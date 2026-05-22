@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1702129693,
+    "title": "【Claude Code】CLAUDE.md・skills・agents を整備して開発体験が劇的に変わった話",
+    "link": "https://zenn.dev/linkedge/articles/27c38cdd9bedc6",
+    "excerpt": ""
+  },
+  {
+    "id": 1702129692,
+    "title": "AI にコードを任せても壊れない人がやっていること",
+    "link": "https://zenn.dev/aiandao/articles/software-fundamentals-with-ai-20260501",
+    "excerpt": ""
+  },
+  {
+    "id": 1702129691,
+    "title": "SKILL.md AGENTS.md AgentSkills 完全整理ノート（備忘録）",
+    "link": "https://zenn.dev/kodak_diary/articles/8fb30c071e9752",
+    "excerpt": ""
+  },
+  {
+    "id": 1702129690,
+    "title": "脱・ファット・CLAUDE.md",
+    "link": "https://zenn.dev/smartshopping/articles/refactor-fat-claude-md",
+    "excerpt": ""
+  },
+  {
+    "id": 1702129689,
+    "title": "【スキルで分割】1300行のCLAUDE.mdを250行にしてみた｜Hiroaki",
+    "link": "https://note.com/major_elk2890/n/n120fa8c437d7",
+    "excerpt": "はじめに  こんにちは、あおいです。  今回は CLAUDE.md の肥大化問題 について、試行錯誤の末にたどり着いた解決策をシェアします。  「CLAUDE.md が長くなりすぎて管理が大変」「ルールを書いても守ってくれない気がする」  そんな悩みをお持ちの方に、この記事が役立てば嬉しいです。   今回のゴール：スキルで CLAUDE.md を分割できるようになること  この記事を読むと：    なぜ CLAUDE.md が長すぎるとダメなのかがわかる    どうやって スキルに分割すればいいかがわかる    何を 本体に残して、何をスキルに逃がすべきかがわかる    私が 1300"
+  },
+  {
+    "id": 1702129688,
+    "title": "CLAUDE.mdの肥大化を防ぐ！.claude/rules/で動的にルールを読み込む方法 #AI - Qiita",
+    "link": "https://qiita.com/tomada/items/cb05d3a7aa00cb35c486",
+    "excerpt": "CLAUDE.mdの肥大化を防ぐ！.claude/rules/で動的にルールを読み込む方法"
+  },
+  {
+    "id": 1702129687,
+    "title": "CLAUDE.md の肥大化を 3 層構造で 83% 軽くした — 実測と試行錯誤の記録",
+    "link": "https://zenn.dev/pepabo/articles/claude-code-rules-skills-split",
+    "excerpt": ""
+  },
+  {
+    "id": 1702129686,
+    "title": "統計検定：Japan Statistical Society Certificate",
+    "link": "https://www.toukei-kentei.jp/",
+    "excerpt": "統計検定の公式ウェブサイトです。\n「統計検定」は、 日本統計学会が公式に認定している全国統一試験です。"
+  },
+  {
+    "id": 1702129685,
+    "title": "一般社団法人日本ディープラーニング協会【公式】",
+    "link": "https://www.jdla.org/",
+    "excerpt": "本協会（JDLA）は、ディープラーニングを中心とする技術による日本の産業競争力の向上を目指します。"
+  },
+  {
+    "id": 1702129684,
+    "title": "Claude Code × tmuxの個人的活用術 | DevelopersIO",
+    "link": "https://dev.classmethod.jp/articles/shuntaka-claude-code-tmux-personal-tips",
+    "excerpt": ""
+  },
+  {
+    "id": 1702134483,
+    "title": "【LP改善AI戦略】たった1日で成約率を2倍にする生成AI活用の実践ロードマップ｜Yossy 🎙️ AI mentor",
+    "link": "https://note.com/activist_j_gr/n/n8e72ad084b1f",
+    "excerpt": "なぜ、あなたのLPは期待した成果を出せないのか?  「広告費をかけても、なかなかコンバージョンが伸びない」 「デザイナーに依頼すると10万円以上かかるし、修正のたびに時間とお金が消えていく」 「A/Bテストをしたいけど、そもそも何をテストすべきか分からない」  スタートアップの命運を握るランディングページ。しかし、多くの起業家が「LP制作=外注の高額案件」という固定観念に縛られ、改善サイクルを回せないまま貴重な時間を浪費しています。  実は今、生成AIの進化によって、この状況は劇的に変わりつつあります。Claude、ChatGPT、Midjourney、そしてFigma AIの組み合わ"
+  },
+  {
+    "id": 1702135550,
+    "title": "Biz職のための \"頑張らなくてもできる\" AI自動化ワークフロー構築｜KAJI | 梶谷健人",
+    "link": "https://note.com/kajiken0630/n/n1b427707c3e9",
+    "excerpt": "生成AIやLLMの活用は、多くのビジネスパーソンにとって日常の一部となりつつあります。しかし、その使い方が「ChatGPTなどのAIとのチャット」や「リサーチ作業」に留まってしまっているケースは少なくないのではないでしょうか。  もちろん、それだけでも十分に強力ですが、生成AIやLLMの真価は「自動化ワークフローへの組み込み」によってさらに引き出されます。  AIを活用した自動化というと、「Dify」が話題に上がることが多いです。  しかし、DifyはAIアプリ開発者のニーズにも応えられるように作られた多機能なプラットフォームであり、ワークフローの構築やAPI連携には専門的な知識が求め"
+  },
+  {
+    "id": 1702135749,
+    "title": "開発者もAI、住人もAI。人間は自分だけ ── 2週間半で「AIが住むSNS」を作ったら何が起きたか",
+    "link": "https://zenn.dev/morango/articles/38a4bc4392b51f",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135236,
+    "title": "外化脳 ー AI3体でマルチエージェントのAIチームを作ったらエヴァのマギシステムだった ー #LLM - Qiita",
+    "link": "https://qiita.com/Usamiko_286/items/84f9a17e6ea47f4843b3",
+    "excerpt": "外化脳 ー AI3体でマルチエージェントのAIチームを作ったらエヴァのマギシステムだった ー"
+  },
+  {
+    "id": 1702134482,
+    "title": "エンジニア未経験でも一目置かれるポートフォリオ。ビジネス視点で顧客に価値を届ける。 #初心者 - Qiita",
+    "link": "https://qiita.com/masa20057/items/3237a14437fbaad63f46",
+    "excerpt": "エンジニア未経験でも一目置かれるポートフォリオ。ビジネス視点で顧客に価値を届ける。"
+  },
+  {
+    "id": 1702135235,
+    "title": "SDD×マルチエージェントシステムによるAI駆動開発 #ClaudeCode - Qiita",
+    "link": "https://qiita.com/shuto_nakatsubo/items/5d3c83b65c40197ea33d",
+    "excerpt": "SDD×マルチエージェントシステムによるAI駆動開発"
+  },
+  {
+    "id": 1702134371,
+    "title": "【AI駆動開発】Gemini Gem＋NotebookLMによる上流工程の最適化戦略",
+    "link": "https://zenn.dev/mediba/articles/136c0290948c65",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135455,
+    "title": "DESIGN.md + 壊れたら気づくハーネス - AI向けデザインシステムを「維持できる仕組み」にした記録",
+    "link": "https://zenn.dev/tsubotax/articles/7f0d3693f70e2f",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135264,
+    "title": "入社1週目で即戦力になれた理由 ── AI駆動開発の iOS 開発チームに入って",
+    "link": "https://zenn.dev/dely_jp/articles/bfc7aed2c10d3c",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135350,
+    "title": "UnityでAntigravity×AI駆動開発って実際どうなの？ 〜ARプリクラを作ってみた〜",
+    "link": "https://zenn.dev/hamachan64/articles/add631eaaae730",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135454,
+    "title": "AGENTS.md の5つの原則、実践中 #AGENTS.md - Qiita",
+    "link": "https://qiita.com/HinanoKawahori/items/cbf0c72cfa940e5c92bb",
+    "excerpt": "AGENTS.md の5つの原則、実践中"
+  },
+  {
+    "id": 1702135748,
+    "title": "「Gemini」アプリが動的コンテンツ回答に対応、触って理解できるシミュレーターも生成 - 窓の杜",
+    "link": "https://forest.watch.impress.co.jp/docs/news/2100669.html",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135747,
+    "title": "【Claude Code】マネできる！個人開発するときに最初に用意したドキュメント24種と機能要件書を全公開 #生成AI - Qiita",
+    "link": "https://qiita.com/tomada/items/e27292b65f723c4633d9",
+    "excerpt": "【Claude Code】マネできる！個人開発するときに最初に用意したドキュメント24種と機能要件書を全公開"
+  },
+  {
+    "id": 1702134481,
+    "title": "デザインの科学をAIに渡したら、10分でプロ品質のLPができた｜KAWAI",
+    "link": "https://note.com/kawaidesign/n/n56fa6fdcf616",
+    "excerpt": "Claude Codeに「LP作って」と言ったら、素人っぽいものが出てきた経験はありませんか。原因はセンスの不足ではありません。AIに「設計書」を渡していないからです。   この記事は全文無料（期間限定）で閲覧できます。   見出し画像はAIで生成しました。 プロンプトは100,000文字超えの記事に掲載中。 \n     デザインは科学——数値で定義できるルールの集合体  「良いデザインにはセンスが必要」。  これは間違いです。  デザインには、再現可能な科学的ルールが存在します。  以下の4つを知っているだけで、デザインの判断基準が根本的に変わります。    Fittsの法則 ターゲ"
+  },
+  {
+    "id": 1702135453,
+    "title": "ハーネスエンジニアリング入門：なぜCLAUDE.mdがエージェント制御の中核なのか #LLM - Qiita",
+    "link": "https://qiita.com/nogataka/items/85557d399bb42c21bfc4",
+    "excerpt": "ハーネスエンジニアリング入門：なぜCLAUDE.mdがエージェント制御の中核なのか"
+  },
+  {
+    "id": 1702135451,
+    "title": "Claude Codeで日常のタスクを45個自動化した東大院生の全記録",
+    "link": "https://zenn.dev/shunya_sudo/articles/claude-code-45-automation-tasks",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135452,
+    "title": "Claude Codeのサブエージェントで動画自動編集ツールを構築｜ハーネス設計を非コーディング領域に応用｜森本 洋平",
+    "link": "https://note.com/samurai_worker/n/ne5685e4d43c0",
+    "excerpt": "2026年3月24日、Anthropicがエンジニアリングブログで公開した「Harness Design for Long-Running Application Development」。Planner / Generator / Evaluatorの3エージェント構成で、同じプロンプトでも$9のゴミが$200の完動品に変わるという衝撃のデータは、noteでも多くの解説記事が書かれました。  ただ、どの記事もAnthropic公式の例（レトロゲーム開発、DAWアプリ構築）をそのまま紹介しているものばかり。「じゃあ、コーディング以外のタスクにどう応用するの？」という問いに答えた記事は見"
+  },
+  {
+    "id": 1702135549,
+    "title": "Claude × Codex × Gemini を\"併用\"する設計 ─ セカンドオピニオン運用フレーム #AI - Qiita",
+    "link": "https://qiita.com/nogataka/items/b2b4a84ba611ccaf8447",
+    "excerpt": "Claude × Codex × Gemini を\"併用\"する設計 ─ セカンドオピニオン運用フレーム"
+  },
+  {
+    "id": 1702135234,
+    "title": "n8nで「三権分立AIエージェント」を構築したら、寝ている間にバグのないコードが勝手に完成した話 #LLM - Qiita",
+    "link": "https://qiita.com/YushiYamamoto/items/9a53b6f957f809089881",
+    "excerpt": "n8nで「三権分立AIエージェント」を構築したら、寝ている間にバグのないコードが勝手に完成した話"
+  },
+  {
+    "id": 1702135442,
+    "title": "Claude Code Skillの作り方｜21個運用して分かった設計と育て方",
+    "link": "https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135443,
+    "title": "Claude Code を Level 5 まで育てたら、開発が「指示と確認だけ」になった — 実ファイル構成で解説 #個人開発 - Qiita",
+    "link": "https://qiita.com/teppei19980914/items/8da88b33ffa8cf88dfa2",
+    "excerpt": "Claude Code を Level 5 まで育てたら、開発が「指示と確認だけ」になった — 実ファイル構成で解説"
+  },
+  {
+    "id": 1702135444,
+    "title": "Claude Codeで動画編集を完全自動化する方法｜15分動画が100円以下で仕上がるスキル構成｜せなお",
+    "link": "https://note.com/it_rutinelabo/n/n11737c8f4bdf",
+    "excerpt": "こんにちは、ルーティンラボのせなお（@rutinelabo）です。今回は、Claude Codeに動画編集スキルを組み込んで、無音カット・テロップ・Bロール生成まで一気に自動化する方法を解説していきます。 inputフォルダに動画を入れて、スラッシュコマンドを2つ叩くだけで一次編集まで完了する仕組みです。  「15分の動画を編集するのに毎回2〜3時間も取られて発信が続かない」 「無音カットとフィラーワード処理だけでも疲れ果てる」 そんな悩みを抱えているクリエイターの方は多いのではないでしょうか。  Claude Codeにスキルを組み込めば、繰り返しの動画編集作業をまるっとAIに任せら"
+  },
+  {
+    "id": 1702135445,
+    "title": "Claude Codeの「サブエージェント」完全ガイド——AIに仕事を分担させる公式テクニック｜小畑タカユキ│3ヶ月でAIエージェントを実装する人",
+    "link": "https://note.com/no_ai_no_life/n/ndccab63ad022",
+    "excerpt": "おつかれさまです。小畑です。  Anthropicの公式ブログに、Claude Codeの「サブエージェント」の使い方が詳しく解説されました。  \n\n\nHow and when to use subagents in Claude Code | Claude\n\n\nWhen to delegate research, parallelize tasks, or get a fresh\n\n\nclaude.com\n\n\n\n \n サブエージェントとは何か。一言で言うと、AIにAIを呼ばせる仕組みです。  メインのClaudeが作業している最中に、別の独立したClaudeを起動して、調査や検証を任"
+  },
+  {
+    "id": 1702135446,
+    "title": "Claude CodeのエージェントでAIコンサルタントを構築する｜McKinsey流フレームワークの実装方法 #ClaudeCode - Qiita",
+    "link": "https://qiita.com/rcomcpgm-cyber/items/901344b211a6a3e7dda7",
+    "excerpt": "Claude CodeのエージェントでAIコンサルタントを構築する｜McKinsey流フレームワークの実装方法"
+  },
+  {
+    "id": 1702135447,
+    "title": "Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita",
+    "link": "https://qiita.com/nogataka/items/efe8eb9df612d2211221",
+    "excerpt": "Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践"
+  },
+  {
+    "id": 1702135448,
+    "title": "Claude Codeの並列作業で「画面に張り付く」をやめるためにやったこと",
+    "link": "https://zenn.dev/pepabo/articles/claude-code-stop-watching-parallel-work",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135449,
+    "title": "SKILL.mdでClaude Codeのワークフローを自動化する実践ガイド ── superpowers 15万Starの設計思想 #ClaudeCode - Qiita",
+    "link": "https://qiita.com/nogataka/items/c59defafd0dfb88c4a90",
+    "excerpt": "SKILL.mdでClaude Codeのワークフローを自動化する実践ガイド ── superpowers 15万Starの設計思想"
+  },
+  {
+    "id": 1702135450,
+    "title": "マルチエージェントの協調パターン5選——Anthropic公式ブログを実装視点で読み解く #ClaudeCode - Qiita",
+    "link": "https://qiita.com/tatematsu-k/items/8bae05136e805f7c54e2",
+    "excerpt": "マルチエージェントの協調パターン5選——Anthropic公式ブログを実装視点で読み解く"
+  },
+  {
+    "id": 1702135529,
+    "title": "Gemini in Chrome に「Skills」が登場。ブラウザがAIワークフローの起点になる時代へ #SKILLS - Qiita",
+    "link": "https://qiita.com/shioccii/items/cdac36fc882871752ce6",
+    "excerpt": "Gemini in Chrome に「Skills」が登場。ブラウザがAIワークフローの起点になる時代へ"
+  },
+  {
+    "id": 1702135530,
+    "title": "Gemini が生成するインタラクティブ3Dモデルと Interactions API 入門 #Python - Qiita",
+    "link": "https://qiita.com/kai_kou/items/35462df3d5455433de75",
+    "excerpt": "Gemini が生成するインタラクティブ3Dモデルと Interactions API 入門"
+  },
+  {
+    "id": 1702135548,
+    "title": "Claude Code vs Gemini CLI ｜ 実務的な使い分けガイド【2026年版】",
+    "link": "https://zenn.dev/akasara/articles/8387058078309d",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135599,
+    "title": "Google ChromeにGemini「Skills」が登場：定型プロンプトのワンクリック実行がもたらすブラウザ体験と生産性の変革 — XenoSpectrum",
+    "link": "https://xenospectrum.com/articlegoogle-chrome-gemini-skills-productivity",
+    "excerpt": "Googleはデスクトップ版ChromeのサイドバーにGemini向け新機能「Skills」を展開した。これは、ユーザーが繰り返し使うAIプロンプトを保存し、Webページ上でワンクリックまたはショートカットで呼び出せる機能であり、AIとの対話にかかる手間を削減し、生産性向上とブラウザ戦争におけるGoogleの戦略的な一手となる。また、プリセットSkillを提供するライブラリも公開され、AIを一般ユーザーへ普及させる役割を担っている。"
+  },
+  {
+    "id": 1702135233,
+    "title": "調査タスクをGemini CLIに委譲してClaude Codeの使用量を節約する",
+    "link": "https://zenn.dev/syncable_tech/articles/5afedbbbefc7cf",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135547,
+    "title": "Claude Code と Gemini CLI による全自動コードレビューループ",
+    "link": "https://zenn.dev/azumag/articles/a0d375832747fb",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135528,
+    "title": "Gemini CLIで爆速ファイル整理！AIに「ぽいっ」と投げたらフォルダが片付いた話",
+    "link": "https://zenn.dev/noah11/articles/9cb8b4db8d4380",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135746,
+    "title": "1行もコードを書かずにGeminiだけでUnityの大富豪ゲームを作って公開した話",
+    "link": "https://zenn.dev/tomotomobile/articles/b5cf31891b77e2",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135441,
+    "title": "【CLAUDE.mdに貼るだけ】Claude Code x Gemini CLI x 人間による、三位一体開発術",
+    "link": "https://zenn.dev/tksfjt1024/articles/5e88385bfb69fd",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135527,
+    "title": "Gemini CLIとClaude Codeによるピンポンプログラミング",
+    "link": "https://zenn.dev/yonekubo/articles/3a2da69cacaa73",
+    "excerpt": ""
+  },
+  {
+    "id": 1702135745,
+    "title": "“なんちゃってゲーム”を超えて複雑なWebゲームを自動生成するローカルAI「OpenGame」、Claude Opus 4.5に迫る精度のAIモデル「Qwen3.6-27B」など生成AI技術5つを解説（生成AIウィークリー） | テクノエッジ TechnoEdge",
+    "link": "https://www.techno-edge.net/article/2026/04/30/5035.html",
+    "excerpt": "この1週間の気になる生成AI技術・研究をいくつかピックアップして解説する今回の「生成AIウィークリー」（第142回）は、オープンソースで最高精度の「DeepSeek-V4」や、Claude Opus 4.5に迫る精度の270億パラメータであるマルチモーダルAIモデル「Qwen3.6-27B」を取り上げます。"
+  },
+  {
+    "id": 1702135232,
+    "title": "Codex vs Claude Codeではない。AI開発は“役割分担ハーネス”で決まる｜hirokaji",
+    "link": "https://note.com/tasty_dunlin998/n/n36e25f73108d",
+    "excerpt": "はじめに  AI開発ツールを比べるとき、 つい「どちらが賢いのか」という話になりがちです。  Codexが強いのか。 Claude Codeが強いのか。 GPT系がいいのか。 Claude系がいいのか。  もちろん、モデルの性能差はあります。 実行速度、コード修正力、文脈理解、日本語の仕上がり、ツール連携、長時間作業への強さ。 それぞれに明確な違いがあります。  ただ、実務で使い込むほど、見えてくる論点は少し変わります。  重要なのは、 どちらが上かではありません。  重要なのは、 どの仕事を、どの実行環境に渡すかです。  つまり、AI開発ツールの比較は、 単なるモデル比較ではなくなっ"
+  }
+]

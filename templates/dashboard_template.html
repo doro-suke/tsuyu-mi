@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>つゆみ - AI駆動「あとで読む」ダッシュボード</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
+        }
+        .filter-active {
+            @apply bg-indigo-600 text-white !important;
+        }
+        .status-read {
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <header class="bg-white shadow-sm sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <h1 class="text-3xl font-bold text-indigo-700">つゆみ</h1>
+                
+                <!-- 検索・フィルタUI -->
+                <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                    <input type="text" id="searchInput" placeholder="記事を検索..." class="px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                    <div class="flex gap-1">
+                        <button onclick="filterPriority('all')" class="priority-btn px-3 py-2 bg-white border border-gray-300 rounded-md text-sm hover:bg-gray-50 filter-active" data-priority="all">All</button>
+                        <button onclick="filterPriority('high')" class="priority-btn px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-red-600 hover:bg-red-50" data-priority="high">High</button>
+                        <button onclick="filterPriority('medium')" class="priority-btn px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-amber-600 hover:bg-amber-50" data-priority="medium">Mid</button>
+                        <button onclick="filterPriority('low')" class="priority-btn px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-600 hover:bg-gray-50" data-priority="low">Low</button>
+                    </div>
+                    <div class="flex gap-1 border-l pl-2 ml-1">
+                        <button onclick="toggleShowRead()" id="toggleReadBtn" class="px-3 py-2 bg-white border border-gray-300 rounded-md text-sm hover:bg-gray-50">
+                            既読を表示中
+                        </button>
+                        <button onclick="copyDeletedIds()" class="px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-red-600 hover:bg-red-50" title="削除した記事のIDをコピーしてAIに渡せます">
+                            削除済みIDをコピー
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="tagContainer" class="mt-4 flex flex-wrap gap-2 items-center">
+                <span class="text-xs font-bold text-gray-400 uppercase">Popular Tags:</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">最終更新: {{last_updated}}</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <div id="articlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- ARTICLES_PLACEHOLDER -->
+        </div>
+    </main>
+
+    <footer class="bg-white mt-12 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 py-8 text-center text-gray-500 text-sm">
+            &copy; 2026 つゆみ - AI-Driven Priority Dashboard
+        </div>
+    </footer>
+
+    <script>
+        let currentPriority = 'all';
+        let currentTag = 'all';
+        let showRead = true;
+        const searchInput = document.getElementById('searchInput');
+
+        function updateDisplay() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const articles = document.querySelectorAll('.article-card');
+            
+            articles.forEach(card => {
+                const title = card.dataset.title.toLowerCase();
+                const summary = card.dataset.summary.toLowerCase();
+                const priority = card.dataset.priority.toLowerCase();
+                const tags = card.dataset.tags.toLowerCase().split(',');
+                const isRead = card.classList.contains('status-read');
+                const isDeleted = localStorage.getItem(`deleted_${card.dataset.articleId}`) === 'true';
+
+                const matchesSearch = title.includes(searchTerm) || summary.includes(searchTerm);
+                const matchesPriority = currentPriority === 'all' || priority === currentPriority;
+                const matchesTag = currentTag === 'all' || tags.includes(currentTag);
+                const matchesReadFilter = showRead || !isRead;
+
+                if (!isDeleted && matchesSearch && matchesPriority && matchesTag && matchesReadFilter) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function renderTags() {
+            const container = document.getElementById('tagContainer');
+            const articles = document.querySelectorAll('.article-card');
+            const tagCounts = {};
+            
+            articles.forEach(card => {
+                const tags = card.dataset.tags.split(',').filter(t => t);
+                tags.forEach(tag => {
+                    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                });
+            });
+
+            const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+            const isExpanded = container.dataset.expanded === 'true';
+            const limit = 10;
+            
+            container.innerHTML = '<span class="text-xs font-bold text-gray-400 uppercase">Popular Tags:</span>';
+            
+            sortedTags.forEach(([tag, count], index) => {
+                if (!isExpanded && index >= limit) return;
+                
+                const btn = document.createElement('button');
+                btn.onclick = () => filterTag(tag);
+                btn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-medium transition-colors ${currentTag === tag ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'}`;
+                btn.dataset.tag = tag;
+                btn.textContent = `#${tag} (${count})`;
+                container.appendChild(btn);
+            });
+
+            if (sortedTags.length > limit) {
+                const toggleBtn = document.createElement('button');
+                toggleBtn.className = 'text-xs font-bold text-indigo-600 hover:text-indigo-800 ml-2';
+                toggleBtn.textContent = isExpanded ? '閉じる ▲' : `すべて表示 (残り${sortedTags.length - limit}件) ▼`;
+                toggleBtn.onclick = () => {
+                    container.dataset.expanded = isExpanded ? 'false' : 'true';
+                    renderTags();
+                };
+                container.appendChild(toggleBtn);
+            }
+        }
+
+        function toggleStatus(articleId) {
+            const card = document.querySelector(`[data-article-id="${articleId}"]`);
+            const isRead = card.classList.toggle('status-read');
+            
+            const btn = card.querySelector('.toggle-status-btn');
+            btn.textContent = isRead ? '未読に戻す' : '既読にする';
+            
+            updateDisplay();
+            
+            // 状態の永続化
+            localStorage.setItem(`status_${articleId}`, isRead ? 'read' : 'unread');
+        }
+
+        function deleteArticle(articleId) {
+            if (!confirm('この記事をダッシュボードから削除（非表示に）しますか？')) return;
+            localStorage.setItem(`deleted_${articleId}`, 'true');
+            updateDisplay();
+            renderTags();
+        }
+
+        function copyDeletedIds() {
+            const keys = Object.keys(localStorage).filter(k => k.startsWith('deleted_') && localStorage.getItem(k) === 'true');
+            const ids = keys.map(k => k.replace('deleted_', ''));
+            if (ids.length === 0) {
+                alert('削除（非表示）された記事はありません。');
+                return;
+            }
+            const text = ids.join(',');
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`削除済みID (${ids.length}件) をコピーしました。AIにこのIDを渡して「prune_bookmarks.jsで完全に削除して」と伝えてください。`);
+            });
+        }
+
+        function copyReadIds() {
+            const keys = Object.keys(localStorage).filter(k => k.startsWith('status_') && localStorage.getItem(k) === 'read');
+            const ids = keys.map(k => k.replace('status_', ''));
+            if (ids.length === 0) {
+                alert('既読の記事はありません。');
+                return;
+            }
+            const text = ids.join(',');
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`既読ID (${ids.length}件) をコピーしました。AIにこのIDを渡して「既読としてマークして」と伝えてください。`);
+            });
+        }
+
+        function toggleShowRead() {
+            showRead = !showRead;
+            const btn = document.getElementById('toggleReadBtn');
+            btn.textContent = showRead ? '既読を表示中' : '既読を非表示';
+            btn.classList.toggle('bg-indigo-600', !showRead);
+            btn.classList.toggle('text-white', !showRead);
+            updateDisplay();
+        }
+
+        function filterPriority(priority) {
+            currentPriority = priority;
+            document.querySelectorAll('.priority-btn').forEach(btn => {
+                if (btn.dataset.priority === priority) {
+                    btn.classList.add('bg-indigo-600', 'text-white');
+                    btn.classList.remove('bg-white');
+                } else {
+                    btn.classList.remove('bg-indigo-600', 'text-white');
+                    btn.classList.add('bg-white');
+                }
+            });
+            updateDisplay();
+        }
+
+        function filterTag(tag) {
+            currentTag = currentTag === tag ? 'all' : tag;
+            renderTags();
+            updateDisplay();
+        }
+
+        // 初期化：localStorageから状態を復元
+        window.addEventListener('DOMContentLoaded', () => {
+            const articles = document.querySelectorAll('.article-card');
+            articles.forEach(card => {
+                const articleId = card.dataset.articleId;
+                const savedStatus = localStorage.getItem(`status_${articleId}`);
+                if (savedStatus === 'read') {
+                    card.classList.add('status-read');
+                    const btn = card.querySelector('.toggle-status-btn');
+                    if (btn) btn.textContent = '未読に戻す';
+                }
+            });
+            renderTags();
+            updateDisplay();
+        });
+
+        searchInput.addEventListener('input', updateDisplay);
+    </script>
+</body>
+</html>

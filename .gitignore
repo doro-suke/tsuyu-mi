@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+data/sample_raindrops.json
+
+# Security Block
+.env
+.env.*
+node_modules/
+
