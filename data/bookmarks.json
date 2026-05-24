@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-22T22:20:16.228Z",
+  "updated_at": "2026-05-23T11:31:54.585Z",
   "articles": [
     {
       "id": "1702129693",
@@ -3540,6 +3540,23 @@
       "status": "unread",
       "analyzed_at": "2026-05-22T22:20:16.228Z",
       "markdown_path": "data/notebooklm_sources/Claude Codeで投資AI秘書を作った1ヶ月｜個人投資家が「やらかさないAI」を作った話｜malfoy_eatwalk.md"
+    },
+    {
+      "id": "1728773258",
+      "url": "https://note.com/umiremix/n/n12fa170fb507",
+      "title": "個人開発のアイディアのひらめき方｜umiremix",
+      "summary": "個人開発における13通りの具体的なアイデア発想法を整理して提示\n既存サービスのニッチ化や機能制限、時間軸の変更など具体的な着眼点を解説\n著者が実際に開発・リリースした複数のWebサービスを事例として紹介",
+      "score": 15,
+      "read_now_reason": "将来的にAI駆動開発を活用して自社サービスやプロトタイプを新規に企画・起案する際の、アイデア発想法のフレームワークとして参考になる。",
+      "defer_reason": "現在のプロジェクトである自動化パイプライン構築やAI駆動開発の具体的なコード、アーキテクチャ、技術的な解決策は一切含まれていないため。",
+      "tags": [
+        "個人開発",
+        "アイデア発想",
+        "企画マインドセット"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-23T11:31:54.585Z",
+      "markdown_path": "data/notebooklm_sources/個人開発のアイディアのひらめき方｜umiremix.md"
     }
   ]
 }

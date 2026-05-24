@@ -48,7 +48,7 @@
             <div id="tagContainer" class="mt-4 flex flex-wrap gap-2 items-center">
                 <span class="text-xs font-bold text-gray-400 uppercase">Popular Tags:</span>
             </div>
-            <p class="text-xs text-gray-400 mt-2">最終更新: 2026/5/23 7:20:16</p>
+            <p class="text-xs text-gray-400 mt-2">最終更新: 2026/5/23 20:31:54</p>
         </div>
     </header>
 
@@ -7776,6 +7776,46 @@ Checkpointの選択やSampler設定、CFG Scaleなどの生成環境に関する
       </div>
 
       <div class="article-card flex flex-col bg-white rounded-lg shadow-md overflow-hidden border-t-4 border-gray-300 transition transform hover:-translate-y-1 hover:shadow-lg "
+           data-article-id="1728773258"
+           data-title="個人開発のアイディアのひらめき方｜umiremix"
+           data-summary="個人開発における13通りの具体的なアイデア発想法を整理して提示
+既存サービスのニッチ化や機能制限、時間軸の変更など具体的な着眼点を解説
+著者が実際に開発・リリースした複数のWebサービスを事例として紹介"
+           data-priority="low"
+           data-score="15"
+           data-tags="個人開発,アイデア発想,企画マインドセット">
+          <div class="px-6 py-4 flex-grow">
+              <div class="flex justify-between items-start mb-2">
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">Low <span class="opacity-70">· 15</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1728773258')" class="toggle-status-btn text-xs font-medium text-indigo-600 hover:text-indigo-800 underline">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1728773258')" class="text-xs font-medium text-red-500 hover:text-red-700 underline ml-1">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-400">2026/5/23</span>
+                  </div>
+              </div>
+              <h2 class="text-xl font-bold mb-3 line-clamp-2 hover:text-indigo-600">
+                  <a href="https://note.com/umiremix/n/n12fa170fb507" target="_blank">個人開発のアイディアのひらめき方｜umiremix</a>
+              </h2>
+              <div class="text-gray-600 text-sm mb-4 space-y-1">
+                  <p>・ 個人開発における13通りの具体的なアイデア発想法を整理して提示</p><p>・ 既存サービスのニッチ化や機能制限、時間軸の変更など具体的な着眼点を解説</p><p>・ 著者が実際に開発・リリースした複数のWebサービスを事例として紹介</p>
+              </div>
+              <div class="bg-gray-50 p-3 rounded-md mb-4">
+                  <p class="text-xs font-bold text-gray-500 uppercase mb-1">今読む理由</p>
+                  <p class="text-sm text-gray-700 italic">将来的にAI駆動開発を活用して自社サービスやプロトタイプを新規に企画・起案する際の、アイデア発想法のフレームワークとして参考になる。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 mr-1 mb-1">#個人開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 mr-1 mb-1">#アイデア発想</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 mr-1 mb-1">#企画マインドセット</span></div>
+          </div>
+          <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-2">
+              <a href="https://note.com/umiremix/n/n12fa170fb507" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">記事を読む</a>
+              <a href="../data/notebooklm_sources/個人開発のアイディアのひらめき方｜umiremix.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-white rounded-lg shadow-md overflow-hidden border-t-4 border-gray-300 transition transform hover:-translate-y-1 hover:shadow-lg "
            data-article-id="1702135925"
            data-title="「#書評」の人気タグ記事一覧｜note ――つくる、つながる、とどける。"
            data-summary="note上の「#書評」タグが付与された、多様なジャンルの一般投稿が並ぶ検索結果ページ
@@ -8284,7 +8324,20 @@ AI駆動開発や自動化パイプライン構築に直接活用できる技術
             }
             const text = ids.join(',');
             navigator.clipboard.writeText(text).then(() => {
-                alert(`削除済みID (${ids.length}件) をコピーしました。AIにこのIDを渡して「完全に削除して」と伝えてください。`);
+                alert(`削除済みID (${ids.length}件) をコピーしました。AIにこのIDを渡して「prune_bookmarks.jsで完全に削除して」と伝えてください。`);
+            });
+        }
+
+        function copyReadIds() {
+            const keys = Object.keys(localStorage).filter(k => k.startsWith('status_') && localStorage.getItem(k) === 'read');
+            const ids = keys.map(k => k.replace('status_', ''));
+            if (ids.length === 0) {
+                alert('既読の記事はありません。');
+                return;
+            }
+            const text = ids.join(',');
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`既読ID (${ids.length}件) をコピーしました。AIにこのIDを渡して「既読としてマークして」と伝えてください。`);
             });
         }
 
