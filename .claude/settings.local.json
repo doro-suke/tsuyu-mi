@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node *)",
+      "Bash(powershell *)",
+      "PowerShell(Get-Item *)",
+      "PowerShell($raw = Get-Content 'data\\\\bookmarks.json' -Raw; Write-Host \"File size: $\\($raw.Length\\) chars\"; Write-Host \"First 300 chars:\"; Write-Host $raw.Substring\\(0, [Math]::Min\\(300, $raw.Length\\)\\))",
+      "PowerShell($json = Get-Content 'data\\\\bookmarks.json' -Raw | ConvertFrom-Json; $first = $json.articles[0]; $first | Get-Member -MemberType NoteProperty | Select-Object Name)"
+    ]
+  }
+}
