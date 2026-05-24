@@ -1,4 +1,4 @@
-# Project Tsuyu-mi: Gemini-Native Pipeline
+# Project Vesper: Gemini-Native Pipeline
 
 ## Concept
 - **Gemini-First**: 外部ライブラリを極力使わず、Gemini CLIの標準ツール（web_fetch, run_shell_command等）と、AI自身のロジックで問題を解決する。

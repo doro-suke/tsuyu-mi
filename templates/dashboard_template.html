@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>つゆみ - AI駆動「あとで読む」ダッシュボード</title>
+    <title>Vesper - AI-Driven Curation Dashboard</title>
+    <!-- PWA Settings -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#121214">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .line-clamp-3 {
@@ -12,50 +17,73 @@
             -webkit-box-orient: vertical;  
             overflow: hidden;
         }
+        /* アクティブなフィルターボタンのローズゴールドグラデーション */
         .filter-active {
-            @apply bg-indigo-600 text-white !important;
+            background: linear-gradient(135deg, #c8968c 0%, #e8c3b9 100%) !important;
+            color: #121214 !important;
+            border-color: transparent !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 12px rgba(200, 150, 140, 0.2);
         }
+        /* 既読状態の落ち着いたUI表現 */
         .status-read {
-            opacity: 0.5;
-            filter: grayscale(0.5);
+            opacity: 0.35;
+            filter: grayscale(0.8);
+            border-top-color: #2a2a30 !important;
         }
-        /* アニメーション用 */
+        /* カードのアニメーション transition */
         .article-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .article-card.hidden-item {
             opacity: 0;
-            transform: scale(0.95);
+            transform: scale(0.96);
             pointer-events: none;
             position: absolute;
             z-index: -1;
         }
         #articlesGrid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
             gap: 2rem;
         }
         .stat-badge {
             font-size: 0.7rem;
-            padding: 0.1rem 0.4rem;
+            padding: 0.1rem 0.45rem;
             margin-left: 0.4rem;
             vertical-align: middle;
         }
+        /* カスタムスクールバー（シックなダーク調） */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121214;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2a30;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c8968c;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans min-h-screen">
-    <header class="bg-white shadow-sm sticky top-0 z-20">
+<body class="bg-[#121214] text-[#f4f4f5] font-sans min-h-screen antialiased selection:bg-[#c8968c] selection:text-[#121214]">
+    <header class="bg-[#161619]/90 border-b border-[#222228] sticky top-0 z-20 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="flex items-center gap-4">
-                    <h1 class="text-3xl font-bold text-indigo-700">つゆみ</h1>
+                    <!-- ローズゴールドの高級感あふれるグラデーションロゴ -->
+                    <h1 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-[#c8968c] via-[#e8c3b9] to-[#c8968c] bg-clip-text text-transparent">Vesper</h1>
                     <div id="readingProgress" class="hidden md:flex flex-col gap-1 w-48">
-                        <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                            <span>Reading Progress</span>
-                            <span id="progressPercent">0%</span>
+                        <div class="flex justify-between text-[9px] font-bold text-[#a1a1aa] uppercase tracking-wider">
+                            <span>Knowledge Intake</span>
+                            <span id="progressPercent" class="text-[#e8c3b9]">0%</span>
                         </div>
-                        <div class="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                            <div id="progressBar" class="h-full bg-indigo-500 transition-all duration-500" style="width: 0%"></div>
+                        <div class="h-1 w-full bg-[#242429] rounded-full overflow-hidden">
+                            <div id="progressBar" class="h-full bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] transition-all duration-700 rounded-full" style="width: 0%"></div>
                         </div>
                     </div>
                 </div>
@@ -63,37 +91,40 @@
                 <!-- 検索・フィルタUI -->
                 <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                     <div class="relative flex-grow">
-                        <input type="text" id="searchInput" placeholder="記事を検索..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none">
-                        <span id="searchCount" class="absolute right-3 top-2.5 text-xs text-gray-400 font-medium"></span>
+                        <input type="text" id="searchInput" placeholder="Vesper内の知識を探索..." class="w-full px-4 py-2 bg-[#1a1a1f] border border-[#2c2c34] text-white rounded-md focus:ring-2 focus:ring-[#c8968c] focus:border-[#c8968c] transition-all outline-none text-sm placeholder:text-gray-600">
+                        <span id="searchCount" class="absolute right-3 top-2.5 text-xs text-[#a1a1aa] font-medium"></span>
                     </div>
                     <div class="flex gap-1">
-                        <button onclick="filterPriority('all')" class="priority-btn flex-grow px-3 py-2 bg-white border border-gray-300 rounded-md text-sm hover:bg-gray-50 transition-colors filter-active" data-priority="all">
-                            All <span id="count-all" class="stat-badge bg-gray-200 text-gray-600 rounded-full">0</span>
+                        <button onclick="filterPriority('all')" class="priority-btn flex-grow px-3 py-2 bg-[#1a1a1f] border border-[#2a2a2e] rounded-md text-xs text-[#a1a1aa] hover:bg-[#222228] transition-colors filter-active" data-priority="all">
+                            All <span id="count-all" class="stat-badge bg-[#2a2a2e] text-[#f4f4f5] rounded-full">0</span>
                         </button>
-                        <button onclick="filterPriority('high')" class="priority-btn flex-grow px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-red-600 hover:bg-red-50 transition-colors" data-priority="high">
-                            High <span id="count-high" class="stat-badge bg-red-100 text-red-700 rounded-full">0</span>
+                        <button onclick="filterPriority('high')" class="priority-btn flex-grow px-3 py-2 bg-[#1a1a1f] border border-[#2a2a2e] rounded-md text-xs text-red-400 hover:bg-red-950/20 hover:border-red-900/50 transition-colors" data-priority="high">
+                            High <span id="count-high" class="stat-badge bg-red-950/40 text-red-300 rounded-full">0</span>
                         </button>
-                        <button onclick="filterPriority('medium')" class="priority-btn flex-grow px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-amber-600 hover:bg-amber-50 transition-colors" data-priority="medium">
-                            Mid <span id="count-medium" class="stat-badge bg-amber-100 text-amber-700 rounded-full">0</span>
+                        <button onclick="filterPriority('medium')" class="priority-btn flex-grow px-3 py-2 bg-[#1a1a1f] border border-[#2a2a2e] rounded-md text-xs text-amber-400 hover:bg-amber-950/20 hover:border-amber-900/50 transition-colors" data-priority="medium">
+                            Mid <span id="count-medium" class="stat-badge bg-amber-950/40 text-amber-300 rounded-full">0</span>
                         </button>
-                        <button onclick="filterPriority('low')" class="priority-btn flex-grow px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-600 hover:bg-gray-50 transition-colors" data-priority="low">
-                            Low <span id="count-low" class="stat-badge bg-gray-200 text-gray-600 rounded-full">0</span>
+                        <button onclick="filterPriority('low')" class="priority-btn flex-grow px-3 py-2 bg-[#1a1a1f] border border-[#2a2a2e] rounded-md text-xs text-[#8e8e93] hover:bg-[#222228] transition-colors" data-priority="low">
+                            Low <span id="count-low" class="stat-badge bg-[#242429] text-[#8e8e93] rounded-full">0</span>
                         </button>
                     </div>
-                    <div class="flex gap-1 border-l pl-2">
-                        <button onclick="toggleShowRead()" id="toggleReadBtn" class="px-3 py-2 bg-white border border-gray-300 rounded-md text-sm hover:bg-gray-50 whitespace-nowrap transition-colors">
+                    <div class="flex gap-1 border-l border-[#2c2c34] pl-2">
+                        <button onclick="toggleShowRead()" id="toggleReadBtn" class="px-3 py-2 bg-[#1a1a1f] border border-[#2c2c34] rounded-md text-xs text-[#a1a1aa] hover:bg-[#222228] whitespace-nowrap transition-colors">
                             既読を表示中
                         </button>
-                        <button onclick="copyDeletedIds()" class="px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-red-600 hover:bg-red-50 transition-colors" title="削除した記事のIDをコピーしてAIに渡せます">
+                        <button onclick="copyDeletedIds()" class="px-3 py-2 bg-[#1a1a1f] border border-[#2c2c34] rounded-md text-xs text-red-400 hover:bg-red-950/20 transition-colors" title="削除した記事のIDをコピーしてAIに渡せます">
                             🗑️
                         </button>
                     </div>
                 </div>
             </div>
-            <div id="tagContainer" class="mt-4 flex flex-wrap gap-2 items-center min-h-[32px]">
-                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-1">Popular Tags:</span>
+            <div id="tagContainer" class="mt-4 flex flex-wrap gap-2 items-center min-h-[32px] border-t border-[#1d1d22] pt-3">
+                <span class="text-[9px] font-bold text-[#8e8e93] uppercase tracking-widest mr-1">Top Focus Tags:</span>
             </div>
-            <p class="text-[10px] text-gray-400 mt-2 font-medium tracking-tight">最終更新: {{last_updated}}</p>
+            <div class="flex justify-between items-center mt-2">
+                <p class="text-[9px] text-[#8e8e93] font-medium tracking-tight">最終アップデート: {{last_updated}}</p>
+                <a href="./data/notebooklm_master.md" target="_blank" class="text-[9px] text-[#e8c3b9] hover:underline font-bold tracking-tight">📝 NotebookLM用統合ソースを開く</a>
+            </div>
         </div>
     </header>
 
@@ -103,9 +134,10 @@
         </div>
     </main>
 
-    <footer class="bg-white mt-12 border-t border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 py-8 text-center text-gray-500 text-sm">
-            &copy; 2026 つゆみ - AI-Driven Priority Dashboard
+    <footer class="bg-[#101012] border-t border-[#1d1d22] mt-20">
+        <div class="max-w-7xl mx-auto px-4 py-10 text-center text-[#8e8e93] text-xs">
+            <p class="mb-2 font-bold tracking-widest text-[#c8968c]">VESPER</p>
+            <p>&copy; 2026 Vesper - AI-Driven Premium Curation Platform</p>
         </div>
     </footer>
 
@@ -154,7 +186,7 @@
                     card.classList.add('hidden-item');
                     setTimeout(() => {
                         if (card.classList.contains('hidden-item')) card.style.display = 'none';
-                    }, 300);
+                    }, 350);
                 }
             });
 
@@ -193,12 +225,12 @@
             const isExpanded = container.dataset.expanded === 'true';
             const limit = 15;
             
-            container.innerHTML = '<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-1">Popular Tags:</span>';
+            container.innerHTML = '<span class="text-[9px] font-bold text-[#8e8e93] uppercase tracking-widest mr-1">Top Focus Tags:</span>';
             
-            // "All Tags" ボタン
+            // "ALL" タグボタン
             const allBtn = document.createElement('button');
             allBtn.onclick = () => filterTag('all');
-            allBtn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold transition-all ${currentTag === 'all' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`;
+            allBtn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold transition-all ${currentTag === 'all' ? 'bg-[#c8968c] text-[#121214] shadow-md' : 'bg-[#1a1a1f] text-[#a1a1aa] hover:bg-[#222228]'}`;
             allBtn.textContent = 'ALL';
             container.appendChild(allBtn);
 
@@ -207,7 +239,7 @@
                 
                 const btn = document.createElement('button');
                 btn.onclick = () => filterTag(tag);
-                btn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold transition-all ${currentTag === tag ? 'bg-indigo-600 text-white shadow-sm' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'}`;
+                btn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold transition-all ${currentTag === tag ? 'bg-[#c8968c] text-[#121214] shadow-md' : 'bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#222228]'}`;
                 btn.dataset.tag = tag;
                 btn.textContent = `${tag.toUpperCase()} (${count})`;
                 container.appendChild(btn);
@@ -215,7 +247,7 @@
 
             if (sortedTags.length > limit) {
                 const toggleBtn = document.createElement('button');
-                toggleBtn.className = 'text-[10px] font-bold text-indigo-600 hover:text-indigo-800 ml-2 uppercase tracking-tighter transition-colors';
+                toggleBtn.className = 'text-[9px] font-bold text-[#e8c3b9] hover:text-white ml-2 uppercase tracking-tighter transition-colors';
                 toggleBtn.textContent = isExpanded ? 'Show Less' : `+${sortedTags.length - limit} more`;
                 toggleBtn.onclick = () => {
                     container.dataset.expanded = isExpanded ? 'false' : 'true';
@@ -304,6 +336,15 @@
         }
 
         window.onload = init;
+
+        // PWA Service Worker 登録
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Vesper PWA Service Worker 登録完了:', reg.scope))
+                    .catch(err => console.error('Vesper PWA Service Worker 登録失敗:', err));
+            });
+        }
     </script>
 </body>
 </html>

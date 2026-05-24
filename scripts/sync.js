@@ -271,57 +271,59 @@ function normalizeTags(tags = []) {
 function generateDashboard(data) {
   if (!fs.existsSync(CONFIG.TEMPLATE_FILE)) return;
   const template = fs.readFileSync(CONFIG.TEMPLATE_FILE, 'utf8');
+  
   const getPriorityClasses = (p) => {
     switch (p.toLowerCase()) {
-      case 'high': return { border: 'border-red-500', badge: 'bg-red-100 text-red-800', label: 'High' };
-      case 'medium': return { border: 'border-amber-400', badge: 'bg-amber-100 text-amber-800', label: 'Medium' };
-      case 'low': return { border: 'border-gray-300', badge: 'bg-gray-100 text-gray-600', label: 'Low' };
-      default: return { border: 'border-blue-300', badge: 'bg-blue-100 text-blue-800', label: p };
+      case 'high': return { border: 'border-red-900/80', badge: 'bg-red-950/40 text-red-300 border border-red-900/50', label: 'High' };
+      case 'medium': return { border: 'border-amber-900/80', badge: 'bg-amber-950/40 text-amber-300 border border-amber-900/50', label: 'Medium' };
+      case 'low': return { border: 'border-[#2a2a30]', badge: 'bg-[#1a1a1f] text-[#8e8e93] border border-[#2c2c34]', label: 'Low' };
+      default: return { border: 'border-[#2c2c34]', badge: 'bg-slate-900/60 text-slate-400 border border-slate-800', label: p };
     }
   };
+
   const generateCard = (article) => {
     const classes = getPriorityClasses(article._tier);
     const tags = normalizeTags(article.tags);
-    const tagsHtml = tags.map(tag => `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 mr-1 mb-1">#${tag}</span>`).join('');
+    const tagsHtml = tags.map(tag => `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#${tag}</span>`).join('');
     const mdRelPath = article.markdown_path ? `./${article.markdown_path}` : '#';
     const isRead = article.status === 'read';
     const score = deriveScore(article);
     return `
-      <div class="article-card flex flex-col bg-white rounded-lg shadow-md overflow-hidden border-t-4 ${classes.border} transition transform hover:-translate-y-1 hover:shadow-lg ${isRead ? 'status-read opacity-60' : ''}"
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 ${classes.border} border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 ${isRead ? 'status-read' : ''}"
            data-article-id="${article.id}"
            data-title="${article.title.replace(/"/g, '&quot;')}"
            data-summary="${article.summary.replace(/"/g, '&quot;')}"
            data-priority="${article._tier}"
            data-score="${score}"
            data-tags="${tags.join(',')}">
-          <div class="px-6 py-4 flex-grow">
-              <div class="flex justify-between items-start mb-2">
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${classes.badge}">${classes.label} <span class="opacity-70">· ${score}</span></span>
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase ${classes.badge}">${classes.label} <span class="opacity-70">· ${score}</span></span>
                   <div class="flex items-center gap-2">
-                    <button onclick="toggleStatus('${article.id}')" class="toggle-status-btn text-xs font-medium text-indigo-600 hover:text-indigo-800 underline">
+                    <button onclick="toggleStatus('${article.id}')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
                         ${isRead ? '未読に戻す' : '既読にする'}
                     </button>
-                    <button onclick="deleteArticle('${article.id}')" class="text-xs font-medium text-red-500 hover:text-red-700 underline ml-1">
+                    <button onclick="deleteArticle('${article.id}')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
                         削除
                     </button>
-                    <span class="text-xs text-gray-400">${new Date(article.analyzed_at).toLocaleDateString('ja-JP')}</span>
+                    <span class="text-xs text-gray-500">${new Date(article.analyzed_at).toLocaleDateString('ja-JP')}</span>
                   </div>
               </div>
-              <h2 class="text-xl font-bold mb-3 line-clamp-2 hover:text-indigo-600">
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
                   <a href="${article.url}" target="_blank">${article.title}</a>
               </h2>
-              <div class="text-gray-600 text-sm mb-4 space-y-1">
-                  ${article.summary.split('\n').map(line => `<p>・ ${line}</p>`).join('')}
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  ${article.summary.split('\n').map(line => `<p class="leading-relaxed">・ ${line}</p>`).join('')}
               </div>
-              <div class="bg-gray-50 p-3 rounded-md mb-4">
-                  <p class="text-xs font-bold text-gray-500 uppercase mb-1">今読む理由</p>
-                  <p class="text-sm text-gray-700 italic">${article.read_now_reason}</p>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">${article.read_now_reason}</p>
               </div>
               <div class="mt-auto">${tagsHtml}</div>
           </div>
-          <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-2">
-              <a href="${article.url}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">記事を読む</a>
-              <a href="${mdRelPath}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">AI用ソース</a>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="${article.url}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="${mdRelPath}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
           </div>
       </div>`;
   };
@@ -335,10 +337,70 @@ function generateDashboard(data) {
 }
 
 /**
+ * NotebookLM 用の「未読・High限定」一括パッキングMarkdownの生成
+ */
+function generateNotebookMaster(bookmarks) {
+  const masterPath = path.join(CONFIG.DATA_DIR, 'notebooklm_master.md');
+  console.log(`[NotebookLM] 一括パッキングファイル生成中: ${masterPath}`);
+
+  // 各記事に優先度階層を割り当て
+  assignTiers(bookmarks.articles);
+  
+  // 未読 (status === 'unread') かつ High優先度 (_tier === 'high') の記事を抽出
+  const highUnreadArticles = bookmarks.articles
+    .filter(a => a.status === 'unread' && a._tier === 'high')
+    .sort((a, b) => deriveScore(b) - deriveScore(a)) // スコアの高い順
+    .slice(0, 50); // 最大50件
+
+  if (highUnreadArticles.length === 0) {
+    fs.writeFileSync(masterPath, `# Vesper - NotebookLM Master Source\n\n現在、High優先度の未読記事はありません。\n`, 'utf8');
+    console.log(`[NotebookLM] 対象記事が0件のため、空のマスターファイルを書き出しました。`);
+    return;
+  }
+
+  let content = `# Vesper - NotebookLM Master Source\n`;
+  content += `最終更新日: ${new Date().toLocaleString('ja-JP')}\n`;
+  content += `対象記事数: ${highUnreadArticles.length} 件 (未読かつHigh優先度)\n\n`;
+  content += `---\n\n`;
+
+  highUnreadArticles.forEach((article, index) => {
+    content += `## ${index + 1}. [${article.title}](${article.url})\n`;
+    content += `- **優先度**: High\n`;
+    content += `- **スコア**: ${deriveScore(article)}\n`;
+    content += `- **解析日時**: ${new Date(article.analyzed_at).toLocaleDateString('ja-JP')}\n`;
+    content += `- **AI要約**:\n${article.summary.split('\n').map(s => `  ${s}`).join('\n')}\n`;
+    content += `- **今読む理由**: ${article.read_now_reason}\n`;
+    content += `- **タグ**: ${article.tags.map(t => `#${t}`).join(', ')}\n\n`;
+
+    // 本文テキストの読み込み（ローカルのMarkdownから本文を抽出して追加）
+    const localMdPath = article.markdown_path ? path.resolve(path.join(__dirname, '..', article.markdown_path)) : null;
+    if (localMdPath && fs.existsSync(localMdPath)) {
+      try {
+        const localContent = fs.readFileSync(localMdPath, 'utf8');
+        const bodyMatch = localContent.split('## 本文');
+        if (bodyMatch[1]) {
+          content += `### 本文\n${bodyMatch[1].trim()}\n\n`;
+        } else {
+          content += `### 本文\n${localContent}\n\n`;
+        }
+      } catch (err) {
+        content += `### 本文\n(ローカル本文の読み込みに失敗しました: ${err.message})\n\n`;
+      }
+    } else {
+      content += `### 本文\n(ローカルの本文ソースがありません。)\n\n`;
+    }
+    content += `---\n\n`;
+  });
+
+  fs.writeFileSync(masterPath, content, 'utf8');
+  console.log(`[NotebookLM] 一括パッキング完了: 合計 ${highUnreadArticles.length} 件の記事を統合しました。`);
+}
+
+/**
  * メイン処理
  */
 async function main() {
-  console.log('=== つゆみ: 全自動同期パイプライン開始 ===');
+  console.log('=== Vesper: 全自動同期パイプライン開始 ===');
   
   const maxProcess = process.argv[2] ? parseInt(process.argv[2], 10) : CONFIG.MAX_PROCESS_DEFAULT;
   console.log(`最大処理件数: ${maxProcess}`);
@@ -427,8 +489,12 @@ async function main() {
       }
     }
     console.log(`\n=== 処理統計 ===\n新規/更新: ${processedCount} 件\nスキップ: ${skipCount} 件\nエラー: ${errorCount} 件`);
-    if (processedCount > 0 || !fs.existsSync(CONFIG.INDEX_HTML)) { generateDashboard(bookmarks); }
-    console.log('=== つゆみ: 全自動同期パイプライン完了 ===');
+    
+    // 同期処理が正常終了したら、常にダッシュボードとNotebookLMまとめファイルを更新する
+    generateDashboard(bookmarks);
+    generateNotebookMaster(bookmarks);
+    
+    console.log('=== Vesper: 全自動同期パイプライン完了 ===');
   } catch (error) {
     console.error(`\n[致命的なエラー] ${error.message}`);
     process.exit(1);
