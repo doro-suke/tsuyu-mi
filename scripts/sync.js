@@ -3,6 +3,17 @@ const path = require('path');
 const { JSDOM } = require('jsdom');
 const { Readability } = require('@mozilla/readability');
 
+// ローカル実行時のみ .env を読み込み、クラウドでは process.env を優先する
+require('dotenv').config();
+
+const RAINDROP_API_KEY = process.env.RAINDROP_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+if (!RAINDROP_API_KEY || !GEMINI_API_KEY) {
+  console.error("【CRITICAL ERROR】RAINDROP_API_KEY または GEMINI_API_KEY が環境変数に設定されていません。GitHub Secrets と sync.yml の env 設定を確認してください。");
+  process.exit(1);
+}
+
 /**
  * 設定
  */
@@ -27,20 +38,6 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 function sanitizeFileName(title) {
   return title.replace(/[\\/:*?"<>|]/g, '_').substring(0, 100);
-}
-
-function loadEnv() {
-  const envPath = path.join(__dirname, '..', '.env');
-  if (!fs.existsSync(envPath)) return {};
-  const content = fs.readFileSync(envPath, 'utf8');
-  const env = {};
-  content.split('\n').forEach(line => {
-    const [key, ...valueParts] = line.split('=');
-    if (key && valueParts.length > 0) {
-      env[key.trim()] = valueParts.join('=').trim();
-    }
-  });
-  return env;
 }
 
 const { execSync } = require('child_process');
@@ -343,16 +340,6 @@ function generateDashboard(data) {
 async function main() {
   console.log('=== つゆみ: 全自動同期パイプライン開始 ===');
   
-  // 環境変数の取得（process.env を優先し、ローカル .env は補助的に読み込む）
-  const env = loadEnv();
-  const raindropKey = process.env.RAINDROP_API_KEY || env.RAINDROP_API_KEY;
-  const geminiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY;
-
-  if (!raindropKey || !geminiKey) {
-    console.error('致命的なエラー: RAINDROP_API_KEY または GEMINI_API_KEY が設定されていません。');
-    console.error('GitHub Actions の場合は Secrets を、ローカルの場合は .env を確認してください。');
-    process.exit(1);
-  }
   const maxProcess = process.argv[2] ? parseInt(process.argv[2], 10) : CONFIG.MAX_PROCESS_DEFAULT;
   console.log(`最大処理件数: ${maxProcess}`);
   let bookmarks = { updated_at: new Date().toISOString(), articles: [] };
@@ -365,7 +352,7 @@ async function main() {
   try {
     let allItems = [];
     for (let p = 0; p < 4; p++) {
-      const items = await fetchRaindrops(raindropKey, p);
+      const items = await fetchRaindrops(RAINDROP_API_KEY, p);
       if (items.length === 0) break;
       allItems = allItems.concat(items);
       if (items.length < CONFIG.RAINDROP_PER_PAGE) break;
@@ -389,7 +376,7 @@ async function main() {
         const extracted = await extractContent(item.link);
         const contentText = extracted ? extracted.textContent.trim() : (item.excerpt || '内容なし');
         const prompt = promptTemplate.replace('{{title}}', item.title).replace('{{url}}', item.link).replace('{{excerpt}}', contentText.substring(0, 5000));
-        const analysis = await getSummary(geminiKey, prompt);
+        const analysis = await getSummary(GEMINI_API_KEY, prompt);
         const mdContent = `# ${item.title}\n- **Source URL**: ${item.link}\n- **Score**: ${analysis.score}\n- **AI Summary**:\n${analysis.summary.map(s => `  - ${s}`).join('\n')}\n- **Read Now Reason**: ${analysis.read_now_reason}\n- **Suggested Tags**: ${analysis.tags_suggested.map(t => `#${t}`).join(', ')}\n- **Processed Date**: ${new Date().toLocaleDateString('ja-JP')}\n\n---\n\n## 本文\n${contentText}\n`;
         fs.writeFileSync(mdPath, mdContent, 'utf8');
         const newArticle = {
