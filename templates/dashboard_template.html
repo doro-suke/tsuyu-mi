@@ -16,44 +16,89 @@
             @apply bg-indigo-600 text-white !important;
         }
         .status-read {
-            opacity: 0.6;
+            opacity: 0.5;
+            filter: grayscale(0.5);
+        }
+        /* アニメーション用 */
+        .article-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .article-card.hidden-item {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+            position: absolute;
+            z-index: -1;
+        }
+        #articlesGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        .stat-badge {
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            margin-left: 0.4rem;
+            vertical-align: middle;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen">
     <header class="bg-white shadow-sm sticky top-0 z-20">
-        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <h1 class="text-3xl font-bold text-indigo-700">つゆみ</h1>
+                <div class="flex items-center gap-4">
+                    <h1 class="text-3xl font-bold text-indigo-700">つゆみ</h1>
+                    <div id="readingProgress" class="hidden md:flex flex-col gap-1 w-48">
+                        <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                            <span>Reading Progress</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                            <div id="progressBar" class="h-full bg-indigo-500 transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- 検索・フィルタUI -->
                 <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-                    <input type="text" id="searchInput" placeholder="記事を検索..." class="px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
-                    <div class="flex gap-1">
-                        <button onclick="filterPriority('all')" class="priority-btn px-3 py-2 bg-white border border-gray-300 rounded-md text-sm hover:bg-gray-50 filter-active" data-priority="all">All</button>
-                        <button onclick="filterPriority('high')" class="priority-btn px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-red-600 hover:bg-red-50" data-priority="high">High</button>
-                        <button onclick="filterPriority('medium')" class="priority-btn px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-amber-600 hover:bg-amber-50" data-priority="medium">Mid</button>
-                        <button onclick="filterPriority('low')" class="priority-btn px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-600 hover:bg-gray-50" data-priority="low">Low</button>
+                    <div class="relative flex-grow">
+                        <input type="text" id="searchInput" placeholder="記事を検索..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none">
+                        <span id="searchCount" class="absolute right-3 top-2.5 text-xs text-gray-400 font-medium"></span>
                     </div>
-                    <div class="flex gap-1 border-l pl-2 ml-1">
-                        <button onclick="toggleShowRead()" id="toggleReadBtn" class="px-3 py-2 bg-white border border-gray-300 rounded-md text-sm hover:bg-gray-50">
+                    <div class="flex gap-1">
+                        <button onclick="filterPriority('all')" class="priority-btn flex-grow px-3 py-2 bg-white border border-gray-300 rounded-md text-sm hover:bg-gray-50 transition-colors filter-active" data-priority="all">
+                            All <span id="count-all" class="stat-badge bg-gray-200 text-gray-600 rounded-full">0</span>
+                        </button>
+                        <button onclick="filterPriority('high')" class="priority-btn flex-grow px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-red-600 hover:bg-red-50 transition-colors" data-priority="high">
+                            High <span id="count-high" class="stat-badge bg-red-100 text-red-700 rounded-full">0</span>
+                        </button>
+                        <button onclick="filterPriority('medium')" class="priority-btn flex-grow px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-amber-600 hover:bg-amber-50 transition-colors" data-priority="medium">
+                            Mid <span id="count-medium" class="stat-badge bg-amber-100 text-amber-700 rounded-full">0</span>
+                        </button>
+                        <button onclick="filterPriority('low')" class="priority-btn flex-grow px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-600 hover:bg-gray-50 transition-colors" data-priority="low">
+                            Low <span id="count-low" class="stat-badge bg-gray-200 text-gray-600 rounded-full">0</span>
+                        </button>
+                    </div>
+                    <div class="flex gap-1 border-l pl-2">
+                        <button onclick="toggleShowRead()" id="toggleReadBtn" class="px-3 py-2 bg-white border border-gray-300 rounded-md text-sm hover:bg-gray-50 whitespace-nowrap transition-colors">
                             既読を表示中
                         </button>
-                        <button onclick="copyDeletedIds()" class="px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-red-600 hover:bg-red-50" title="削除した記事のIDをコピーしてAIに渡せます">
-                            削除済みIDをコピー
+                        <button onclick="copyDeletedIds()" class="px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-red-600 hover:bg-red-50 transition-colors" title="削除した記事のIDをコピーしてAIに渡せます">
+                            🗑️
                         </button>
                     </div>
                 </div>
             </div>
-            <div id="tagContainer" class="mt-4 flex flex-wrap gap-2 items-center">
-                <span class="text-xs font-bold text-gray-400 uppercase">Popular Tags:</span>
+            <div id="tagContainer" class="mt-4 flex flex-wrap gap-2 items-center min-h-[32px]">
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-1">Popular Tags:</span>
             </div>
-            <p class="text-xs text-gray-400 mt-2">最終更新: {{last_updated}}</p>
+            <p class="text-[10px] text-gray-400 mt-2 font-medium tracking-tight">最終更新: {{last_updated}}</p>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div id="articlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div id="articlesGrid">
             <!-- ARTICLES_PLACEHOLDER -->
         </div>
     </main>
@@ -73,7 +118,11 @@
         function updateDisplay() {
             const searchTerm = searchInput.value.toLowerCase();
             const articles = document.querySelectorAll('.article-card');
+            let visibleCount = 0;
             
+            // 統計用の集計
+            const stats = { all: 0, high: 0, medium: 0, low: 0, read: 0, total: 0 };
+
             articles.forEach(card => {
                 const title = card.dataset.title.toLowerCase();
                 const summary = card.dataset.summary.toLowerCase();
@@ -82,17 +131,47 @@
                 const isRead = card.classList.contains('status-read');
                 const isDeleted = localStorage.getItem(`deleted_${card.dataset.articleId}`) === 'true';
 
+                if (isDeleted) {
+                    card.style.display = 'none';
+                    return;
+                }
+
+                stats.total++;
+                stats.all++;
+                stats[priority] = (stats[priority] || 0) + 1;
+                if (isRead) stats.read++;
+
                 const matchesSearch = title.includes(searchTerm) || summary.includes(searchTerm);
                 const matchesPriority = currentPriority === 'all' || priority === currentPriority;
                 const matchesTag = currentTag === 'all' || tags.includes(currentTag);
                 const matchesReadFilter = showRead || !isRead;
 
-                if (!isDeleted && matchesSearch && matchesPriority && matchesTag && matchesReadFilter) {
+                if (matchesSearch && matchesPriority && matchesTag && matchesReadFilter) {
+                    card.classList.remove('hidden-item');
                     card.style.display = 'flex';
+                    visibleCount++;
                 } else {
-                    card.style.display = 'none';
+                    card.classList.add('hidden-item');
+                    setTimeout(() => {
+                        if (card.classList.contains('hidden-item')) card.style.display = 'none';
+                    }, 300);
                 }
             });
+
+            // 統計UIの更新
+            updateStatsUI(stats);
+            document.getElementById('searchCount').textContent = `${visibleCount}件`;
+        }
+
+        function updateStatsUI(stats) {
+            document.getElementById('count-all').textContent = stats.all;
+            document.getElementById('count-high').textContent = stats.high;
+            document.getElementById('count-medium').textContent = stats.medium;
+            document.getElementById('count-low').textContent = stats.low;
+
+            const progress = stats.total > 0 ? Math.round((stats.read / stats.total) * 100) : 0;
+            document.getElementById('progressPercent').textContent = `${progress}%`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
         }
 
         function renderTags() {
@@ -101,6 +180,9 @@
             const tagCounts = {};
             
             articles.forEach(card => {
+                const isDeleted = localStorage.getItem(`deleted_${card.dataset.articleId}`) === 'true';
+                if (isDeleted) return;
+                
                 const tags = card.dataset.tags.split(',').filter(t => t);
                 tags.forEach(tag => {
                     tagCounts[tag] = (tagCounts[tag] || 0) + 1;
@@ -109,25 +191,32 @@
 
             const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
             const isExpanded = container.dataset.expanded === 'true';
-            const limit = 10;
+            const limit = 15;
             
-            container.innerHTML = '<span class="text-xs font-bold text-gray-400 uppercase">Popular Tags:</span>';
+            container.innerHTML = '<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-1">Popular Tags:</span>';
             
+            // "All Tags" ボタン
+            const allBtn = document.createElement('button');
+            allBtn.onclick = () => filterTag('all');
+            allBtn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold transition-all ${currentTag === 'all' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`;
+            allBtn.textContent = 'ALL';
+            container.appendChild(allBtn);
+
             sortedTags.forEach(([tag, count], index) => {
                 if (!isExpanded && index >= limit) return;
                 
                 const btn = document.createElement('button');
                 btn.onclick = () => filterTag(tag);
-                btn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-medium transition-colors ${currentTag === tag ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'}`;
+                btn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold transition-all ${currentTag === tag ? 'bg-indigo-600 text-white shadow-sm' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'}`;
                 btn.dataset.tag = tag;
-                btn.textContent = `#${tag} (${count})`;
+                btn.textContent = `${tag.toUpperCase()} (${count})`;
                 container.appendChild(btn);
             });
 
             if (sortedTags.length > limit) {
                 const toggleBtn = document.createElement('button');
-                toggleBtn.className = 'text-xs font-bold text-indigo-600 hover:text-indigo-800 ml-2';
-                toggleBtn.textContent = isExpanded ? '閉じる ▲' : `すべて表示 (残り${sortedTags.length - limit}件) ▼`;
+                toggleBtn.className = 'text-[10px] font-bold text-indigo-600 hover:text-indigo-800 ml-2 uppercase tracking-tighter transition-colors';
+                toggleBtn.textContent = isExpanded ? 'Show Less' : `+${sortedTags.length - limit} more`;
                 toggleBtn.onclick = () => {
                     container.dataset.expanded = isExpanded ? 'false' : 'true';
                     renderTags();
@@ -143,91 +232,78 @@
             const btn = card.querySelector('.toggle-status-btn');
             btn.textContent = isRead ? '未読に戻す' : '既読にする';
             
-            updateDisplay();
-            
             // 状態の永続化
             localStorage.setItem(`status_${articleId}`, isRead ? 'read' : 'unread');
+            updateDisplay();
         }
 
         function deleteArticle(articleId) {
-            if (!confirm('この記事をダッシュボードから削除（非表示に）しますか？')) return;
-            localStorage.setItem(`deleted_${articleId}`, 'true');
-            updateDisplay();
-            renderTags();
+            if (confirm('この記事をダッシュボードから非表示にしますか？（Raindrop側は削除されません）')) {
+                localStorage.setItem(`deleted_${articleId}`, 'true');
+                updateDisplay();
+                renderTags();
+            }
         }
 
         function copyDeletedIds() {
-            const keys = Object.keys(localStorage).filter(k => k.startsWith('deleted_') && localStorage.getItem(k) === 'true');
-            const ids = keys.map(k => k.replace('deleted_', ''));
-            if (ids.length === 0) {
-                alert('削除（非表示）された記事はありません。');
+            const deletedIds = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('deleted_') && localStorage.getItem(key) === 'true') {
+                    deletedIds.push(key.replace('deleted_', ''));
+                }
+            }
+            if (deletedIds.length === 0) {
+                alert('削除済みの記事はありません。');
                 return;
             }
-            const text = ids.join(',');
-            navigator.clipboard.writeText(text).then(() => {
-                alert(`削除済みID (${ids.length}件) をコピーしました。AIにこのIDを渡して「prune_bookmarks.jsで完全に削除して」と伝えてください。`);
+            navigator.clipboard.writeText(deletedIds.join(', ')).then(() => {
+                alert(`${deletedIds.length}件の削除済みIDをクリップボードにコピーしました。これをAIに渡して「以下のIDの記事をbookmarks.jsonから完全に削除して」と指示できます。`);
             });
-        }
-
-        function copyReadIds() {
-            const keys = Object.keys(localStorage).filter(k => k.startsWith('status_') && localStorage.getItem(k) === 'read');
-            const ids = keys.map(k => k.replace('status_', ''));
-            if (ids.length === 0) {
-                alert('既読の記事はありません。');
-                return;
-            }
-            const text = ids.join(',');
-            navigator.clipboard.writeText(text).then(() => {
-                alert(`既読ID (${ids.length}件) をコピーしました。AIにこのIDを渡して「既読としてマークして」と伝えてください。`);
-            });
-        }
-
-        function toggleShowRead() {
-            showRead = !showRead;
-            const btn = document.getElementById('toggleReadBtn');
-            btn.textContent = showRead ? '既読を表示中' : '既読を非表示';
-            btn.classList.toggle('bg-indigo-600', !showRead);
-            btn.classList.toggle('text-white', !showRead);
-            updateDisplay();
         }
 
         function filterPriority(priority) {
             currentPriority = priority;
             document.querySelectorAll('.priority-btn').forEach(btn => {
                 if (btn.dataset.priority === priority) {
-                    btn.classList.add('bg-indigo-600', 'text-white');
-                    btn.classList.remove('bg-white');
+                    btn.classList.add('filter-active');
                 } else {
-                    btn.classList.remove('bg-indigo-600', 'text-white');
-                    btn.classList.add('bg-white');
+                    btn.classList.remove('filter-active');
                 }
             });
             updateDisplay();
         }
 
         function filterTag(tag) {
-            currentTag = currentTag === tag ? 'all' : tag;
+            currentTag = tag;
             renderTags();
             updateDisplay();
         }
 
-        // 初期化：localStorageから状態を復元
-        window.addEventListener('DOMContentLoaded', () => {
-            const articles = document.querySelectorAll('.article-card');
-            articles.forEach(card => {
-                const articleId = card.dataset.articleId;
-                const savedStatus = localStorage.getItem(`status_${articleId}`);
-                if (savedStatus === 'read') {
+        function toggleShowRead() {
+            showRead = !showRead;
+            const btn = document.getElementById('toggleReadBtn');
+            btn.textContent = showRead ? '既読を表示中' : '未読のみ表示';
+            updateDisplay();
+        }
+
+        // 初期化: localStorageから既読状態を復元
+        function init() {
+            document.querySelectorAll('.article-card').forEach(card => {
+                const id = card.dataset.articleId;
+                const status = localStorage.getItem(`status_${id}`);
+                if (status === 'read') {
                     card.classList.add('status-read');
-                    const btn = card.querySelector('.toggle-status-btn');
-                    if (btn) btn.textContent = '未読に戻す';
+                    card.querySelector('.toggle-status-btn').textContent = '未読に戻す';
                 }
             });
+            
+            searchInput.addEventListener('input', updateDisplay);
             renderTags();
             updateDisplay();
-        });
+        }
 
-        searchInput.addEventListener('input', updateDisplay);
+        window.onload = init;
     </script>
 </body>
 </html>

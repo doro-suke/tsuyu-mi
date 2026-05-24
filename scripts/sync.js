@@ -24,7 +24,7 @@ const CONFIG = {
   BOOKMARKS_JSON: path.join(__dirname, '..', 'data', 'bookmarks.json'),
   PROMPT_FILE: path.join(__dirname, '..', 'prompts', 'summarize_prompt.txt'),
   TEMPLATE_FILE: path.join(__dirname, '..', 'templates', 'dashboard_template.html'),
-  INDEX_HTML: path.join(__dirname, '..', 'docs', 'index.html'),
+  INDEX_HTML: path.join(__dirname, '..', 'index.html'),
   RAINDROP_PER_PAGE: 50,
   MAX_PROCESS_DEFAULT: 100, // 取得件数: 100件
   SLEEP_MS: 60000,          // 絶対遅延: 60秒（RPM制限対策で延長）
@@ -283,7 +283,7 @@ function generateDashboard(data) {
     const classes = getPriorityClasses(article._tier);
     const tags = normalizeTags(article.tags);
     const tagsHtml = tags.map(tag => `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 mr-1 mb-1">#${tag}</span>`).join('');
-    const mdRelPath = article.markdown_path ? `../${article.markdown_path}` : '#';
+    const mdRelPath = article.markdown_path ? `./${article.markdown_path}` : '#';
     const isRead = article.status === 'read';
     const score = deriveScore(article);
     return `
