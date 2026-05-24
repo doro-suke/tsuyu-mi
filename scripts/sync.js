@@ -52,7 +52,9 @@ function curl(url, options = {}) {
   let command = `curl -s -L "${url}"`;
   if (options.headers) {
     for (const [key, value] of Object.entries(options.headers)) {
-      command += ` -H "${key}: ${value}"`;
+      // 値にダブルクォートが含まれる場合の簡易的なエスケープ
+      const safeValue = String(value).replace(/"/g, '\\"');
+      command += ` -H "${key}: ${safeValue}"`;
     }
   }
   if (options.method === 'POST') {
@@ -65,11 +67,18 @@ function curl(url, options = {}) {
       return {
         ok: true,
         text: async () => stdout,
-        json: async () => JSON.parse(stdout)
+        json: async () => {
+          try {
+            return JSON.parse(stdout);
+          } catch (e) {
+            console.error(`[JSON解析失敗] レスポンスがJSONではありません: ${stdout.substring(0, 200)}...`);
+            throw e;
+          }
+        }
       };
     } catch (error) {
       if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
-      console.error(`curl failed: ${error.message}`);
+      console.error(`curl (POST) failed: ${error.message}`);
       return { ok: false, status: 500, text: async () => '', json: async () => ({}) };
     }
   }
@@ -79,7 +88,16 @@ function curl(url, options = {}) {
     return {
       ok: true,
       text: async () => stdout,
-      json: async () => JSON.parse(stdout)
+      json: async () => {
+        try {
+          if (!stdout || stdout.trim() === "") throw new Error("レスポンスが空です");
+          return JSON.parse(stdout);
+        } catch (e) {
+          console.error(`[JSON解析失敗] URL: ${url}`);
+          console.error(`[JSON解析失敗] 内容: ${stdout.substring(0, 500)}...`);
+          throw e;
+        }
+      }
     };
   } catch (error) {
     console.error(`curl failed: ${error.message}`);
@@ -99,10 +117,16 @@ async function fetchRaindrops(apiKey, page = 0) {
   });
 
   if (!response.ok) {
-    throw new Error(`Raindrop API エラー`);
+    throw new Error(`Raindrop API 接続エラー (curl failed)`);
   }
 
   const data = await response.json();
+  
+  // Raindrop API のエラーレスポンスをチェック
+  if (data.result === false || data.error) {
+    throw new Error(`Raindrop API エラー: ${data.error || '不明なエラー'}`);
+  }
+
   return data.items || [];
 }
 
@@ -116,6 +140,7 @@ async function extractContent(url) {
     });
     if (!response.ok) throw new Error(`Fetch failed`);
     const html = await response.text();
+    if (!html) throw new Error(`HTML content is empty`);
     
     const doc = new JSDOM(html, { url });
     const reader = new Readability(doc.window.document);
@@ -144,6 +169,10 @@ async function getSummary(apiKey, prompt, retryCount = 0) {
       generationConfig: { response_mime_type: "application/json" }
     })
   });
+
+  if (!response.ok) {
+    throw new Error(`Gemini API 接続エラー (curl failed)`);
+  }
 
   const responseJson = await response.json();
 
@@ -313,12 +342,16 @@ function generateDashboard(data) {
  */
 async function main() {
   console.log('=== つゆみ: 全自動同期パイプライン開始 ===');
+  
+  // 環境変数の取得（process.env を優先し、ローカル .env は補助的に読み込む）
   const env = loadEnv();
-  const raindropKey = env.RAINDROP_API_KEY;
-  const geminiKey = env.GEMINI_API_KEY;
+  const raindropKey = process.env.RAINDROP_API_KEY || env.RAINDROP_API_KEY;
+  const geminiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY;
+
   if (!raindropKey || !geminiKey) {
-    console.error('エラー: RAINDROP_API_KEY または GEMINI_API_KEY が .env にありません。');
-    return;
+    console.error('致命的なエラー: RAINDROP_API_KEY または GEMINI_API_KEY が設定されていません。');
+    console.error('GitHub Actions の場合は Secrets を、ローカルの場合は .env を確認してください。');
+    process.exit(1);
   }
   const maxProcess = process.argv[2] ? parseInt(process.argv[2], 10) : CONFIG.MAX_PROCESS_DEFAULT;
   console.log(`最大処理件数: ${maxProcess}`);
@@ -393,8 +426,10 @@ async function main() {
     }
     console.log(`\n=== 処理統計 ===\n新規/更新: ${processedCount} 件\nスキップ: ${skipCount} 件\nエラー: ${errorCount} 件`);
     if (processedCount > 0 || !fs.existsSync(CONFIG.INDEX_HTML)) { generateDashboard(bookmarks); }
+    console.log('=== つゆみ: 全自動同期パイプライン完了 ===');
   } catch (error) {
-    console.error(`実行時エラー: ${error.message}`);
+    console.error(`\n[致命的なエラー] ${error.message}`);
+    process.exit(1);
   }
 }
 
