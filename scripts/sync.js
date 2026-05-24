@@ -351,13 +351,28 @@ async function main() {
 
   try {
     let allItems = [];
+    let stopFetching = false;
     for (let p = 0; p < 4; p++) {
       const items = await fetchRaindrops(RAINDROP_API_KEY, p);
       if (items.length === 0) break;
-      allItems = allItems.concat(items);
-      if (items.length < CONFIG.RAINDROP_PER_PAGE) break;
+      
+      for (const item of items) {
+        const existing = bookmarks.articles.find(a => a.url === item.link);
+        const sanitizedTitle = sanitizeFileName(item.title);
+        const mdPath = path.join(CONFIG.NOTEBOOK_DIR, `${sanitizedTitle}.md`);
+        
+        // 差分同期: すでに処理済みの記事を見つけたらフェッチを中断
+        if (existing && fs.existsSync(mdPath)) {
+          console.log(`[Incremental Sync] 既存の記事 (${item.title}) を検出。フェッチを中断します。`);
+          stopFetching = true;
+          break;
+        }
+        allItems.push(item);
+      }
+
+      if (stopFetching || items.length < CONFIG.RAINDROP_PER_PAGE) break;
     }
-    console.log(`[Raindrop] 合計 ${allItems.length} 件の記事を取得しました。`);
+    console.log(`[Raindrop] 合計 ${allItems.length} 件の新規記事を取得しました。`);
     const promptTemplate = fs.readFileSync(CONFIG.PROMPT_FILE, 'utf8');
     let processedCount = 0;
     let skipCount = 0;
