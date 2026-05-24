@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-23T11:31:54.585Z",
+  "updated_at": "2026-05-24T08:22:58.676Z",
   "articles": [
     {
       "id": "1702129693",
@@ -3557,6 +3557,183 @@
       "status": "unread",
       "analyzed_at": "2026-05-23T11:31:54.585Z",
       "markdown_path": "data/notebooklm_sources/個人開発のアイディアのひらめき方｜umiremix.md"
+    },
+    {
+      "id": "1730739322",
+      "url": "https://zenn.dev/motowo/articles/claude-code-html-report-workflow",
+      "title": "Claude Code で HTML レポートワークフローを構築する—非デザイナー向け実装ガイド",
+      "summary": "Claude Codeが生成するMarkdownの限界を克服し、HTMLレポートを自動生成する実装手法\nAIへのインプット（テキスト）とアウトプット（視覚情報・HTML）の役割分担による情報消費効率の最大化\n色温度（背景色・罫線）を活用した確定事項と検討経緯の分離と、カスタムコマンドへの統合プロセス",
+      "score": 82,
+      "read_now_reason": "Claude Codeを用いた自動化パイプラインで、人間がレビューしやすい視覚的なHTMLレポートを出力する具体的なワークフローとCSS設計が提示されており、即座に実装に適用できるため。",
+      "defer_reason": "既存のMarkdownによる自動出力レポートの視認性に不満がない場合や、AI駆動開発の成果物フォーマット改善を急がない場合は、実装を後回しにしても影響がないため。",
+      "tags": [
+        "Claude Code",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-24T08:12:39.222Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code で HTML レポートワークフローを構築する—非デザイナー向け実装ガイド.md"
+    },
+    {
+      "id": "1730739292",
+      "url": "https://zenn.dev/nocodesolutions/articles/f71479fa5711fe",
+      "title": "Claude Codeを社内に安全に導入する：システムエンジニアのためのセキュリティ実践ガイド",
+      "summary": "Claude Codeを安全に社内導入するための権限制御や多層防御策を解説している。\n開発者が上書きできないManaged Settingsによる組織ポリシーの強制手法を提示している。\n機密ファイルアクセス拒否やSIEM連携など、具体的な設定ファイル記述例を掲載している。",
+      "score": 85,
+      "read_now_reason": "AI駆動開発を推進するにあたり、Claude Codeを開発環境や自動化パイプラインへ安全に導入するための具体的な設定ファイル記述（Managed Settingsや.env等の読込拒否ルール）と多層防御アーキテクチャが明記されているため。未対策での導入による認証情報の漏洩や破壊的コマンドの実行リスクを即座に回避できます。",
+      "defer_reason": "自組織でClaude Codeのローカル導入・利用を一切想定しておらず、GitHub Copilot等のWeb/IDE完結型ツールのみを利用している場合は緊急性が下がります。",
+      "tags": [
+        "Claude-Code",
+        "AI駆動開発",
+        "DevSecOps",
+        "セキュリティ統制"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-24T08:14:06.117Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeを社内に安全に導入する：システムエンジニアのためのセキュリティ実践ガイド.md"
+    },
+    {
+      "id": "1730739278",
+      "url": "https://qiita.com/Lifect/items/a78081bd585bd6f2142f",
+      "title": "「言わなくても動く参謀」を目指して。自分専用AIエージェント「秘書M」をゼロから作った話（Phase 1: MVP編） - Qiita",
+      "summary": "FastAPIとClaude API、LINE、各種Google APIを連携したAIエージェントのMVP実装。\nRailway等のクラウド環境におけるOAuth認証トークン管理の実践的な解決策の提示。\nAPSchedulerのタイムゾーン設定やGoogle OAuthのエラー対策など具体的なトラブル解決法。",
+      "score": 78,
+      "read_now_reason": "LINEと各種Google API（Gmail、Calendar）を仲介するFastAPIの実装方法や、クラウド環境（Railway）でのOAuth認証情報保持、タイムゾーン設定を伴う定期実行など、AI駆動開発や自動化パイプラインに直結する具体的コードと解決策が豊富に含まれているため。",
+      "defer_reason": "AIエージェントの基本構造やAPI連携手法に焦点を当てており、高度な長期記憶（RAG）の構築や、自律的なマルチエージェント協調の設計コードまでは本記事に含まれていないため、これらを最優先で求めている場合は後回しにしても安全です。",
+      "tags": [
+        "AIエージェント",
+        "FastAPI",
+        "LINE-API",
+        "OAuth",
+        "Railway"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-24T08:15:13.094Z",
+      "markdown_path": "data/notebooklm_sources/「言わなくても動く参謀」を目指して。自分専用AIエージェント「秘書M」をゼロから作った話（Phase 1_ MVP編） - Qiita.md"
+    },
+    {
+      "id": "1730739268",
+      "url": "https://qiita.com/yurukusa/items/b79edb07bebc794a4a17",
+      "title": "Claude Codeのコスト爆発を3つのhookで防ぐ——月$200を超えないための安全装置 - Qiita",
+      "summary": "Claude Codeの暴走によるコスト急増を3層のプロセスレベルhookで確実に防ぐ手法を提示\n即時遮断、セッション監視、日次累積追跡を行う3つの具体的なBashスクリプトと動作原理を解説\nsettings.jsonへの設定例が明記され、ツール呼び出し回数を指標とした実用的な制御が可能",
+      "score": 92,
+      "read_now_reason": "AI駆動開発においてClaude Code導入時の最大の懸念である「自律ループによるコスト爆発」を、即時適用可能なコードと設定ファイルで確実に防止できるため。",
+      "defer_reason": "現在Claude Codeを開発プロセスに導入しておらず、AIエージェントによる自動化パイプラインの運用も行っていない場合。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "コスト最適化",
+        "Bash"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-24T08:16:18.836Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeのコスト爆発を3つのhookで防ぐ——月$200を超えないための安全装置 - Qiita.md"
+    },
+    {
+      "id": "1730739249",
+      "url": "https://qiita.com/tags/ai%e9%a7%86%e5%8b%95%e9%96%8b%e7%99%ba",
+      "title": "AI駆動開発とは？開発に役立つ使い方、トレンド記事やtips - Qiita",
+      "summary": "AI駆動開発タグのトレンドにClaude Codeの具体的な活用や導入設定の記事が集積\n実ファイル構成を用いた開発自動化や、セキュリティを考慮した社内導入ガードレールを解説\nCloudflareなどを活用した個人開発入門など、モダンなインフラスタック情報も網羅",
+      "score": 75,
+      "read_now_reason": "現在のプロジェクト（AI駆動開発、自動化）に直結する『Claude Code』の実践的なファイル構成や、セキュリティを担保するための具体的な社内導入設定パターンが複数紹介されているため、早期に目を通す価値があります。",
+      "defer_reason": "本ページは個別記事ではなくタグのポータルサイトであるため、具体的なコードや設定を即座にコピペしてデプロイする段階ではなく、各個別リンクを精査する時間が必要となるため。",
+      "tags": [
+        "AI駆動開発",
+        "Claude_Code"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-24T08:17:26.204Z",
+      "markdown_path": "data/notebooklm_sources/AI駆動開発とは？開発に役立つ使い方、トレンド記事やtips - Qiita.md"
+    },
+    {
+      "id": "1730739239",
+      "url": "https://zenn.dev/zenogawa/articles/godot-claude-game",
+      "title": "Godot + Claude Code + etc で Party Hard オマージュのゲームを作る",
+      "summary": "Claude CodeとGodotを組み合わせ、ステルスアクションゲームを個人開発した事例を紹介\n要件定義ツールgrill-meを活用し、AIへの指示を明確化することでトークンの浪費とバグを抑制\n画像生成AIによる素材作成と、AIが苦手なコリジョン設定の手動補完など、現実的な役割分担を解説",
+      "score": 58,
+      "read_now_reason": "AI駆動開発において、AIの暴走（ガバガバコードの生成）を防ぐための「grill-meによる事前要件定義」や、実費100ドルという開発コスト感など、開発プロセスのコントロール手法が具体的に示されているため。",
+      "defer_reason": "Godotゲーム開発に特化した文脈であり、現在のプロジェクトである自動化パイプライン構築や、一般的なAI駆動開発に即時適用できる具体的なシステムコード・設定ファイルは含まれていないため。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code",
+        "Godot",
+        "ゲーム開発",
+        "MCP-Server"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-24T08:18:32.838Z",
+      "markdown_path": "data/notebooklm_sources/Godot + Claude Code + etc で Party Hard オマージュのゲームを作る.md"
+    },
+    {
+      "id": "1730739232",
+      "url": "https://zenn.dev/miyan/articles/claude-code-context-engineering-guide-2026",
+      "title": "コンテキストエンジニアリング実践ガイド — Claude Codeで学ぶ4つの戦略",
+      "summary": "AIの精度低下を防ぐため、プロンプトではなくコンテキストを設計する4つの汎用戦略を解説\nCLAUDE.mdとrules/、memoryの役割分担を定義しコンテキスト消費を最適化する手法を提示\nコンテキスト肥大化を防ぐハンドオフの2層構造と、段階的なクリアや隔離によるエージェント設計",
+      "score": 85,
+      "read_now_reason": "AI駆動開発においてCLAUDE.mdに情報を詰め込みすぎて精度が低下（Context Rot）する問題を解決するための、rules/やskillsを用いた具体的なコンテキスト設計・削減アプローチが体系化されており、現在構築中の自動化パイプラインに即座に組み込めるため。",
+      "defer_reason": "すでにClaude CodeやCursor等のプロンプト・コンテキスト管理が最適化されており、AIエージェントのコンテキスト過多による精度低下やAPIコスト肥大化が課題になっていない場合に限る。",
+      "tags": [
+        "AI駆動開発",
+        "Claude_Code",
+        "Context_Engineering",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-24T08:19:39.114Z",
+      "markdown_path": "data/notebooklm_sources/コンテキストエンジニアリング実践ガイド — Claude Codeで学ぶ4つの戦略.md"
+    },
+    {
+      "id": "1730739217",
+      "url": "https://zenn.dev/remitaid/articles/4f9dc787b6c191",
+      "title": "日々の開発で使っているClaude Code Skills",
+      "summary": "Claude Codeを実務に導入し、開発プロセスを効率化する各種Skillの活用法を解説\nリサーチ・計画・実装に分け、計画に人間が注釈を入れて合意後に実装させる仕組みを提唱\n計画成果物をディレクトリ管理し、差分レビューやコミット作成までAIに担わせる実践例を提示",
+      "score": 75,
+      "read_now_reason": "AI駆動開発において、Claude Codeを30分以上自律稼働させるための「計画・レビュー・自動実装」のプロセス設計が具体的に示されており、AIパイプライン構築の設計原則として即時応用できるため。",
+      "defer_reason": "自作した各Skillの具体的な設定ファイル（SKILL.mdなど）のソースコードそのものは記事内に掲載されておらず、即座にコピー＆ペーストで設定を再現することはできないため。",
+      "tags": [
+        "Claude-Code",
+        "AI駆動開発",
+        "自律型エージェント",
+        "開発プロセス自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-24T08:20:45.524Z",
+      "markdown_path": "data/notebooklm_sources/日々の開発で使っているClaude Code Skills.md"
+    },
+    {
+      "id": "1730739207",
+      "url": "https://zenn.dev/shuji_bonji/articles/9fd9850011f3ae",
+      "title": "ファクトチェックとメディアリテラシーチェックを2つのClaude Skill化してみた話",
+      "summary": "Claude Code/Cowork向けに、2つの信頼性検証Skillの実装方法を公開。\nSKILL.mdのメタデータや自然文の発火フレーズ列挙による起動精度向上の手法を提示。\n自己評価バイアスを防ぐため、別定義の独立したsub-agentを動かすパターンを解説。",
+      "score": 82,
+      "read_now_reason": "Claude Code/Coworkにおける「SKILL.md」の具体的なプロンプト設計、トリガー精度向上のノウハウ、および自己バイアスを排除する「sub-agentパターン」の設計が明示されており、AIエージェントの自動化パイプライン構築に即座に応用可能なため。",
+      "defer_reason": "LLMによるコンテンツのファクトチェックや評価という特定のユースケースに興味がなく、単一タスクのスクリプト自動化のみに注力している場合は、今すぐ読む必要はありません。",
+      "tags": [
+        "Claude-Code",
+        "Agent-Architecture",
+        "Claude-Skills",
+        "Prompt-Engineering"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-24T08:21:52.449Z",
+      "markdown_path": "data/notebooklm_sources/ファクトチェックとメディアリテラシーチェックを2つのClaude Skill化してみた話.md"
+    },
+    {
+      "id": "1730739193",
+      "url": "https://zenn.dev/corone/articles/bba6344ab562c8",
+      "title": "#56 LLMの「分かったふり」を許さない。9つの行動制約（Behavioral Constraints）による自己矯正",
+      "summary": "LLMの「分かったふり」や手抜きを防ぐため、9つの行動制約を定義してプロンプトに組み込む手法の提案。\n推測禁止、謝罪の禁止、エビデンス優先などの制約を優先セクションに配置する具体的な実装方法の解説。\n導入の結果、ハルシネーション率が1%未満に低下し、タスク完遂率は98%まで向上した効果測定を明記。",
+      "score": 85,
+      "read_now_reason": "AI駆動開発において、マルチエージェントの制御不能な挙動（ハルシネーションや勝手なプロセススキップ）を防ぎ、トークンを節約しながら信頼性を高めるプロンプト設計の具体例が明示されているため。",
+      "defer_reason": "プロンプトによる行動制約の設計手法がメインであり、システムに組み込むための特定のフレームワーク（LangChain等）の具体的な実装コード自体は含まれていないため。",
+      "tags": [
+        "AI駆動開発",
+        "プロンプトエンジニアリング",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-24T08:22:58.676Z",
+      "markdown_path": "data/notebooklm_sources/#56 LLMの「分かったふり」を許さない。9つの行動制約（Behavioral Constraints）による自己矯正.md"
     }
   ]
 }
