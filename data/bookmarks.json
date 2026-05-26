@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-24T08:22:58.676Z",
+  "updated_at": "2026-05-26T02:17:21.052Z",
   "articles": [
     {
       "id": "1702129693",
@@ -3734,6 +3734,77 @@
       "status": "unread",
       "analyzed_at": "2026-05-24T08:22:58.676Z",
       "markdown_path": "data/notebooklm_sources/#56 LLMの「分かったふり」を許さない。9つの行動制約（Behavioral Constraints）による自己矯正.md"
+    },
+    {
+      "id": "1732317401",
+      "url": "https://zenn.dev/kenimo49/articles/claude-code-extensions-47-to-5-narrowing",
+      "title": "Claude Code拡張を47個試して5個に絞った話 ── 残した理由と捨てた基準",
+      "summary": "47個の拡張による競合とループ発生から、3ヶ月の運用を経て実用的な5個に厳選したプロセス。\n起動ログの分析による機械的削減と、機能重複の統合によるコンテキストノイズの最小化手法。\n残すべき基準として、使用頻度、事故防止、不可逆性、認知コスト、独自ドメインの5軸を提示。",
+      "score": 82,
+      "read_now_reason": "AI駆動開発（Claude Code）におけるツールの競合や無限ループなどの暴走リスクを防ぎ、トークン消費を抑えて開発効率を最大化するための、実践的なツール選定・運用原則が明記されているため。",
+      "defer_reason": "厳選された個々の拡張（Skill）の具体的なコードや、詳細な設定ファイルの記述そのものは含まれていないため。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "ツール最適化",
+        "エージェント設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-26T02:05:23.863Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code拡張を47個試して5個に絞った話 ── 残した理由と捨てた基準.md"
+    },
+    {
+      "id": "1732317364",
+      "url": "https://note.com/npaka/n/na559f5f1d136",
+      "title": "Autodesk Flow Studio + Codex で3Dゲームの作成を試す｜npaka",
+      "summary": "Autodesk Flow Studioで3Dモデルを生成し、Three.js用フォーマットに変換し配置。\nCodexに対し、画面モックと段階的な日本語プロンプトを用いてゲームの機能実装を指示。\n効果音やBGMアセットを準備し、Codexへの指示を通じて適切なタイミングでの再生を実装。",
+      "score": 35,
+      "read_now_reason": "マルチモーダルAIを活用した3Dアセット生成から、プロンプトによるゲームロジック構築までのアセットパイプラインの全体像を把握するため。",
+      "defer_reason": "具体的なソースコードや設定ファイル、自動化されたCI/CDパイプラインの構築手順に関する技術的記述が欠如しているため。",
+      "tags": [
+        "3Dアセット生成",
+        "Codex",
+        "ゲーム開発AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-26T02:08:22.150Z",
+      "markdown_path": "data/notebooklm_sources/Autodesk Flow Studio + Codex で3Dゲームの作成を試す｜npaka.md"
+    },
+    {
+      "id": "1732317281",
+      "url": "https://zenn.dev/miyan/articles/claude-code-context-exhaustion-strategy",
+      "title": "Claude Codeのコンテキスト枯渇に立ち向かう──大規模リファクタリングのセッション設計",
+      "summary": "Claude Codeの200Kトークン枯渇による提案の矛盾や規則無視の予兆と段階的症状の解説\nファイル全体読み込みを避け行範囲指定や手動コンパクションを推奨するトークン節約手法\n状態をMarkdownファイルに外部化しセッション分割とクリアで進めるリファクタプロトコル",
+      "score": 92,
+      "read_now_reason": "AI駆動開発で大規模リファクタを行う際、トークン枯渇によるAIの精度低下と時間ロスを防ぐための実践的なセッション制御手法が具体的に記載されているため。",
+      "defer_reason": "対象コードが1万行以下で、IDEの自動リファクタ機能やテストコードが十分に整備されている小規模環境であれば、本プロトコルを適用するオーバーヘッドが上回るため後回しにできる。",
+      "tags": [
+        "AI駆動開発",
+        "Claude_Code",
+        "リファクタリング",
+        "コンテキスト管理"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-26T02:15:32.176Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeのコンテキスト枯渇に立ち向かう──大規模リファクタリングのセッション設計.md"
+    },
+    {
+      "id": "1732317267",
+      "url": "https://jbpress.ismedia.jp/articles/-/94922?page=2",
+      "title": "24時間365日稼働するAIエージェントGemini SparkはClaude Coworkとどう違うのか？それぞれの設計思想と戦略を比較 【生成AI事件簿】AIに生活の鍵を渡す日が到来、Googleの新エージェントは便利か危険か | JBpress (ジェイビープレス)",
+      "summary": "GoogleのGemini Sparkは広範な権限を持ち、クラウド上で常時稼働する執事型エージェントである\nClaude Coworkはローカルの特定フォルダ内でのみ動作し、PC停止時に停止する派遣スタッフ型である\n両者は初期権限と常駐位置の思想が異なり、外部連携には共通プロトコルMCPが採用されている",
+      "score": 45,
+      "read_now_reason": "AIエージェントのセキュリティ境界（ローカル常駐 vs クラウド常駐）の違いや、MCP（Model Context Protocol）を用いた連携方針を概念的に把握できるため。",
+      "defer_reason": "Gemini SparkやClaude Coworkを実際にAPI経由で組み込むための具体的なコードや設定、プロトコル実装手順が含まれていないため。",
+      "tags": [
+        "AIエージェント",
+        "セキュリティアーキテクチャ",
+        "MCP",
+        "概念比較"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-26T02:17:21.052Z",
+      "markdown_path": "data/notebooklm_sources/24時間365日稼働するAIエージェントGemini SparkはClaude Coworkとどう違うのか？それぞれの設計思想と戦略を比較 【生成AI事件簿】AIに生活の鍵を渡す日が到来、Google.md"
     }
   ]
 }
