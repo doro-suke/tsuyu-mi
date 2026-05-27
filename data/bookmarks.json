@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-26T02:17:21.052Z",
+  "updated_at": "2026-05-27T02:16:50.449Z",
   "articles": [
     {
       "id": "1702129693",
@@ -3805,6 +3805,77 @@
       "status": "unread",
       "analyzed_at": "2026-05-26T02:17:21.052Z",
       "markdown_path": "data/notebooklm_sources/24時間365日稼働するAIエージェントGemini SparkはClaude Coworkとどう違うのか？それぞれの設計思想と戦略を比較 【生成AI事件簿】AIに生活の鍵を渡す日が到来、Google.md"
+    },
+    {
+      "id": "1733254858",
+      "url": "https://www.jiji.com/sp/article?k=000000015.000178737&g=prt",
+      "title": "AI駆動開発検定がローンチ。Claude Code・Cursor時代のエンジニア市場価値を可視化",
+      "summary": "CursorやClaude Code等の実務力を測る「AI駆動開発検定」がオンラインで開始された\n出題領域はAIエージェントによる開発フローや生成コードの品質確認、本番運用の安全性など多岐にわたる\n合格者にはデジタル認定証が発行され、個人のスキル証明や企業の研修成果の可視化に活用できる",
+      "score": 35,
+      "read_now_reason": "AI駆動開発（Cursor/Claude Code等）の実務で求められるスキルセット（設計、品質管理、安全性）の出題範囲を確認することで、チームのAI開発標準やレビュー観点を体系化するための参考にできます。",
+      "defer_reason": "本記事は検定試験のローンチに関するプレスリリースであり、現在の自動化プロジェクトに直接適用できる具体的なソースコードやパイプラインの設定ファイル、技術的解決策は一切含まれていないためです。",
+      "tags": [
+        "AI駆動開発",
+        "スキル評価",
+        "業界動向"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-27T02:13:29.333Z",
+      "markdown_path": "data/notebooklm_sources/AI駆動開発検定がローンチ。Claude Code・Cursor時代のエンジニア市場価値を可視化.md"
+    },
+    {
+      "id": "1733254747",
+      "url": "https://note.com/samuraijuku_biz/n/n769e7e51c172",
+      "title": "【朗報】Google Workspace StudioにGemが登場！フォーム対応を自動化！｜SAMURAI Biz | 生成AI情報発信局",
+      "summary": "Google Workspace Studioで作成したGemを自動化フローに組み込む機能が正式リリースされた。\nGoogleドライブのファイルをナレッジとして持つGemのみがフロー内での質問アクションに対応する。\nフォーム回答をトリガーにGemが回答案を作成し、Google Chatへ自動投稿する設定手順を解説。",
+      "score": 52,
+      "read_now_reason": "Google Workspace環境下において、API連携やプログラミングをすることなく、社内ナレッジを活用したAI自動化フローをノーコードで即座に検証・構築できるため、業務効率化のクイックウィンとして役立ちます。",
+      "defer_reason": "システム開発におけるコードベースの自動化パイプライン構築や、自作のAIエージェントのAPI統合に直接適用できるソースコード、SDK情報、またはコンテナ設定等は含まれていないためです。",
+      "tags": [
+        "Google Workspace Studio",
+        "Gemini",
+        "ノーコード自動化",
+        "ナレッジ共有"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-27T02:14:36.372Z",
+      "markdown_path": "data/notebooklm_sources/【朗報】Google Workspace StudioにGemが登場！フォーム対応を自動化！｜SAMURAI Biz _ 生成AI情報発信局.md"
+    },
+    {
+      "id": "1733254602",
+      "url": "https://zenn.dev/arkbig/articles/devbox_0b6b39cd097e3288fe58baa5a49c7d39a28c5b46849",
+      "title": "DevContainerより軽量？Devboxで開発環境を瞬時に作る",
+      "summary": "Nixベースの環境構築ツールDevboxを用いて、Dockerより軽量かつ高速に開発環境を作る手法を解説\nroot権限がない環境やVS Code Remote SSHに対応するための、具体的なシェル設定スクリプトを提示\ndevbox initとdirenvの連携により、プロジェクトごとにPATHやツール群を自動的に切り替える手順を明記",
+      "score": 55,
+      "read_now_reason": "プロジェクトメンバー間の開発環境を統一・軽量化する自動化アプローチとして有用であり、VS Code Remote SSH利用時の具体的なバグ回避策がシェルスクリプト付きで提示されているため。",
+      "defer_reason": "AI駆動開発や自動化パイプラインの具体的なコード・構成管理そのものではなく、ローカル開発環境の改善に留まるため、現行タスクの優先度が高い場合は後回しにして問題ない。",
+      "tags": [
+        "Devbox",
+        "Nix",
+        "開発環境構築",
+        "direnv"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-27T02:15:43.224Z",
+      "markdown_path": "data/notebooklm_sources/DevContainerより軽量？Devboxで開発環境を瞬時に作る.md"
+    },
+    {
+      "id": "1733254545",
+      "url": "https://zenn.dev/sonicgarden/articles/claude-code-skill-building-tools",
+      "title": "Claude Codeのスキルを書くときに便利だった3つの組み込みツール",
+      "summary": "Claude Codeの挙動を安定させる3つの組み込みツールの使い方と指示プロンプト例を紹介。\nTodoWriteやTaskツールを用い、手順のスキップやレビューの未実施を物理的に防止する。\nAgentツールによる並列レビューと、PlanModeによる実装前のユーザー承認ゲートの構築手法。",
+      "score": 85,
+      "read_now_reason": "Claude Codeを用いた自律型開発パイプラインにおいて、エージェントの制御崩壊や手順スキップを防ぐ具体的な設定プロンプトとツール活用法が即座に適用できるため。",
+      "defer_reason": "開発フローでClaude Codeを導入していない、またはAIエージェントに自律的な複数ステップのタスクを実行させる予定が当面ない場合。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "エージェント構築",
+        "ワークフロー自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-27T02:16:50.449Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeのスキルを書くときに便利だった3つの組み込みツール.md"
     }
   ]
 }
