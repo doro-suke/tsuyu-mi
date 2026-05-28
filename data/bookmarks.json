@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-27T02:16:50.449Z",
+  "updated_at": "2026-05-28T01:58:07.040Z",
   "articles": [
     {
       "id": "1702129693",
@@ -3876,6 +3876,42 @@
       "status": "unread",
       "analyzed_at": "2026-05-27T02:16:50.449Z",
       "markdown_path": "data/notebooklm_sources/Claude Codeのスキルを書くときに便利だった3つの組み込みツール.md"
+    },
+    {
+      "id": "1734704466",
+      "url": "https://note.com/autobahn_edu/n/n33a3b2873d8e",
+      "title": "【社内勉強会開催レポート】現役エンジニアも絶賛！「Claude Code」で実務が変わる、超実践勉強会で得られた『リアルな気づき』｜【公式】株式会社アウトバーン",
+      "summary": "AIを複数の仮想エージェント組織として協業させ、業務を自律的に進める設計思想が共有された。\nコーポレートルールを事前に読み込ませることで、統一されたスライド資料の自動生成を実現している。\nローカル等でのAI自律運用において、PCメモリ16GBでは動作が厳しくなる物理スペックの課題が共有された。",
+      "score": 45,
+      "read_now_reason": "Claude Codeを活用したマルチエージェント協業や、CLAUDE.md、Skills/Hooksといった自動化パイプライン構築のヒントとなる概念的フレームワークが提示されているため。",
+      "defer_reason": "社内勉強会のイベントレポートであり、CLAUDE.mdの具体的な設定記述やSkills/Hooksのコード実装など、即座にプロジェクトへ適用できる技術的詳細が欠けているため。",
+      "tags": [
+        "Claude Code",
+        "AIエージェント",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-28T01:56:58.874Z",
+      "markdown_path": "data/notebooklm_sources/【社内勉強会開催レポート】現役エンジニアも絶賛！「Claude Code」で実務が変わる、超実践勉強会で得られた『リアルな気づき』｜【公式】株式会社アウトバーン.md"
+    },
+    {
+      "id": "1734704435",
+      "url": "https://qiita.com/engchina/items/78f28b4467b691c3b963",
+      "title": "Codex の承認疲れを減らす常駐デスクトップアプリを Tauri + Rust + UI Automation で作る - Qiita",
+      "summary": "TauriとRustを用いてCodexの承認作業を自動化・制御するデスクトップツールの設計を解説\n600ms周期のポーリングや多重実行・連打防止のクールダウンなど安全なUI自動操作の実装コードを提示\nUI Automationでのウィンドウ検出とコマンド解析、監査ログ記録を分離した堅牢なアーキテクチャ",
+      "score": 78,
+      "read_now_reason": "AIコーディングエージェント利用時のボトルネックである「手動承認の負担」を自動化する具体的なRust/TypeScriptコードが提示されています。Tauriを用いたOSレベルの自動化・監視パイプライン構築に即時応用可能な設計パターンが学べます。",
+      "defer_reason": "WindowsのUI Automation APIに強く依存した実装解説が主であるため、Linux/macOS環境での自動化を進める場合や、Codex以外の汎用AIエージェントへの即時適用が必要ない場合は後回しにしても安全です。",
+      "tags": [
+        "AI駆動開発",
+        "Tauri",
+        "Rust",
+        "Windows-UI-Automation",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-28T01:58:07.040Z",
+      "markdown_path": "data/notebooklm_sources/Codex の承認疲れを減らす常駐デスクトップアプリを Tauri + Rust + UI Automation で作る - Qiita.md"
     }
   ]
 }
