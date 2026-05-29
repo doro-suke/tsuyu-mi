@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-28T01:58:07.040Z",
+  "updated_at": "2026-05-29T02:12:00.723Z",
   "articles": [
     {
       "id": "1702129693",
@@ -3912,6 +3912,131 @@
       "status": "unread",
       "analyzed_at": "2026-05-28T01:58:07.040Z",
       "markdown_path": "data/notebooklm_sources/Codex の承認疲れを減らす常駐デスクトップアプリを Tauri + Rust + UI Automation で作る - Qiita.md"
+    },
+    {
+      "id": "1735910822",
+      "url": "https://zenn.dev/ryu_takatsukasa/articles/485dd1853fecd2",
+      "title": "この春、私は「学んだことを資産に変える仕組み」を作り始めた",
+      "summary": "Obsidianを用いた「Inbox」から「Archive」までの6段階によるナレッジ整理手法の提示。\nAIを執筆の丸投げではなく、個人メモを特定媒体向けに構造化・変換する支援ツールとして定義。\nつまずきや初期の疑問を記録し、再利用性を高めるための学習メモ用テンプレートの公開。",
+      "score": 35,
+      "read_now_reason": "個人の技術学習やノウハウを効率的に資産化・ドキュメント化するための、具体的なObsidianのフォルダ構成やテンプレート設計の参考になるため。",
+      "defer_reason": "AI駆動開発や自動化パイプラインの構築に即時適用できる具体的なソースコード、API連携、システムアーキテクチャなどの記述が一切含まれていないため。",
+      "tags": [
+        "ナレッジマネジメント",
+        "Obsidian",
+        "ドキュメンテーション",
+        "AI活用マインドセット"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-29T02:04:33.197Z",
+      "markdown_path": "data/notebooklm_sources/この春、私は「学んだことを資産に変える仕組み」を作り始めた.md"
+    },
+    {
+      "id": "1735910781",
+      "url": "https://qiita.com/4q_sano/items/dc26f7468dcd39fbe62f",
+      "title": "15万スター超のCLAUDE.mdに学ぶ、Claude Codeを暴走させない運用術 - Qiita",
+      "summary": "Claude Codeの暴走を防ぐため、行動制約ファイルCLAUDE.mdの運用が極めて重要。\nAndrej Karpathy氏のリポジトリに学ぶ、行動を制御するための4つの基本原則を解説。\nグローバルとプロジェクト固有の設定を分離し、安全かつ効率的なAI開発環境を構築する手法。",
+      "score": 85,
+      "read_now_reason": "現在進行中のAI駆動開発において、Claude Codeが勝手なリファクタリングや巨大な差分を作って暴走するのを防ぐ具体的な設定（~/.claude/CLAUDE.md）と、4つの行動原則（思考・単純・局所・ゴール駆動）を今すぐプロジェクトに導入できるため。",
+      "defer_reason": "Claude Codeを実務開発ツールとしてまだ導入していない場合、またはAIエージェントによるコード破壊やコードレビュー負荷の増大が現状の課題になっていない場合は後回しにしても安全です。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "CLAUDE.md",
+        "プロダクション運用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-29T02:05:39.227Z",
+      "markdown_path": "data/notebooklm_sources/15万スター超のCLAUDE.mdに学ぶ、Claude Codeを暴走させない運用術 - Qiita.md"
+    },
+    {
+      "id": "1735910683",
+      "url": "https://zenn.dev/backtech/articles/617b9ec02f6d48",
+      "title": "Claude Code同士でプランをレビューさせよう。",
+      "summary": "複数機能の実装時に、Claude Codeの複数インスタンスでプランを並行作成する手法を提案。\nそれぞれの作成したプランを相互にレビュー・批評させることで、共有コードの堅牢性を向上させる。\n実例では実装の約90%を再利用でき、変更行数をLLM任せにする場合の半分程度に削減できた。",
+      "score": 60,
+      "read_now_reason": "AI駆動開発において、Claude Codeの手戻りを防ぎ高品質なコードを生成するための「並行プラン×相互レビュー」という具体的な協調動作プロセスを学べるため。",
+      "defer_reason": "手法の概念と手動プロセスの紹介が主であり、自動化パイプラインに即時適用できる設定ファイルやスクリプトなどのコードは含まれていないため。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code",
+        "LLM協調動作",
+        "開発プロセス"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-29T02:06:44.643Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code同士でプランをレビューさせよう。.md"
+    },
+    {
+      "id": "1735910656",
+      "url": "https://qiita.com/dahatake/items/ef5cb2ad8d0e27dd976a",
+      "title": "これがいいとは言わないが。私が普段 Vibe Coding で実際に投入しているPromptを晒す - Qiita",
+      "summary": "AIのオーバーエンジニアリングを防ぎ、YAGNIを徹底させる具体的なプロンプトを提示。\nタスクを最小単位に分解し、直列・並列の依存関係を考慮した実装プランをAIに作らせる手法。\nVS CodeでのCopilot Chatを前提とし、コンテキストウィンドウを効率化する運用フローの解説。",
+      "score": 82,
+      "read_now_reason": "AI駆動開発において課題となる「AIのオーバーエンジニアリング（過剰な汎用化・抽象化・ハルシネーション）」を直接防ぐための、即時コピー＆ペースト可能な指示書テンプレートが含まれているため。タスクを最小化してコンテキスト消費を抑えるアプローチは、自動化パイプライン設計や日々のコーディング速度向上に直結します。",
+      "defer_reason": "すでにAIエージェントの指示出しフローが十分に確立されており、タスク分割やオーバーエンジニアリング防止策を独自のプロンプトテンプレート等で自動制御できている場合は、後回しにしても問題ありません。",
+      "tags": [
+        "AI駆動開発",
+        "GitHub-Copilot",
+        "プロンプトエンジニアリング",
+        "生産性向上"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-29T02:07:52.877Z",
+      "markdown_path": "data/notebooklm_sources/これがいいとは言わないが。私が普段 Vibe Coding で実際に投入しているPromptを晒す - Qiita.md"
+    },
+    {
+      "id": "1735910636",
+      "url": "https://macfan.book.mynavi.jp/article/102869/",
+      "title": "Mac×Geminiで学習計画を自動整理。独学ロードマップ作成術 | Mac Fan Portal",
+      "summary": "Geminiを使って学習項目を出力し、学習ロードマップを作成する手順を紹介している。\nGeminiの回答をワンクリックでGoogleスプレッドシートにエクスポートして管理する方法を解説。\n進捗管理やメモとしてスプレッドシートを活用し、独学のタスク管理に役立てる手法を提案している。",
+      "score": 15,
+      "read_now_reason": "AIを用いた一般的なドキュメント作成や、簡易的なタスクリストの生成・管理手法のアイデアを得たい場合にのみ参考となります。",
+      "defer_reason": "現在のプロジェクトであるAI駆動開発や自動化パイプライン構築に直結する具体的なコード、API仕様、またはシステムアーキテクチャの解説が一切含まれていないため、後回しにしても問題ありません。",
+      "tags": [
+        "Gemini",
+        "Googleスプレッドシート",
+        "タスク管理"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-29T02:09:02.494Z",
+      "markdown_path": "data/notebooklm_sources/Mac×Geminiで学習計画を自動整理。独学ロードマップ作成術 _ Mac Fan Portal.md"
+    },
+    {
+      "id": "1735910597",
+      "url": "https://dev.classmethod.jp/articles/claude-code-security-4-settings-for-beginners/",
+      "title": "【非エンジニアのためのClaude/ClaudeCodeシリーズ】Claude Code を使う前にやったセキュリティ設定4選 | DevelopersIO",
+      "summary": "Claude Codeによる機密ファイル（.envやSSH鍵等）の読み取りを防ぐ拒否ルールの設定例を提示。\nrm -rfやsudoなどの危険なコマンド実行を自動でブロックするBash拒否設定を解説。\nbypassPermissionsモードの危険性やMCPサーバー導入時におけるセキュリティ判断基準を紹介。",
+      "score": 72,
+      "read_now_reason": "AI駆動開発においてClaude Codeを安全にローカル環境へ導入する際、機密情報漏洩や破壊的コマンドの暴走を防ぐための具体的なpermissions設定ファイル（JSON）が明記されており、即時適用可能であるため。",
+      "defer_reason": "内容は非エンジニア向けの基本的な初期設定にとどまり、エンタープライズ向けのサンドボックス環境の構築手順や、パイプライン統合用の自動化スクリプトなど高度な実装手法は含まれていないため。",
+      "tags": [
+        "Claude Code",
+        "Security",
+        "AI駆動開発",
+        "Configuration"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-29T02:10:51.483Z",
+      "markdown_path": "data/notebooklm_sources/【非エンジニアのためのClaude_ClaudeCodeシリーズ】Claude Code を使う前にやったセキュリティ設定4選 _ DevelopersIO.md"
+    },
+    {
+      "id": "1735910573",
+      "url": "https://zenn.dev/playpark/articles/claude-code-vs-codex-comparison",
+      "title": "Claude CodeとCodexを2ヶ月使い比べて分かった選び方 — settings.jsonを育てた側が速い",
+      "summary": "Next.jsプロジェクトでClaude CodeとCodexを2ヶ月運用比較した実証レポート。\nClaude Codeは設定とSkillsの育成、Codexは大規模変更やCI/CD連携に強みがある。\nCLAUDE.mdの肥大化を避け、暗黙のパターン学習とsettings.jsonを育てる設計を推奨。",
+      "score": 72,
+      "read_now_reason": "CLAUDE.mdの肥大化によるコンテキスト圧迫を防ぐ設計アプローチや、日常開発と大規模マイグレーションにおけるAIツールの使い分け基準など、AI駆動開発の効率を最大化する知見が詰まっているため。",
+      "defer_reason": "概念的な使い分けと設計思想の提示が主であり、具体的なsettings.jsonの設定内容やCI/CD連携のコード自体は元記事を参照する必要があるため、今すぐの実装作業には直接使えない点。",
+      "tags": [
+        "AI駆動開発",
+        "Claude_Code",
+        "Codex",
+        "生産性向上"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-05-29T02:12:00.723Z",
+      "markdown_path": "data/notebooklm_sources/Claude CodeとCodexを2ヶ月使い比べて分かった選び方 — settings.jsonを育てた側が速い.md"
     }
   ]
 }
