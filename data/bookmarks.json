@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-29T02:12:00.723Z",
+  "updated_at": "2026-06-01T02:43:45.005Z",
   "articles": [
     {
       "id": "1702129693",
@@ -4037,6 +4037,94 @@
       "status": "unread",
       "analyzed_at": "2026-05-29T02:12:00.723Z",
       "markdown_path": "data/notebooklm_sources/Claude CodeとCodexを2ヶ月使い比べて分かった選び方 — settings.jsonを育てた側が速い.md"
+    },
+    {
+      "id": "1739218516",
+      "url": "https://note.com/sherrysherry3416/n/nacb616275327",
+      "title": "知識0からのプログラミング学習 ～Twitter（ツイッター）から株価予測～｜アドルフサックス",
+      "summary": "Twitter APIとMeCabを用いてトヨタ自動車のツイートを取得し感情分析を行う手順を解説。\n感情極性実体辞書を用いてツイートの感情平均値を算出し、時系列データに整形・補完している。\n取得した感情データと株価データを組み合わせ、ロジスティック回帰などのモデルで予測を行う。",
+      "score": 35,
+      "read_now_reason": "API経由でのテキスト取得からMeCabによる形態素解析、感情数値化（PN値）の流れを追うための簡易的なコード実装例として参考になる。",
+      "defer_reason": "初心者向けの基本的な機械学習パイプラインであり、現在のプロジェクトが求める堅牢な自動化や高度なAIモデル構築に直結する設計原則やインフラ構成が欠けているため。",
+      "tags": [
+        "NLP",
+        "Sentiment-Analysis",
+        "Python-Intro"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-01T02:36:35.088Z",
+      "markdown_path": "data/notebooklm_sources/知識0からのプログラミング学習 ～Twitter（ツイッター）から株価予測～｜アドルフサックス.md"
+    },
+    {
+      "id": "1739217916",
+      "url": "https://qiita.com/philosophy_note/items/0b6f8751e61728c26d30",
+      "title": "AIへの好奇心が強すぎて公務員を退職し、『この人狂ってる』と言われた未経験エンジニアの競馬予想AIアプリ開発記録 - Qiita",
+      "summary": "競馬予想AIとSNSを統合したWebアプリをDjangoやLightGBM、AWSを用いて個人開発した事例\nコア機能の早期デプロイによりHerokuのタイムアウトやメモリ超過などのインフラ制限を早期に検知・対処\nユーザー視点に立ったユーザーストーリーの作成と画面設計に連動したデータベース設計の重要性を提示",
+      "score": 40,
+      "read_now_reason": "AWS GlueやS3、Herokuを組み合わせたデータ自動取得・予測モデルの運用設計と、インフラ制限に伴うトラブルシューティングの教訓を学べるため。",
+      "defer_reason": "個人の開発体験談・エッセイとしての側面が強く、現在の自動化パイプライン構築プロジェクトに直接適用できる設定コードや実装テンプレートが不足しているため。",
+      "tags": [
+        "個人開発",
+        "機械学習デプロイ",
+        "Django",
+        "AWS-Glue"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-01T02:37:43.848Z",
+      "markdown_path": "data/notebooklm_sources/AIへの好奇心が強すぎて公務員を退職し、『この人狂ってる』と言われた未経験エンジニアの競馬予想AIアプリ開発記録 - Qiita.md"
+    },
+    {
+      "id": "1739217007",
+      "url": "https://note.com/glad_walrus6151/n/ne79d20ba64e7",
+      "title": "3歳の娘に仕事を聞かれ…知識ゼロママの「Geminiとやってみた！」めくれる絵本アプリ開発記｜Lステップ連携ラボ",
+      "summary": "NotebookLMを活用し10万字超のチャット履歴からチームの特徴を抽出・整理した事例\nGeminiのCanvas機能と詳細な役割付きプロンプトを用いて子供向けの物語を共創\n開発経験ゼロからGASと生成AIを組み合わせたWebアプリ絵本開発のプロセス",
+      "score": 25,
+      "read_now_reason": "NotebookLMによるドキュメント分析アプローチや、GeminiのCanvas機能を用いた対話的なドキュメント作成プロセスの参考になります。",
+      "defer_reason": "個人の開発体験記であり、AI駆動開発や自動化パイプライン構築に直接適用できる具体的な実装コードやシステムアーキテクチャの解説が欠如しているため。",
+      "tags": [
+        "NotebookLM",
+        "Gemini-Canvas",
+        "プロンプトデザイン",
+        "個人開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-01T02:38:51.101Z",
+      "markdown_path": "data/notebooklm_sources/3歳の娘に仕事を聞かれ…知識ゼロママの「Geminiとやってみた！」めくれる絵本アプリ開発記｜Lステップ連携ラボ.md"
+    },
+    {
+      "id": "1739209068",
+      "url": "https://note.com/l_mrk/n/nbceb79641053",
+      "title": "天才個人開発者がやったYoutube自動化の方法を再現してみよう。｜AI駆動塾",
+      "summary": "10万登録を達成したYouTube Shorts自動化プロモーションの仕組みと再現フローを解説。\n視聴者を惹きつけるフックの分類、CTAとの論理的紐付け、台本のテンプレート固定化の重要性を提示。\n動画生成やYouTube APIによる投稿自動化の概念と、運用時のアカウントBANリスク等を指摘。",
+      "score": 45,
+      "read_now_reason": "AIを用いた動画生成・投稿自動化パイプラインの全体的な設計思想やワークフローの流れを概念的に把握できるため。",
+      "defer_reason": "具体的なPythonスクリプトやRemotion等のコード、API設定などの記述がなく、即座の実装には繋がらないため。",
+      "tags": [
+        "YouTube自動化",
+        "マーケティング自動化",
+        "プロモーション自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-01T02:42:37.795Z",
+      "markdown_path": "data/notebooklm_sources/天才個人開発者がやったYoutube自動化の方法を再現してみよう。｜AI駆動塾.md"
+    },
+    {
+      "id": "1739209047",
+      "url": "https://zenn.dev/genda_jp/articles/2026-05-28-agent-skills-ai-interaction",
+      "title": "Agent Skills で AI への依頼を設計する",
+      "summary": "AIエージェントへの共通指示をAgent Skillsとして切り出し、再利用する設計手法の解説。\n普通のドキュメントと異なり、起動条件、手順、検証、引き継ぎに特化した記述を推奨。\nWazaを用いたトリガーテストの自動化やCopilot等を用いた評価検証フローの具体例を紹介。",
+      "score": 85,
+      "read_now_reason": "現在のAI駆動開発プロジェクトに即時適用できる、AIエージェント向け指示のモジュール化手法（Agent Skills）や、Wazaによるテスト自動化パイプラインの具体的なコード、設定ファイルの記述例が含まれているため。",
+      "defer_reason": "AIエージェントのプロンプト管理やテストの自動評価環境がすでに完成しており、指示の再利用性向上の必要性が全くない場合を除き、後回しにすべきではありません。",
+      "tags": [
+        "AI駆動開発",
+        "AgentSkills",
+        "Waza",
+        "GitHubCopilot"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-01T02:43:45.005Z",
+      "markdown_path": "data/notebooklm_sources/Agent Skills で AI への依頼を設計する.md"
     }
   ]
 }
