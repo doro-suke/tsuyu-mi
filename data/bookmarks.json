@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-01T02:43:45.005Z",
+  "updated_at": "2026-06-04T02:47:00.886Z",
   "articles": [
     {
       "id": "1702129693",
@@ -4125,6 +4125,183 @@
       "status": "unread",
       "analyzed_at": "2026-06-01T02:43:45.005Z",
       "markdown_path": "data/notebooklm_sources/Agent Skills で AI への依頼を設計する.md"
+    },
+    {
+      "id": "1743094576",
+      "url": "https://note.com/startup_now0708/n/nb2a16bb2b48c",
+      "title": "Chromeが「作業OS」になる日：Geminiがタブ地獄と手作業を終わらせる｜SecondWave｜米国株・テックトレンド",
+      "summary": "GeminiがChromeに統合され、閲覧からWeb作業を代行する作業OSへと進化する。\n履歴リコール機能により、曖昧な自然言語で閉じたタブを再検索して再集合させることが可能になる。\nAuto browse機能がサイドパネルで動作し、フォーム入力や比較などのWeb手順作業を自動化する。",
+      "score": 45,
+      "read_now_reason": "将来的にブラウザ操作を伴うAIエージェントを構築する際、Googleが採用している『user alignment critic（批判役）』によるガードレール設計やセキュリティ思想が参考になるため。",
+      "defer_reason": "現在のプロジェクト（AI駆動開発、自動化パイプライン構築）に直接適用できる具体的なコード、設定ファイル、またはAPIの実装方法が記載されていないため。",
+      "tags": [
+        "AI-Agent",
+        "Chrome-Extension",
+        "Web-Automation",
+        "Gemini"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-04T02:36:58.121Z",
+      "markdown_path": "data/notebooklm_sources/Chromeが「作業OS」になる日：Geminiがタブ地獄と手作業を終わらせる｜SecondWave｜米国株・テックトレンド.md"
+    },
+    {
+      "id": "1743094471",
+      "url": "https://note.com/tasty_dunlin998/n/n7d8ec4c8a26c",
+      "title": "トークンを燃やさないAI調査術｜hirokaji",
+      "summary": "重い調査処理をメインLLMの外に逃がす「外部リサーチセル」のアーキテクチャ設計を提案\nメインLLMのトークン消費と文脈汚染を防ぎ、再利用可能な中間成果物として情報を整理する手法\n調査結果を信頼できる判断材料にするため「DBSE」フレームワークによる構造化を推奨",
+      "score": 65,
+      "read_now_reason": "AI自動化パイプライン構築において、エージェント（Claude Code等）の文脈窓の浪費やコンテキスト汚染を防ぐための「処理分離設計」の概念を即座に適用できるため。",
+      "defer_reason": "NotebookLMやAPIを自動連携させるための具体的なコードや、パイプラインの構成ファイルなどの即時コピー可能な実装例は含まれていないため。",
+      "tags": [
+        "AIエージェント",
+        "LLMアーキテクチャ",
+        "コンテキスト管理",
+        "DBSEフレームワーク"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-04T02:38:04.389Z",
+      "markdown_path": "data/notebooklm_sources/トークンを燃やさないAI調査術｜hirokaji.md"
+    },
+    {
+      "id": "1743094463",
+      "url": "https://qiita.com/kai_kou/items/57913a30305d2e9ca7ae",
+      "title": "Nano Banana 2 / Pro API実践ガイド — GA版Gemini画像生成をPythonで使いこなす - Qiita",
+      "summary": "Gemini画像生成モデルのGA版移行に伴い、プレビュー版が2026年6月にシャットダウンされること\nPython SDKによるアスペクト比・解像度指定や、マルチターン画像編集の具体的な実装コード\nFlashモデル限定で、動画URLから映画ポスターやサムネイルなどの画像を自動生成する新機能を紹介",
+      "score": 75,
+      "read_now_reason": "2026年6月25日のプレビュー版APIシャットダウンに伴う移行コード（サフィックスの削除）と、動画からサムネイルを自動生成するパイプライン構築に直結するPython実装が具体的に開示されているため。",
+      "defer_reason": "現在のAI駆動開発や自動化パイプラインのスコープにおいて、Gemini APIを用いた画像生成や動画マルチモーダル処理を組み込む予定が現状ない場合。",
+      "tags": [
+        "Gemini-API",
+        "Python-SDK",
+        "画像生成",
+        "API移行"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-04T02:39:12.179Z",
+      "markdown_path": "data/notebooklm_sources/Nano Banana 2 _ Pro API実践ガイド — GA版Gemini画像生成をPythonで使いこなす - Qiita.md"
+    },
+    {
+      "id": "1743094355",
+      "url": "https://zenn.dev/octabird/articles/7c49330224b1d8",
+      "title": "Claude CodeのAgent Skillsで学習ログを自動化しながらRustでWeb APIを作った",
+      "summary": "Claude CodeのAgent Skillsを用い、会話履歴から学習ログを自動生成する仕組みを構築。\nAxum、SQLx、Tokioを使用したRust製Web APIの具体的な実装と設計プロセス。\nSQLxのコンパイル時検証に伴う問題や、QueryBuilderでの安全な動的SQL構築の解決策。",
+      "score": 75,
+      "read_now_reason": "Claude CodeのAgent Skillsを活用した開発プロセスの自動化、および自動ログ生成パイプラインの具体的な構築手順が示されており、AI駆動開発の効率化に即時適用できるため。",
+      "defer_reason": "記事の大部分がRust（Axum/SQLx）による具体的なコード解説に依存しているため、現在のプロジェクトで異なる開発言語を採用している場合は即時のコード適用が難しく、後回しにしても影響が小さいため。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code",
+        "Rust",
+        "自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-04T02:40:20.517Z",
+      "markdown_path": "data/notebooklm_sources/Claude CodeのAgent Skillsで学習ログを自動化しながらRustでWeb APIを作った.md"
+    },
+    {
+      "id": "1743094350",
+      "url": "https://izanami.dev/post/ce82cdd3-cb71-4143-8528-7e552d2aa4c4",
+      "title": "Claude Codeのトークンを削減しつつ、同等の回答精度を維持するライブラリ - izanami",
+      "summary": "LLMのコンテキストを圧縮するheadroomをClaude Codeに適用し実測検証した結果の紹介\n構造化JSONのツール出力では44.6%のトークン削減を達成した一方、冗長ログは0%削減と判明\nワークロードの特性によって削減効果が大きく異なり、万能な圧縮ツールではないという結論",
+      "score": 68,
+      "read_now_reason": "AI駆動開発においてClaude Codeの消費トークンとAPIコストを削減するための具体的なデータと、コンテキスト圧縮が有効なワークロードの判断基準が示されているため。",
+      "defer_reason": "headroomを自動化パイプラインへ即時導入するための詳細な設定コードや手順書ではなく、検証レポートの性質が強いため、ツールの選定段階に入るまでは後回しにしても問題ありません。",
+      "tags": [
+        "AI駆動開発",
+        "トークン削減",
+        "Claude-Code",
+        "コスト最適化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-04T02:41:26.832Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeのトークンを削減しつつ、同等の回答精度を維持するライブラリ - izanami.md"
+    },
+    {
+      "id": "1743094349",
+      "url": "https://note.com/npaka/n/n4de390d62d0c",
+      "title": "Codex で弾幕シューティングゲームの生成を試す｜npaka",
+      "summary": "CodexとPhaserを使用し画像やプロンプトから弾幕シューティングを生成する手順を紹介\n当たり判定やUIの修正、演出の追加など、AIに対する段階的で詳細な指示内容を記録\n外部アセットをプロジェクトに組み込むための具体的なSEおよびBGMの指示方法を提示",
+      "score": 45,
+      "read_now_reason": "AIを用いたゲーム開発やフロントエンドプロトタイピングにおいて、段階的な指示と調整を繰り返すプロンプトエンジニアリングの実践例として役立ちます。",
+      "defer_reason": "Phaserを用いたゲーム開発に特化した内容であり、現在のプロジェクトである自動化パイプライン構築に直接適用できるコードや設定ファイルの記述がないため、後回しにしても安全です。",
+      "tags": [
+        "AI駆動開発",
+        "プロンプトエンジニアリング",
+        "Phaser"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-04T02:42:33.011Z",
+      "markdown_path": "data/notebooklm_sources/Codex で弾幕シューティングゲームの生成を試す｜npaka.md"
+    },
+    {
+      "id": "1743093526",
+      "url": "https://zenn.dev/tokium_dev/articles/pdm-brain-on-claude-code",
+      "title": "PdMの脳みそをClaude Codeに移植した仕組み",
+      "summary": "主観と客観を分離した4レイヤー構成で、Claude Code用のコンテキスト情報を整理する設計思想\nJIRAやSlack等の複数ソースから情報を自動集約し、ダッシュボードを自走更新するパイプライン\nClaude Code用プロンプトやカスタムスキル（SKILL.md）の実装手順とテンプレートの提示",
+      "score": 82,
+      "read_now_reason": "AI駆動開発において極めて重要な「LLM（Claude Code）へのコンテキスト注入と更新自動化」の具体的アーキテクチャが示されており、自動化パイプラインの設計に即座に応用できるため。",
+      "defer_reason": "プロンプト設計や運用プロセスが主であり、特定のライブラリや言語における、実装しなければシステムが停止するような死活的コード・バグ修正は含まれていないため。",
+      "tags": [
+        "Claude-Code",
+        "AI駆動開発",
+        "自動化パイプライン",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-04T02:43:39.956Z",
+      "markdown_path": "data/notebooklm_sources/PdMの脳みそをClaude Codeに移植した仕組み.md"
+    },
+    {
+      "id": "1743093513",
+      "url": "https://qiita.com/y-morimatsu/items/ea44baec84417d36b85d",
+      "title": "Claude Opus 4.8 のプロンプティング・ベストプラクティス — 公式ガイドの要点 - Qiita",
+      "summary": "Opus 4.8のAPIは、effortパラメータで知能とコストのトレードオフを5段階に厳格に制御する\nadaptive thinkingパラメータの導入により、複雑さに応じた思考プロセスの動的制御が可能\nツール使用やsubagentの起動は控えめなため、プロンプトでの明示的な指示や設定調整が推奨される",
+      "score": 85,
+      "read_now_reason": "AI駆動開発プロジェクトにおいて、最新のClaude Opus 4.8 API（effortやadaptive thinking）を適用するための具体的なコード移行例と、推論・ツール利用の制御方法が明記されているため、即座に実装に反映できる。",
+      "defer_reason": "既存のLLM（Sonnet 3.5など）による開発・実行パイプラインが現在安定しており、近々にOpus 4.8へのモデル移行やAPIパラメータ変更を行う予定がない場合、急いで読む必要はない。",
+      "tags": [
+        "Claude-Opus-4.8",
+        "Prompt-Engineering",
+        "AI駆動開発",
+        "Anthropic-API"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-04T02:44:46.852Z",
+      "markdown_path": "data/notebooklm_sources/Claude Opus 4.8 のプロンプティング・ベストプラクティス — 公式ガイドの要点 - Qiita.md"
+    },
+    {
+      "id": "1743093480",
+      "url": "https://qiita.com/katoriko/items/f35bec9460b47129b0b2",
+      "title": "【動画生成】Gemini Omniを使ってみた - Qiita",
+      "summary": "Gemini Omniは対話型で文脈を維持したまま段階的な編集ができる新しい動画生成AIモデルである\nテキストや画像、スケッチ等のマルチモーダルな入力を組み合わせ、物理法則に即したリアルな映像を生成可能\n従来のモデルよりも短いプロンプトで、質感の変化やカメラアングルなどを精密に調整できる",
+      "score": 35,
+      "read_now_reason": "最新のマルチモーダルAIにおける対話型編集技術や、コンテキスト維持の仕組みを把握する参考情報になります。",
+      "defer_reason": "現在のプロジェクト（AI駆動開発、自動化パイプライン構築）に即座に組み込める具体的なAPI利用コードやシステム設計、設定ファイルが掲載されていないため。",
+      "tags": [
+        "Gemini-Omni",
+        "動画生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-04T02:45:51.983Z",
+      "markdown_path": "data/notebooklm_sources/【動画生成】Gemini Omniを使ってみた - Qiita.md"
+    },
+    {
+      "id": "1743093468",
+      "url": "https://qiita.com/archeleeds/items/6ec24ba4942973a1ce0b",
+      "title": "ClaudeCodeとCodexにコーディングを全て任せて商用レベルのUnityゲーム開発を行う【後編】 - Qiita",
+      "summary": "AI駆動開発で技術負債を抑え、商用品質を維持するための設計・文書化手法を実証解説。\nAIのコンテキスト維持に不可欠な、設計、ルール、ロードマップ、自己レビューの4大文書化を提示。\nデータ構造の事前設計と、AIによる段階的な実装・コード化の具体的なワークフローを定義。",
+      "score": 85,
+      "read_now_reason": "AI駆動開発で発生しがちな「肥大化したスパゲッティコード」や「AIのコンテキスト喪失」を、4つのドキュメント管理（guidelines、roadmap等）で解決する実践的プロトコルが提示されており、現在のAI駆動開発の設計に即座に組み込めるため。",
+      "defer_reason": "UnityおよびC#のゲーム開発を題材としており、インフラの自動化パイプライン構築に直接コピー＆ペーストして使える具体的なYAMLやTerraformなどの設定コード自体は含まれていないため。",
+      "tags": [
+        "AI駆動開発",
+        "LLMコンテキスト管理",
+        "ソフトウェアアーキテクチャ",
+        "Unity"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-04T02:47:00.886Z",
+      "markdown_path": "data/notebooklm_sources/ClaudeCodeとCodexにコーディングを全て任せて商用レベルのUnityゲーム開発を行う【後編】 - Qiita.md"
     }
   ]
 }

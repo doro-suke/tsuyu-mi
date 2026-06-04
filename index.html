@@ -122,7 +122,7 @@
                 <span class="text-[9px] font-bold text-[#8e8e93] uppercase tracking-widest mr-1">Top Focus Tags:</span>
             </div>
             <div class="flex justify-between items-center mt-2">
-                <p class="text-[9px] text-[#8e8e93] font-medium tracking-tight">最終アップデート: 2026/6/1 2:43:45</p>
+                <p class="text-[9px] text-[#8e8e93] font-medium tracking-tight">最終アップデート: 2026/6/4 2:47:00</p>
                 <a href="./data/notebooklm_master.md" target="_blank" class="text-[9px] text-[#e8c3b9] hover:underline font-bold tracking-tight">📝 NotebookLM用統合ソースを開く</a>
             </div>
         </div>
@@ -1571,18 +1571,18 @@ Agent Teamは共有タスクリストとメッセージングを用い、状態�
           </div>
       </div>
 
-      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-red-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1702135526"
            data-title="Gemini CLI で Subagents を活用し、ブログ執筆を Orchestrate してみた(情報収集→執筆→ファクトチェック→修正 をサイクリックに) #GoogleCloud - Qiita"
            data-summary="Gemini CLIのSubagents機能を使い、情報収集から執筆、検閲までを行う多段階自動化フローを構築。
 エージェントごとにツール権限やプロンプトを定義し、ファイル経由で工程間の情報を引き継ぐ設計を提示。
 ファクトチェックの結果に応じてエラー判定エージェントが前工程へ差し戻す、自律的なサイクルを実現。"
-           data-priority="medium"
+           data-priority="high"
            data-score="85"
            data-tags="AgenticWorkflow,GeminiCLI">
           <div class="px-6 py-5 flex-grow">
               <div class="flex justify-between items-start mb-3">
-                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 85</span></span>
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-red-950/40 text-red-300 border border-red-900/50">High <span class="opacity-70">· 85</span></span>
                   <div class="flex items-center gap-2">
                     <button onclick="toggleStatus('1702135526')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
                         既読にする
@@ -2052,6 +2052,86 @@ Wazaを用いたトリガーテストの自動化やCopilot等を用いた評価
       </div>
 
       <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1743093513"
+           data-title="Claude Opus 4.8 のプロンプティング・ベストプラクティス — 公式ガイドの要点 - Qiita"
+           data-summary="Opus 4.8のAPIは、effortパラメータで知能とコストのトレードオフを5段階に厳格に制御する
+adaptive thinkingパラメータの導入により、複雑さに応じた思考プロセスの動的制御が可能
+ツール使用やsubagentの起動は控えめなため、プロンプトでの明示的な指示や設定調整が推奨される"
+           data-priority="medium"
+           data-score="85"
+           data-tags="Claude-Opus-4.8,Prompt-Engineering,AI駆動開発,Anthropic-API">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 85</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1743093513')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1743093513')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/4</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://qiita.com/y-morimatsu/items/ea44baec84417d36b85d" target="_blank">Claude Opus 4.8 のプロンプティング・ベストプラクティス — 公式ガイドの要点 - Qiita</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ Opus 4.8のAPIは、effortパラメータで知能とコストのトレードオフを5段階に厳格に制御する</p><p class="leading-relaxed">・ adaptive thinkingパラメータの導入により、複雑さに応じた思考プロセスの動的制御が可能</p><p class="leading-relaxed">・ ツール使用やsubagentの起動は控えめなため、プロンプトでの明示的な指示や設定調整が推奨される</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AI駆動開発プロジェクトにおいて、最新のClaude Opus 4.8 API（effortやadaptive thinking）を適用するための具体的なコード移行例と、推論・ツール利用の制御方法が明記されているため、即座に実装に反映できる。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Claude-Opus-4.8</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Prompt-Engineering</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI駆動開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Anthropic-API</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://qiita.com/y-morimatsu/items/ea44baec84417d36b85d" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/Claude Opus 4.8 のプロンプティング・ベストプラクティス — 公式ガイドの要点 - Qiita.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1743093468"
+           data-title="ClaudeCodeとCodexにコーディングを全て任せて商用レベルのUnityゲーム開発を行う【後編】 - Qiita"
+           data-summary="AI駆動開発で技術負債を抑え、商用品質を維持するための設計・文書化手法を実証解説。
+AIのコンテキスト維持に不可欠な、設計、ルール、ロードマップ、自己レビューの4大文書化を提示。
+データ構造の事前設計と、AIによる段階的な実装・コード化の具体的なワークフローを定義。"
+           data-priority="medium"
+           data-score="85"
+           data-tags="AI駆動開発,LLMコンテキスト管理,ソフトウェアアーキテクチャ,Unity">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 85</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1743093468')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1743093468')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/4</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://qiita.com/archeleeds/items/6ec24ba4942973a1ce0b" target="_blank">ClaudeCodeとCodexにコーディングを全て任せて商用レベルのUnityゲーム開発を行う【後編】 - Qiita</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ AI駆動開発で技術負債を抑え、商用品質を維持するための設計・文書化手法を実証解説。</p><p class="leading-relaxed">・ AIのコンテキスト維持に不可欠な、設計、ルール、ロードマップ、自己レビューの4大文書化を提示。</p><p class="leading-relaxed">・ データ構造の事前設計と、AIによる段階的な実装・コード化の具体的なワークフローを定義。</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AI駆動開発で発生しがちな「肥大化したスパゲッティコード」や「AIのコンテキスト喪失」を、4つのドキュメント管理（guidelines、roadmap等）で解決する実践的プロトコルが提示されており、現在のAI駆動開発の設計に即座に組み込めるため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI駆動開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#LLMコンテキスト管理</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#ソフトウェアアーキテクチャ</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Unity</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://qiita.com/archeleeds/items/6ec24ba4942973a1ce0b" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/ClaudeCodeとCodexにコーディングを全て任せて商用レベルのUnityゲーム開発を行う【後編】 - Qiita.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1702135233"
            data-title="調査タスクをGemini CLIに委譲してClaude Codeの使用量を節約する"
            data-summary="Claude CodeのSkills機能を活用し、調査タスクをGemini CLIに自動委譲してトークン消費を抑える手法を解説
@@ -2408,6 +2488,46 @@ VS CodeでのCopilot Chatを前提とし、コンテキストウィンドウを�
           <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
               <a href="https://qiita.com/dahatake/items/ef5cb2ad8d0e27dd976a" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
               <a href="./data/notebooklm_sources/これがいいとは言わないが。私が普段 Vibe Coding で実際に投入しているPromptを晒す - Qiita.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1743093526"
+           data-title="PdMの脳みそをClaude Codeに移植した仕組み"
+           data-summary="主観と客観を分離した4レイヤー構成で、Claude Code用のコンテキスト情報を整理する設計思想
+JIRAやSlack等の複数ソースから情報を自動集約し、ダッシュボードを自走更新するパイプライン
+Claude Code用プロンプトやカスタムスキル（SKILL.md）の実装手順とテンプレートの提示"
+           data-priority="medium"
+           data-score="82"
+           data-tags="Claude-Code,AI駆動開発,自動化パイプライン,プロンプトエンジニアリング">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 82</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1743093526')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1743093526')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/4</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://zenn.dev/tokium_dev/articles/pdm-brain-on-claude-code" target="_blank">PdMの脳みそをClaude Codeに移植した仕組み</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ 主観と客観を分離した4レイヤー構成で、Claude Code用のコンテキスト情報を整理する設計思想</p><p class="leading-relaxed">・ JIRAやSlack等の複数ソースから情報を自動集約し、ダッシュボードを自走更新するパイプライン</p><p class="leading-relaxed">・ Claude Code用プロンプトやカスタムスキル（SKILL.md）の実装手順とテンプレートの提示</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AI駆動開発において極めて重要な「LLM（Claude Code）へのコンテキスト注入と更新自動化」の具体的アーキテクチャが示されており、自動化パイプラインの設計に即座に応用できるため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Claude-Code</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI駆動開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#自動化パイプライン</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#プロンプトエンジニアリング</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://zenn.dev/tokium_dev/articles/pdm-brain-on-claude-code" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/PdMの脳みそをClaude Codeに移植した仕組み.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
           </div>
       </div>
 
@@ -4292,6 +4412,86 @@ Cloudflareなどを活用した個人開発入門など、モダンなインフ�
       </div>
 
       <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1743094463"
+           data-title="Nano Banana 2 / Pro API実践ガイド — GA版Gemini画像生成をPythonで使いこなす - Qiita"
+           data-summary="Gemini画像生成モデルのGA版移行に伴い、プレビュー版が2026年6月にシャットダウンされること
+Python SDKによるアスペクト比・解像度指定や、マルチターン画像編集の具体的な実装コード
+Flashモデル限定で、動画URLから映画ポスターやサムネイルなどの画像を自動生成する新機能を紹介"
+           data-priority="medium"
+           data-score="75"
+           data-tags="Gemini-API,Python-SDK,画像生成,API移行">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 75</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1743094463')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1743094463')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/4</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://qiita.com/kai_kou/items/57913a30305d2e9ca7ae" target="_blank">Nano Banana 2 / Pro API実践ガイド — GA版Gemini画像生成をPythonで使いこなす - Qiita</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ Gemini画像生成モデルのGA版移行に伴い、プレビュー版が2026年6月にシャットダウンされること</p><p class="leading-relaxed">・ Python SDKによるアスペクト比・解像度指定や、マルチターン画像編集の具体的な実装コード</p><p class="leading-relaxed">・ Flashモデル限定で、動画URLから映画ポスターやサムネイルなどの画像を自動生成する新機能を紹介</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">2026年6月25日のプレビュー版APIシャットダウンに伴う移行コード（サフィックスの削除）と、動画からサムネイルを自動生成するパイプライン構築に直結するPython実装が具体的に開示されているため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Gemini-API</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Python-SDK</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#画像生成</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#API移行</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://qiita.com/kai_kou/items/57913a30305d2e9ca7ae" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/Nano Banana 2 _ Pro API実践ガイド — GA版Gemini画像生成をPythonで使いこなす - Qiita.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1743094355"
+           data-title="Claude CodeのAgent Skillsで学習ログを自動化しながらRustでWeb APIを作った"
+           data-summary="Claude CodeのAgent Skillsを用い、会話履歴から学習ログを自動生成する仕組みを構築。
+Axum、SQLx、Tokioを使用したRust製Web APIの具体的な実装と設計プロセス。
+SQLxのコンパイル時検証に伴う問題や、QueryBuilderでの安全な動的SQL構築の解決策。"
+           data-priority="medium"
+           data-score="75"
+           data-tags="AI駆動開発,Claude-Code,Rust,自動化">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 75</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1743094355')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1743094355')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/4</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://zenn.dev/octabird/articles/7c49330224b1d8" target="_blank">Claude CodeのAgent Skillsで学習ログを自動化しながらRustでWeb APIを作った</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ Claude CodeのAgent Skillsを用い、会話履歴から学習ログを自動生成する仕組みを構築。</p><p class="leading-relaxed">・ Axum、SQLx、Tokioを使用したRust製Web APIの具体的な実装と設計プロセス。</p><p class="leading-relaxed">・ SQLxのコンパイル時検証に伴う問題や、QueryBuilderでの安全な動的SQL構築の解決策。</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">Claude CodeのAgent Skillsを活用した開発プロセスの自動化、および自動ログ生成パイプラインの具体的な構築手順が示されており、AI駆動開発の効率化に即時適用できるため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI駆動開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Claude-Code</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Rust</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#自動化</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://zenn.dev/octabird/articles/7c49330224b1d8" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/Claude CodeのAgent Skillsで学習ログを自動化しながらRustでWeb APIを作った.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1709405439"
            data-title="ClaudeCodeとGeminiで「個人資産運用最適化システム」を作ってみた〜〜〜！"
            data-summary="ClaudeCodeとGeminiを使い分け、同質性バイアスを排除するマルチエージェント設計の構築
@@ -4692,6 +4892,46 @@ ComfyUIの新機能「App Mode」による、複雑なノード群のWeb UIア�
       </div>
 
       <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1743094350"
+           data-title="Claude Codeのトークンを削減しつつ、同等の回答精度を維持するライブラリ - izanami"
+           data-summary="LLMのコンテキストを圧縮するheadroomをClaude Codeに適用し実測検証した結果の紹介
+構造化JSONのツール出力では44.6%のトークン削減を達成した一方、冗長ログは0%削減と判明
+ワークロードの特性によって削減効果が大きく異なり、万能な圧縮ツールではないという結論"
+           data-priority="medium"
+           data-score="68"
+           data-tags="AI駆動開発,トークン削減,Claude-Code,コスト最適化">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 68</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1743094350')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1743094350')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/4</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://izanami.dev/post/ce82cdd3-cb71-4143-8528-7e552d2aa4c4" target="_blank">Claude Codeのトークンを削減しつつ、同等の回答精度を維持するライブラリ - izanami</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ LLMのコンテキストを圧縮するheadroomをClaude Codeに適用し実測検証した結果の紹介</p><p class="leading-relaxed">・ 構造化JSONのツール出力では44.6%のトークン削減を達成した一方、冗長ログは0%削減と判明</p><p class="leading-relaxed">・ ワークロードの特性によって削減効果が大きく異なり、万能な圧縮ツールではないという結論</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AI駆動開発においてClaude Codeの消費トークンとAPIコストを削減するための具体的なデータと、コンテキスト圧縮が有効なワークロードの判断基準が示されているため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI駆動開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#トークン削減</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Claude-Code</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#コスト最適化</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://izanami.dev/post/ce82cdd3-cb71-4143-8528-7e552d2aa4c4" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/Claude Codeのトークンを削減しつつ、同等の回答精度を維持するライブラリ - izanami.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1702135743"
            data-title="IT未経験の20代がAIを使ってGitHubトレンドを毎日自動解説するサイトを作った話 #Python - Qiita"
            data-summary="GitHub Actionsを活用したトレンド取得から静的サイト生成、デプロイまでの自動パイプライン構成
@@ -4728,6 +4968,46 @@ GitHub Actionsの書き込み権限(403)やpush競合を解消する、具体的
           <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
               <a href="https://qiita.com/vivi5151/items/bb7f96618be2272a8413" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
               <a href="./data/notebooklm_sources/IT未経験の20代がAIを使ってGitHubトレンドを毎日自動解説するサイトを作った話 #Python - Qiita.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1743094471"
+           data-title="トークンを燃やさないAI調査術｜hirokaji"
+           data-summary="重い調査処理をメインLLMの外に逃がす「外部リサーチセル」のアーキテクチャ設計を提案
+メインLLMのトークン消費と文脈汚染を防ぎ、再利用可能な中間成果物として情報を整理する手法
+調査結果を信頼できる判断材料にするため「DBSE」フレームワークによる構造化を推奨"
+           data-priority="medium"
+           data-score="65"
+           data-tags="AIエージェント,LLMアーキテクチャ,コンテキスト管理,DBSEフレームワーク">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 65</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1743094471')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1743094471')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/4</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://note.com/tasty_dunlin998/n/n7d8ec4c8a26c" target="_blank">トークンを燃やさないAI調査術｜hirokaji</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ 重い調査処理をメインLLMの外に逃がす「外部リサーチセル」のアーキテクチャ設計を提案</p><p class="leading-relaxed">・ メインLLMのトークン消費と文脈汚染を防ぎ、再利用可能な中間成果物として情報を整理する手法</p><p class="leading-relaxed">・ 調査結果を信頼できる判断材料にするため「DBSE」フレームワークによる構造化を推奨</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AI自動化パイプライン構築において、エージェント（Claude Code等）の文脈窓の浪費やコンテキスト汚染を防ぐための「処理分離設計」の概念を即座に適用できるため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AIエージェント</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#LLMアーキテクチャ</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#コンテキスト管理</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#DBSEフレームワーク</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://note.com/tasty_dunlin998/n/n7d8ec4c8a26c" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/トークンを燃やさないAI調査術｜hirokaji.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
           </div>
       </div>
 
@@ -4771,18 +5051,18 @@ AIへのコンテキスト制限やノイズ除去に役立つ .geminiignore の
           </div>
       </div>
 
-      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-[#2a2a30] border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1735910683"
            data-title="Claude Code同士でプランをレビューさせよう。"
            data-summary="複数機能の実装時に、Claude Codeの複数インスタンスでプランを並行作成する手法を提案。
 それぞれの作成したプランを相互にレビュー・批評させることで、共有コードの堅牢性を向上させる。
 実例では実装の約90%を再利用でき、変更行数をLLM任せにする場合の半分程度に削減できた。"
-           data-priority="medium"
+           data-priority="low"
            data-score="60"
            data-tags="AI駆動開発,Claude-Code,LLM協調動作,開発プロセス">
           <div class="px-6 py-5 flex-grow">
               <div class="flex justify-between items-start mb-3">
-                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 60</span></span>
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#1a1a1f] text-[#8e8e93] border border-[#2c2c34]">Low <span class="opacity-70">· 60</span></span>
                   <div class="flex items-center gap-2">
                     <button onclick="toggleStatus('1735910683')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
                         既読にする
@@ -4811,18 +5091,18 @@ AIへのコンテキスト制限やノイズ除去に役立つ .geminiignore の
           </div>
       </div>
 
-      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-[#2a2a30] border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1702135916"
            data-title="あとで読む（読まない）を何とかしたい｜星影｜Tech Hunter"
            data-summary="未読記事が溜まる心理的負荷を軽減するため、AIを活用した要約・可視化の仕組み構築を提案。
 Raindrop APIとGemini 1.5 Flashを組み合わせ、低コストで記事の優先度を判定するツールを実装。
 Claude Codeを用いた効率的なコーディング実践例として、ナレッジ整理の自動化プロセスを公開。"
-           data-priority="medium"
+           data-priority="low"
            data-score="58"
            data-tags="ナレッジマネジメント,Gemini_API,AI自動化">
           <div class="px-6 py-5 flex-grow">
               <div class="flex justify-between items-start mb-3">
-                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 58</span></span>
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#1a1a1f] text-[#8e8e93] border border-[#2c2c34]">Low <span class="opacity-70">· 58</span></span>
                   <div class="flex items-center gap-2">
                     <button onclick="toggleStatus('1702135916')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
                         既読にする
@@ -6332,6 +6612,86 @@ Claude Coworkはローカルの特定フォルダ内でのみ動作し、PC停�
       </div>
 
       <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-[#2a2a30] border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1743094576"
+           data-title="Chromeが「作業OS」になる日：Geminiがタブ地獄と手作業を終わらせる｜SecondWave｜米国株・テックトレンド"
+           data-summary="GeminiがChromeに統合され、閲覧からWeb作業を代行する作業OSへと進化する。
+履歴リコール機能により、曖昧な自然言語で閉じたタブを再検索して再集合させることが可能になる。
+Auto browse機能がサイドパネルで動作し、フォーム入力や比較などのWeb手順作業を自動化する。"
+           data-priority="low"
+           data-score="45"
+           data-tags="AI-Agent,Chrome-Extension,Web-Automation,Gemini">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#1a1a1f] text-[#8e8e93] border border-[#2c2c34]">Low <span class="opacity-70">· 45</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1743094576')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1743094576')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/4</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://note.com/startup_now0708/n/nb2a16bb2b48c" target="_blank">Chromeが「作業OS」になる日：Geminiがタブ地獄と手作業を終わらせる｜SecondWave｜米国株・テックトレンド</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ GeminiがChromeに統合され、閲覧からWeb作業を代行する作業OSへと進化する。</p><p class="leading-relaxed">・ 履歴リコール機能により、曖昧な自然言語で閉じたタブを再検索して再集合させることが可能になる。</p><p class="leading-relaxed">・ Auto browse機能がサイドパネルで動作し、フォーム入力や比較などのWeb手順作業を自動化する。</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">将来的にブラウザ操作を伴うAIエージェントを構築する際、Googleが採用している『user alignment critic（批判役）』によるガードレール設計やセキュリティ思想が参考になるため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI-Agent</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Chrome-Extension</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Web-Automation</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Gemini</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://note.com/startup_now0708/n/nb2a16bb2b48c" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/Chromeが「作業OS」になる日：Geminiがタブ地獄と手作業を終わらせる｜SecondWave｜米国株・テックトレンド.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-[#2a2a30] border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1743094349"
+           data-title="Codex で弾幕シューティングゲームの生成を試す｜npaka"
+           data-summary="CodexとPhaserを使用し画像やプロンプトから弾幕シューティングを生成する手順を紹介
+当たり判定やUIの修正、演出の追加など、AIに対する段階的で詳細な指示内容を記録
+外部アセットをプロジェクトに組み込むための具体的なSEおよびBGMの指示方法を提示"
+           data-priority="low"
+           data-score="45"
+           data-tags="AI駆動開発,プロンプトエンジニアリング,Phaser">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#1a1a1f] text-[#8e8e93] border border-[#2c2c34]">Low <span class="opacity-70">· 45</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1743094349')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1743094349')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/4</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://note.com/npaka/n/n4de390d62d0c" target="_blank">Codex で弾幕シューティングゲームの生成を試す｜npaka</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ CodexとPhaserを使用し画像やプロンプトから弾幕シューティングを生成する手順を紹介</p><p class="leading-relaxed">・ 当たり判定やUIの修正、演出の追加など、AIに対する段階的で詳細な指示内容を記録</p><p class="leading-relaxed">・ 外部アセットをプロジェクトに組み込むための具体的なSEおよびBGMの指示方法を提示</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AIを用いたゲーム開発やフロントエンドプロトタイピングにおいて、段階的な指示と調整を繰り返すプロンプトエンジニアリングの実践例として役立ちます。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI駆動開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#プロンプトエンジニアリング</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Phaser</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://note.com/npaka/n/n4de390d62d0c" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/Codex で弾幕シューティングゲームの生成を試す｜npaka.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-[#2a2a30] border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1705374281"
            data-title="売上予測ツールを個人開発してリリースした話——FastAPI + Prophet + React"
            data-summary="FastAPIとProphetを組み合わせた時系列予測Webアプリの構成と実装事例の紹介
@@ -7168,6 +7528,46 @@ AIを執筆の丸投げではなく、個人メモを特定媒体向けに構造
           <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
               <a href="https://note.com/sherrysherry3416/n/nacb616275327" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
               <a href="./data/notebooklm_sources/知識0からのプログラミング学習 ～Twitter（ツイッター）から株価予測～｜アドルフサックス.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-[#2a2a30] border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1743093480"
+           data-title="【動画生成】Gemini Omniを使ってみた - Qiita"
+           data-summary="Gemini Omniは対話型で文脈を維持したまま段階的な編集ができる新しい動画生成AIモデルである
+テキストや画像、スケッチ等のマルチモーダルな入力を組み合わせ、物理法則に即したリアルな映像を生成可能
+従来のモデルよりも短いプロンプトで、質感の変化やカメラアングルなどを精密に調整できる"
+           data-priority="low"
+           data-score="35"
+           data-tags="Gemini-Omni,動画生成AI">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#1a1a1f] text-[#8e8e93] border border-[#2c2c34]">Low <span class="opacity-70">· 35</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1743093480')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1743093480')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/4</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://qiita.com/katoriko/items/f35bec9460b47129b0b2" target="_blank">【動画生成】Gemini Omniを使ってみた - Qiita</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ Gemini Omniは対話型で文脈を維持したまま段階的な編集ができる新しい動画生成AIモデルである</p><p class="leading-relaxed">・ テキストや画像、スケッチ等のマルチモーダルな入力を組み合わせ、物理法則に即したリアルな映像を生成可能</p><p class="leading-relaxed">・ 従来のモデルよりも短いプロンプトで、質感の変化やカメラアングルなどを精密に調整できる</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">最新のマルチモーダルAIにおける対話型編集技術や、コンテキスト維持の仕組みを把握する参考情報になります。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Gemini-Omni</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#動画生成AI</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://qiita.com/katoriko/items/f35bec9460b47129b0b2" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/【動画生成】Gemini Omniを使ってみた - Qiita.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
           </div>
       </div>
 
