@@ -1,6 +1,6 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/6/7 2:30:09
-対象記事数: 37 件 (未読かつHigh優先度)
+最終更新日: 2026/6/8 2:47:14
+対象記事数: 39 件 (未読かつHigh優先度)
 
 ---
 
@@ -6028,7 +6028,218 @@ Claude Code のトークン消費を最適化する（ECC シリーズ）
 
 ---
 
-## 15. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
+## 15. [Claude Code「Dynamic Workflows」完全ガイド：6つのパターンと14ステップ](https://zenn.dev/aria3/articles/claude-code-dynamic-workflows-6-patterns)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/6/8
+- **AI要約**:
+  単一コンテキストの限界を解決するClaude Codeの動的ワークフローの仕組みと起動方法を解説
+  コアAPI（agent, parallel, pipeline）と、敵対的検証やトーナメントなど6つの設計パターンを提示
+  エージェントの怠慢や目標ドリフトを防ぎ、複雑な開発タスクを自律的・並列に処理する実践手法を網羅
+- **今読む理由**: AI駆動開発やパイプライン構築において、エージェントの精度低下（目標ドリフトや怠慢）を防ぐ具体的なオーケストレーション手法とコアAPI（parallelやpipeline）の使用例が明記されており、即座に実装設計へ適用できるため。
+- **タグ**: #AI駆動開発, #Claude-Code, #エージェントアーキテクチャ, #自動化パイプライン
+
+### 本文
+Claude Codeを使い込んでいる人でも、Dynamic Workflowsをまだ試していないケースが多いようです。2026年5月28日にリリースされたこの機能、Anthropicのエンジニアたちが実際に使っている6つのパターンと14ステップのロードマップをまとめました。
+
+ Dynamic Workflowsとは何か
+通常のClaude Codeは、計画と実行を同じコンテキストウィンドウの中でこなします。短〜中規模のコーディングタスクならこれで十分です。でも、長時間稼働・大規模並列・高度に構造化されたタスク・敵対的な検証が必要なケースでは、単一ウィンドウのアプローチが壊れていくんですね。
+Dynamic Workflowsとは、Claudeがそのタスク専用のハーネスをその場で書く仕組みです。サブエージェントのスポーンと協調を担う特殊関数と、通常のJavaScript（Math・JSON・Array）を組み合わせたファイルをClaudeが生成し、エージェント間を流れるデータを処理します。
+起動方法は2通りあります。Claudeに直接「このワークフローを作って」と頼むか、ultracode というトリガーワードを使うか。ワークフローが中断しても、セッションを再開すれば止まったところから再開できます。
+
+ ワークフローが解決する3つの失敗パターン
+動的ワークフローが必要かどうかを判断するには、それが何を修正するかを理解する必要があります。Claudeが複雑なタスクを単一コンテキストウィンドウで長時間処理すると、次の3つの問題が起きやすいです。
+
+
+Agentic laziness（エージェント的怠慢）：複雑な複数ステップのタスクを完了前に止めて「完了」と宣言してしまう。セキュリティレビューの20件に対応して残りを「処理済み」と言い張るようなケース。
+
+Self-preferential bias（自己優先バイアス）：自分の出力をルーブリックと照らして検証・評価するとき、Claudeは自分の結果を優先する。利害関係のある検証者は公正な審判にはなれない。
+
+Goal drift（目標ドリフト）：多くのターンにわたって元の目標への忠実度が徐々に落ちていく。コンテキスト圧縮後は特に顕著で、「Xをしない」という制約が47ターン目にはひっそり消えてしまう。
+
+ワークフローはこれを構造的に解決します。独自のコンテキスト・集中した目標・独立した状態をそれぞれ持つ、別々のClaudeを使うからです。
+
+ 静的ワークフローとDynamic Workflowsの違い
+Claude Agent SDKやclaude -pを使って複数のClaude Codeインスタンスを協調させる静的ワークフローはすでに使っている方もいるでしょう。違いはこうです。
+
+
+静的ワークフロー：すべてのエッジケースを扱うために一度だけ書かれる汎用的なもの。機能するが、保守的にならざるを得ない。
+
+Dynamic Workflows：Claudeがこのタスクのためにこのワークフローを書く。ハーネスはオーダーメイドされる。
+
+動的バージョンが勝つのはステップの数ではなく、ワークフロー自体があなたのコンテキストに合わせて自分を形作れるからです。自分のコードを読み、実際の新プロバイダーのドキュメントと各機能を照合し、トランザクション量での価格を算出し、自分の出てきた答えに対して「なぜ移行しないか」という敵対的な検証パスを実行できるんですね。
+
+ コアAPI：agent()、parallel()、pipeline()
+
+3つの関数でほとんどの作業をこなします。これを把握しておけば、Claudeが書いてくれるどんなワークフローも読めるし、特定の形にしたいときの誘導もできます。
+
+
+agent()：単一のサブエージェントをスポーンする
+
+parallel()：バリア型。一気に展開して、すべてが返ってくるまで待つ
+
+pipeline()：ストリーミング型。各アイテムがすべてのステージを独立して流れる
+
+選び方は「次の処理の前にすべての結果が必要か？」という問いで決まります。必要ならparallel()、不要ならpipeline()（コスト・スループットで有利）。
+
+ 6つのパターン
+
+ パターン1：Classify-and-act（分類してから実行）
+タスクの種類を分類エージェントが決定し、ワークフローがその答えに基づいて異なるエージェントや処理に振り分けます。
+効果が高い場面は次のとおりです。
+
+タスクが異種混在で、サブタイプごとに異なる処理が必要なとき
+高価なモデルを複雑な箇所だけに使いたいとき（分類は安いモデル、複雑な処理はOpusだけに振る）
+
+例として、「認証モジュールの仕組みを説明して」というリクエスト。分類サブエージェントがまずコードベースを読んで複雑さを見積もり、10ファイルのモジュールならSonnetに、100ファイルなら理解してからOpusに振ります。
+
+ パターン2：Fan-out-and-synthesize（展開して統合）
+タスクを多くの小ステップに分割し、各ステップに並列でエージェントを実行し、結果を1つの答えにまとめます。
+// 展開：ファイルごとに1エージェント。バリア：すべてを待つ
+const reviews = await parallel(
+  files.map(file => () => agent(
+    `${file}のセキュリティ問題をレビューして`,
+    { model: "haiku", schema: IssueList }
+  ))
+)
+
+// 統合：Opusエージェントがすべてをマージ
+const report = await agent(
+  `これらのレビューを一つの優先度付きレポートにまとめて：\n${JSON.stringify(reviews)}`,
+  { model: "opus" }
+)
+このパターンが実践で多用される理由は、単一コンテキスト作業の「一度に多すぎる」という失敗を解決するからです。各サブエージェントは自分の担当箇所だけを見る。オーケストレーターが50の無関係な詳細に気を取られることはありません。
+使いどきの目安は3つです。
+
+作業項目が明確に列挙できるとき（50ファイル、200エンドポイント、100レビュー）
+各項目が独立していて、他の項目の出力を必要としないとき
+最後にバラバラな部分レポートではなく、統合された1つの答えが欲しいとき
+
+
+ パターン3：Adversarial verification（敵対的検証）
+self-preferential biasへの構造的な修正策です。スポーンされたエージェントごとに、別のスポーンされたエージェントがルーブリックに基づいて出力を敵対的に検証します。検証者は元の作業を見ていないので、それに肩入れできません。
+重要なのはペアリングのルール：検証者はルーブリックと成果物だけを知るべきで、誰が生成したかは知らせない。そうしないと、プロンプトのヒントを通じて自己優先バイアスが入り込んでしまいます。
+このパターンが特に重要な場面です。
+
+レポート内のすべての事実的な記述を、独自の検証サブエージェントが元のソースに対して確認するファクトチェック
+作成者エージェントが修正を書いて、レビュアーエージェント（別のコンテキスト）がそれをレビューするコードレビュー
+何かが出荷される前に、それに対する最も弱いケースを見つけようとする品質ゲート
+
+
+ パターン4：Generate-and-filter（生成してフィルタリング）
+あるトピックについてアイデアを生成し、ルーブリックや検証でフィルタリングし、重複を除去し、品質の高いものだけを返します。
+「最良の答え」を求めることの逆です。最良の答えを求めるとClaudeは早期にコミットする。Generate-and-filterは、すべてのオプションが評価された後に遅くコミットさせます。
+
+ パターン5：Tournament（トーナメント）
+作業を分割する代わりに、エージェントを競わせます。N個のエージェントがそれぞれ異なるアプローチで同じタスクに取り組み、1つが勝つまでペアワイズ形式で結果を審査します。
+スコアでソートするより信頼性が高い理由：1,000個のアイテムを1つのプロンプトでソートしようとすると、品質が劣化してコンテキストにも収まらない。トーナメントはブラケットを新鮮なエージェントに分割し、それぞれが2アイテムだけを比較します。ブラケット自体はコード内の決定論的なループ（コンテキストではない）にある。
+デザインの選択・候補者の選定・コンテンツの優先付けといった好みベースのランキングにも同じアイデアが使えます。
+
+ パターン6：Loop until done（完了まで繰り返す）
+作業量が不明なタスクに対して、固定回数のパスを実行するのではなく、停止条件が満たされるまでエージェントのスポーンをループします。停止条件の例としては「新しい発見がない」「ログにエラーがない」「理論が検証された」などです。
+「実際に完了するまで続ける」への答えです。
+
+フレーキーなテストのデバッグ：再現、理論を立てる、テストする、1つの理論が成立するまで
+バグハンティング：完全なパスでゼロが返るまでバグを探し続ける
+パターンの掘り起こし：新しいクラスタが現れなくなるまでクラスタリングと規則の特定を繰り返す
+
+/goalとペアにして完了要件を設定しましょう（「1つの理論が機能するまで止まるな」）。停止条件はコードにある。アクティブなイテレーションだけがコンテキストに残ります。
+
+ パターンの組み合わせ方
+実際のワークフローでは、2〜4つのパターンを組み合わせます。
+
+
+
+ユースケース
+使うパターン
+
+
+
+
+マイグレーション・リファクタリング
+Fan-out → Adversarial verification → Loop until done
+
+
+深いリサーチ
+Fan-out（並列ウェブ検索）→ Adversarial verification → Synthesize
+
+
+1,000件以上のアイテムのソート
+Tournament（ペアワイズ比較）
+
+
+根本原因の調査
+Generate theories → Panel of verifiers/refuters → Loop
+
+
+大規模トリアージ
+Classify-and-act → Dedupe → Fix or escalate
+
+
+デザイン・命名の探索
+Generate-and-filter → Tournament with rubric
+
+
+軽量Eval
+Run in worktree → Comparison agents grade → Refine and re-grade
+
+
+
+パターンを内面化する正しい方法は、今のタスクがどの失敗モードに陥っているかを特定して、それを構造的に防ぐパターンを選ぶことです。
+
+ドリフトが起きている → Fan-out
+自己優先が問題 → Adversarial verification
+終わりが見えない → Loop until done
+スコアリングが難しい → Tournament
+
+
+ 運用のコツ：/goal、/loop、トークン予算
+ワークフローはコストが増えます。3つの設定で「クールだが高価」から「無人で実行できるツール」に変わります。
+
+
+/goal：ハードな完了要件を設定する。Loopパターンとペアにする（「1つの理論が機能するまで止まるな」）。/goalなしでは最初のソフトな完了ポイントで止まる。
+
+/loop：ワークフロー全体を繰り返しスケジュールで実行する。継続的に実行したいワークフローに使う（トリアージ、週次リサーチ更新、定期検証）。
+
+明示的なトークン予算：プロンプトで「1万トークン使って」と伝える。これがないと野心的なワークフローが期待値の5〜10倍に膨れ上がる。
+
+> ultracode この前提の素早い敵対的レビュー：
+  「Postgresへの移行でシャードの再バランスが不要になる」
+  5kトークン使って。/goal 反例か3つの独立した確認が
+  得られるまで止まるな。
+Anthropicのチームも「ベストプラクティスはまだ発展中。Dynamic Workflowsはトークンを多く使うことが多いので、いつどのように使うか慎重に考えて」と言っています。普通のClaude Codeセッションが5分で終わるタスクならワークフローは不要です。
+
+ 信頼できない入力にはQuarantineパターンを
+サポートチケット・バグレポート・ユーザーフィードバック・スクレイピングされたデータなど、信頼できない公開コンテンツを読むワークフローは、プロンプトインジェクションの可能性を前提にする必要があります。
+修正策はQuarantine（隔離）です。信頼できないコンテンツを読むエージェントは、高権限のアクションを実行できないようにする。生のコンテンツに触れていない別のエージェントが実際のアクションを担当します。
+ユーザー提出のコンテンツを処理する場合、公開Webページをスクレイピングする場合、サードパーティAPIからの出力を処理する場合は必ず適用しましょう。読み取り専用のリーダーエージェントはほぼコストがかからず、プロンプトインジェクションリスクをまるごと排除できます。
+
+ ワークフローを保存してSkillとして配布する
+ワークフローが機能したら保存しましょう。ワークフローメニューでsを押す。保存されたワークフローは~/.claude/workflowsに入ります。そこから2つの選択肢があります。
+
+ローカルに保持して自分のプロジェクト全体で再利用する
+Skillとして配布する：JavaScriptファイルをSkillフォルダ内にバンドルし、SKILL.mdで参照すれば、そのSkillをインストールした誰もが同じワークフローを実行できる
+
+1つ実用的なポイント：ワークフローをSkillにパッケージするとき、Claudeに「このワークフローをそのまま実行するスクリプトではなく、テンプレートとして扱って」と指示しましょう。そうすることで、全体的な構造を保ちながらも、タスクに応じてワークフローの形を適用させる余地が生まれます。
+
+ よくある失敗
+
+普通のClaude Codeセッションで十分なのにワークフローを使う。ほとんどの従来のコーディングタスクは5人のレビュアーのパネルを必要としない
+トークン予算なし。明示的なキャップなしで野心的なワークフローは5〜10倍に膨れ上がる
+1つのエージェントが作業と検証の両方をやる。self-preferential biasが検証者を作業者に肩入れさせる。両者は分離されなければならない
+
+parallel()とpipeline()を互換として扱う。バリアが重要。parallelはすべてを待ち、pipelineはストリームする
+Loopパターンで/goalを省略する。ワークフローが最初のソフトな完了ポイントで早期終了する
+信頼できないコンテンツをアクターに届かせる。ユーザー提出のものを処理するなら隔離は省略不可
+絶対スコアでソートする。比較判断の方が信頼性は高いので、トーナメントを使う
+機能するワークフローを保存しない。毎週同じ形を再プロンプトするのは時間の無駄
+
+
+Dynamic Workflowsはまだベストプラクティスが発展中の機能です。でも6つのパターンと失敗モードの対応関係を頭に入れておけば、どんなタスクが「ワークフロー向き」かの判断がかなりクリアになります。ultracodeで試してみるのが一番の近道です。
+
+---
+
+## 16. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -6275,7 +6486,7 @@ AIに渡すルールは、自然言語ドキュメント1枚から三つの仕�
 
 ---
 
-## 16. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
+## 17. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -6783,7 +6994,7 @@ Skillは「自分専用のClaude Code」を育てることに近いと感じて�
 
 ---
 
-## 17. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
+## 18. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -7288,7 +7499,7 @@ Building agents with the Claude Agent SDK - Anthropic Engineering
 
 ---
 
-## 18. [【CLAUDE.mdに貼るだけ】Claude Code x Gemini CLI x 人間による、三位一体開発術](https://zenn.dev/tksfjt1024/articles/5e88385bfb69fd)
+## 19. [【CLAUDE.mdに貼るだけ】Claude Code x Gemini CLI x 人間による、三位一体開発術](https://zenn.dev/tksfjt1024/articles/5e88385bfb69fd)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -7441,7 +7652,7 @@ Claude Code: https://docs.anthropic.com/claude-code
 
 ---
 
-## 19. [Gemini CLIとClaude Codeによるピンポンプログラミング](https://zenn.dev/yonekubo/articles/3a2da69cacaa73)
+## 20. [Gemini CLIとClaude Codeによるピンポンプログラミング](https://zenn.dev/yonekubo/articles/3a2da69cacaa73)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -7659,7 +7870,7 @@ Bash(mkdir:*)
 
 ---
 
-## 20. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
+## 21. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -7804,7 +8015,7 @@ banned_visual_motifs:
 
 ---
 
-## 21. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
+## 22. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/7
@@ -8040,7 +8251,7 @@ Slack, Google Calendar, Confluence等のMCPツールを活用して情報取得�
 
 ---
 
-## 22. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
+## 23. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -8234,7 +8445,7 @@ CLAUDE.mdにルールを書いて、WIP.mdに作業状態を残すようにし�
 
 ---
 
-## 23. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
+## 24. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -8543,7 +8754,7 @@ your-project/
 
 ---
 
-## 24. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
+## 25. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -8678,7 +8889,7 @@ Qiitaニュースを購読する
 
 ---
 
-## 25. [GitHub - unsolublesugar/tsuyu-mi: Fetch, summarize, and publish Raindrop.io articles as a priority-ranked HTML dashboard · GitHub](https://github.com/unsolublesugar/tsuyu-mi)
+## 26. [GitHub - unsolublesugar/tsuyu-mi: Fetch, summarize, and publish Raindrop.io articles as a priority-ranked HTML dashboard · GitHub](https://github.com/unsolublesugar/tsuyu-mi)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -8934,7 +9145,7 @@ MIT
 
 ---
 
-## 26. [GitHub - chaenmasahiro0425/exbrain: Exbrain — Your AI's External Brain. Claude Code × Obsidian × SOUL/MEMORY/DREAMS · GitHub](https://github.com/chaenmasahiro0425/exbrain)
+## 27. [GitHub - chaenmasahiro0425/exbrain: Exbrain — Your AI's External Brain. Claude Code × Obsidian × SOUL/MEMORY/DREAMS · GitHub](https://github.com/chaenmasahiro0425/exbrain)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -9534,7 +9745,7 @@ MIT
 
 ---
 
-## 27. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
+## 28. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -10336,7 +10547,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 28. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
+## 29. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -10387,7 +10598,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 29. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
+## 30. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -10646,7 +10857,7 @@ Claude Code や AI 自動化についてさらに深く学びたい方は、筆�
 
 ---
 
-## 30. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
+## 31. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -11189,7 +11400,7 @@ Prime 200銘柄
 
 ---
 
-## 31. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
+## 32. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -11369,7 +11580,7 @@ mainで作業 → worktreeを使う
 
 ---
 
-## 32. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
+## 33. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/12
@@ -12078,7 +12289,7 @@ Claude Code の 6種類のメモリと優先順位を理解して効率的に活
 
 ---
 
-## 33. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
+## 34. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/22
@@ -13318,7 +13529,1599 @@ AIの「揮発性の高い記憶」を補うための「外部メモリ」とし
 
 ---
 
-## 34. [Claude × Codex × Gemini を"併用"する設計 ─ セカンドオピニオン運用フレーム #AI - Qiita](https://qiita.com/nogataka/items/b2b4a84ba611ccaf8447)
+## 35. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
+- **優先度**: High
+- **スコア**: 88
+- **解析日時**: 2026/6/8
+- **AI要約**:
+  AIエージェントのコンテキスト肥大化を防ぐディレクトリ構成とファイル分割手法を提示
+  AGENTS.mdを「ルーター」として定義し詳細ルールをSkills等に逃がす設計原則を提唱
+  GitHub CopilotやClaude Codeの仕様に最適化された最新の命令定義ルールを解説
+- **今読む理由**: AI駆動開発プロジェクトにおいて、AIエージェント（Copilot/Claude Code等）に渡すコンテキスト量を削減し、精度向上とトークン消費の最適化を両立する具体的なディレクトリ構成・プロンプト設計を即座に適用できるため。
+- **タグ**: #AI駆動開発, #Copilot_Instructions, #AGENTS.md, #コンテキスト管理, #プロンプトエンジニアリング
+
+### 本文
+はじめに
+2026年現在、多くのエンジニアは GitHub Copilot, Claude Code, Cline, Cursor をはじめとするAIコーディングツールを使っているでしょう。データサイエンティストも例外に漏れず、AIコーディングツールを使っています。
+AIコーディングツールの能力を最大限引き出すためには、AIに適切な前提知識を教えてあげることが重要です。本記事では、私が普段の分析業務で AGENTS.md に書いている内容に加え、本記事執筆を良い機会と思って Skills に整理した内容を紹介します。
+大きな方針は次の通りです。
+
+全タスクで守ってほしいことは AGENTS.md に薄く書く
+作業別の詳しいルールは skills に分ける
+プロジェクト固有の情報は docs に分ける
+よく使う依頼は prompts にする
+本当に守らせたいことは scripts や CI でも検査する
+
+
+
+
+
+ 結論
+こちらです。以下ぐだぐだ書かれたものを読むよりも、一旦.githubをそのままご自身のプロジェクトフォルダに置いてその効果をご確認いただく方が早いかもしれません。
+
+.
+├── AGENTS.md
+├── .github/
+│   ├── copilot-instructions.md
+│   ├── instructions/
+│   │   ├── python.instructions.md
+│   │   ├── sql.instructions.md
+│   │   ├── notebooks.instructions.md
+│   │   ├── docs.instructions.md
+│   │   └── data.instructions.md
+│   ├── prompts/
+│   │   ├── plan-analysis.prompt.md
+│   │   ├── review-sql.prompt.md
+│   │   ├── run-eda.prompt.md
+│   │   ├── run-modeling.prompt.md
+│   │   ├── summarize-analysis.prompt.md
+│   │   ├── prepare-pr.prompt.md
+│   │   └── update-agent-docs.prompt.md
+│   └── skills/
+│       ├── python-project-ops/
+│       │   └── SKILL.md
+│       ├── safe-data-handling/
+│       │   └── SKILL.md
+│       ├── sql-analysis/
+│       │   └── SKILL.md
+│       ├── python-style/
+│       │   └── SKILL.md
+│       ├── dataframe-polars/
+│       │   └── SKILL.md
+│       ├── visualization/
+│       │   └── SKILL.md
+│       ├── path-and-io/
+│       │   └── SKILL.md
+│       ├── notebook-workflow/
+│       │   └── SKILL.md
+│       ├── statistical-ml-review/
+│       │   └── SKILL.md
+│       └── analysis-reporting/
+│           └── SKILL.md
+├── docs/
+│   └── agent/
+│       ├── project-overview.md
+│       ├── repository-structure.md
+│       ├── data-catalog.md
+│       ├── metrics-and-definitions.md
+│       ├── analysis-workflow.md
+│       ├── statistical-and-ml-guidelines.md
+│       ├── validation-and-testing.md
+│       ├── reporting-guidelines.md
+│       ├── security-and-privacy.md
+│       └── agent-behavior.md
+├── scripts/
+│   ├── check_no_raw_data_commit.py
+│   ├── check_no_sensitive_patterns.py
+│   ├── run_quality_checks.sh
+│   └── validate_agent_docs.py
+└── src/
+AGENTS.md は秘伝のタレ[1]のようにするのではなく、各種ルールへのルーターにします。
+
+
+
+ファイル・ディレクトリ
+役割
+
+
+
+
+.github/copilot-instructions.md
+Copilot に常に読ませたい最小限の共通方針
+
+
+AGENTS.md
+AI エージェント向けのルーター
+
+
+.github/instructions/*.instructions.md
+Python, SQL, notebook など、パス別に効かせる指示
+
+
+.github/skills/*/SKILL.md
+SQL、Polars、可視化、データ保護などの作業別手順
+
+
+.github/prompts/*.prompt.md
+分析計画、SQL レビュー、結果要約などの再利用プロンプト
+
+
+docs/agent/*
+プロジェクト固有の知識、データ定義、指標定義など
+
+
+scripts/*
+AI にお願いするのではなく機械的に検査したいもの[2]
+
+
+
+
+GitHub Copilot の場合、repository-wide instructions[3] は .github/copilot-instructions.md、path-specific instructions[4] は .github/instructions/*.instructions.md、agent instructions[5] は AGENTS.md に置けます[6]。また、agent skills は .github/skills/<skill-name>/SKILL.md のように置けます[7]。Prompt files は .github/prompts/*.prompt.md に置くと、VS Code などから再利用しやすくなります[8]。
+
+
+ なぜ全部 AGENTS.md に書かないのか
+当初私はそんなにAIに守らせたいルールがたくさんなかったので、最初は AGENTS.md に全部書けばよいと思っていました。
+実際、Python の実行コマンド、SQL の書き方、docstring の書き方、データの扱い、Polars のルール、Matplotlib のルール、ファイルパスのルールなどを全部 AGENTS.md に書いておけば、AI はそれなりに従ってくれます。
+ただ、やっているうちに以下のような問題が出てきます。
+
+関係ない知識を読み込んでしまう（SQL を書かない作業でも SQL の長いルールを読ませることになる）
+
+AGENTS.md が長くなり、人間が読まなくなる/メンテしなくなる
+プロジェクト固有の知識と全プロジェクト共通のルールが混ざる
+似たような指示が増えて矛盾しやすくなる
+
+特にデータサイエンスのプロジェクトは、コードだけでなくデータ、指標定義、SQL、notebook、可視化、分析レポートまで扱います。全部を 1 ファイルに入れると、すぐに巨大化します。
+なので、私は結論のように分けるのが良いと思っています[9]。
+特に2026年6月に GitHub Copilotは Premium Requests 制（呼び出す回数に上限がある）から、GitHub AI Credits制（使えるトークン数に上限がある）へ移行しましたので、尚更コンテキストの管理はシビアになってきます。Claude Code など他のツールも大概がトークンベースです。
+
+
+ まずは AGENTS.md を薄く作る
+AGENTS.md はこのくらいにします。ここに詳細ルールを全部書かないのがポイントです。
+AGENTS.md の例
+AGENTS.md
+# AGENTS.md
+
+This file is an **agent router**. It provides high-level rules and directs agents to the appropriate skill files for detailed instructions.
+
+Detailed task-specific procedures are in `.github/skills/*/SKILL.md`.
+Project-specific context is in `docs/agent/*`.
+
+## Hard Rules (Always Apply)
+
+- Never commit raw data, credentials, API keys, tokens, or customer-level records.
+- Never modify, overwrite, delete, or regenerate raw data directly.
+- Prefer small, reviewable changes.
+- Explain assumptions before non-trivial analytical decisions.
+- Ask for clarification when data semantics are unclear.
+- Use `uv` exclusively for Python dependency management. Never use pip, conda, poetry, or pipenv.
+
+## Routing Table
+
+| Task | Skill |
+|------|-------|
+| Dependencies, tests, lint, type check, notebook execution | [python-project-ops](.github/skills/python-project-ops/SKILL.md) |
+| Reading / writing / moving data files | [safe-data-handling](.github/skills/safe-data-handling/SKILL.md) + [path-and-io](.github/skills/path-and-io/SKILL.md) |
+| Writing or reviewing SQL | [sql-analysis](.github/skills/sql-analysis/SKILL.md) |
+| Writing or reviewing Python code | [python-style](.github/skills/python-style/SKILL.md) |
+| DataFrame operations | [dataframe-polars](.github/skills/dataframe-polars/SKILL.md) |
+| Charts and visualization | [visualization](.github/skills/visualization/SKILL.md) |
+| Notebook creation and editing | [notebook-workflow](.github/skills/notebook-workflow/SKILL.md) |
+| Statistics or ML | [statistical-ml-review](.github/skills/statistical-ml-review/SKILL.md) |
+| Analysis summaries and reports | [analysis-reporting](.github/skills/analysis-reporting/SKILL.md) |
+| File paths and I/O | [path-and-io](.github/skills/path-and-io/SKILL.md) |
+
+## Project Context (docs/agent)
+
+| Document | Purpose |
+|----------|---------|
+| [project-overview.md](docs/agent/project-overview.md) | プロジェクトの目的とスコープ |
+| [repository-structure.md](docs/agent/repository-structure.md) | ディレクトリ構成 |
+| [data-catalog.md](docs/agent/data-catalog.md) | データセット一覧と定義 |
+| [metrics-and-definitions.md](docs/agent/metrics-and-definitions.md) | 指標定義 |
+| [analysis-workflow.md](docs/agent/analysis-workflow.md) | 分析ワークフロー |
+| [statistical-and-ml-guidelines.md](docs/agent/statistical-and-ml-guidelines.md) | 統計・MLガイドライン |
+| [validation-and-testing.md](docs/agent/validation-and-testing.md) | テスト・検証方針 |
+| [reporting-guidelines.md](docs/agent/reporting-guidelines.md) | 報告テンプレート |
+| [security-and-privacy.md](docs/agent/security-and-privacy.md) | セキュリティ・プライバシー |
+| [agent-behavior.md](docs/agent/agent-behavior.md) | エージェント行動指針 |
+
+
+最低限にしたつもりですが、気になる点があれば教えてください。
+
+ .github/copilot-instructions.md に書くこと
+GitHub Copilot を使うなら、AGENTS.md だけでなく .github/copilot-instructions.md も置いておくとよいです。
+ここにはほぼ全タスクで効かせたいことだけを書きます。これも長くしません。
+.github/copilot-instructions.md の例
+
+.github/copilot-instructions.md
+# Repository-Wide Custom Instructions
+
+This is a **Python 3.11 data science / analysis project**.
+
+## Package Management
+
+- Use **uv** exclusively for all dependency management.
+- Never use pip, pip3, `python -m pip`, poetry, conda, pipenv, or easy_install.
+
+## Data Safety
+
+- Never commit raw data, credentials, API keys, tokens, or customer-level records.
+- Never modify or delete raw data directly.
+- Treat `data/raw` and `data/external` as immutable.
+
+## Where to Find Detailed Rules
+
+- **Task-specific skills**: `.github/skills/*/SKILL.md` — see `AGENTS.md` for routing.
+- **Project context**: `docs/agent/*` — data catalog, metrics, workflow, etc.
+- **Path-specific hints**: `.github/instructions/*.instructions.md`
+
+## Common Commands
+
+```bash
+uv sync
+uv run pytest
+uv run ruff check .
+uv run ruff format .
+uv run mypy src
+uv run python scripts/check_no_raw_data_commit.py
+uv run python scripts/check_no_sensitive_patterns.py
+
+
+
+ Key Conventions
+
+DataFrame operations: prefer polars over pandas.
+Visualization: use fig, ax = plt.subplots(...), not plt.figure(...).
+File paths: use pathlib.Path, no absolute local paths.
+Docstrings: Google-style.
+Inline comments: Japanese.
+Reports and documentation: Japanese.
+
+
+copilot-instructions.md は、毎回 Copilot に渡されても困らないくらいの量にしておくのが良さそうです。
+
+ 全プロジェクト共通
+プロジェクトごとに設定する項目と、分析プロジェクトなら必ず設定しているものとがあります。まずは Python を用いた分析なら絶対に指定しているものから紹介します。
+ただし、ここから先は基本的に AGENTS.md へ直接書くのではなく、skills に分けます。
+
+ 環境構築・実行コマンド
+Python のバージョン指定や、ruff[10] や uv[11] の使い方を教えています。私や私の所属する組織では、Python のパッケージ管理では uv を使うことにしているので、uv 以外絶対に[12]使ってほしくないです。
+これは AGENTS.md に長々と書くのではなく、必要な時に読んでくれればよいので、.github/skills/python-project-ops/SKILL.md に書きます。
+
+.github/skills/python-project-ops/SKILL.md
+.github/skills/python-project-ops/SKILL.md
+---
+name: python-project-ops
+description: Use this when managing Python dependencies with uv, running tests with pytest, linting with ruff, formatting code, type checking with mypy, or executing notebooks.
+---
+
+# Skill: Python Project Operations
+
+Use this skill when changing dependencies, running tests, linting, formatting, type checking, or executing notebooks.
+
+## Package Manager: uv Only
+
+- Use `uv` for all dependency installation, synchronization, addition, removal, and updates.
+- **Never** use pip, pip3, `python -m pip`, poetry, conda, pipenv, or easy_install.
+- **Never** manually create or edit `requirements.txt`.
+- Use `uv add <package>` when adding dependencies.
+- Use `uv add --group dev <package>` for dev-only dependencies.
+- Review diffs in `pyproject.toml` and `uv.lock` after dependency changes.
+
+## Python Version
+
+- Python 3.11.
+
+## Common Commands
+
+```bash
+uv sync                    # Install/synchronize dependencies
+uv run pytest              # Run tests
+uv run ruff check .        # Lint
+uv run ruff format .       # Format
+uv run mypy src            # Type check
+uv run papermill notebooks/input.ipynb notebooks/output.ipynb  # Execute notebook
+bash scripts/run_quality_checks.sh  # Run all quality checks
+
+## Workflow
+
+1. After modifying `pyproject.toml`, run `uv sync`.
+2. After adding code, run `uv run ruff check .` and `uv run ruff format .`.
+3. Before committing, run `uv run pytest` and `uv run mypy src`.
+4. For notebook execution in CI or automation, prefer `papermill`.
+
+
+
+
+
+
+ データ取り扱いルール
+大切なデータを勝手にあれこれされてはたまったものではありません。個人的にはまだ一度も AI にデータに関して「悪さ」をされた経験はなかったのですが、お守りと思って書いています。もちろんこの skill を過信せず、修正履歴は目視確認しましょう。
+これは AGENTS.md にも最低限残しつつ、詳しくは .github/skills/safe-data-handling/SKILL.md に置きます。
+
+.github/skills/safe-data-handling/SKILL.md
+.github/skills/safe-data-handling/SKILL.md
+---
+name: safe-data-handling
+description: Use this when reading, writing, moving, copying, modifying, deleting, or generating data files — including any operation that touches data/raw, data/external, data/interim, data/processed, or outputs directories.
+---
+
+# Skill: Safe Data Handling
+
+Use this skill before reading, writing, moving, modifying, deleting, or generating data files.
+
+## Hard Rules
+
+- **Never** commit raw data, credentials, API keys, tokens, or customer-level records.
+- **Never** directly modify, overwrite, delete, or regenerate raw data.
+- Treat `data/raw/` and `data/external/` as **immutable**.
+- Write derived data to `data/interim/`, `data/processed/`, or `outputs/`.
+- Before writing output, confirm the target path is **not** under `data/raw/` or `data/external/`.
+
+## Recommended Workflow
+
+1. **Identify** whether input data is raw, external, interim, processed, or output.
+2. **Read** raw/external data as immutable input — never modify the source.
+3. **Write** generated artifacts to a separate output path (`data/interim/`, `data/processed/`, or `outputs/`).
+4. **Summarize** files read and written at the end of the operation.
+
+## Directory Roles
+
+| Directory | Role | Mutable? |
+|-----------|------|----------|
+| `data/raw/` | Original source data | No |
+| `data/external/` | Third-party reference data | No |
+| `data/interim/` | Intermediate transforms | Yes |
+| `data/processed/` | Final cleaned/derived data | Yes |
+| `outputs/` | Figures, tables, reports | Yes |
+
+## PII and Customer-Level Records
+
+- Do not include personally identifiable information (PII) or customer-level records in committed files.
+- If analysis requires customer-level data, keep it in `data/raw/` (gitignored) and never commit.
+- Aggregated or anonymized outputs are acceptable for `data/processed/` or `outputs/`.
+- When in doubt, ask before writing customer-level data to any path.
+
+
+AGENTS.md だけだと「お願い」ですが、scripts/check_no_raw_data_commit.py や secret scanning （後段で出てきます）と組み合わせるとだいぶ安心できます。
+
+ SQL のルール
+SQL に関しては過去、とんでもないものを書かれた経験がありまして、いろいろ書いています[14]。
+これも AGENTS.md に全部入れると重いですしSQLを書くときだけで良いので、.github/skills/sql-analysis/SKILL.md に書きます。
+
+.github/skills/sql-analysis/SKILL.md
+
+.github/skills/sql-analysis/SKILL.md
+---
+name: sql-analysis
+description: Use this when writing, reviewing, or modifying SQL queries — including SELECT, CTEs, joins, aggregations, window functions, and validating query correctness or performance.
+---
+
+# Skill: SQL Analysis
+
+Use this skill when writing, reviewing, or modifying SQL queries.
+
+## Rules
+
+- Use **explicit column names** — avoid `SELECT *` except for quick exploration.
+- Use **CTEs** (Common Table Expressions) for readability and modularity.
+- Add **date filters** for large fact tables to limit scan scope.
+- Check **join keys** and **join cardinality** before writing joins.
+- **Validate row counts** before and after joins to detect fanout or data loss.
+- Avoid **implicit cross joins**.
+- **Never** run `DROP`, `TRUNCATE`, `DELETE`, or `UPDATE` unless explicitly requested by the user.
+- If destructive SQL is requested, propose a dry-run, backup, or transaction strategy first.
+
+## Query Structure
+
+```sql
+WITH base AS (
+    SELECT
+        column_a,
+        column_b,
+        event_date
+    FROM schema.table_name
+    WHERE event_date BETWEEN '2024-01-01' AND '2024-01-31'
+),
+aggregated AS (
+    SELECT
+        column_a,
+        COUNT(*) AS row_count,
+        SUM(column_b) AS total_b
+    FROM base
+    GROUP BY column_a
+)
+SELECT
+    column_a,
+    row_count,
+    total_b
+FROM aggregated
+ORDER BY row_count DESC;
+
+
+
+ Review Checklist
+Before finalizing a query, verify:
+
+
+ Are grains (unit of analysis per row) clear?
+
+ Are date ranges explicit and appropriate?
+
+ Are NULLs handled (filtered, coalesced, or documented)?
+
+ Are duplicates considered (distinct, dedup logic)?
+
+ Is join cardinality validated (1:1, 1:N, M:N)?
+
+ Are business definitions documented in comments or CTEs?
+
+ Are row counts checked before and after key transformations?
+
+ Is there any risk of implicit cross join?
+
+ Are destructive operations absent or explicitly approved?
+
+
+SQL は「それっぽいけど間違っている」ものが一番怖いです。集計結果が正しいことを別途確認したり、実行に時間がかかりすぎていないかに気をかけるのも良いですが、SQL 文そのものを見るのも重要です。
+
+ docstring のルール
+AI が書いたコードはAIも人間も読むので、私はコメントは充実している方が良いという立場です。Python の関数には必ず docstring をつけるようにしてもらっています。
+これも .github/skills/python-style/SKILL.md に書くのが良いでしょう。
+
+.github/skills/python-style/SKILL.md
+.github/skills/python-style/SKILL.md
+---
+name: python-style
+description: Use this when creating, editing, or reviewing Python code — including type hints, docstrings, naming conventions, imports, error handling, and code structure.
+---
+
+# Skill: Python Style
+
+Use this skill when creating, editing, or reviewing Python code.
+
+## Type Hints
+
+- Add type hints to all public function signatures.
+- Use `from __future__ import annotations` when convenient.
+
+## Docstrings
+
+- Use **Google-style** docstrings for all public modules, classes, functions, and methods.
+- Docstrings should describe:
+  - Purpose
+  - Args
+  - Returns
+  - Raises (if applicable)
+  - Examples (when helpful)
+  - Important assumptions
+
+## Comments
+
+- **Inline comments and explanatory comments must be written in Japanese.**
+- Comments should explain non-obvious intent, assumptions, or business logic.
+- Do not comment obvious syntax.
+
+## Code Style
+
+- Prefer small, pure functions where practical.
+- Prefer explicit error handling over bare `except`.
+- Use `pathlib.Path` for file paths — see [path-and-io skill](../path-and-io/SKILL.md).
+- Follow `ruff` linting and formatting rules configured in `pyproject.toml`.
+
+## Example
+
+```python
+from pathlib import Path
+
+
+def load_config(config_path: Path) -> dict:
+    """設定ファイルを読み込んで辞書として返す。
+
+    Args:
+        config_path: 設定ファイルのパス。
+
+    Returns:
+        設定内容を格納した辞書。
+
+    Raises:
+        FileNotFoundError: 指定されたパスにファイルが存在しない場合。
+    """
+    # JSONファイルを読み込む
+    import json
+
+    with config_path.open("r", encoding="utf-8") as f:
+        return json.load(f)
+```
+
+
+
+ コメントのルール
+日本語で書いてほしいということだけを伝えています。
+- Inline comments and explanatory comments must be written in Japanese.
+これは python-style skill に入れておけば十分だと思います。
+
+
+ Pandas の廃止
+AI は過去の学習データを見過ぎたせいか、pandas が大好きで、データを与えるとなんでも pandas を使っちゃいます。依存関係以外の理由で未だに pandas を使う理由が思いつきません。極力 Polars を使いましょう。そして、遅延評価は巨大なデータ扱う我々の心強い味方です。
+.github/skills/dataframe-polars/SKILL.md
+.github/skills/dataframe-polars/SKILL.md
+---
+name: dataframe-polars
+description: Use this when performing DataFrame operations — including loading, filtering, joining, aggregating, transforming, or reshaping tabular data with polars or pandas.
+---
+
+# Skill: DataFrame Operations with Polars
+
+Use this skill for DataFrame operations.
+
+## Default: Polars
+
+- Prefer **polars** for all DataFrame work.
+- Prefer **LazyFrame** for loading, filtering, joins, aggregations, and transformations.
+- Use eager execution when simpler and data is small.
+
+## Pandas: Only When Required
+
+- Use pandas **only** when required by an existing dependency, external library, or legacy code.
+- If pandas is needed, keep its usage minimal and convert back to polars as soon as practical.
+
+## Transformations
+
+- Transformations should be reproducible and scriptable.
+- Avoid manual, spreadsheet-like edits.
+- Document data transformations with comments (in Japanese).
+
+## Examples
+
+### Lazy Scan and Filter
+
+```python
+import polars as pl
+
+# Parquetファイルを遅延読み込み
+lf = pl.scan_parquet("data/raw/events.parquet")
+
+# 日付フィルタと列選択
+result = (
+    lf.filter(pl.col("event_date") >= "2024-01-01")
+    .select(["user_id", "event_type", "event_date"])
+    .collect()
+)
+```
+
+### Group By and Aggregation
+
+```python
+# ユーザーごとのイベント数を集計
+summary = (
+    lf.group_by("user_id")
+    .agg(
+        pl.col("event_type").count().alias("event_count"),
+        pl.col("event_date").max().alias("last_event"),
+    )
+    .collect()
+)
+```
+
+### Safe Join with Row Count Check
+
+```python
+left = pl.scan_parquet("data/processed/users.parquet")
+right = pl.scan_parquet("data/processed/orders.parquet")
+
+# 結合前の行数を確認
+left_count = left.select(pl.len()).collect().item()
+right_count = right.select(pl.len()).collect().item()
+
+joined = left.join(right, on="user_id", how="left").collect()
+
+# 結合後の行数を確認（ファンアウトの検出）
+assert joined.height >= left_count, "結合で行が減少した"
+print(f"left={left_count}, right={right_count}, joined={joined.height}")
+```
+
+
+
+ 可視化のルール
+Matplotlib で可視化しようとすると、AI は何故か plt.figure(figsize=(14, 7)) の形式で書きます。可視化は最終的に手で[15]微修正することが多いので[16]、fig, ax = plt.subplots(...) で書いてほしいのです。また、見にくいカラーマップや小さすぎるフォント、日本語フォントの文字化けなんかも人間の手での修正を最小限にしたいので、ルール化しておきます。
+可視化の時だけ見れくれればよいので .github/skills/visualization/SKILL.md に書くことになります。
+.github/skills/visualization/SKILL.md
+.github/skills/visualization/SKILL.md
+---
+name: visualization
+description: Use this when creating, modifying, reviewing, or saving charts, figures, plots, or visual summaries — including matplotlib/seaborn code, EDA figures, report figures, dashboards, or any task involving Japanese chart labels, color palettes, or figure styling.
+---
+
+# Skill: Visualization
+
+Use this skill whenever the user asks to:
+
+- Plot, visualize, chart, or graph data.
+- Create figures for EDA, reports, dashboards, or presentations.
+- Modify or improve existing matplotlib / seaborn code.
+- Save figures to disk for reports or notebooks.
+
+## Library
+
+- Use **matplotlib** for charts.
+- Use **seaborn** alongside matplotlib for theming, palettes, and statistical plots.
+
+## Global Setup (do this first)
+
+At the start of any notebook or script that produces figures, set the theme once. `font_scale` enlarges all text elements proportionally, so individual `fontsize=` arguments are usually unnecessary.
+
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.set_theme(
+    style="whitegrid",
+    palette="muted",
+    font_scale=1.2,
+)
+```
+
+### Japanese text
+
+If any text (titles, labels, legends, annotations) contains Japanese, configure a CJK-capable font, **otherwise characters render as tofu (□□□)**.
+
+Preferred approach (cross-platform):
+
+```python
+import japanize_matplotlib  # pip install japanize-matplotlib
+```
+
+Alternative (set an installed CJK font explicitly):
+
+```python
+plt.rcParams["font.family"] = "Noto Sans CJK JP"  # or "IPAexGothic", "Hiragino Sans", "Yu Gothic"
+```
+
+## Figure Creation
+
+- **Do not** use the stateful `plt.figure(...)` / `plt.plot(...)` style.
+- **Always** create figures and axes explicitly, and prefer `constrained_layout=True` over `tight_layout()`:
+
+```python
+fig, ax = plt.subplots(figsize=(10, 6), constrained_layout=True)
+```
+
+- Use the **object-oriented** API: `ax.set_title()`, `ax.set_xlabel()`, `ax.plot()`, etc.
+- `figsize=(10, 6)` is a reasonable default. Adjust to content: wide time series → `(12, 4)`, square scatter → `(6, 6)`, multi-panel → scale up accordingly.
+
+## Color Map / Color Palette
+
+Choose by data type:
+
+- **Categorical**: `"muted"`, `"Set2"`, `"colorblind"` (seaborn palettes).
+- **Sequential (continuous)**: `"viridis"`, `"cividis"`, `"mako"` — perceptually uniform.
+- **Diverging**: `"coolwarm"`, `"RdBu"`, `"vlag"`.
+- **Forbidden**: `"jet"`, `"rainbow"` — not perceptually uniform, poor for colorblind viewers.
+
+## Font Size
+
+`sns.set_theme(font_scale=1.2)` covers most cases. Override per-element **only when needed** (e.g. a long title needs to be smaller, or one label needs emphasis):
+
+```python
+ax.set_title("...", fontsize=18)
+```
+
+Do **not** repeat `fontsize=` on every call — it is redundant when `font_scale` is set.
+
+## Axis Scale Guidelines
+
+- **Bar charts**: start y-axis at 0 (`ax.set_ylim(bottom=0)`). Truncated bars are misleading.
+- **Line / scatter**: do **not** force y-axis to 0 — it can hide meaningful variation. Let matplotlib autoscale, or set limits based on the data range.
+- **Log scale**: use `ax.set_yscale("log")` when data spans multiple orders of magnitude.
+
+## Legend
+
+- Use `ax.legend()` only when ≥2 series are plotted.
+- If the auto-placement overlaps data, set explicitly: `ax.legend(loc="upper left")` or place outside: `ax.legend(loc="center left", bbox_to_anchor=(1.0, 0.5))`.
+
+## Saving
+
+- Save final figures under `outputs/figures/`. Create the directory if needed:
+
+```python
+from pathlib import Path
+Path("outputs/figures").mkdir(parents=True, exist_ok=True)
+```
+
+- Use descriptive snake_case filenames: `monthly_sales_2024h1.png`, not `fig1.png`.
+- DPI guidance:
+  - Notebook / README / slides: `dpi=150`
+  - Publication / print: `dpi=300`
+- Always call `plt.close(fig)` after saving to free memory.
+
+```python
+fig.savefig("outputs/figures/monthly_sales.png", dpi=150, bbox_inches="tight")
+plt.close(fig)
+```
+
+## Chart Quality Checklist
+
+Before finalizing a chart, verify:
+
+- [ ] **Title** clearly describes what the chart shows.
+- [ ] **Axis labels** include units where applicable (e.g. "売上 (万円)", "Latency (ms)").
+- [ ] **Font sizes** are readable (rely on `font_scale=1.2` as baseline).
+- [ ] **Color palette** is perceptually uniform / colorblind-friendly (no jet/rainbow).
+- [ ] **Date range** noted in title, subtitle, or annotation when relevant.
+- [ ] **Sample / filter note** when data is subsetted (e.g. "n=1,234, 2024年1月〜6月").
+- [ ] **Bar charts** start y-axis at 0; other chart types use sensible limits.
+- [ ] **Legend** present when multiple series; placement does not overlap data.
+- [ ] **Japanese text** renders correctly (japanize-matplotlib or CJK font configured).
+- [ ] **Saved** to `outputs/figures/` with descriptive filename, followed by `plt.close(fig)`.
+
+## Example
+
+```python
+from pathlib import Path
+import matplotlib.pyplot as plt
+import seaborn as sns
+import japanize_matplotlib  # noqa: F401  # 日本語フォント有効化
+
+sns.set_theme(style="whitegrid", palette="muted", font_scale=1.2)
+
+Path("outputs/figures").mkdir(parents=True, exist_ok=True)
+
+fig, ax = plt.subplots(figsize=(10, 6), constrained_layout=True)
+
+ax.bar(categories, values)
+ax.set_title("月別売上推移 (2024年1月〜6月)")
+ax.set_xlabel("月")
+ax.set_ylabel("売上 (万円)")
+ax.set_ylim(bottom=0)  # 棒グラフは0起点
+
+fig.savefig("outputs/figures/monthly_sales_2024h1.png", dpi=150, bbox_inches="tight")
+plt.close(fig)
+```
+
+
+
+ ファイルパスのルール
+ローカルで分析するとき、データファイルまでのパスを埋め込まれると後々面倒になります。メンテナンスのことも考えると、文字列を使うのではなくpathlib も強要したいところです。
+.github/skills/path-and-io/SKILL.md
+.github/skills/path-and-io/SKILL.md
+---
+name: path-and-io
+description: Use this when reading from or writing to local files — including constructing file paths with pathlib, creating directories, choosing output locations, and using path utilities from src/analysis_project/paths.py.
+---
+
+# Skill: Path and I/O
+
+Use this skill when reading from or writing to local files.
+
+## Rules
+
+- Use `pathlib.Path` for all file path operations.
+- **Do not** hard-code absolute local paths.
+- Prefer paths relative to repository root or configured directories.
+- Use the path utilities in `src/analysis_project/paths.py`.
+- **Do not** write outputs into raw data directories (`data/raw/`, `data/external/`).
+- Create parent directories explicitly when writing outputs: `path.parent.mkdir(parents=True, exist_ok=True)`.
+- Use descriptive file names.
+- Include dates or run identifiers when outputs are time-dependent.
+- Avoid overwriting existing outputs unless explicitly requested.
+
+## Example
+
+```python
+from analysis_project.paths import outputs_dir, ensure_parent_dir
+
+# 出力パスを構成
+output_path = outputs_dir() / "tables" / "summary_2024q1.csv"
+
+# 親ディレクトリを作成してから書き込み
+ensure_parent_dir(output_path)
+df.write_csv(output_path)
+
+
+
+ Notebook のルール
+私は個人的にあまり使わないのですが、データ分析では notebook を使うことも多いようです。notebook は便利なのですが、AI に任せると（あるいはAIに任せなくても。。。）hidden state[17] だらけになったり、再実行できない notebook ができたりします。他にも、再利用するロジックは src/ に切り出すようなことも指示しています。
+使わない人もいると思うので、私は notebook 用の skill として分ければよいのかなと思っています。marimoのような新しい便利な notebook も登場しているので、そちらを使うような指示にしても良いかもしれません。
+.github/skills/notebook-workflow/SKILL.md
+
+.github/skills/notebook-workflow/SKILL.md
+---
+name: notebook-workflow
+description: Use this when creating, editing, executing, or reviewing Jupyter notebooks — including cell structure, kernel management, extracting reusable logic to src/, and ensuring notebooks are restartable.
+---
+
+# Skill: Notebook Workflow
+
+Use this skill when creating, editing, executing, or reviewing Jupyter notebooks.
+
+## Purpose of Notebooks
+
+- Notebooks are for **exploration and communication**.
+- Reusable logic should be extracted to `src/analysis_project/`.
+
+## Rules
+
+- Keep notebooks **restartable from a clean kernel** (Kernel → Restart & Run All must work).
+- Avoid hidden state — do not rely on cells being run in a non-linear order.
+- Do not include secrets or customer-level records in notebook outputs.
+- Prefer saving final charts and tables to `outputs/`.
+
+## Naming Convention
+
+
+
+NNN_short_description.ipynb
+
+Example: `001_data_exploration.ipynb`, `002_feature_analysis.ipynb`
+
+## Automation
+
+- Use **papermill** for parameterized notebook execution when automation is needed.
+
+```bash
+uv run papermill notebooks/input.ipynb notebooks/output.ipynb -p param_name value
+
+
+ Structure
+
+
+Header cell: Title, author, date, objective.
+
+Imports: All imports in the first code cell.
+
+Configuration: Parameters, paths, constants.
+
+Analysis: Exploratory or analytical cells.
+
+Summary: Key findings and next steps.
+
+
+ Cleanup Before Commit
+
+Clear large outputs that are not essential for review.
+Ensure no credentials or PII in cell outputs.
+Verify the notebook runs end-to-end with a fresh kernel.
+
+
+
+ path-specific instructions も置いておく
+Copilot 向けには .github/instructions/*.instructions.md も置けます。これは *.py や *.sql のように、ファイルパスに応じて効かせる指示です。
+例えば Python ファイル向けにはこうします。
+
+.github/instructions/python.instructions.md
+---
+applyTo: "**/*.py"
+---
+Follow these skills for Python files:
+- `.github/skills/python-style/SKILL.md` — type hints, Google-style docstrings, Japanese comments.
+- `.github/skills/dataframe-polars/SKILL.md` — prefer polars over pandas.
+- `.github/skills/path-and-io/SKILL.md` — use pathlib.Path, no absolute paths.
+
+SQL ファイル向けにはこうします。
+
+.github/instructions/sql.instructions.md
+---
+applyTo: "**/*.sql"
+---
+Follow `.github/skills/sql-analysis/SKILL.md` for all SQL files:
+- Use explicit column names; avoid SELECT *.
+- Use CTEs for readability.
+- Add date filters for large tables.
+- Validate join cardinality and row counts.
+- Never run DROP, TRUNCATE, DELETE, or UPDATE unless explicitly requested.
+
+AGENTS.md はルーター、skills は詳しい手順、path-specific instructions はファイル単位の補助、というイメージです。
+
+ prompts も置いておく
+よく使う依頼は .github/prompts/*.prompt.md にしておくと便利です。将来的には[18]、非エンジニアがこの prompts を使って分析を終わらせる日が来るかもしれませんね。
+.github/prompts/
+├── plan-analysis.prompt.md
+├── review-sql.prompt.md
+├── run-eda.prompt.md
+├── run-modeling.prompt.md
+├── summarize-analysis.prompt.md
+├── prepare-pr.prompt.md
+└── update-agent-docs.prompt.md
+例えば分析計画を作る prompt を作りました（plan-analysis.prompt.md）。これは、コードを書き始める前に「目的・データソース・分析単位・主要指標・リスク・検証方法・成果物」を整理した分析計画を日本語で作らせる プロンプトです。docs/agent/ のデータカタログや指標定義を参照させることで、プロジェクト固有の前提を踏まえた計画にしてもらいます。
+github/prompts/plan-analysis.prompt.md
+.github/prompts/plan-analysis.prompt.md
+---
+agent "agent"
+description: "Create an analysis plan before coding"
+---
+You are a data science planning assistant. Before writing any code, create a structured analysis plan.
+
+Ask or determine the following:
+
+1. **Objective**: What question are we trying to answer?
+2. **Data sources**: What data will be used? (tables, files, APIs)
+3. **Unit of analysis**: What does one row represent?
+4. **Key metrics**: What metrics will be calculated? How are they defined?
+5. **Risks**: What could go wrong? (data quality, leakage, bias, missing data)
+6. **Validation**: How will results be validated?
+7. **Outputs**: What deliverables are expected? (tables, charts, reports, models)
+
+Format the plan in Japanese. Reference `docs/agent/metrics-and-definitions.md` and `docs/agent/data-catalog.md` for project-specific context.
+
+
+SQL レビューもよく使います。
+sql-analysis skill のチェックリストに沿って SQL をレビューさせる プロンプトです。SELECT *・日付フィルタの欠落・join のカーディナリティ・破壊的操作などを確認し、該当行と修正案を日本語で返してもらいます。
+.github/prompts/review-sql.prompt.md
+.github/prompts/review-sql.prompt.md
+---
+agent "agent"
+description: "Review SQL for correctness and safety"
+---
+Review the provided SQL query using the checklist from `.github/skills/sql-analysis/SKILL.md`.
+
+Check for:
+- `SELECT *` usage (should use explicit columns)
+- Missing date filters on large tables
+- Join cardinality issues (1:1, 1:N, M:N)
+- Row count validation before and after joins
+- Destructive statements (DROP, TRUNCATE, DELETE, UPDATE)
+- Unclear metric definitions
+- NULL handling
+- Duplicate risk
+- Implicit cross joins
+
+Provide feedback in Japanese with specific line references and suggested fixes.
+
+
+
+ プロジェクトごとに設定するもの
+以降はプロジェクトごとに設定するものです。正直反面教師かもしれませんが、短期的な検証プロジェクトなら書かないことも多いです。逆に、複数人でやるテーマや、半年以上やるテーマなら絶対に書きます。
+プロジェクト固有の知識は docs/agent/ に分けるのが良さそうです。
+
+
+ Project overview
+プロジェクト開始時に書くべきことのひな型は以下のような感じですかね？正解はないと思いますので、各組織で育てていってみてください。
+
+docs/agent/project-overview.md
+# プロジェクト概要
+
+## 目的
+
+<!-- TODO: このプロジェクトが解決しようとしている課題を記述してください -->
+
+## 利用者
+
+<!-- TODO: 分析結果を利用するステークホルダーを記述してください -->
+
+## 意思決定
+
+<!-- TODO: この分析がどのような意思決定に使われるか記述してください -->
+
+## スコープ外
+
+<!-- TODO: このプロジェクトで扱わないことを明記してください -->
+
+## 重要な前提
+
+<!-- TODO: 分析の前提条件を記述してください -->
+
+
+ Repository structure
+これは完全にAIに出力させました。違和感はないと思っています。
+
+docs/agent/repository-structure.md
+# リポジトリ構成
+
+各ディレクトリの役割を説明します。
+
+| ディレクトリ | 役割 |
+|-------------|------|
+| `src/analysis_project/` | 再利用可能なPythonモジュール |
+| `notebooks/` | 探索・分析用Jupyter Notebook |
+| `scripts/` | CI・検証用スクリプト |
+| `tests/` | pytest用テスト |
+| `data/raw/` | 元データ（不変・gitignore対象） |
+| `data/external/` | 外部データ（不変・gitignore対象） |
+| `data/interim/` | 中間加工データ |
+| `data/processed/` | 最終加工データ |
+| `outputs/figures/` | グラフ・図 |
+| `outputs/tables/` | 集計テーブル |
+| `outputs/reports/` | レポート |
+| `docs/agent/` | エージェント向けプロジェクト文書 |
+| `.github/skills/` | 作業別スキルファイル |
+| `.github/instructions/` | パス別補助指示 |
+| `.github/prompts/` | 再利用プロンプト |
+
+
+ Data catalog
+こういった定義はAIの為だけでなく、人間のためにもかなり有用と思います。
+
+docs/agent/data-catalog.md
+# データカタログ
+
+分析で使用するデータセットの一覧です。
+
+## データセット一覧
+
+<!-- TODO: 以下のテンプレートに従ってデータセットを追加してください -->
+
+### データセット名
+
+| 項目 | 内容 |
+|------|------|
+| パス | `data/raw/xxx.parquet` |
+| 粒度 | （例: ユーザー×日） |
+| 更新頻度 | （例: 日次、月次、不定期） |
+| オーナー | （例: データエンジニアリングチーム） |
+| 機密度 | （例: 社内限定、個人情報含む） |
+| 注意点 | （例: 2023年以前はスキーマが異なる） |
+
+## カラム定義
+
+<!-- TODO: 主要カラムの定義を記述してください -->
+
+| カラム名 | 型 | 説明 | 備考 |
+|---------|-----|------|------|
+| `user_id` | string | ユーザー識別子 | |
+| `event_date` | date | イベント発生日 | |
+
+
+ Metrics and definitions
+これもプロジェクトの最初に決めるべき事柄ですね。ただ、やっていくうちに変わっていくこともあるので、サボらずにメンテしていくことが重要です。
+
+docs/agent/metrics-and-definitions.md
+# 指標定義
+
+分析で使用する主要指標の定義です。
+
+<!-- TODO: プロジェクト固有の指標を追加してください -->
+
+## 指標テンプレート
+
+### 指標名
+
+| 項目 | 内容 |
+|------|------|
+| 定義 | <!-- 指標の説明 --> |
+| 分子 | <!-- 分子の定義 --> |
+| 分母 | <!-- 分母の定義 --> |
+| 除外条件 | <!-- 除外するケース --> |
+| 日付の扱い | <!-- 発生日 or 集計日 or 報告日 --> |
+| 粒度 | <!-- 日次、週次、月次 --> |
+| 備考 | <!-- 注意点 --> |
+
+
+ Validation and testing
+これは、pytest・ruff・mypy・notebook 検証・データ検証の実行方法と設定の置き場所をまとめたものです。それぞれのコマンドと、pyproject.toml のどのセクションに設定があるかを書いておくことで、AI が設定ファイルを探し回らずに済みます。最後に run_quality_checks.sh で一括実行できるようにしてあるので、コミット前にこれを回す運用にしています。運用回りの話になるので「プロジェクトごとに設定するもの」として扱っています。
+docs/agent/validation-and-testing.md
+docs/agent/validation-and-testing.md
+# テスト・検証方針
+
+## pytest
+
+- テストは `tests/` ディレクトリに配置する
+- `uv run pytest` で実行する
+- テストは高速に保つ（外部依存を最小限に）
+
+## ruff
+
+- `uv run ruff check .` でリントする
+- `uv run ruff format .` でフォーマットする
+- 設定は `pyproject.toml` の `[tool.ruff]` セクション
+
+## mypy
+
+- `uv run mypy src` で型チェックする
+- 設定は `pyproject.toml` の `[tool.mypy]` セクション
+
+## Notebook検証
+
+- Notebookがクリーンなカーネルから再実行できることを確認する
+- 秘密情報がセル出力に含まれていないことを確認する
+
+## データ検証
+
+- `uv run python scripts/check_no_raw_data_commit.py` — rawデータのコミット防止
+- `uv run python scripts/check_no_sensitive_patterns.py` — 秘密情報パターンの検出
+
+## エージェント文書検証
+
+- `uv run python scripts/validate_agent_docs.py` — 必須ファイルの存在確認
+
+## 一括実行
+
+```bash
+bash scripts/run_quality_checks.sh
+```
+
+
+
+ Reporting guidelines
+ここでは、分析レポートのテンプレートを定義しています。「結論を最初に書く」構成で、背景・目的、データと手法、結果、解釈と提言、制約・注意点、そして再現手順までを型にしています。特に再現手順（入力データ・スクリプト・出力・実行コマンド）を必ず残させるのがポイントで、後から自分や他の人が同じ結果を再現できるようにしています。詳細は analysis-reporting skill 側に置いています。もちろん、組織のルールや好みがかなりあると思うので、どんどん育てていってください。
+docs/agent/reporting-guidelines.md
+docs/agent/reporting-guidelines.md
+# 報告ガイドライン
+
+分析結果の報告テンプレートです。詳細は `.github/skills/analysis-reporting/SKILL.md` を参照してください。
+
+## 報告テンプレート
+
+### タイトル
+
+**分析者**: （名前）
+**期間**: YYYY-MM-DD 〜 YYYY-MM-DD
+**ステータス**: ドラフト / レビュー中 / 完了
+
+---
+
+### 結論
+
+<!-- 最も重要な発見を最初に書く -->
+
+### 分析の背景と目的
+
+<!-- なぜこの分析を行ったか -->
+
+### データと手法
+
+- **データソース**: <!-- 使用したデータのパスと説明 -->
+- **対象期間**: <!-- 分析対象期間 -->
+- **サンプルサイズ**: <!-- レコード数 -->
+- **手法**: <!-- 使用した分析手法 -->
+
+### 結果
+
+<!-- 事実に基づく結果を記述 -->
+
+### 解釈と提言
+
+<!-- 結果の解釈と推奨アクション -->
+
+### 制約・注意点
+
+<!-- 限界、バイアス、注意すべき点 -->
+
+### 再現手順
+
+- **入力データ**: `data/raw/xxx.parquet`
+- **分析スクリプト**: `notebooks/NNN_analysis.ipynb`
+- **出力**: `outputs/figures/xxx.png`, `outputs/tables/xxx.csv`
+- **実行コマンド**: `uv run papermill notebooks/NNN_analysis.ipynb notebooks/NNN_output.ipynb`
+
+
+
+ Security and privacy
+これは、raw データ・認証情報・PII の扱いに関するプロジェクト固有のルールをまとめたものです。data/raw と data/external は .gitignore 対象かつ不変、.env はコミットしない（キー名だけ .env.example に置く）、API キーやパスワードをハードコードしない、PII や顧客レベルのレコードはコミットしない、といった事項を明記しています。safe-data-handling skill が「作業手順」なのに対して、こちらは「このプロジェクトでの取り決め」という位置づけです。あわせて検証スクリプトと CI での自動チェックにも触れ、自然言語ベースのお願いで終わらせない構成にしています。
+docs/agent/security-and-privacy.md
+docs/agent/security-and-privacy.md
+# セキュリティ・プライバシー
+
+## Raw Data
+
+- `data/raw/` と `data/external/` は `.gitignore` でコミット対象外にしている。
+- これらのディレクトリのデータは不変として扱う。
+
+## Credentials・Secrets
+
+- `.env` ファイルは `.gitignore` でコミット対象外。
+- `.env.example` にキー名のみ記載し、実際の値は含めない。
+- APIキー、トークン、パスワードをコード中にハードコードしない。
+- `python-dotenv` を使って環境変数から読み込む。
+
+## PII・顧客データ
+
+- 個人を特定できる情報（PII）をコミットしない。
+- 顧客レベルのレコードをコミットしない。
+- 集計・匿名化したデータのみ `data/processed/` や `outputs/` に保存可能。
+- 分析結果にも個人が特定されないよう注意する。
+
+## 検証スクリプト
+
+- `scripts/check_no_raw_data_commit.py` — rawデータのコミットを検知する。
+- `scripts/check_no_sensitive_patterns.py` — 秘密情報のパターンを検知する。
+
+## CIでの保護
+
+- GitHub Actions CI で上記スクリプトを自動実行し、違反を検知する。
+
+
+
+ Agent behavior
+最後はやや毛色が違って、AI エージェントそのものに期待するふるまいを定義しています。「小さな差分にする」「仮定を明示する」「危険な操作の前に確認する」「不明点は推測せず質問する」という基本方針に加え、「やるべきこと」「やってはいけないこと」を対比で並べています。skill やルーティングは「どこを見るか」を示すものですが、こちらは「どういう姿勢で動いてほしいか」をまとめた、いわばエージェントの行動規範です。
+docs/agent/agent-behavior.md
+docs/agent/agent-behavior.md
+# エージェント行動指針
+
+AIエージェント（GitHub Copilot等）に期待するふるまいを定義します。
+
+## 基本方針
+
+- **小さな差分**: 変更は小さく、レビュー可能な単位で行う。
+- **仮定の明示**: 分析上の仮定は必ず明記する。
+- **危険操作前の確認**: データの削除、上書き、破壊的SQL実行の前に確認する。
+- **不明点の確認**: データの意味が不明な場合は推測せず質問する。
+
+## やるべきこと
+
+- `AGENTS.md` のルーティングテーブルに従い、適切なskillを参照する。
+- `docs/agent/*` のプロジェクト固有文書を参照する。
+- コード変更後は `uv run ruff check .` と `uv run pytest` を実行する。
+- 分析結果にはデータ期間、フィルタ条件、サンプルサイズを明記する。
+
+## やってはいけないこと
+
+- `data/raw/` や `data/external/` のデータを変更・削除する。
+- 秘密情報やPIIをコミットする。
+- pip、conda、poetryを使ってパッケージをインストールする。
+- `SELECT *` を本番クエリで使う。
+- 根拠なくデータの因果関係を主張する。
+- 過度に大きな変更を一度に行う。
+
+
+
+ 本当に守らせたいものは scripts や CI にする
+AGENTS.md や skills は便利ですが、あくまで自然言語の「お願い」であり、本当に守らせたいものは、scripts や CI にした方が良いです。
+既にもういくつか記事中に登場していますが、例えば以下のようなものです。
+scripts/
+├── check_no_raw_data_commit.py
+├── check_no_sensitive_patterns.py
+├── run_quality_checks.sh
+└── validate_agent_docs.py
+check_no_raw_data_commit.py では、data/raw や data/external に .gitkeep 以外のファイルを入れていないか確認します。
+check_no_sensitive_patterns.py では、API key や token っぽい文字列が入っていないか確認します。
+validate_agent_docs.py では、AGENTS.md、.github/copilot-instructions.md、.github/skills/*/SKILL.md、docs/agent/* が存在するか確認します。
+run_quality_checks.sh では、上記のスクリプトに加え ruff, mypy, pytest をまとめて実行します。
+これらを CI で流せば、AI がうっかり変なファイルを追加しても気づきやすくなります。
+
+ 小さいプロジェクト/初手ではどこまでやるか
+ここまで書くと、ちょっと大げさに見えるかもしれません。
+短期の検証プロジェクトなら、最初からすべて全部は必要はないと思っています。例えば、以下のような最低限の構成も考えられます。
+.
+├── AGENTS.md
+├── .github/
+│   ├── copilot-instructions.md
+│   ├── instructions/
+│   │   ├── python.instructions.md
+│   │   ├── sql.instructions.md
+│   │   ├── notebooks.instructions.md
+│   │   ├── docs.instructions.md
+│   │   └── data.instructions.md
+│   └── skills/
+│       ├── python-project-ops/
+│       │   └── SKILL.md
+│       ├── safe-data-handling/
+│       │   └── SKILL.md
+│       ├── sql-analysis/
+│       │   └── SKILL.md
+│       ├── python-style/
+│       │   └── SKILL.md
+│       ├── dataframe-polars/
+│       │   └── SKILL.md
+│       ├── visualization/
+│       │   └── SKILL.md
+│       ├── path-and-io/
+│       │   └── SKILL.md
+│       └─── notebook-workflow/
+│           └── SKILL.md
+├── scripts/
+│   ├── check_no_raw_data_commit.py
+│   ├── check_no_sensitive_patterns.py
+│   ├── run_quality_checks.sh
+│   └── validate_agent_docs.py
+└── docs/
+    └── agent/
+        ├── data-catalog.md
+        └── metrics-and-definitions.md
+        
+Skills や instructions はほとんど全部入れますが、統計・ML、レポーティングは、プロジェクトが長期化したり、複数人で触るようになってから分けても良いです。
+docs/ はプロジェクトの最初に決めるべきことや、引継ぎを想定してデータに関する記述をしっかりしておくと安心です。PR（Pull Request）の際のチェック項目にしておけば属人化して書かれないといった事態も避けられます。
+
+ デモ
+
+kaggleの練習用でも有名なタイタニックデータを利用して、ここで作ったプロジェクトの動作感を確認します。
+
+データはローカルで data/raw/titanic/train.csv に置いておきます。
+data/raw は raw data なので、Git 管理には含めません。
+ここまでで、AGENTS.md、.github/copilot-instructions.md、.github/skills/*、docs/agent/*、.github/prompts/* を用意しました。
+データ分析業務に慣れている人は、ご自身でプロンプトを書いたり、自分が思い描いた方法を指示すれば良いですが、慣れていない人でも、例えば用意したカスタムプロンプトを用いて以下のように指示すればざっくり動いてくれます。
+/plan-analysis
+
+dataset_path: data/raw/titanic/train.csv
+objective: Titanic passengers の生存要因を可視化し、Survived を予測する簡単なモデルを作る
+/run-eda
+
+データは `data/raw/titanic/train.csv` にあります。
+/run-modeling
+
+dataset_path: data/raw/titanic/train.csv
+target: Survived
+task: Predict whether each Titanic passenger survived
+/summarize-analysis
+
+topic: Titanic survival analysis demo
+output_dir: outputs/
+/prepare-pr
+
+ 実行結果の概要
+上記のプロンプトを順番に実行すると、Copilot は以下のファイルを自動生成しました。
+src/analysis_project/
+├── eda.py         # EDA 用の集計・可視化関数
+├── features.py    # 特徴量エンジニアリング
+├── modeling.py    # 前処理パイプライン・モデル定義・評価関数
+└── paths.py       # パスユーティリティ（既存）
+
+scripts/
+├── run_titanic_eda.py       # EDA 実行スクリプト
+└── run_titanic_modeling.py  # モデリング実行スクリプト
+
+tests/
+└── test_features.py   # 特徴量エンジニアリングのテスト（15ケース）
+人間が書いたのはプロンプトだけです。
+以下、生成されたコードと出力を見ながら .github 以下のルールがちゃんと効いているか を確認していきます。
+
+ ルールの効き具合を確認
+
+ 可視化ルール（visualization skill）
+まず一番わかりやすいのがグラフです。visualization skill には以下のようなルールを書きました。
+
+
+fig, ax = plt.subplots(...) を使う（plt.figure() は禁止）
+
+font_scale=1.2 でフォントサイズを統一する
+日本語フォントを設定する（文字化け防止）
+棒グラフは y 軸を 0 起点にする
+
+"muted" パレットを使う（"jet" / "rainbow" は禁止）
+
+constrained_layout=True でレイアウト崩れを防ぐ
+
+dpi=150 で保存する
+
+実際に生成された図を見てみましょう。
+
+このグラフを見ると、以下が確認できます。
+
+
+日本語のタイトル・軸ラベルが文字化けしていない（「性別ごとの生存率（Titanic）」「生存率」がちゃんと表示されている）
+
+フォントサイズが十分に大きい（font_scale=1.2 が効いている）
+
+y 軸が 0 起点で 1.0 まで（棒グラフのルール通り）
+
+バーの上にサンプルサイズ n=314, n=577 が表示されている（データの信頼度が一目でわかる）
+
+"muted" パレットの落ち着いた色合い
+
+visualization skill を書いていなかったころは、plt.figure(figsize=(14,7)) で作られたり、日本語が □□□ になったり[19]、y 軸が切り詰められたりしていました。毎回手で直すのは面倒なので、skill に書いておく価値があります。
+もう少し複雑なグラフも見てみます。
+
+性別×客室クラスのクロス集計です。hue（色分け）にクラスが使われ、凡例も配置されています。visualization skill には「2 系列以上のときは legend を使う」と書きましたが、ちゃんと右上に凡例が出ています。
+ヒストグラムも確認します。
+
+生存別の年齢分布では、凡例のラベルが「死亡」「生存」と 日本語 になっています。これは visualization skill と python-style skill（コメントは日本語）の組み合わせで実現されています。ヒストグラムは 0 起点のルールの対象外なので、matplotlib のオートスケールに任せています。
+
+相関行列のヒートマップです。カラーマップに "coolwarm"（ダイバージングパレット）が使われており、visualization skill の「ダイバージング → coolwarm, RdBu, vlag」のルール通りです。annot=True で相関係数が表示されているので、数値も読めます。
+
+ DataFrame ルール（dataframe-polars skill）
+生成されたコードでは、すべての集計処理が polars で書かれています。
+import polars as pl
+
+df = pl.read_csv(raw_path)
+
+# グループごとの生存率を集計
+return (
+    df.group_by(list(group_cols))
+    .agg(
+        pl.len().alias("count"),
+        pl.col("Survived").sum().alias("survived"),
+        pl.col("Survived").mean().alias("survival_rate"),
+    )
+    .sort(list(group_cols))
+)
+pandas が使われているのは sklearn に渡す直前の .to_pandas() 変換のみです。dataframe-polars skill に「pandas は外部ライブラリの要求時のみ使用し、最小限にする」と書きましたが、その通りになっています。
+
+ パス管理ルール（path-and-io skill）
+実装の途中に突然ハードコードされた絶対パスは一切なく、すべて pathlib.Path ベースです。
+from analysis_project.paths import data_dir, outputs_dir, ensure_parent_dir
+
+raw_path = data_dir() / "raw" / "titanic" / "train.csv"
+output_path = outputs_dir() / "tables" / "missing_values.csv"
+ensure_parent_dir(output_path)
+path-and-io skill に書いた「pathlib.Path を使う」「絶対パスを埋め込まない」「src/analysis_project/paths.py のユーティリティを使う」がすべて守られています。
+
+ Python スタイル（python-style skill）
+生成された関数にはすべて Google スタイルの docstring がついており、コメントは日本語です。
+def missing_value_summary(df: pl.DataFrame) -> pl.DataFrame:
+    """各カラムの欠損値数と欠損率を集計する。
+
+    Args:
+        df: 分析対象の DataFrame。
+
+    Returns:
+        カラム名・欠損数・欠損率を含む DataFrame。
+    """
+    total = df.height
+    # 各カラムの null 数を集計
+    null_counts = [df[col].null_count() for col in df.columns]
+    ...
+型ヒント（df: pl.DataFrame -> pl.DataFrame）もついています。
+
+ テストと品質チェック（python-project-ops skill）
+$ uv run pytest
+tests/test_features.py ...............    [78%]
+tests/test_paths.py ....              [100%]
+19 passed
+
+$ uv run ruff check src/ scripts/
+All checks passed!
+テストでは敬称抽出、家族サイズ計算、HasCabin フラグ、リーケージ検出、build_features の出力カラム確認など 19 ケースが検証されています。python-project-ops skill に「コード変更後は uv run ruff check . と uv run pytest を実行する」と書きましたが、スクリプト生成後にちゃんと実行しています。
+
+ 分析結果
+ルールの確認ができたので、分析結果自体も簡単にまとめておきます。
+
+ EDA 結果
+
+
+
+属性
+カテゴリ
+生存率
+人数
+
+
+
+
+全体
+—
+38.4%
+891
+
+
+性別
+女性
+74.2%
+314
+
+
+性別
+男性
+18.9%
+577
+
+
+客室クラス
+1等
+63.0%
+216
+
+
+客室クラス
+2等
+47.3%
+184
+
+
+客室クラス
+3等
+24.2%
+491
+
+
+
+
+ モデリング結果
+使用した特徴量は 11 個で、Pclass, Sex, Age, SibSp, Parch, Fare, Embarked に加え、派生特徴量として FamilySize, IsAlone, HasCabin, Title を追加しています。
+
+
+
+モデル
+Accuracy
+Precision
+Recall
+F1
+AUC
+
+
+
+
+ベースライン（性別のみ）
+0.777
+0.738
+0.652
+0.692
+0.753
+
+
+ロジスティック回帰
+0.832
+0.800
+0.754
+0.776
+0.872
+
+
+ロジスティック回帰（5-Fold CV）
+0.828 ± 0.010
+—
+—
+—
+—
+
+
+
+
+左がベースライン、右がロジスティック回帰。ロジスティック回帰では偽陰性（生存者の見逃し）が 24→17 に減少。ここでも日本語タイトルが正しく表示され、フォントサイズも十分。
+
+ROC 曲線の凡例にも日本語が使われている（「ベースライン（性別ベース）」「ロジスティック回帰」）。2 系列以上なので凡例が表示されており、visualization skill 通り。
+
+ロジスティック回帰の係数。正（緑）が生存に寄与、負（赤）が死亡に寄与。x=0 に補助線が引かれている。
+特徴量重要度の上位は Title_Master（+1.28）、Title_Mr（-1.27）、Sex_female（+0.81）、Pclass（-0.59）で、EDA で見た「女性と上位クラスの生存率が高い」という知見と整合しています。
+
+ まとめ
+「AIにほぼ丸投げ」状態でそれっぽい図やソースコードが得られました。このように、skills を設定しておくことで「pandas で書かれた」「plt.figure() で書かれた」「日本語が □□□ になっている」「raw data を上書きした」「リーケージチェックがない」といった 毎回同じ修正を繰り返す手間 はなくなります。これが、.github 以下を整備する最大のメリットです。
+繰り返しになりますが、生成されたコードや分析結果を鵜呑みにせずに、実行者が責任を持って検証しましょう。
+
+ 結び
+本記事ではデータ分析する上で、AGENTS.md や Skills として設定しておくと便利な項目と具体例を紹介しました。分析スクリプトを書くためのノウハウをこのように「実行可能な形」でドキュメント化できるようになったのはとても大きく、この手の取り組みは組織の分析力の底上げ/効率化につながると確信しています。
+
+脚注
+
+
+こういった変な比喩を使うのは個人的に好きなのですが、どうしてもAIっぽくなるので使うか毎回迷った挙句使うことにしています。 ↩︎
+
+
+機械的にできることはできるだけこっちでやる方がよいです。 ↩︎
+
+
+リポジトリ全体に適用される指示・ルールのことです。 ↩︎
+
+
+リポジトリ内の特定のパスに一致するファイルのコンテキストで適用される指示のことです。 ↩︎
+
+
+AI coding agent に対して与える作業ルール・振る舞いの指示です。 ↩︎
+
+
+github-custom-instructions ↩︎
+
+
+github-skills ↩︎
+
+
+github-prompt-files ↩︎
+
+
+AI コーディングを使い倒している人からすると当たり前かもしれませんが、データサイエンス観点で再整理しました。 ↩︎
+
+
+Rust で実装された高速に動作する Pythonの linter であり code formatter です。 ↩︎
+
+
+Rust で実装された高速に動作する Python のパッケージマネージャーです。 ↩︎
+
+
+絶対ではないです。 ↩︎
+
+
+Personally Identifiable Information.「個人を特定できる情報」や「個人識別情報」のことです。そもそも組織によっては PII はAIが読みに行ってはいけないルールを課している場合があるので、各自で確認してください。 ↩︎
+
+
+AI に相談して書いてもらいました。 ↩︎
+
+
+もちろん図を直接修正するといういみではなく、Python を修正するという意味です。 ↩︎
+
+
+図を顧客に見せる機会が多いので、注意深く作っています。 ↩︎
+
+
+「画面上で見えているコードの状態」と「裏側（メモリ上/カーネル）で保持されている変数の状態」が食い違ってしまっている状態のことです。適当にやりたいように notebook を触っているとこのようなことになってしまいます。 ↩︎
+
+
+いや、もうすでにそういうタイミングなのかもしれません ↩︎
+
+
+よく豆腐って言いますよね。 ↩︎
+
+---
+
+## 36. [Claude × Codex × Gemini を"併用"する設計 ─ セカンドオピニオン運用フレーム #AI - Qiita](https://qiita.com/nogataka/items/b2b4a84ba611ccaf8447)
 - **優先度**: High
 - **スコア**: 85
 - **解析日時**: 2026/5/4
@@ -13793,7 +15596,7 @@ Claude Code を主に据えて、Codex / Gemini を Skill 経由で呼ぶ構成�
 
 ---
 
-## 35. [毎回プロンプトで頑張らないためのPromptOps Templates｜hirokaji](https://note.com/tasty_dunlin998/n/n68eb27bc3b59)
+## 37. [毎回プロンプトで頑張らないためのPromptOps Templates｜hirokaji](https://note.com/tasty_dunlin998/n/n68eb27bc3b59)
 - **優先度**: High
 - **スコア**: 85
 - **解析日時**: 2026/5/7
@@ -14002,7 +15805,7 @@ Claude Code / Codexで使う、Done when・Hook・Skill・承認境界の実務�
 
 ---
 
-## 36. [AIエージェントは「増やす」と壊れる｜hirokaji](https://note.com/tasty_dunlin998/n/n969899421173)
+## 38. [AIエージェントは「増やす」と壊れる｜hirokaji](https://note.com/tasty_dunlin998/n/n969899421173)
 - **優先度**: High
 - **スコア**: 85
 - **解析日時**: 2026/5/7
@@ -14030,7 +15833,7 @@ PromptOps Runtime Tips #5 Sub-AgentとAgent Teamを分ける基準は、役割�
 
 ---
 
-## 37. [Gemini CLI で Subagents を活用し、ブログ執筆を Orchestrate してみた(情報収集→執筆→ファクトチェック→修正 をサイクリックに) #GoogleCloud - Qiita](https://qiita.com/hirosait/items/d43936339965618cafef)
+## 39. [Gemini CLI で Subagents を活用し、ブログ執筆を Orchestrate してみた(情報収集→執筆→ファクトチェック→修正 をサイクリックに) #GoogleCloud - Qiita](https://qiita.com/hirosait/items/d43936339965618cafef)
 - **優先度**: High
 - **スコア**: 85
 - **解析日時**: 2026/5/7

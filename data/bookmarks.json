@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-04T02:47:00.886Z",
+  "updated_at": "2026-06-08T02:46:14.747Z",
   "articles": [
     {
       "id": "1702129693",
@@ -4302,6 +4302,180 @@
       "status": "unread",
       "analyzed_at": "2026-06-04T02:47:00.886Z",
       "markdown_path": "data/notebooklm_sources/ClaudeCodeとCodexにコーディングを全て任せて商用レベルのUnityゲーム開発を行う【後編】 - Qiita.md"
+    },
+    {
+      "id": "1748986051",
+      "url": "https://forest.watch.impress.co.jp/docs/news/2113901.html",
+      "title": "「Google ドライブ」の散らかったファイルをGeminiが自動で整理してくれるように／表示言語が英語に設定されているユーザー向けに提供",
+      "summary": "Geminiがファイルを分析し適切なフォルダ移動や作成を提案する機能が一般提供開始\nユーザーは提案された移動先を確認し、フォルダ名のインライン編集や選択解除が可能\n現在は表示言語が英語のユーザーかつ特定のGoogle Workspace等のプラン向けに提供",
+      "score": 25,
+      "read_now_reason": "AIによるファイル分類・整理における提案型UI/UX（確認、修正、一括実行）の設計アプローチを把握する参考になります。",
+      "defer_reason": "Google Workspaceの一般ユーザー向けUI機能の紹介であり、AI駆動開発や自動化パイプライン構築に直接適用できるAPI、コード、設定ファイルは含まれていないため。",
+      "tags": [
+        "GoogleDrive",
+        "Gemini",
+        "AIユースケース"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-08T02:35:12.107Z",
+      "markdown_path": "data/notebooklm_sources/「Google ドライブ」の散らかったファイルをGeminiが自動で整理してくれるように／表示言語が英語に設定されているユーザー向けに提供.md"
+    },
+    {
+      "id": "1748986036",
+      "url": "https://newspicks.com/news/16789148/body/",
+      "title": "Claude Codeの作業フォルダ設計〜初心者が最初に作るべきディレクトリ構成〜",
+      "summary": "Claude Codeの出力を安定させる推奨フォルダ構成（inbox、reference等）を提示\n.claude/フォルダ内にプログラミング用の設定やskillsを配置することを推奨\n記事作成や議事録、調査など業務用途に応じたディレクトリ構成の具体例を紹介",
+      "score": 50,
+      "read_now_reason": "Claude Codeを活用したAI駆動開発において、エージェントのコンテキスト理解を助ける作業ディレクトリ設計の基本概念を把握できるため。",
+      "defer_reason": "紹介されている構成が一般的なドキュメントや記事作成向けであり、開発プロジェクトや自動化パイプライン構築に特化した具体的な設定コードやCLAUDE.mdの記述例が欠けているため。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "環境構築"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-08T02:36:20.398Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeの作業フォルダ設計〜初心者が最初に作るべきディレクトリ構成〜.md"
+    },
+    {
+      "id": "1748986002",
+      "url": "https://qiita.com/rex0220/items/53cc389d2c92ecaff070",
+      "title": "Google Antigravity 2.0で専門技術記事はどこまで作れるか：時計編 - Qiita",
+      "summary": "Google Antigravity 2.0を用いた専門技術記事の作成検証に関する記事。\nアクセス制限（403 Error）により、現時点で詳細な本文内容が取得不可。\nタイトルから実験的なコンテンツ作成の試みと推測される。",
+      "score": 10,
+      "read_now_reason": "なし。アクセスエラーが発生しており、現在のプロジェクトに即時適用可能な技術情報も含まれていません。",
+      "defer_reason": "403エラーにより本文が閲覧できない状態であり、かつタイトルから判断して自動化パイプラインやAI駆動開発に直結する技術要素が欠如しているため。",
+      "tags": [
+        "アクセスエラー",
+        "検証・実験"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-08T02:37:29.416Z",
+      "markdown_path": "data/notebooklm_sources/Google Antigravity 2.0で専門技術記事はどこまで作れるか：時計編 - Qiita.md"
+    },
+    {
+      "id": "1748985957",
+      "url": "https://zenn.dev/flinters_blog/articles/02540e0b0429b7",
+      "title": "「モデルが悪い」をやめる — Learn Harness Engineering を読んで考えた、AIエージェントの失敗を層に分ける習慣",
+      "summary": "AIエージェントを制御する基盤「ハーネス」を構成する5つのサブシステム（指示、環境、検証等）を提示。\n失敗を「モデルのせい」にせず、5つの防御層に帰属させて記録・計測する診断ループを推奨。\nルール追加による指示ファイルの肥大化がコンテキストを圧迫し性能を低下させる「巨大な指示の罠」を警告。",
+      "score": 60,
+      "read_now_reason": "AI駆動開発プロジェクトにおいて、エージェントの出力精度向上や自律動作の安定化を図るための「ハーネス（エンジニアリング基盤）」の設計思想や、失敗原因の分類フレームワーク（5つの防御層）を即座に設計へ取り入れられるため。",
+      "defer_reason": "ハーネスエンジニアリングの概念的フレームワークや重要性の解説が主であり、特定のAIエージェントフレームワークに直接適用できる具体的なソースコードや構築用の詳細な設定ファイルが欠けているため。",
+      "tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "ハーネスエンジニアリング",
+        "ソフトウェア品質"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-08T02:39:35.718Z",
+      "markdown_path": "data/notebooklm_sources/「モデルが悪い」をやめる — Learn Harness Engineering を読んで考えた、AIエージェントの失敗を層に分ける習慣.md"
+    },
+    {
+      "id": "1748985943",
+      "url": "https://zenn.dev/miyagawayuu/articles/kawaii-nodes-dev-blog",
+      "title": "ComfyUI用のKawaiiNodesを作った",
+      "summary": "ComfyUIでプロンプトを要素ごとに分解・部品化するカスタムノードの開発記録\nLLMによる自然なプロンプト書き直しを想定した構造化出力とパラメータ設計\n表記揺れを防ぐクリーナーや、複数案を容易に切り替えるスイッチノードの実装",
+      "score": 45,
+      "read_now_reason": "LLMによるプロンプト生成と画像生成AIのパイプライン連携における、入力テキストの正規化手法やワークフローのモジュール化設計が参考になります。",
+      "defer_reason": "内容は特定のComfyUI用UIカスタムノードの紹介であり、現在の自動化パイプライン構築に直接組み込める汎用的なバックエンドコードやデプロイ設定は含まれていないため。",
+      "tags": [
+        "ComfyUI",
+        "プロンプトエンジニアリング",
+        "画像生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-08T02:40:42.553Z",
+      "markdown_path": "data/notebooklm_sources/ComfyUI用のKawaiiNodesを作った.md"
+    },
+    {
+      "id": "1748985898",
+      "url": "https://zenn.dev/aria3/articles/claude-code-dynamic-workflows-6-patterns",
+      "title": "Claude Code「Dynamic Workflows」完全ガイド：6つのパターンと14ステップ",
+      "summary": "単一コンテキストの限界を解決するClaude Codeの動的ワークフローの仕組みと起動方法を解説\nコアAPI（agent, parallel, pipeline）と、敵対的検証やトーナメントなど6つの設計パターンを提示\nエージェントの怠慢や目標ドリフトを防ぎ、複雑な開発タスクを自律的・並列に処理する実践手法を網羅",
+      "score": 92,
+      "read_now_reason": "AI駆動開発やパイプライン構築において、エージェントの精度低下（目標ドリフトや怠慢）を防ぐ具体的なオーケストレーション手法とコアAPI（parallelやpipeline）の使用例が明記されており、即座に実装設計へ適用できるため。",
+      "defer_reason": "Claude Codeの独自機能である「Dynamic Workflows」に特化した内容であるため、現在Claude Codeを開発プロセスに導入していない、あるいは静的なプロンプト実行のみで運用している場合は後回しにしても問題ありません。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code",
+        "エージェントアーキテクチャ",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-08T02:41:49.564Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code「Dynamic Workflows」完全ガイド：6つのパターンと14ステップ.md"
+    },
+    {
+      "id": "1748985868",
+      "url": "https://zenn.dev/green_tea/articles/d310e5cf809190",
+      "title": "データサイエンティストのためのAGENTS.mdとSkills",
+      "summary": "AIエージェントのコンテキスト肥大化を防ぐディレクトリ構成とファイル分割手法を提示\nAGENTS.mdを「ルーター」として定義し詳細ルールをSkills等に逃がす設計原則を提唱\nGitHub CopilotやClaude Codeの仕様に最適化された最新の命令定義ルールを解説",
+      "score": 88,
+      "read_now_reason": "AI駆動開発プロジェクトにおいて、AIエージェント（Copilot/Claude Code等）に渡すコンテキスト量を削減し、精度向上とトークン消費の最適化を両立する具体的なディレクトリ構成・プロンプト設計を即座に適用できるため。",
+      "defer_reason": "データ分析業務（SQLやPolars等）に特化した設定例が多いため、純粋なインフラ自動化パイプライン構築に限定して作業する場合は、適用範囲を絞る必要があり一時的に後回しにすることも可能。",
+      "tags": [
+        "AI駆動開発",
+        "Copilot_Instructions",
+        "AGENTS.md",
+        "コンテキスト管理",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-08T02:42:56.801Z",
+      "markdown_path": "data/notebooklm_sources/データサイエンティストのためのAGENTS.mdとSkills.md"
+    },
+    {
+      "id": "1748985833",
+      "url": "https://note.com/kawaidesign/n/ndfa4afa6d5ca",
+      "title": "【完全保存版】広告生成プロンプト大全｜KAWAI",
+      "summary": "広告生成に特化したプロンプトのまとめ記事と推測される\nアクセス制限エラーが発生しており本文の具体的な内容が取得できない\nAI駆動開発や自動化パイプラインに直結する技術情報であるかは不明",
+      "score": 15,
+      "read_now_reason": "現時点ではエラーにより内容が確認できないため、今すぐ読むべき技術的優先度は極めて低いです。",
+      "defer_reason": "本文が取得できないことに加え、広告用プロンプトというテーマ自体が現在の開発プロジェクトに直結しないため。",
+      "tags": [
+        "プロンプトエンジニアリング",
+        "マーケティング",
+        "エラー記事"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-08T02:44:02.181Z",
+      "markdown_path": "data/notebooklm_sources/【完全保存版】広告生成プロンプト大全｜KAWAI.md"
+    },
+    {
+      "id": "1748985762",
+      "url": "https://qiita.com/tateishi-t/items/03529caccd796a8a8dcf",
+      "title": "Claude Codeのフックで「自分専用セカンドブレイン」を作る ─ 10本超のフック構成と実装例 - Qiita",
+      "summary": "Claude Codeのフック機能を活用したセカンドブレイン構築手法の解説\n自動化や効率化に直結する10本以上の具体的なフック構成の提示\nAI駆動開発における開発プロセスのカスタマイズと実装例の紹介",
+      "score": 85,
+      "read_now_reason": "AI駆動開発の最新ツールであるClaude Codeのフック機能を活用し、開発プロセスの自動化や情報整理を効率化する具体的な実装例が10本以上紹介されているため、即座にパイプライン構築に適用可能です。",
+      "defer_reason": "現在Claude Codeを開発環境に導入する予定がない場合、またはCLIツールのカスタマイズが開発タスクにおいて優先度が低い場合は後回しにしても問題ありません。",
+      "tags": [
+        "Claude-Code",
+        "AI駆動開発",
+        "自動化パイプライン",
+        "生産性向上"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-08T02:45:09.466Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeのフックで「自分専用セカンドブレイン」を作る ─ 10本超のフック構成と実装例 - Qiita.md"
+    },
+    {
+      "id": "1748985714",
+      "url": "https://note.com/npaka/n/n3ad5e2331e00",
+      "title": "Google Colab CLI を試す｜npaka",
+      "summary": "提供されたソーステキストがCloudFrontの403エラーにより取得できない状態である\nタイトルからGoogle Colab CLIに関する検証記事であることが推測される\n本文が欠損しているため具体的なコマンドや実装プロセスの確認は不可能である",
+      "score": 5,
+      "read_now_reason": "記事コンテンツがエラーにより取得できないため、現時点で読むメリットはありません。",
+      "defer_reason": "CloudFrontによるアクセス制限（403エラー）が発生しており、具体的な技術情報が一切含まれていないため。",
+      "tags": [
+        "Google Colab",
+        "CLI",
+        "アクセスエラー"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-08T02:46:14.747Z",
+      "markdown_path": "data/notebooklm_sources/Google Colab CLI を試す｜npaka.md"
     }
   ]
 }
