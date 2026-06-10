@@ -122,7 +122,7 @@
                 <span class="text-[9px] font-bold text-[#8e8e93] uppercase tracking-widest mr-1">Top Focus Tags:</span>
             </div>
             <div class="flex justify-between items-center mt-2">
-                <p class="text-[9px] text-[#8e8e93] font-medium tracking-tight">最終アップデート: 2026/6/8 2:46:14</p>
+                <p class="text-[9px] text-[#8e8e93] font-medium tracking-tight">最終アップデート: 2026/6/10 2:22:46</p>
                 <a href="./data/notebooklm_master.md" target="_blank" class="text-[9px] text-[#e8c3b9] hover:underline font-bold tracking-tight">📝 NotebookLM用統合ソースを開く</a>
             </div>
         </div>
@@ -1532,6 +1532,86 @@ GitHub CopilotやClaude Codeの仕様に最適化された最新の命令定義�
       </div>
 
       <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-red-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1751517208"
+           data-title="Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール"
+           data-summary="CLAUDE.md、agents、skills、hooksの役割と使い分けを2軸（発火条件・文脈共有）で整理。
+サブエージェントの質問不可という制約に対し、成果物と承認依頼を委譲元に返す明文化ルールで対処。
+hooksを活用し、編集時の軽いコード整形とターン終了時の重い静的解析を最適に連携させて自動化。"
+           data-priority="high"
+           data-score="88"
+           data-tags="ClaudeCode,AI駆動開発,自動化パイプライン,LLMエンジニアリング">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-red-950/40 text-red-300 border border-red-900/50">High <span class="opacity-70">· 88</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1751517208')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1751517208')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/10</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks" target="_blank">Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ CLAUDE.md、agents、skills、hooksの役割と使い分けを2軸（発火条件・文脈共有）で整理。</p><p class="leading-relaxed">・ サブエージェントの質問不可という制約に対し、成果物と承認依頼を委譲元に返す明文化ルールで対処。</p><p class="leading-relaxed">・ hooksを活用し、編集時の軽いコード整形とターン終了時の重い静的解析を最適に連携させて自動化。</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AI駆動開発におけるClaude Codeの文脈枯渇を回避する設計原則や、JSON設定およびフック用のスクリプト設計が具体的に明記されており、今すぐ開発自動化パイプラインへ適用可能なため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#ClaudeCode</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI駆動開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#自動化パイプライン</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#LLMエンジニアリング</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/Claude Codeのagents _ skills _ hooksをどう使い分ける？実プロダクト開発で出した運用ルール.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-red-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1751517185"
+           data-title="AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita"
+           data-summary="AGENTS.mdはAIエージェントにリポジトリのルールを伝えるための「AI用README」である
+ツール依存の設定を統合し、AIが推論できない独自の規約や立ち入り禁止の境界線を明記する
+Agentic AI Foundationが管理するオープン標準であり、CursorやClaude Codeに対応している"
+           data-priority="high"
+           data-score="88"
+           data-tags="AI駆動開発,AGENTS.md,Context_Engineering,開発標準化">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-red-950/40 text-red-300 border border-red-900/50">High <span class="opacity-70">· 88</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1751517185')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1751517185')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/10</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a" target="_blank">AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ AGENTS.mdはAIエージェントにリポジトリのルールを伝えるための「AI用README」である</p><p class="leading-relaxed">・ ツール依存の設定を統合し、AIが推論できない独自の規約や立ち入り禁止の境界線を明記する</p><p class="leading-relaxed">・ Agentic AI Foundationが管理するオープン標準であり、CursorやClaude Codeに対応している</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AI駆動開発において、エージェントによる誤ったコマンド実行や規約違反、不要な差分生成などの手戻りを防ぐための「AGENTS.md」の具体的な書き方と設計原則（Context Engineering）が即座に導入できるため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI駆動開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AGENTS.md</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Context_Engineering</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#開発標準化</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-red-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1702135549"
            data-title="Claude × Codex × Gemini を&quot;併用&quot;する設計 ─ セカンドオピニオン運用フレーム #AI - Qiita"
            data-summary="Claude、Codex、Geminiの強みを活かした役割分担と、相互補完的な運用設計を定義
@@ -1651,18 +1731,18 @@ Agent Teamは共有タスクリストとメッセージングを用い、状態�
           </div>
       </div>
 
-      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-red-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1702135526"
            data-title="Gemini CLI で Subagents を活用し、ブログ執筆を Orchestrate してみた(情報収集→執筆→ファクトチェック→修正 をサイクリックに) #GoogleCloud - Qiita"
            data-summary="Gemini CLIのSubagents機能を使い、情報収集から執筆、検閲までを行う多段階自動化フローを構築。
 エージェントごとにツール権限やプロンプトを定義し、ファイル経由で工程間の情報を引き継ぐ設計を提示。
 ファクトチェックの結果に応じてエラー判定エージェントが前工程へ差し戻す、自律的なサイクルを実現。"
-           data-priority="high"
+           data-priority="medium"
            data-score="85"
            data-tags="AgenticWorkflow,GeminiCLI">
           <div class="px-6 py-5 flex-grow">
               <div class="flex justify-between items-start mb-3">
-                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-red-950/40 text-red-300 border border-red-900/50">High <span class="opacity-70">· 85</span></span>
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 85</span></span>
                   <div class="flex items-center gap-2">
                     <button onclick="toggleStatus('1702135526')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
                         既読にする
@@ -2248,6 +2328,206 @@ AI駆動開発における開発プロセスのカスタマイズと実装例の
           <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
               <a href="https://qiita.com/tateishi-t/items/03529caccd796a8a8dcf" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
               <a href="./data/notebooklm_sources/Claude Codeのフックで「自分専用セカンドブレイン」を作る ─ 10本超のフック構成と実装例 - Qiita.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1751517358"
+           data-title="シンプルなプロンプトでも開発者体験を高めるマルチエージェント構成 構成編"
+           data-summary="人間の認知を分解したTREパイプラインとYAMLによるインターフェース設計を提示
+自然言語から構造化、実装計画、コード生成へ至る各ロールの具体的な入力・出力例を解説
+品質ゲートを「何を通さないか」という却下基準で定義し、自動検証する多層チェック機構を紹介"
+           data-priority="medium"
+           data-score="85"
+           data-tags="AIエージェント,マルチエージェント,パイプライン設計,YAMLバリデーション">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 85</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1751517358')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1751517358')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/10</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://zenn.dev/jinjer_techblog/articles/c40f3e62a21a55" target="_blank">シンプルなプロンプトでも開発者体験を高めるマルチエージェント構成 構成編</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ 人間の認知を分解したTREパイプラインとYAMLによるインターフェース設計を提示</p><p class="leading-relaxed">・ 自然言語から構造化、実装計画、コード生成へ至る各ロールの具体的な入力・出力例を解説</p><p class="leading-relaxed">・ 品質ゲートを「何を通さないか」という却下基準で定義し、自動検証する多層チェック機構を紹介</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">マルチエージェントやAI駆動パイプラインにおける出力の不安定さを解消するための、具体的なYAMLスキーマ定義、ルール設計、品質ゲート（rejection_criteria）の実装アプローチが極めて具体的に示されているため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AIエージェント</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#マルチエージェント</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#パイプライン設計</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#YAMLバリデーション</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://zenn.dev/jinjer_techblog/articles/c40f3e62a21a55" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/シンプルなプロンプトでも開発者体験を高めるマルチエージェント構成 構成編.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1751517298"
+           data-title="AIを1体で使うのをやめる ― 自分を「並列化」するマルチエージェント・オーケストレーション入門"
+           data-summary="Promise.allを用いたオーケストレーター・ワーカー型の並列化実装コードの提示
+独立性やコストからマルチエージェントの適用妥当性を判定するロジックの定義
+タスク境界を明確にする指示書設計と、重複や矛盾を防ぐ結果統合プロセスの解説"
+           data-priority="medium"
+           data-score="85"
+           data-tags="AI駆動開発,マルチエージェント,オーケストレーション,TypeScript">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 85</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1751517298')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1751517298')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/10</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://zenn.dev/akira_papa/articles/22190bcd961a22" target="_blank">AIを1体で使うのをやめる ― 自分を「並列化」するマルチエージェント・オーケストレーション入門</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ Promise.allを用いたオーケストレーター・ワーカー型の並列化実装コードの提示</p><p class="leading-relaxed">・ 独立性やコストからマルチエージェントの適用妥当性を判定するロジックの定義</p><p class="leading-relaxed">・ タスク境界を明確にする指示書設計と、重複や矛盾を防ぐ結果統合プロセスの解説</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AI駆動開発や自動化パイプライン構築において、AIエージェントを破綻させずに並列化・協調動作させる具体的なTypeScript実装と設計原則が即座に適用できるため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI駆動開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#マルチエージェント</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#オーケストレーション</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#TypeScript</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://zenn.dev/akira_papa/articles/22190bcd961a22" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/AIを1体で使うのをやめる ― 自分を「並列化」するマルチエージェント・オーケストレーション入門.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1751517164"
+           data-title="permissions.deny を書いたのに効いていなかった — Claude Code で安全床を作る3つの落とし穴"
+           data-summary="ユーザー階層の.local設定は無視されるため、Managed階層の共有設定ファイルに記述する必要がある
+コマンドはパイプ等で分割判定されるため、xargs等ではコマンドの先頭語からアンカー指定する
+ルール変更後はClaude Codeを再起動し、テスト用コマンドの実測検証が不可欠である"
+           data-priority="medium"
+           data-score="85"
+           data-tags="Claude-Code,AI駆動開発,セキュリティ,セーフガード">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 85</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1751517164')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1751517164')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/10</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://zenn.dev/taketakekaho/articles/2e35f53184f336" target="_blank">permissions.deny を書いたのに効いていなかった — Claude Code で安全床を作る3つの落とし穴</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ ユーザー階層の.local設定は無視されるため、Managed階層の共有設定ファイルに記述する必要がある</p><p class="leading-relaxed">・ コマンドはパイプ等で分割判定されるため、xargs等ではコマンドの先頭語からアンカー指定する</p><p class="leading-relaxed">・ ルール変更後はClaude Codeを再起動し、テスト用コマンドの実測検証が不可欠である</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AI駆動開発においてClaude Code等による意図しないファイルの暴走削除を防ぐための、セキュリティ設定（permissions.deny）の具体的な落とし穴と対策が実証ベースで解説されているため、即座に反映して環境の安全性を担保すべきです。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Claude-Code</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI駆動開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#セキュリティ</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#セーフガード</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://zenn.dev/taketakekaho/articles/2e35f53184f336" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/permissions.deny を書いたのに効いていなかった — Claude Code で安全床を作る3つの落とし穴.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1751517129"
+           data-title="Claude Codeに「忘れない記憶」と「自己改善ループ」を組み込む設計【.claude/rules"
+           data-summary="セッションを跨ぐ知見を「環境固有メモリ」と「Git同期の統合知見ベース」に分ける2層メモリ構造
+pathsの遅延ロードによるトークン削減や、失敗3回でルールに自動昇格する自己改善ループ
+CLAUDE.mdを薄く保ち、不要になったルールを削除して指示遵守率とコストを最適化する設計原則"
+           data-priority="medium"
+           data-score="85"
+           data-tags="ClaudeCode,LLM開発プロセス,プロンプトエンジニアリング">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 85</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1751517129')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1751517129')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/10</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://zenn.dev/cutlet_of_pork/articles/27c640d785217c" target="_blank">Claude Codeに「忘れない記憶」と「自己改善ループ」を組み込む設計【.claude/rules</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ セッションを跨ぐ知見を「環境固有メモリ」と「Git同期の統合知見ベース」に分ける2層メモリ構造</p><p class="leading-relaxed">・ pathsの遅延ロードによるトークン削減や、失敗3回でルールに自動昇格する自己改善ループ</p><p class="leading-relaxed">・ CLAUDE.mdを薄く保ち、不要になったルールを削除して指示遵守率とコストを最適化する設計原則</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">Claude Code使用時のトークン消費急増やセッション間の文脈喪失という実用上の課題に対し、フロントマターによる遅延ロードや2層メモリ構造、Git同期といった即時導入可能な具体的構成案が提示されているため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#ClaudeCode</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#LLM開発プロセス</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#プロンプトエンジニアリング</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://zenn.dev/cutlet_of_pork/articles/27c640d785217c" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/Claude Codeに「忘れない記憶」と「自己改善ループ」を組み込む設計【.claude_rules.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1751517119"
+           data-title="Claude Codeを導入したらやるべき！おすすめ3選（CLAUDE.md / hooks / プラグイン）"
+           data-summary="CLAUDE.mdを用いたプロジェクト前提知識の自動読み込みと役割別のファイル分割手法
+hooks機能を活用し、特定ファイルへの編集制限や自動整形などの強制処理を適用する方法
+SuperpowersやContext7プラグインによる、思考プロセスの強化と最新ドキュメントの参照手順"
+           data-priority="medium"
+           data-score="85"
+           data-tags="ClaudeCode,AI駆動開発,CLAUDE.md,MCP">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 85</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1751517119')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1751517119')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/10</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://zenn.dev/secondselection/articles/claude_code_knowledge" target="_blank">Claude Codeを導入したらやるべき！おすすめ3選（CLAUDE.md / hooks / プラグイン）</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ CLAUDE.mdを用いたプロジェクト前提知識の自動読み込みと役割別のファイル分割手法</p><p class="leading-relaxed">・ hooks機能を活用し、特定ファイルへの編集制限や自動整形などの強制処理を適用する方法</p><p class="leading-relaxed">・ SuperpowersやContext7プラグインによる、思考プロセスの強化と最新ドキュメントの参照手順</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AI駆動開発において、Claude Codeのコンテキスト制御（CLAUDE.md）やセキュリティ制御（hooks）を早期に設定し、トークン消費の削減と開発の安全性を即座に高められるため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#ClaudeCode</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#AI駆動開発</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#CLAUDE.md</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#MCP</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://zenn.dev/secondselection/articles/claude_code_knowledge" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/Claude Codeを導入したらやるべき！おすすめ3選（CLAUDE.md _ hooks _ プラグイン）.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
           </div>
       </div>
 
@@ -5131,18 +5411,58 @@ GitHub Actionsの書き込み権限(403)やpush競合を解消する、具体的
           </div>
       </div>
 
-      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-[#2a2a30] border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1751517251"
+           data-title="【2026年最新】Multi-Agentフレームワーク徹底比較：CrewAI vs AutoGen vs LangGraph — SME（中小企業）が選ぶべき「最適解」とは？ - Qiita"
+           data-summary="CrewAI（役割）、AutoGen（会話）、LangGraph（状態遷移）の設計思想の違いを解説
+開発速度、本番の制御性、トークンコストなど5つの評価指標に基づく詳細な比較表を提示
+PoCから商用運用へ移行する際の、段階的なハイブリッドリファクタリング戦略を提案"
+           data-priority="low"
+           data-score="65"
+           data-tags="Multi-Agent,技術選定">
+          <div class="px-6 py-5 flex-grow">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#1a1a1f] text-[#8e8e93] border border-[#2c2c34]">Low <span class="opacity-70">· 65</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus('1751517251')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle('1751517251')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/6/10</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://qiita.com/Sayaka_bnr/items/988600d1f47e56c2a2e9" target="_blank">【2026年最新】Multi-Agentフレームワーク徹底比較：CrewAI vs AutoGen vs LangGraph — SME（中小企業）が選ぶべき「最適解」とは？ - Qiita</a>
+              </h2>
+              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
+                  <p class="leading-relaxed">・ CrewAI（役割）、AutoGen（会話）、LangGraph（状態遷移）の設計思想の違いを解説</p><p class="leading-relaxed">・ 開発速度、本番の制御性、トークンコストなど5つの評価指標に基づく詳細な比較表を提示</p><p class="leading-relaxed">・ PoCから商用運用へ移行する際の、段階的なハイブリッドリファクタリング戦略を提案</p>
+              </div>
+              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
+                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">AI駆動開発および自動化パイプライン構築において、どのフレームワークを採用すべきかのアーキテクチャ選定基準と、将来的な手戻りを防ぐ移行ロードマップが明確に示されているため。</p>
+              </div>
+              <div class="mt-auto"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#Multi-Agent</span><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#技術選定</span></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://qiita.com/Sayaka_bnr/items/988600d1f47e56c2a2e9" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/【2026年最新】Multi-Agentフレームワーク徹底比較：CrewAI vs AutoGen vs LangGraph — SME（中小企業）が選ぶべき「最適解」とは？ - Qiita.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-[#2a2a30] border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1702135746"
            data-title="1行もコードを書かずにGeminiだけでUnityの大富豪ゲームを作って公開した話"
            data-summary="Geminiのみを用いた完全ノーコードでのUnityゲーム開発とGitHub Actions自動化の事例
 コードが複雑化した際にAIに仕様書を書かせ、ゼロから再構築する「仕様書駆動」の有効性を提示
 AIへのコンテキスト制限やノイズ除去に役立つ .geminiignore の活用法についての言及"
-           data-priority="medium"
+           data-priority="low"
            data-score="62"
            data-tags="AI駆動開発,仕様書駆動開発,GeminiCLI,Unity自動化">
           <div class="px-6 py-5 flex-grow">
               <div class="flex justify-between items-start mb-3">
-                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 62</span></span>
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#1a1a1f] text-[#8e8e93] border border-[#2c2c34]">Low <span class="opacity-70">· 62</span></span>
                   <div class="flex items-center gap-2">
                     <button onclick="toggleStatus('1702135746')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
                         既読にする
@@ -5171,18 +5491,18 @@ AIへのコンテキスト制限やノイズ除去に役立つ .geminiignore の
           </div>
       </div>
 
-      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-[#2a2a30] border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1735910683"
            data-title="Claude Code同士でプランをレビューさせよう。"
            data-summary="複数機能の実装時に、Claude Codeの複数インスタンスでプランを並行作成する手法を提案。
 それぞれの作成したプランを相互にレビュー・批評させることで、共有コードの堅牢性を向上させる。
 実例では実装の約90%を再利用でき、変更行数をLLM任せにする場合の半分程度に削減できた。"
-           data-priority="medium"
+           data-priority="low"
            data-score="60"
            data-tags="AI駆動開発,Claude-Code,LLM協調動作,開発プロセス">
           <div class="px-6 py-5 flex-grow">
               <div class="flex justify-between items-start mb-3">
-                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 60</span></span>
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#1a1a1f] text-[#8e8e93] border border-[#2c2c34]">Low <span class="opacity-70">· 60</span></span>
                   <div class="flex items-center gap-2">
                     <button onclick="toggleStatus('1735910683')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
                         既読にする
@@ -5211,18 +5531,18 @@ AIへのコンテキスト制限やノイズ除去に役立つ .geminiignore の
           </div>
       </div>
 
-      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-[#2a2a30] border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1748985957"
            data-title="「モデルが悪い」をやめる — Learn Harness Engineering を読んで考えた、AIエージェントの失敗を層に分ける習慣"
            data-summary="AIエージェントを制御する基盤「ハーネス」を構成する5つのサブシステム（指示、環境、検証等）を提示。
 失敗を「モデルのせい」にせず、5つの防御層に帰属させて記録・計測する診断ループを推奨。
 ルール追加による指示ファイルの肥大化がコンテキストを圧迫し性能を低下させる「巨大な指示の罠」を警告。"
-           data-priority="medium"
+           data-priority="low"
            data-score="60"
            data-tags="AI駆動開発,AIエージェント,ハーネスエンジニアリング,ソフトウェア品質">
           <div class="px-6 py-5 flex-grow">
               <div class="flex justify-between items-start mb-3">
-                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 60</span></span>
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#1a1a1f] text-[#8e8e93] border border-[#2c2c34]">Low <span class="opacity-70">· 60</span></span>
                   <div class="flex items-center gap-2">
                     <button onclick="toggleStatus('1748985957')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
                         既読にする

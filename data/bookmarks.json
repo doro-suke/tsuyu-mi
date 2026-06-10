@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-08T02:46:14.747Z",
+  "updated_at": "2026-06-10T02:22:46.188Z",
   "articles": [
     {
       "id": "1702129693",
@@ -4476,6 +4476,147 @@
       "status": "unread",
       "analyzed_at": "2026-06-08T02:46:14.747Z",
       "markdown_path": "data/notebooklm_sources/Google Colab CLI を試す｜npaka.md"
+    },
+    {
+      "id": "1751517358",
+      "url": "https://zenn.dev/jinjer_techblog/articles/c40f3e62a21a55",
+      "title": "シンプルなプロンプトでも開発者体験を高めるマルチエージェント構成 構成編",
+      "summary": "人間の認知を分解したTREパイプラインとYAMLによるインターフェース設計を提示\n自然言語から構造化、実装計画、コード生成へ至る各ロールの具体的な入力・出力例を解説\n品質ゲートを「何を通さないか」という却下基準で定義し、自動検証する多層チェック機構を紹介",
+      "score": 85,
+      "read_now_reason": "マルチエージェントやAI駆動パイプラインにおける出力の不安定さを解消するための、具体的なYAMLスキーマ定義、ルール設計、品質ゲート（rejection_criteria）の実装アプローチが極めて具体的に示されているため。",
+      "defer_reason": "AIエージェント間の協調設計やルールの概念・スキーマ例は豊富だが、LangChainやLangGraphなどの具体的なプログラム実装コードそのものは含まれていないため、設計フェーズ以外なら後回しでも安全。",
+      "tags": [
+        "AIエージェント",
+        "マルチエージェント",
+        "パイプライン設計",
+        "YAMLバリデーション"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-10T02:12:02.942Z",
+      "markdown_path": "data/notebooklm_sources/シンプルなプロンプトでも開発者体験を高めるマルチエージェント構成 構成編.md"
+    },
+    {
+      "id": "1751517298",
+      "url": "https://zenn.dev/akira_papa/articles/22190bcd961a22",
+      "title": "AIを1体で使うのをやめる ― 自分を「並列化」するマルチエージェント・オーケストレーション入門",
+      "summary": "Promise.allを用いたオーケストレーター・ワーカー型の並列化実装コードの提示\n独立性やコストからマルチエージェントの適用妥当性を判定するロジックの定義\nタスク境界を明確にする指示書設計と、重複や矛盾を防ぐ結果統合プロセスの解説",
+      "score": 85,
+      "read_now_reason": "AI駆動開発や自動化パイプライン構築において、AIエージェントを破綻させずに並列化・協調動作させる具体的なTypeScript実装と設計原則が即座に適用できるため。",
+      "defer_reason": "マルチエージェント構成の実装フェーズに未達で、単体エージェントによる自動化プロセスの設計・評価段階に留まっている場合。",
+      "tags": [
+        "AI駆動開発",
+        "マルチエージェント",
+        "オーケストレーション",
+        "TypeScript"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-10T02:14:24.774Z",
+      "markdown_path": "data/notebooklm_sources/AIを1体で使うのをやめる ― 自分を「並列化」するマルチエージェント・オーケストレーション入門.md"
+    },
+    {
+      "id": "1751517251",
+      "url": "https://qiita.com/Sayaka_bnr/items/988600d1f47e56c2a2e9",
+      "title": "【2026年最新】Multi-Agentフレームワーク徹底比較：CrewAI vs AutoGen vs LangGraph — SME（中小企業）が選ぶべき「最適解」とは？ - Qiita",
+      "summary": "CrewAI（役割）、AutoGen（会話）、LangGraph（状態遷移）の設計思想の違いを解説\n開発速度、本番の制御性、トークンコストなど5つの評価指標に基づく詳細な比較表を提示\nPoCから商用運用へ移行する際の、段階的なハイブリッドリファクタリング戦略を提案",
+      "score": 65,
+      "read_now_reason": "AI駆動開発および自動化パイプライン構築において、どのフレームワークを採用すべきかのアーキテクチャ選定基準と、将来的な手戻りを防ぐ移行ロードマップが明確に示されているため。",
+      "defer_reason": "比較自体は概念的・抽象的な設計思想の整理が主であり、具体的なコードや設定ファイルのレベルで即座に実装に適用できる情報は含まれていないため。",
+      "tags": [
+        "Multi-Agent",
+        "技術選定"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-10T02:16:03.462Z",
+      "markdown_path": "data/notebooklm_sources/【2026年最新】Multi-Agentフレームワーク徹底比較：CrewAI vs AutoGen vs LangGraph — SME（中小企業）が選ぶべき「最適解」とは？ - Qiita.md"
+    },
+    {
+      "id": "1751517208",
+      "url": "https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks",
+      "title": "Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール",
+      "summary": "CLAUDE.md、agents、skills、hooksの役割と使い分けを2軸（発火条件・文脈共有）で整理。\nサブエージェントの質問不可という制約に対し、成果物と承認依頼を委譲元に返す明文化ルールで対処。\nhooksを活用し、編集時の軽いコード整形とターン終了時の重い静的解析を最適に連携させて自動化。",
+      "score": 88,
+      "read_now_reason": "AI駆動開発におけるClaude Codeの文脈枯渇を回避する設計原則や、JSON設定およびフック用のスクリプト設計が具体的に明記されており、今すぐ開発自動化パイプラインへ適用可能なため。",
+      "defer_reason": "Claude Codeの導入を予定していない、あるいはローカルのAI開発環境の自動化・効率化設計に直近で着手する予定がない場合は、後回しにしても問題ありません。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "自動化パイプライン",
+        "LLMエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-10T02:17:10.337Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeのagents _ skills _ hooksをどう使い分ける？実プロダクト開発で出した運用ルール.md"
+    },
+    {
+      "id": "1751517185",
+      "url": "https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a",
+      "title": "AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita",
+      "summary": "AGENTS.mdはAIエージェントにリポジトリのルールを伝えるための「AI用README」である\nツール依存の設定を統合し、AIが推論できない独自の規約や立ち入り禁止の境界線を明記する\nAgentic AI Foundationが管理するオープン標準であり、CursorやClaude Codeに対応している",
+      "score": 88,
+      "read_now_reason": "AI駆動開発において、エージェントによる誤ったコマンド実行や規約違反、不要な差分生成などの手戻りを防ぐための「AGENTS.md」の具体的な書き方と設計原則（Context Engineering）が即座に導入できるため。",
+      "defer_reason": "自動化パイプラインやコーディングエージェントを現在のプロジェクトで一切使用しておらず、完全に手動で開発を行っている場合。",
+      "tags": [
+        "AI駆動開発",
+        "AGENTS.md",
+        "Context_Engineering",
+        "開発標準化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-10T02:18:49.722Z",
+      "markdown_path": "data/notebooklm_sources/AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita.md"
+    },
+    {
+      "id": "1751517164",
+      "url": "https://zenn.dev/taketakekaho/articles/2e35f53184f336",
+      "title": "permissions.deny を書いたのに効いていなかった — Claude Code で安全床を作る3つの落とし穴",
+      "summary": "ユーザー階層の.local設定は無視されるため、Managed階層の共有設定ファイルに記述する必要がある\nコマンドはパイプ等で分割判定されるため、xargs等ではコマンドの先頭語からアンカー指定する\nルール変更後はClaude Codeを再起動し、テスト用コマンドの実測検証が不可欠である",
+      "score": 85,
+      "read_now_reason": "AI駆動開発においてClaude Code等による意図しないファイルの暴走削除を防ぐための、セキュリティ設定（permissions.deny）の具体的な落とし穴と対策が実証ベースで解説されているため、即座に反映して環境の安全性を担保すべきです。",
+      "defer_reason": "現在のプロジェクトでClaude Codeをまだ導入していない場合、またはAIエージェントに対するローカルファイル書き換え・削除の権限付与を運用上行っていない場合は、後回しにできます。",
+      "tags": [
+        "Claude-Code",
+        "AI駆動開発",
+        "セキュリティ",
+        "セーフガード"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-10T02:19:55.324Z",
+      "markdown_path": "data/notebooklm_sources/permissions.deny を書いたのに効いていなかった — Claude Code で安全床を作る3つの落とし穴.md"
+    },
+    {
+      "id": "1751517129",
+      "url": "https://zenn.dev/cutlet_of_pork/articles/27c640d785217c",
+      "title": "Claude Codeに「忘れない記憶」と「自己改善ループ」を組み込む設計【.claude/rules",
+      "summary": "セッションを跨ぐ知見を「環境固有メモリ」と「Git同期の統合知見ベース」に分ける2層メモリ構造\npathsの遅延ロードによるトークン削減や、失敗3回でルールに自動昇格する自己改善ループ\nCLAUDE.mdを薄く保ち、不要になったルールを削除して指示遵守率とコストを最適化する設計原則",
+      "score": 85,
+      "read_now_reason": "Claude Code使用時のトークン消費急増やセッション間の文脈喪失という実用上の課題に対し、フロントマターによる遅延ロードや2層メモリ構造、Git同期といった即時導入可能な具体的構成案が提示されているため。",
+      "defer_reason": "開発環境でClaude Codeを直接導入・運用しておらず、Cursorや通常のVS Code等での標準的なAIアシスタント運用のみを行っている場合は、急ぎで設定を移植する必要がないため。",
+      "tags": [
+        "Claude Code",
+        "LLM開発プロセス",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-10T02:21:38.126Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeに「忘れない記憶」と「自己改善ループ」を組み込む設計【.claude_rules.md"
+    },
+    {
+      "id": "1751517119",
+      "url": "https://zenn.dev/secondselection/articles/claude_code_knowledge",
+      "title": "Claude Codeを導入したらやるべき！おすすめ3選（CLAUDE.md / hooks / プラグイン）",
+      "summary": "CLAUDE.mdを用いたプロジェクト前提知識の自動読み込みと役割別のファイル分割手法\nhooks機能を活用し、特定ファイルへの編集制限や自動整形などの強制処理を適用する方法\nSuperpowersやContext7プラグインによる、思考プロセスの強化と最新ドキュメントの参照手順",
+      "score": 85,
+      "read_now_reason": "AI駆動開発において、Claude Codeのコンテキスト制御（CLAUDE.md）やセキュリティ制御（hooks）を早期に設定し、トークン消費の削減と開発の安全性を即座に高められるため。",
+      "defer_reason": "hooksの具体的なOS別の設定ファイル記述手順が割愛されており、完全なパイプライン構築には公式ドキュメントの併読が必要となるため。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "CLAUDE.md",
+        "MCP"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-10T02:22:46.188Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeを導入したらやるべき！おすすめ3選（CLAUDE.md _ hooks _ プラグイン）.md"
     }
   ]
 }
