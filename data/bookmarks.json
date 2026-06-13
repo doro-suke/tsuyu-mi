@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-10T02:22:46.188Z",
+  "updated_at": "2026-06-13T02:19:48.030Z",
   "articles": [
     {
       "id": "1702129693",
@@ -4617,6 +4617,153 @@
       "status": "unread",
       "analyzed_at": "2026-06-10T02:22:46.188Z",
       "markdown_path": "data/notebooklm_sources/Claude Codeを導入したらやるべき！おすすめ3選（CLAUDE.md _ hooks _ プラグイン）.md"
+    },
+    {
+      "id": "1756841593",
+      "url": "https://zenn.dev/aya/articles/4c7ae95322ced5",
+      "title": "【Claude Code】グラフィックもBGM・SEもAIが作ってくれる — ゲームプロトタイプ作成テンプレートのご紹介",
+      "summary": "Claude Codeで設計からアセット生成、実装までをAIが一貫して自動で行うゲーム開発テンプレートの紹介\nReact 19、Phaser 4、TypeScript、Viteを基盤とし、uvによるPythonでのアセット生成を内包\nAIが要件定義書や外部設計書を自動作成し、ユーザーのフィードバックを得ながら開発を進行するプロセス",
+      "score": 72,
+      "read_now_reason": "Claude Codeの「.claude/」以下のカスタムルールやスキルを活用し、要件定義からアセット生成、コード実装までをAIに一貫して実行させる「AI駆動開発パイプライン」の具体的な構成例として非常に参考になるため。",
+      "defer_reason": "対象がReactとPhaserを用いた2Dブラウザゲームの開発に特化しており、ゲーム以外の大規模Webシステムや一般的なCI/CD自動化パイプラインにそのまま流用できる具体的なコード・設定が直接記述されているわけではないため。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "開発プロセス自動化",
+        "React",
+        "Phaser"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-13T02:10:49.892Z",
+      "markdown_path": "data/notebooklm_sources/【Claude Code】グラフィックもBGM・SEもAIが作ってくれる — ゲームプロトタイプ作成テンプレートのご紹介.md"
+    },
+    {
+      "id": "1756841535",
+      "url": "https://zenn.dev/yasuakiomokawa/articles/9d06818f51056c",
+      "title": "Agent skills 改善ベストプラクティス",
+      "summary": "Claude Code上で自作エージェントスキルを自律改善するプロンプトを提示\n検証用スキルを組み合わせ、実地検証に基づきプロンプトを自動調整する手法を解説\nモデル更新やスキル変更時に、人間の介入を最小限に抑えて定量評価とチューニングが可能",
+      "score": 78,
+      "read_now_reason": "AI駆動開発においてClaude Codeを用いた自律的なエージェントスキルの改善・自動チューニングを即座に試せる具体的なプロンプトワークフローが明記されているため。",
+      "defer_reason": "Claude Codeの導入および前提となる外部スキル（empirical-prompt-tuning等）の環境構築が完了していない場合、即時の再現が難しいため。",
+      "tags": [
+        "Claude-Code",
+        "AIエージェント",
+        "プロンプトエンジニアリング",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-13T02:11:55.845Z",
+      "markdown_path": "data/notebooklm_sources/Agent skills 改善ベストプラクティス.md"
+    },
+    {
+      "id": "1756841424",
+      "url": "https://www.zaikei.co.jp/article/20260610/856340.html",
+      "title": "AnthropicがClaude Codeスキルの社内活用法を公開——実証済み9分類と「検証が最重要」の根拠 | 財経新聞",
+      "summary": "スキルは単なるプロンプトではなく、SKILL.mdやスクリプト等を含むフォルダ構造のキットである。\n全9分類の中で最も重要とされるのは「検証スキル」であり、確実な動作確認が品質向上に不可欠である。\nモデル用の説明文、落とし穴の記述、情報の段階的開示など、エージェントを制御する設計手法が示された。",
+      "score": 78,
+      "read_now_reason": "AI駆動開発においてClaude Codeを実用化・自動化する際の、フォルダ構造の設計原則や記述すべき『落とし穴』などの具体的プラクティスが体系的に解説されているため、即座に設計へ反映できる。",
+      "defer_reason": "具体的なSKILL.mdのコード例や設定ファイルの雛形そのものは掲載されておらず、ツールの使い方ではなく概念設計が主であるため、今すぐコードを書く段階でなければ後回しにしても致命傷にはならない。",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "自動化パイプライン",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-13T02:13:04.838Z",
+      "markdown_path": "data/notebooklm_sources/AnthropicがClaude Codeスキルの社内活用法を公開——実証済み9分類と「検証が最重要」の根拠 _ 財経新聞.md"
+    },
+    {
+      "id": "1756841413",
+      "url": "https://qiita.com/archeleeds/items/6fbf02174f308e31f284",
+      "title": "ClaudeCodeとCodexにコーディングを全て任せて商用レベルのUnityゲーム開発を行う【前編】 - Qiita",
+      "summary": "CLIツールを活用しビルドやエラーログ収集、スクショ画像分析によるAIの自動デバッグ環境を構築している\nAIがフレームワークを無視する問題に対し、パターン集やコーディングルールの文書化で制御を試みている\n設計監督役のClaudeCodeと実装役のCodexを、Markdownファイルを介して連携させる手法を検証している",
+      "score": 85,
+      "read_now_reason": "AI駆動開発および自動化パイプラインの構築において、CLI（unity-cli-loop）を介した自動デバッグループの回し方や、AIのフレームワーク逸脱を防ぐドキュメント設計など、即時導入可能なノウハウが示されているため。",
+      "defer_reason": "実際のゲームコードや使用フレームワーク「Lighthouse」の具体的な実装ファイル自体はGitHub外部リポジトリにあり、記事単体では完結していないため。",
+      "tags": [
+        "AI駆動開発",
+        "自動化パイプライン",
+        "ClaudeCode",
+        "マルチAgent",
+        "Unity"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-13T02:14:12.390Z",
+      "markdown_path": "data/notebooklm_sources/ClaudeCodeとCodexにコーディングを全て任せて商用レベルのUnityゲーム開発を行う【前編】 - Qiita.md"
+    },
+    {
+      "id": "1756841385",
+      "url": "https://newspicks.com/news/16853096/body/",
+      "title": "【新提案】AI時代の「brand.md」完全解説",
+      "summary": "AI生成物の一貫性を保つため、見た目と言葉のルールを定義する「brand.md」の導入を提案。\n会社全体の「親ルール」と、プロジェクト毎の「子ルール」を親子構造で分離して管理・運用する。\n最小構成となる8つの定義項目（約束、対象/回避印象、視覚・文字・執筆ルール等）を解説。",
+      "score": 65,
+      "read_now_reason": "AI駆動開発において、AIが生成するドキュメントやUIテキストの一貫性を保つためのプロンプト統制用ファイル（brand.md）の構造設計に即座に活用できるため。",
+      "defer_reason": "具体的な自動化スクリプトやパイプラインのYAMLファイル等の即時実行可能なコードは含まれておらず、概念と構成フレームワークの紹介に留まるため。",
+      "tags": [
+        "AI駆動開発",
+        "プロンプトエンジニアリング",
+        "ブランド一貫性",
+        "Markdown"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-13T02:15:23.215Z",
+      "markdown_path": "data/notebooklm_sources/【新提案】AI時代の「brand.md」完全解説.md"
+    },
+    {
+      "id": "1756841346",
+      "url": "https://qiita.com/rairaii/items/0ea0ebf709eb00230b93",
+      "title": "Claude Code / GitHub Copilot のトークン消費を手軽に削減する2つのツール - Qiita",
+      "summary": "シェル出力を最適化し入力トークンを平均76.4%削減するツール「RTK」の導入と仕組み\nClaude Codeの出力を簡潔化して出力トークンを約65%削減する「Caveman」の提示\n両ツールとも数分で導入可能であり、開発ワークフローを崩さずにAPIコストを大幅に削減可能",
+      "score": 85,
+      "read_now_reason": "AI駆動開発におけるAPIトークン消費とコストを即座に削減するための、具体的なCLIツールとインストールコマンドが明記されており、現在の開発環境へ即時適用可能であるため。",
+      "defer_reason": "本質的なコード生成ロジックの改善ではなく、シェルや出力をラップする外部ツールによる最適化であるため、開発プロセス自体の設計変更を伴わない点では後回しにしても致命傷にはならない。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code",
+        "GitHub-Copilot",
+        "コスト最適化",
+        "CLIツール"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-13T02:17:14.943Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code _ GitHub Copilot のトークン消費を手軽に削減する2つのツール - Qiita.md"
+    },
+    {
+      "id": "1756841333",
+      "url": "https://zenn.dev/innovation/articles/a5203b76e87d35",
+      "title": "Claude Code の commands と skills で開発フローを整備した話",
+      "summary": "Claude Codeのcommandsとskillsの役割を整理し、マルチチーム対応の開発フローを構築\n自動起動するskillsに規約やチェッカーを集約し、フローに依存しない品質担保を実現\n具体的なSKILL.mdの定義例や、起動漏れを防ぐためのTAKTを用いた今後の展望を解説",
+      "score": 85,
+      "read_now_reason": "Claude Codeを用いたAI駆動開発において、チーム開発での規約強制と自動コード生成を両立する「skills」の具体的な定義（SKILL.md）や設計原則が示されており、自動化パイプラインの構築に即時応用可能であるため。",
+      "defer_reason": "Claude Codeを実務に導入していない場合や、複数チームでの開発規約の自動化・スケール化という課題に直面していない場合は、概念の理解に留まるため後回しにしても問題ありません。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "Agent Skills",
+        "開発プロセス自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-13T02:18:21.324Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code の commands と skills で開発フローを整備した話.md"
+    },
+    {
+      "id": "1756841324",
+      "url": "https://zenn.dev/acntechjp/articles/83f9d7bb898010",
+      "title": "Claude Codeのアドバイザーが「プロジェクトの本質」を毎回思い出させてくれる ── 公式仕様を踏まえたCLAUDE.mdの書き方",
+      "summary": "Claude Codeのアドバイザー機能は、会話の全履歴を読み、重要な節目で自動呼び出しされる。\nアドバイザーへ二人称で直接呼びかける指示は、三人称の記述より確実に従われるという公式仕様を解説。\nCLAUDE.mdに「アドバイザー向け」と「実行モデル向け」のルールを書き分ける具体的なテンプレートを提示。",
+      "score": 85,
+      "read_now_reason": "Claude Codeを使用したAI駆動開発において、AIが直近のタスクに引きずられて設計方針を見失う「コンテキストドリフト」を防ぐための、CLAUDE.mdの具体的な記述テンプレートと公式の技術的根拠が提示されており、即座に開発へ適用して実装ロスを防げるため。",
+      "defer_reason": "すでにClaude Codeの挙動制御が完璧であり、長時間のAIコーディングセッションにおいても設計方針のブレや不要なライブラリ追加などの問題が一切発生していない場合のみ、後回しにしても安全です。",
+      "tags": [
+        "Claude Code",
+        "CLAUDE.md",
+        "AI駆動開発",
+        "Prompt Engineering"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-13T02:19:48.030Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeのアドバイザーが「プロジェクトの本質」を毎回思い出させてくれる ── 公式仕様を踏まえたCLAUDE.mdの書き方.md"
     }
   ]
 }
