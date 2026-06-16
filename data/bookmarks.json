@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-13T02:19:48.030Z",
+  "updated_at": "2026-06-16T02:50:17.429Z",
   "articles": [
     {
       "id": "1702129693",
@@ -4764,6 +4764,150 @@
       "status": "unread",
       "analyzed_at": "2026-06-13T02:19:48.030Z",
       "markdown_path": "data/notebooklm_sources/Claude Codeのアドバイザーが「プロジェクトの本質」を毎回思い出させてくれる ── 公式仕様を踏まえたCLAUDE.mdの書き方.md"
+    },
+    {
+      "id": "1760026860",
+      "url": "https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure",
+      "title": "Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール",
+      "summary": "Skillsのdescriptionを2%以下に抑える段階的開示と3層構造によるコンテキスト管理\n常時ロードを避けるためのSKILL.md、サブエージェント、リファレンスの分離とファイル構成\nAIの自己判断による品質低下を防ぐIron Law（合理化防止テーブル）の具体的な設計と定義例",
+      "score": 88,
+      "read_now_reason": "AI駆動開発においてClaude Codeを使用する際、トークン消費を抑えつつエージェントの自律稼働品質を保証するための具体的なディレクトリ構成やIron Law（合理化防止ルール）の記述テンプレートを即座に適用できるため。",
+      "defer_reason": "Claude Codeなどのターミナル常駐型AIエージェントをまだ開発プロセスや自動化パイプラインに導入しておらず、Web UI経由のチャット利用のみに留まっている場合。",
+      "tags": [
+        "Claude-Code",
+        "AI-Driven-Development",
+        "Prompt-Engineering",
+        "Agent-Architecture"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-16T02:41:32.412Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール.md"
+    },
+    {
+      "id": "1759360857",
+      "url": "https://zenn.dev/tingtt/articles/fc05c73f8265e4",
+      "title": "「原則」を Rules / Skills にして運用してみた",
+      "summary": "AIエージェント用の「原則」をRulesやSkillsのファイル構造として運用する具体的手法を提案\nMarkdown作成やコード設計の原則をSKILL.mdと関連ドキュメントに分割して定義する設定例を提示\n原則を構造化して参照させることでAIの自己判断や推測を防ぎ、コンテキストを適切に管理可能にする",
+      "score": 88,
+      "read_now_reason": "AI駆動開発において、プロンプトの記述量を削減しながらAIの出力品質を劇的に高めるための具体的な「SKILL.md」の設定と運用ディレクトリ構造が明記されており、今すぐプロジェクトに導入可能であるため。",
+      "defer_reason": "AIエージェント（CursorやClaude Code等）へのコンテキスト注入ルールの最適化が不要であり、泥臭いプロンプト調整と手動レビューのみによる現状の開発手法に課題を感じていない場合。",
+      "tags": [
+        "AI駆動開発",
+        "プロンプトエンジニアリング",
+        "Cursor",
+        "コンテキスト管理"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-16T02:42:38.969Z",
+      "markdown_path": "data/notebooklm_sources/「原則」を Rules _ Skills にして運用してみた.md"
+    },
+    {
+      "id": "1759360834",
+      "url": "https://qiita.com/fallout/items/5097f0575b58f4c69b81",
+      "title": "Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita",
+      "summary": "Claude CodeからMCP経由でAntigravity CLIを呼び出す環境構築手順を解説。\nagyの標準出力バグを回避するため、transcriptを読むPythonブリッジを採用。\nWindows環境でのフリーズ、モデル固定失敗、PATHの不具合に対する具体的な解決策を提示。",
+      "score": 88,
+      "read_now_reason": "AI駆動開発において、Claude Codeと無料枠Geminiを連携させる具体的なMCP設定に加え、agy CLIの致命的なバグである「標準出力が空になる問題」や「対話フリーズ」を回避するためのPythonブリッジの構成・設定手順が網羅されており、構築時の大幅な時間ロスを即座に防げるため。",
+      "defer_reason": "ローカルのAI開発環境としてClaude CodeおよびGoogleのAntigravity CLI（OAuth接続による従量課金ゼロ運用）の組み合わせを採用する予定がない、またはWindows特有のPATH問題の解決策が不要な場合。",
+      "tags": [
+        "Claude Code",
+        "Gemini",
+        "Antigravity CLI",
+        "MCP",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-16T02:44:46.134Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita.md"
+    },
+    {
+      "id": "1759360821",
+      "url": "https://xenospectrum.com/google-notebooklm-gemini-35-antigravity/",
+      "title": "Google、NotebookLMにGemini 3.5とAntigravityを統合しリサーチ機能と出力フォーマットを大幅拡充",
+      "summary": "NotebookLMに最新モデルが導入され、自律的なWeb検索によるソース追加機能が追加\nコード実行環境の統合により、プラットフォーム上での高度なデータ分析が可能に\n多様なファイル出力形式に対応し、リサーチから成果物作成への利便性が大幅に向上",
+      "score": 45,
+      "read_now_reason": "AIによる自律検索やコード実行環境の統合といった最新の機能群は、AI駆動開発の自動化ワークフローを設計する上での参考事例となるため。",
+      "defer_reason": "自社プロジェクトのパイプラインに直接組み込めるAPIのコードや、具体的な実装・アーキテクチャの解説が含まれていないため。",
+      "tags": [
+        "NotebookLM",
+        "Gemini",
+        "AIリサーチ",
+        "データ分析"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-16T02:45:51.623Z",
+      "markdown_path": "data/notebooklm_sources/Google、NotebookLMにGemini 3.5とAntigravityを統合しリサーチ機能と出力フォーマットを大幅拡充.md"
+    },
+    {
+      "id": "1759360805",
+      "url": "https://zenn.dev/91works/articles/b535a86336cf42",
+      "title": "ゲーム事業部設立して、終了したお話",
+      "summary": "1人でAIツールを補助的に活用し、4ヶ月で4本のゲームを開発・検証した事例\nMeta広告を用いたUS向けCPIテストの結果、目標の0.5ドルを下回れず事業はクローズ\n専門プランナーの不在やパブリッシャーとの未提携など、体制と市場調査の不足が課題となった",
+      "score": 35,
+      "read_now_reason": "画像生成AI（Leonardo.ai）や企画・アニメーション選定にAI（Ludo.ai, Gemini）を実業務に組み込み、1人で短期間にプロトタイプを作り上げたツール活用例として参考になります。",
+      "defer_reason": "現在の注力テーマであるAI駆動開発や自動化パイプライン構築に直結する、CI/CD、テストコード、自動生成の統合実装などの具体的な技術情報が含まれていないため、後回しにしても安全です。",
+      "tags": [
+        "AIプロダクト適用事例",
+        "ゲーム開発",
+        "CPIテスト",
+        "振り返り"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-16T02:46:58.117Z",
+      "markdown_path": "data/notebooklm_sources/ゲーム事業部設立して、終了したお話.md"
+    },
+    {
+      "id": "1759360765",
+      "url": "https://zenn.dev/sosa/articles/antigravity-context-window",
+      "title": "Antigravity2.0の魅力は、コンテキストウィンドウに着目するとわかる！+ サブエージェントの作り方",
+      "summary": "AIエージェントは思考ログの外部メモリ化により、推論の自己修復能力やツール照合の精度を向上させる\nLLMの弱点であるコンテキスト過密を回避するため、複数エージェントによる分断・統治の設計が有効である\nAntigravity2.0は、メインとサブエージェントの階層構造を用いてタスクごとのコンテキストを最小化する",
+      "score": 62,
+      "read_now_reason": "AI駆動開発プロジェクトにおいて、コンテキスト制限やプロンプトノイズに起因する推論精度低下を防ぐための「マルチエージェントによる設計原則」が示されているため。",
+      "defer_reason": "概念的な設計思想の解説が主であり、自社開発パイプラインに即時適用可能な具体的な設定コードやSDKの実装手順までは含まれていないため。",
+      "tags": [
+        "AIエージェント",
+        "コンテキストウィンドウ",
+        "マルチエージェント",
+        "Antigravity"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-16T02:48:04.305Z",
+      "markdown_path": "data/notebooklm_sources/Antigravity2.0の魅力は、コンテキストウィンドウに着目するとわかる！+ サブエージェントの作り方.md"
+    },
+    {
+      "id": "1759360734",
+      "url": "https://zenn.dev/0h_n0/articles/3a4fdda1d5c743",
+      "title": "Claude Code Hooks×Routines×Workflowで開発自動化パイプラインを構築する",
+      "summary": "Claude Codeの自動化機能をHooks、Routines、Workflowsの3層で整理。\nsettings.jsonを用いたHooksの定義や、自動整形、危険コマンドブロックの具体コードを提示。\nクラウド実行のRoutinesや、大規模向けのDynamic Workflowsの用途と制約を比較。",
+      "score": 92,
+      "read_now_reason": "AI駆動開発プロジェクトに即時適用可能な、Claude Codeの環境設定ファイル（settings.json）の具体的な記述、自動コード整形や破壊的コマンドのブロック処理など、堅牢なパイプライン構築に直結する実践的コードが網羅されているため。",
+      "defer_reason": "Routinesなど一部機能はリサーチプレビュー段階であり、かつローカル環境での単純なテキスト生成のみを目的とし、マルチエージェントやクラウド連携を現時点で必要としない場合は、読み飛ばしても影響がないため。",
+      "tags": [
+        "ClaudeCode",
+        "自動化パイプライン",
+        "DevOps"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-16T02:49:11.569Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code Hooks×Routines×Workflowで開発自動化パイプラインを構築する.md"
+    },
+    {
+      "id": "1759360726",
+      "url": "https://zenn.dev/genda_jp/articles/b6045575e2e13d",
+      "title": "サブエージェント活用で Claude Fable 5 をコスパよく運用する",
+      "summary": "Fable 5のコスト高をSonnetやOpus等のサブエージェントへの役割委譲で解決する設計手法\nトークナイザ特性やeffortパラメータ、タスク特性に基づいた最適なモデル使い分け基準を提示\nCLAUDE.mdやエージェント定義ファイルを活用し委譲ルールを構造的に固定・自動化する方法",
+      "score": 85,
+      "read_now_reason": "AI駆動開発において高価格な最上位モデルのAPI消費を抑えつつ、Claude Codeのサブエージェントを最適配置する具体的なディレクトリ構成や.claudeの設定、プロンプト運用の実例が解説されており、開発パイプラインのコスト最適化に即時適用できるため。",
+      "defer_reason": "現在Claude Codeを用いた自律型AI開発環境を構築していない、またはAPIコストの最適化（マルチモデル運用）がプロジェクトにおける当面の課題ではない場合は、急ぎで参照する必要性がないため。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code",
+        "コスト最適化",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-16T02:50:17.429Z",
+      "markdown_path": "data/notebooklm_sources/サブエージェント活用で Claude Fable 5 をコスパよく運用する.md"
     }
   ]
 }

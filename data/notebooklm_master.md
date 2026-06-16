@@ -1,6 +1,6 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/6/15 2:39:11
-対象記事数: 41 件 (未読かつHigh優先度)
+最終更新日: 2026/6/16 2:51:17
+対象記事数: 42 件 (未読かつHigh優先度)
 
 ---
 
@@ -6239,7 +6239,776 @@ Dynamic Workflowsはまだベストプラクティスが発展中の機能です
 
 ---
 
-## 16. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
+## 16. [Claude Code Hooks×Routines×Workflowで開発自動化パイプラインを構築する](https://zenn.dev/0h_n0/articles/3a4fdda1d5c743)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/6/16
+- **AI要約**:
+  Claude Codeの自動化機能をHooks、Routines、Workflowsの3層で整理。
+  settings.jsonを用いたHooksの定義や、自動整形、危険コマンドブロックの具体コードを提示。
+  クラウド実行のRoutinesや、大規模向けのDynamic Workflowsの用途と制約を比較。
+- **今読む理由**: AI駆動開発プロジェクトに即時適用可能な、Claude Codeの環境設定ファイル（settings.json）の具体的な記述、自動コード整形や破壊的コマンドのブロック処理など、堅牢なパイプライン構築に直結する実践的コードが網羅されているため。
+- **タグ**: #ClaudeCode, #自動化パイプライン, #DevOps
+
+### 本文
+Claude Code Hooks×Routines×Workflowで開発自動化パイプラインを構築する
+
+ この記事でわかること
+
+Claude Codeの自動化機能をHooks・Routines・Dynamic Workflowsの3層で整理し、使い分けの判断基準を理解できる
+
+settings.jsonにHooksを設定して、コード整形・コマンドガード・通知を自動化する実装パターンを習得できる
+Routinesでクラウド上のスケジュール実行・GitHubイベント駆動・API駆動の3トリガーを設定できる
+Dynamic Workflowsでagent()/parallel()/pipeline()を使い、数十〜数百のサブエージェントをオーケストレーションできる
+3層を組み合わせたCI/CDパイプラインの設計パターンを理解し、実プロジェクトに適用できる
+
+
+ 対象読者
+
+
+想定読者: Claude Codeを日常的に使っている中級〜上級の開発者
+
+必要な前提知識:
+
+Claude Code v2.1.154以降の基本操作（ファイル編集、Bash実行）
+Git/GitHubの基本的なワークフロー（ブランチ、PR、CI/CD）
+JSONの読み書き、JavaScriptの基本構文
+ターミナルでのシェルスクリプト操作
+
+
+
+
+ 結論・成果
+Claude Codeの自動化機能は3つの層で構成されており、それぞれ異なるユースケースをカバーしています。Hooksはツール実行前後のガードレール、Routinesはクラウド上の定期実行、Dynamic Workflowsは大規模なマルチエージェントオーケストレーションを担います。
+Anthropicの公式ドキュメントによると、これらを組み合わせることで以下の成果が報告されています。
+
+
+Hooks: すべてのファイル編集に対してフォーマッタを自動適用し、手動のprettier/ruff実行をゼロにできる
+
+Routines: GitHub PRへの自動レビュー、夜間バッチ処理、アラート対応を無人で実行（ランタイムコスト$0.08/時間）
+
+Dynamic Workflows: Bun（JavaScriptランタイム）のZig→Rust移植で75万行のコードを11日で生成（公式ブログの事例）
+
+ただし、Routinesは2026年6月時点でリサーチプレビュー段階であり、APIや挙動が変更される可能性があります。Dynamic Workflowsは2026年5月28日のリリースで一般提供（GA）となっていますが、大量のトークンを消費するため、本番環境への導入時はこれらの制約を理解したうえで段階的に適用してください。
+
+ Claude Code自動化の3層アーキテクチャを理解する
+Claude Codeの自動化は、用途と実行環境が異なる3つの層に分かれています。各層は独立して使えますが、組み合わせることで開発パイプライン全体をカバーできます。
+
+ 3層の全体像と使い分け
+
+
+
+層
+機能
+実行環境
+トリガー
+典型的なユースケース
+
+
+
+
+Hooks
+ツール実行前後の決定論的ルール
+ローカル（セッション内）
+ライフサイクルイベント
+コード整形、コマンドガード、通知
+
+
+Routines
+スケジュール・イベント駆動の自動実行
+Anthropicクラウド
+Cron/GitHub/API
+PR自動レビュー、夜間バッチ、アラート対応
+
+
+Dynamic Workflows
+マルチエージェントオーケストレーション
+ローカル（バックグラウンド）
+ユーザー指示/ultracode
+コード監査、大規模移行、リサーチ
+
+
+
+
+ なぜ3層に分かれているのか
+この分離には設計上の理由があります。
+Hooksは「何があっても必ず実行される」決定論的なルールです。LLMの判断に依存せず、シェルコマンドで確実にルールを強制します。たとえば、「Claude Codeがファイルを編集したら必ずPrettierを実行する」というルールは、LLMが忘れることなく毎回適用されます。
+Routinesはラップトップを閉じても動き続けるクラウド実行環境です。GitHub PRが作成されたタイミングでレビューを走らせたり、毎晩3時にバックログを整理したりする処理は、開発者のローカル環境に依存すべきではありません。
+Dynamic Workflowsは「1つのコンテキストウィンドウに収まらないタスク」を扱うための仕組みです。数百ファイルのセキュリティ監査を1エージェントで行うと、コンテキストがあふれます。Workflowsはタスクを分割し、中間結果をスクリプト変数に保持することで、この制約を回避します。
+
+注意: 3つの層すべてを使う必要はありません。多くのプロジェクトではHooksだけで十分な自動化が実現できます。Routinesは複数人チームでの運用、Workflowsは大規模なコードベース操作で初めて必要になるケースがほとんどです。
+
+
+ Hooksで決定論的な自動化ルールを設定する
+Hooksは、Claude Codeのライフサイクルイベントに紐づくシェルコマンドです。LLMに「コード整形してね」と毎回お願いする代わりに、settings.jsonに書いた設定で確実に実行されます。
+
+ Hooks設定の基本構造
+Hooksは.claude/settings.json（プロジェクト単位）または~/.claude/settings.json（ユーザー単位）に設定します。
+{
+  "hooks": {
+    "<イベント名>": [
+      {
+        "matcher": "<対象ツール名のパターン>",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "<実行するシェルコマンド>"
+          }
+        ]
+      }
+    ]
+  }
+}
+matcherはツール名のパターンで、Write|Editのようにパイプで複数指定できます。環境変数$CLAUDE_TOOL_INPUT_FILE_PATHや$CLAUDE_TOOL_INPUTでツールの入出力を参照できます。
+
+ 主要なライフサイクルイベント
+実際の開発で使う頻度が高いイベントは以下の4つです。
+
+
+
+イベント
+発火タイミング
+用途
+
+
+
+
+PreToolUse
+ツール実行前
+
+コマンドガード、引数の書き換え
+
+
+PostToolUse
+ツール実行後
+
+自動整形、ログ記録、検証
+
+
+SessionStart
+セッション開始時
+環境チェック、リマインダー表示
+
+
+PostResponse
+Claude応答完了後
+デスクトップ通知、要約記録
+
+
+
+公式ドキュメントでは31種のライフサイクルイベントが定義されていますが（2026年6月時点）、上記4つで大部分のユースケースをカバーできます。
+
+ 実装パターン1: ファイル保存時の自動フォーマット
+Claude Codeがファイルを編集するたびに、言語に応じたフォーマッタを自動実行します。
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "filepath=\"$CLAUDE_TOOL_INPUT_FILE_PATH\"; case \"$filepath\" in *.py) ruff format \"$filepath\" 2>/dev/null;; *.ts|*.tsx|*.js|*.jsx) npx prettier --write \"$filepath\" 2>/dev/null;; *.rs) rustfmt \"$filepath\" 2>/dev/null;; esac; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}
+なぜこの実装を選んだか:
+
+
+PostToolUseを使うことで、Claudeのファイル編集が完了した直後にフォーマッタが走る
+
+case文で拡張子に応じたフォーマッタを選択するため、多言語プロジェクトでも1つの設定で対応できる
+
+2>/dev/nullとexit 0で、フォーマッタが未インストールの言語でもエラーにならない
+
+
+ 実装パターン2: 危険なコマンドのブロック
+rm -rf /やDROP TABLEのような破壊的なコマンドをClaude Codeが実行しようとした場合にブロックします。
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$CLAUDE_TOOL_INPUT\" | grep -qiE 'rm\\s+-rf\\s+/|DROP\\s+TABLE|FORMAT\\s+C:|>(\\s+)/dev/sd' && echo 'BLOCKED: destructive command detected' >&2 && exit 2 || exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}
+exit 2は特別な終了コードで、「ツール実行をブロックし、フィードバックメッセージをClaudeに返す」ことを意味します。exit 0は「問題なし、ツール実行を続行」です。
+
+ 実装パターン3: セッション開始時の環境チェック
+セッション開始時にプロジェクトのセットアップ状態を自動チェックします。
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '---'; command -v node >/dev/null && echo \"Node.js: $(node -v)\" || echo 'WARNING: Node.js not found'; command -v uv >/dev/null && echo \"uv: $(uv --version)\" || echo 'WARNING: uv not found'; test -f .env || echo 'WARNING: .env file missing'; echo '---'"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+ Hooksの3タイプ: command・prompt・agent
+上記の例はすべてtype: "command"（シェルコマンド直接実行）ですが、より高度な判断や外部連携が必要な場合は4つの追加タイプが使えます。
+
+
+
+タイプ
+判断方法
+ユースケース
+
+
+
+
+command
+シェルの終了コード
+パターンマッチ、フォーマット、通知
+
+
+http
+HTTPエンドポイントへのPOST
+外部サービス連携、Webhook通知
+
+
+mcp_tool
+接続済みMCPサーバーのツール呼び出し
+MCP経由の検証・記録
+
+
+prompt
+Claudeモデルに入力を評価させる
+コードレビュー、セキュリティチェック
+
+
+agent
+サブエージェントがツールを使って検証
+複雑な条件の多段階検証（実験的機能）
+
+
+
+promptタイプの例として、SQLインジェクションの可能性があるコードの検出があります。
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Does this code change introduce a potential SQL injection vulnerability? If yes, respond with exit_code 2 and explain the risk. If no, respond with exit_code 0."
+          }
+        ]
+      }
+    ]
+  }
+}
+promptタイプはClaudeの小型モデルを呼び出して評価するため、commandよりレイテンシが大きくなります。パターンマッチで十分なケースではcommandタイプを優先してください。
+
+ハマりポイント: Hooksのcommand内でシングルクォートを使うとJSON解析エラーになります。シェルコマンド内の文字列は必ずダブルクォートでエスケープするか、外部スクリプトファイルを呼び出す形にしてください。
+
+
+ Routinesでクラウド上の定期実行を設定する
+Routinesは2026年4月にリリースされた機能で、Claude Codeのセッションをクラウド上で自動実行します。ラップトップを閉じても動作し続けるため、「毎晩3時にPRレビュー」「PRが作られたら自動でコードレビュー」といったユースケースに対応します。
+
+ Routinesの3つのトリガー
+
+
+
+トリガー
+説明
+設定方法
+
+
+
+
+Schedule
+cron式に基づく定期実行（最小間隔: 1時間）
+CLI /schedule またはWeb UI
+
+
+GitHub Event
+PR作成、Release公開などのリポジトリイベント
+Web UIのみ
+
+
+API
+HTTP POSTで任意のタイミングで起動
+Web UIでトークン発行後、curl等で呼び出し
+
+
+
+1つのRoutineに複数のトリガーを組み合わせることも可能です。たとえば「毎晩のPRレビュー + 新規PR作成時のレビュー」を1つのRoutineで実現できます。
+
+ CLIからRoutineを作成する
+# 毎朝9時にPRレビューを実行するRoutineを作成
+/schedule daily PR review at 9am
+
+# 1回限りのスケジュール実行
+/schedule tomorrow at 9am, summarize yesterday's merged PRs
+
+# 既存Routineの管理
+/schedule list      # 一覧
+/schedule update    # 更新
+/schedule run       # 即時実行
+/scheduleはCLIからのScheduleトリガー専用です。GitHub EventトリガーやAPIトリガーの設定はclaude.ai/code/routinesのWeb UIから行います。
+
+ GitHub Eventトリガーの設定例: 自動PRレビュー
+Web UIでRoutineを作成し、以下のように設定します。
+
+
+プロンプト: レビュー指示を記述
+
+Review the pull request according to our team's code review checklist:
+1. Check for security vulnerabilities (SQL injection, XSS, etc.)
+2. Verify error handling covers edge cases
+3. Ensure test coverage for new logic
+4. Flag any API breaking changes
+Leave inline comments for issues found and a summary comment.
+
+
+リポジトリ: レビュー対象のGitHubリポジトリを選択
+
+トリガー: GitHub Event → pull_request.opened を選択
+
+フィルター: is_draft = false（ドラフトPRを除外）
+
+
+ APIトリガーの設定例: アラート対応の自動化
+監視ツール（Datadog、PagerDutyなど）からのアラートでRoutineを起動し、自動で原因調査を行う例です。
+curl -X POST \
+  https://api.anthropic.com/v1/claude_code/routines/trig_XXXX/fire \
+  -H "Authorization: Bearer sk-ant-oat01-xxxxx" \
+  -H "anthropic-beta: experimental-cc-routine-2026-04-01" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Error rate spike in payment-service: 5xx at 15% for 10 minutes"}'
+レスポンスにはセッションURLが含まれ、ブラウザでリアルタイムにClaudeの調査過程を確認できます。
+{
+  "type": "routine_fire",
+  "claude_code_session_id": "session_01HJKLMNOPQRSTUVWXYZ",
+  "claude_code_session_url": "https://claude.ai/code/session_01HJKLMNOPQRSTUVWXYZ"
+}
+
+ Routinesの制約と注意点
+コスト面:
+
+通常のClaude APIレート + ランタイム$0.08/時間
+
+45秒のRoutineで約$0.001（ランタイム分のみ。トークン費用は別途）
+
+制約事項:
+
+ローカルファイルへのアクセス不可（毎回リポジトリをクローン）
+リサーチプレビュー段階のため、APIの挙動が変更される可能性がある
+日次の実行回数上限あり（プランにより異なる）
+MCP Connectorの認証はclaude.ai側のアカウントに紐づく
+
+セキュリティ上の注意点:
+
+Routineが実行するアクション（commit、PRコメント等）はあなたのGitHubアカウントとして実行される
+デフォルトではclaude/プレフィックスのブランチにのみpush可能。制限解除は明示的に設定が必要
+
+
+よくある間違い: /scheduleコマンドがCLIで見つからない場合、ANTHROPIC_API_KEY環境変数が設定されていないか確認してください。/scheduleはclaude.aiサブスクリプションログインが必要で、Console APIキーやBedrock/Vertex認証では動作しません。
+
+
+ Dynamic Workflowsで大規模マルチエージェントを実行する
+Dynamic Workflowsは2026年5月28日に一般提供（GA）された機能で、JavaScriptスクリプトによるサブエージェントのオーケストレーションを実現します。1つのコンテキストウィンドウに収まらない大規模タスクを、数十〜数百のエージェントに分散して実行できます。
+
+ Workflowsの基本構造
+Workflowsの核心は、Claudeが動的に生成する（またはユーザーが保存する）JavaScriptスクリプトです。
+export const meta = {
+  name: 'security-audit',
+  description: 'Audit API endpoints for auth and injection vulnerabilities',
+  phases: [
+    { title: 'Scan', detail: 'Find all API endpoints' },
+    { title: 'Audit', detail: 'Check each endpoint for vulnerabilities' },
+    { title: 'Verify', detail: 'Adversarially verify findings' }
+  ]
+}
+
+phase('Scan')
+const endpoints = await agent(
+  'List all API route handlers under src/routes/. Return file path and HTTP method for each.',
+  { label: 'scan-routes', schema: {
+    type: 'object',
+    properties: {
+      routes: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            file: { type: 'string' },
+            method: { type: 'string' },
+            path: { type: 'string' }
+          }
+        }
+      }
+    }
+  }}
+)
+
+phase('Audit')
+const findings = await pipeline(
+  endpoints.routes,
+  (route) => agent(
+    `Audit ${route.file} (${route.method} ${route.path}) for:
+     1. Missing authentication/authorization checks
+     2. SQL injection via unsanitized input
+     3. Missing rate limiting
+     Report each issue with severity (critical/high/medium/low).`,
+    { label: `audit:${route.path}`, phase: 'Audit', schema: FINDING_SCHEMA }
+  )
+)
+
+phase('Verify')
+const verified = await pipeline(
+  findings.filter(Boolean).flatMap(f => f.issues),
+  (issue) => agent(
+    `Adversarially verify this finding. Try to prove it is a false positive:
+     File: ${issue.file}, Issue: ${issue.description}
+     Default to confirmed=true if you cannot disprove it.`,
+    { label: `verify:${issue.file}`, phase: 'Verify', schema: VERDICT_SCHEMA }
+  )
+)
+
+return verified.filter(Boolean).filter(v => v.confirmed)
+
+ 4つの基本プリミティブ
+
+
+
+プリミティブ
+役割
+同期モデル
+
+
+
+
+agent(prompt, opts?)
+サブエージェント1体を実行
+
+awaitで結果を取得
+
+
+parallel(thunks[])
+複数タスクを同時実行し、全完了を待つ
+
+バリア同期
+
+
+pipeline(items, ...stages)
+各アイテムをステージ順に処理（バリアなし）
+ストリーム型
+
+
+phase(title)
+進捗表示のフェーズ区切り
+表示のみ
+
+
+
+pipeline()とparallel()の使い分けが重要です。
+pipeline()では、item Aのstage3が実行中にitem Bはまだstage1にいる可能性があります。各アイテムは独立してステージを進むため、最も遅いアイテムの処理時間がウォールクロック時間になります。
+一方、parallel()はバリア同期です。すべてのタスクが完了するまで次の処理に進めません。
+// parallel()が正当なケース: 全結果を集約してから重複除去する必要がある
+const allFindings = await parallel(
+  dimensions.map(d => () => agent(d.prompt, { schema: FINDINGS }))
+)
+const deduped = deduplicateByKey(allFindings.filter(Boolean).flatMap(r => r.items))
+判断基準: 次のステージが他のアイテムの結果を参照する必要があるならparallel()、そうでなければpipeline()を使ってください。
+
+ Workflowsの起動方法
+3つの起動方法があります。
+# 方法1: プロンプトに "ultracode" を含める
+ultracode: audit every API endpoint under src/routes/ for missing auth checks
+
+# 方法2: effortレベルを設定（セッション全体に適用）
+/effort ultracode
+
+# 方法3: 保存済みWorkflowをコマンドとして実行
+/security-audit
+/effort ultracodeを設定すると、セッション内のすべてのタスクに対してClaudeがWorkflowの使用を自動判断します。トークン消費が増加するため、大規模タスクが終わったら/effort highに戻すことを推奨します。
+
+ Workflowsの保存と再利用
+一度実行したWorkflowを保存して、コマンドとして再利用できます。
+# 実行中または完了したWorkflowを保存
+/workflows
+# → ワークフローを選択して "s" キーを押す
+# → 保存先を選択:
+#   .claude/workflows/  (プロジェクト共有)
+#   ~/.claude/workflows/ (個人用)
+保存したWorkflowは/<名前>で実行でき、argsパラメータで入力を渡せます。
+
+ 制約事項
+
+
+
+制約
+値
+理由
+
+
+
+
+同時実行エージェント数
+最大16（CPUコア数-2）
+ローカルリソースの上限
+
+
+総エージェント数/実行
+最大1,000
+暴走ループの防止
+
+
+ファイルシステム直接アクセス
+不可（エージェント経由）
+スクリプトはオーケストレーションに専念
+
+
+実行中のユーザー入力
+不可（権限プロンプトのみ）
+中断なしの自動実行を保証
+
+
+
+Date.now()等の非決定的関数
+使用不可
+レジューム時の再現性を保証
+
+
+
+
+トレードオフ: Dynamic Workflowsは大量のトークンを消費します。500ファイルの監査で数百エージェントを起動すると、1回の実行でセッション数時間分のトークンを使うことがあります。まず小さいスコープ（1ディレクトリ、1モジュール）で試してからスケールアップしてください。
+
+
+ 3層を組み合わせた実践パイプラインを設計する
+ここまで紹介した3つの自動化層を組み合わせて、実際の開発パイプラインを構築するパターンを見ていきましょう。
+
+ パターン1: PR品質ゲートの自動化
+PRのライフサイクル全体にわたる品質チェックを自動化する構成です。
+
+
+
+フェーズ
+使用する層
+処理内容
+
+
+
+
+コード編集時
+
+Hooks (PostToolUse)
+自動フォーマット、lint実行
+
+
+PR作成時
+
+Routines (GitHub Event)
+自動コードレビュー、セキュリティチェック
+
+
+複雑なPR
+
+Workflows (手動起動)
+マルチ観点レビュー（セキュリティ・パフォーマンス・テストカバレッジ）
+
+
+
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "filepath=\"$CLAUDE_TOOL_INPUT_FILE_PATH\"; case \"$filepath\" in *.py) ruff check --fix \"$filepath\" 2>/dev/null && ruff format \"$filepath\" 2>/dev/null;; *.ts|*.tsx) npx eslint --fix \"$filepath\" 2>/dev/null && npx prettier --write \"$filepath\" 2>/dev/null;; esac; exit 0"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$CLAUDE_TOOL_INPUT\" | grep -qE 'git\\s+push\\s+.*--force|git\\s+reset\\s+--hard' && echo 'BLOCKED: force push/hard reset requires manual confirmation' >&2 && exit 2 || exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}
+Routines側では、GitHub Event トリガーで新規PRに対する自動レビューを設定します。
+Review the pull request changes:
+1. Security: Check for injection, auth bypass, data exposure
+2. Performance: Flag N+1 queries, missing indexes, large payloads
+3. Tests: Verify new logic has test coverage
+4. Breaking changes: Flag public API modifications
+
+Leave inline comments for each issue and a summary with severity counts.
+
+ パターン2: 夜間バッチ処理パイプライン
+毎晩、コードベースの健全性をチェックするRoutineの構成例です。
+# Routineプロンプト（毎晩3時に実行）
+Check the repository health:
+1. Review all open PRs - leave review comments if stale (>3 days)
+2. Scan for TODO/FIXME comments added in the last week
+3. Check if dependencies have known vulnerabilities (npm audit / pip-audit)
+4. Summarize findings in a new issue with the label "nightly-report"
+このRoutineはclaude.ai/code/routinesから作成し、Scheduleトリガーを「Daily at 3:00 AM」に設定します。
+
+ パターン3: 大規模リファクタリングのWorkflow
+レガシーコードの段階的なリファクタリングにWorkflowsを活用する例です。
+export const meta = {
+  name: 'modernize-error-handling',
+  description: 'Replace callback-style error handling with async/await',
+  phases: [
+    { title: 'Discover', detail: 'Find callback patterns' },
+    { title: 'Transform', detail: 'Convert to async/await' },
+    { title: 'Test', detail: 'Verify no regressions' }
+  ]
+}
+
+phase('Discover')
+const files = await agent(
+  'Find all .ts files under src/ that use callback-style error handling ' +
+  '(e.g., .then().catch(), callback(err, result)). Return the file paths.',
+  { label: 'discover', schema: FILES_SCHEMA }
+)
+
+phase('Transform')
+const results = await pipeline(
+  files.paths,
+  (filepath) => agent(
+    `Convert callback-style error handling to async/await in ${filepath}. ` +
+    'Preserve all existing behavior. Make minimal changes.',
+    { label: `transform:${filepath}`, phase: 'Transform', isolation: 'worktree' }
+  ),
+  (transformResult, filepath) => agent(
+    `Run the tests related to ${filepath}. Report pass/fail.`,
+    { label: `test:${filepath}`, phase: 'Test' }
+  )
+)
+
+const failures = results.filter(Boolean).filter(r => !r.passed)
+if (failures.length > 0) {
+  log(`${failures.length} files failed tests after transformation`)
+}
+return { transformed: results.filter(Boolean).filter(r => r.passed).length, failures }
+isolation: 'worktree' を指定すると、各エージェントが独立したGit worktreeで作業するため、並列でファイルを編集しても競合しません。ただし、worktreeのセットアップに200〜500msのオーバーヘッドがかかるため、ファイルを変更しないタスク（読み取り専用の分析）には使わないでください。
+
+ よくある問題と解決方法
+
+
+
+問題
+原因
+解決方法
+
+
+
+
+Hookが実行されない
+
+settings.jsonのJSONフォーマットエラー
+
+jq . .claude/settings.jsonで構文チェック
+
+
+
+/scheduleが「Unknown command」
+API key認証を使用している
+
+ANTHROPIC_API_KEYを削除し、claude.aiログインに切り替え
+
+
+Workflowが途中で停止
+トークン上限に到達
+
+/workflowsで進捗確認、小さいスコープで再実行
+
+
+Routineのネットワークエラー
+許可ドメインリストにホストがない
+環境設定で「Allowed domains」にドメインを追加
+
+
+Hookのcommand内でクォートエラー
+JSON内のシングルクォート
+外部スクリプトファイルに分離してbash script.shで呼び出し
+
+
+WorkflowでDate.now()エラー
+非決定的関数の使用制限
+
+args経由でタイムスタンプを渡すか、Workflow完了後に付与
+
+
+
+
+ まとめと次のステップ
+まとめ:
+
+Claude Codeの自動化は**Hooks（決定論的ルール）・Routines（クラウド定期実行）・Dynamic Workflows（マルチエージェント）**の3層で構成される
+Hooksはsettings.jsonに設定するだけで、ファイル編集時の自動整形やコマンドガードを確実に実行できる
+Routinesはcron/GitHubイベント/APIの3トリガーでクラウド上の無人実行を実現し、PRレビューやバッチ処理に適用できる
+Dynamic Workflowsはpipeline()/parallel()/agent()で最大1,000エージェントをオーケストレーションし、大規模コードベース操作に対応する
+3層は独立して使えるが、組み合わせることでPR品質ゲート→夜間バッチ→大規模リファクタリングまでカバーする開発パイプラインを構築できる
+
+次にやるべきこと:
+
+まずHooksから始める: .claude/settings.jsonにPostToolUseの自動フォーマットを設定し、1週間運用してみる
+Routinesを試す: claude.ai/code/routinesで既存リポジトリに対するPRレビューRoutineを1つ作成する
+Workflowsはスコープを絞って試す: ultracode: audit src/auth/ for security issuesのように1ディレクトリに限定して実行し、トークン消費量を確認する
+
+関連記事
+
+ 参考
+
+Automate actions with hooks - Claude Code Docs
+Hooks reference - Claude Code Docs
+Run prompts on a schedule - Claude Code Docs
+Automate work with routines - Claude Code Docs
+Orchestrate subagents at scale with dynamic workflows - Claude Code Docs
+Introducing dynamic workflows in Claude Code - Anthropic Blog
+Orchestrate teams of Claude Code sessions - Claude Code Docs
+
+
+
+ 関連する深掘り記事
+この記事で紹介した技術について、さらに深掘りした記事を書きました：
+
+
+Anthropicのマルチエージェントリサーチシステム設計解説 - tech_blog解説
+
+長時間稼働エージェントのハーネス設計パターン解説 - tech_blog解説
+
+Anthropicが提唱する効果的なAIエージェント設計パターン解説 - tech_blog解説
+
+論文解説: SWE-agent — ACI設計によるソフトウェアエンジニアリング自動化 - arxiv解説
+
+論文解説: ChatDev — マルチエージェント協調によるソフトウェア開発自動化 - arxiv解説
+
+---
+
+## 17. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -6486,7 +7255,7 @@ AIに渡すルールは、自然言語ドキュメント1枚から三つの仕�
 
 ---
 
-## 17. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
+## 18. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -6994,7 +7763,7 @@ Skillは「自分専用のClaude Code」を育てることに近いと感じて�
 
 ---
 
-## 18. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
+## 19. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -7499,7 +8268,7 @@ Building agents with the Claude Agent SDK - Anthropic Engineering
 
 ---
 
-## 19. [【CLAUDE.mdに貼るだけ】Claude Code x Gemini CLI x 人間による、三位一体開発術](https://zenn.dev/tksfjt1024/articles/5e88385bfb69fd)
+## 20. [【CLAUDE.mdに貼るだけ】Claude Code x Gemini CLI x 人間による、三位一体開発術](https://zenn.dev/tksfjt1024/articles/5e88385bfb69fd)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -7652,7 +8421,7 @@ Claude Code: https://docs.anthropic.com/claude-code
 
 ---
 
-## 20. [Gemini CLIとClaude Codeによるピンポンプログラミング](https://zenn.dev/yonekubo/articles/3a2da69cacaa73)
+## 21. [Gemini CLIとClaude Codeによるピンポンプログラミング](https://zenn.dev/yonekubo/articles/3a2da69cacaa73)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -7870,7 +8639,7 @@ Bash(mkdir:*)
 
 ---
 
-## 21. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
+## 22. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -8015,7 +8784,7 @@ banned_visual_motifs:
 
 ---
 
-## 22. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
+## 23. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/7
@@ -8251,7 +9020,7 @@ Slack, Google Calendar, Confluence等のMCPツールを活用して情報取得�
 
 ---
 
-## 23. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
+## 24. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -8445,7 +9214,7 @@ CLAUDE.mdにルールを書いて、WIP.mdに作業状態を残すようにし�
 
 ---
 
-## 24. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
+## 25. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -8754,7 +9523,7 @@ your-project/
 
 ---
 
-## 25. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
+## 26. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -8889,7 +9658,7 @@ Qiitaニュースを購読する
 
 ---
 
-## 26. [GitHub - unsolublesugar/tsuyu-mi: Fetch, summarize, and publish Raindrop.io articles as a priority-ranked HTML dashboard · GitHub](https://github.com/unsolublesugar/tsuyu-mi)
+## 27. [GitHub - unsolublesugar/tsuyu-mi: Fetch, summarize, and publish Raindrop.io articles as a priority-ranked HTML dashboard · GitHub](https://github.com/unsolublesugar/tsuyu-mi)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -9145,7 +9914,7 @@ MIT
 
 ---
 
-## 27. [GitHub - chaenmasahiro0425/exbrain: Exbrain — Your AI's External Brain. Claude Code × Obsidian × SOUL/MEMORY/DREAMS · GitHub](https://github.com/chaenmasahiro0425/exbrain)
+## 28. [GitHub - chaenmasahiro0425/exbrain: Exbrain — Your AI's External Brain. Claude Code × Obsidian × SOUL/MEMORY/DREAMS · GitHub](https://github.com/chaenmasahiro0425/exbrain)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -9745,7 +10514,7 @@ MIT
 
 ---
 
-## 28. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
+## 29. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -10547,7 +11316,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 29. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
+## 30. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -10598,7 +11367,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 30. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
+## 31. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -10857,7 +11626,7 @@ Claude Code や AI 自動化についてさらに深く学びたい方は、筆�
 
 ---
 
-## 31. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
+## 32. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -11400,7 +12169,7 @@ Prime 200銘柄
 
 ---
 
-## 32. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
+## 33. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -11580,7 +12349,7 @@ mainで作業 → worktreeを使う
 
 ---
 
-## 33. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
+## 34. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/12
@@ -12289,7 +13058,7 @@ Claude Code の 6種類のメモリと優先順位を理解して効率的に活
 
 ---
 
-## 34. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
+## 35. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/22
@@ -13529,7 +14298,7 @@ AIの「揮発性の高い記憶」を補うための「外部メモリ」とし
 
 ---
 
-## 35. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
+## 36. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/8
@@ -15121,7 +15890,7 @@ AI に相談して書いてもらいました。 ↩︎
 
 ---
 
-## 36. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
+## 37. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -15372,7 +16141,7 @@ hooks は決定論的な強制です。必ず同じ処理を再現したいも�
 
 ---
 
-## 37. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
+## 38. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -15871,7 +16640,886 @@ READMEが人間への手紙なら、AGENTS.md は、明日の自分・明日の�
 
 ---
 
-## 38. [Claude × Codex × Gemini を"併用"する設計 ─ セカンドオピニオン運用フレーム #AI - Qiita](https://qiita.com/nogataka/items/b2b4a84ba611ccaf8447)
+## 39. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
+- **優先度**: High
+- **スコア**: 88
+- **解析日時**: 2026/6/16
+- **AI要約**:
+  Skillsのdescriptionを2%以下に抑える段階的開示と3層構造によるコンテキスト管理
+  常時ロードを避けるためのSKILL.md、サブエージェント、リファレンスの分離とファイル構成
+  AIの自己判断による品質低下を防ぐIron Law（合理化防止テーブル）の具体的な設計と定義例
+- **今読む理由**: AI駆動開発においてClaude Codeを使用する際、トークン消費を抑えつつエージェントの自律稼働品質を保証するための具体的なディレクトリ構成やIron Law（合理化防止ルール）の記述テンプレートを即座に適用できるため。
+- **タグ**: #Claude-Code, #AI-Driven-Development, #Prompt-Engineering, #Agent-Architecture
+
+### 本文
+はじめに
+Claude Code Skillsの入門記事は日本語でも増えてきましたが、「どう設計すれば良いか」の判断基準を体系化した記事はまだ少ない印象です。
+本記事では、15以上のSkillsを実運用してきた経験から、以下の設計思想を整理します。
+
+
+段階的開示（Progressive Disclosure） ：必要な情報を必要なタイミングで展開する
+
+コンテキスト2%ルール ：Skillsのdescription設計の定量的基準
+
+3層構造 ：SKILL.md / agents / references によるコンテキスト分離
+
+Iron Law + 合理化防止 ：品質を担保するパターン
+
+
+
+ Skills設計の核心：段階的開示とは
+
+ 問題：全てを書くとコンテキストが溢れる
+Claude Codeはセッション開始時に ~/.claude/CLAUDE.md、プロジェクトの .claude/CLAUDE.md、そして全Skillsの description を読み込みます。
+Skillsのdescriptionの合計サイズは コンテキストウィンドウ全体の約2% （最大16,000文字程度）を占めます。この2%は避けがたい固定コスト。Skillsが増えるほど、実際の作業コンテキストに使えるトークンが減る計算になります。
+コンテキストウィンドウ（200K tokens）
+├── システムプロンプト（固定）
+├── CLAUDE.md（固定）
+├── Skills descriptions（固定、最大〜16,000文字）← ここが問題
+├── 会話履歴（可変）
+└── 実際の作業内容（可変）←← これが削られる
+
+ 解決策：段階的開示
+段階的開示（Progressive Disclosure）は、UIデザインの概念をコンテキストエンジニアリングに応用したものです。
+Level 1: description（常時ロード）
+  ↓ Skillが呼ばれたとき
+Level 2: SKILL.md（Skill実行時にロード）
+  ↓ 複雑な処理が必要なとき
+Level 3: agents / references（処理内でロード）
+descriptionは「このSkillが何をするか」を20〜50文字で伝えるだけにします。詳細な手順は SKILL.md に書き、Skill実行時に初めてロードします。
+
+
+ Skills設計の3層構造
+
+ 実際のディレクトリ構成
+~/.claude/skills/
+├── session-start.md     ← Skill本体（description + 手順）
+├── session-end.md
+├── da-review.md
+├── content-scout.md
+├── agents/              ← サブエージェント定義
+│   ├── pragmatist.md
+│   ├── skeptic.md
+│   ├── idealist.md
+│   └── connector.md
+└── references/          ← 詳細リファレンス（必要時のみ参照）
+    ├── da-review-criteria.md
+    ├── session-template.md
+    └── content-formats.md
+
+ Layer 1: descriptionの設計
+<!-- ~/.claude/skills/da-review.md の冒頭部分 -->
+# da-review
+
+**description**: Runs a Devil's Advocate (Skeptic-only) critical review.
+Use for quick single-perspective review before commit or deploy.
+Triggered by: "/da-review", "DAレビュー", "レビューして".
+
+<!-- この後に詳細な手順を書く -->
+descriptionのルール：
+
+
+1〜2文で完結 ：トリガーとユースケースのみ
+
+英語推奨 ：日本語より約30%トークンを節約できる
+
+トリガーフレーズを必ず含める ：Claude Codeがどこでこのスキルを使うか判断するため
+
+
+ Layer 2: SKILL.md（Skill本体）
+# da-review Skill
+
+## 概要
+
+Devil's Advocate（懐疑派）の視点から、コードや記事の批判的レビューを実行する。
+コミット前・デプロイ前の最終チェックに使う。
+
+## 実行手順
+
+### Step 1: レビュー対象の特定
+ユーザーのメッセージから以下を特定する：
+- 対象ファイル（またはコードブロック）
+- レビューの深度（quick / thorough）
+
+### Step 2: 懐疑派の視点でレビュー
+
+以下の観点でレビューを実施：
+
+** セキュリティ（Security） **
+- SQLインジェクション / XSS / CSRF の脆弱性
+- 認証・認可の抜け漏れ
+- シークレットのハードコード
+
+** データ整合性（Data Integrity） **
+- トランザクション処理の正確性
+- エラー時のロールバック
+- 冪等性の担保
+
+** エラーハンドリング（Error Handling） **
+- 全例外の握りつぶしがないか
+- ユーザーへのエラーメッセージが適切か
+
+<!-- ... 続く ... -->
+
+ Layer 3: agents / references（処理内でロード）
+複雑な処理では、サブエージェントの定義を別ファイルに切り出します。
+<!-- ~/.claude/skills/agents/skeptic.md -->
+# Skeptic（懐疑派）エージェント定義
+
+あなたはDevil's Advocateです。以下の特性を持ちます：
+
+- 全ての前提に疑問を持つ
+- 「最悪のケース」を想定する
+- 楽観的な見通しに反証を示す
+- 具体的な失敗シナリオを提示する
+
+## 発言スタイル
+
+「〇〇という前提が成立しない場合は？」
+「この実装が本番環境で壊れるとしたら、何が原因か？」
+「レビュアーが見落としているリスクは？」
+<!-- ~/.claude/skills/da-review.md の中でロードを指示 -->
+## サブエージェントの読み込み
+
+懐疑派の視点でレビューする際は、以下を参照：
+`~/.claude/skills/agents/skeptic.md`
+
+
+ コンテキスト2%ルールの実践
+
+ description文字数の管理
+# 全Skillのdescription文字数を確認するスクリプト
+#!/bin/bash
+
+SKILLS_DIR=~/.claude/skills
+TOTAL=0
+
+echo "Skill                        | 文字数"
+echo "-----------------------------+-------"
+
+for skill_file in "$SKILLS_DIR"/*.md; do
+  skill_name=$(basename "$skill_file" .md)
+  
+  # description行を抽出（最初のコードブロック外の段落）
+  desc=$(awk '/^## /{exit} /^[^#]/{print}' "$skill_file" | \
+    head -5 | tr -d '\n')
+  
+  char_count=${#desc}
+  TOTAL=$((TOTAL + char_count))
+  
+  printf "%-30s | %d\n" "$skill_name" "$char_count"
+done
+
+echo "-----------------------------+-------"
+echo "Total: $TOTAL characters"
+echo "Estimated tokens: $((TOTAL / 4)) (÷4 approximation)"
+
+ 実測データ（15 Skills）
+自社の15 Skillsを計測した結果：
+
+
+
+カテゴリ
+Skills数
+合計文字数
+推定トークン
+
+
+
+
+セッション管理
+3
+1,240
+310
+
+
+レビュー・品質
+4
+2,100
+525
+
+
+コンテンツ
+5
+1,870
+468
+
+
+経理・広告
+3
+980
+245
+
+
+合計
+15
+6,190
+1,548
+
+
+
+16,000文字の上限に対して6,190文字（約39%）で収まっています。この余裕があることで、新しいSkillを追加したときの影響を吸収できます。
+
+
+ Iron Law：合理化を防ぐ品質パターン
+GitHubで39,700 Star（2026年3月時点）を獲得している superpowers リポジトリには「Iron Law」という概念があります。
+AIが作業中に「例外的に〇〇していい」と自己判断して品質基準を下げることを防ぐパターンです。
+
+ 合理化防止テーブルの例
+<!-- ~/.claude/skills/da-review.md の中に記載 -->
+
+## 合理化防止テーブル
+
+以下の思考パターンが発生した場合、即座に作業を止めてユーザーに確認する：
+
+| 合理化パターン | 正しい対応 |
+|---|---|
+| 「小さな変更だから品質チェックを省略してもいい」 | 省略しない。チェックは必須 |
+| 「ユーザーが急いでいるからレビューを簡略化しよう」 | 急いでいても手順は変えない |
+| 「この部分は確認済みだから飛ばしていい」 | 全ての手順を実行する |
+| 「このファイルは影響範囲が小さいから」 | 影響範囲の判断はユーザーに委ねる |
+
+## Iron Law
+
+以下のルールは例外なく適用される：
+
+1. セキュリティチェックは全項目を実施する（スキップ禁止）
+2. 「HIGH」評価の指摘は修正が完了するまでレビューを完了としない
+3. ファクトチェックなしに事実主張を含む文章を承認しない
+
+ 実装への応用
+<!-- 開発系Skillの合理化防止例 -->
+
+## 絶対ルール（Iron Law）
+
+以下は「効率化」「時間短縮」を理由にしても破れない：
+
+- `git push --force` は禁止（`--force-with-lease` を提案する）
+- 本番DBへの直接操作は禁止（ステージング経由必須）
+- APIキーのハードコードは禁止（環境変数化を提案する）
+- セキュリティレビュー未実施のコードをコミットしない
+
+「ユーザーが急いでいる」「小さな変更」「確認済み」はいずれも例外理由にならない。
+
+
+ トリガーフレーズの設計
+
+ 日英両方のトリガーを設定する
+**Triggered by:**
+- "/da-review"
+- "/DAレビュー"
+- "DAレビュー"
+- "レビューして"
+- "コードレビュー"
+- "デプロイ前にチェック"
+- "review this"
+- "check this code"
+日本語のトリガーを追加することで、日常会話の中でSkillが自然に発火します。
+
+ モデル指定のパターン
+<!-- Skillでモデルをopusかsonnetかhaikusで指定する -->
+
+## 使用モデル
+
+このSkillは **claude-opus-4** で実行する。
+
+理由：セキュリティレビューの見落としは手戻りコストが大きいため、
+精度最優先でopusを選択する。
+
+<!-- haiku向けSkillの例 -->
+## 使用モデル
+
+このSkillは **claude-haiku** で実行する。
+
+理由：テンプレートへの値の埋め込みは単純タスクのため、
+速度・コスト優先でhaikuを選択する。
+
+
+ disable-model-invocationの活用
+Skillsの中でサブエージェントを呼び出す場合、disable-model-invocation フラグを使うと、Skill実行中のモデル切り替えを防げます。
+## 実行設定
+
+- disable-model-invocation: true
+
+このフラグを設定することで、Skill実行中にユーザーが別のモデルを
+指定しても無視される。品質ゲートの確実な実行に有効。
+
+
+ 実運用からの知見
+
+ 15 Skillsの運用で学んだこと
+1. Skillは小さく保つ
+1つのSkillに複数の責務を持たせると、どちらの用途にも使いにくくなります。session-start と session-update は分離した方が使いやすかった実例です。
+<!-- NG: 1つのSkillに全部詰め込む -->
+# session-management
+セッション開始・更新・終了を全て管理する
+
+<!-- OK: 責務を分割する -->
+# session-start    ← セッション開始専用
+# session-update   ← 作業中の更新専用
+# session-end      ← 終了・自動抽出専用
+2. descriptionにuse whenを明記する
+いつ使うSkillかを明示することで、Claude Codeの自律的なSkill選択が改善します。
+**Use when**: コミット前、デプロイ前の最終チェック時。
+  成果物（コード/記事）の品質確認に使う。
+
+**Do NOT use when**: 仕様検討段階、アイデア出しフェーズ。
+  実装済みのコードや完成した文章に対してのみ使う。
+3. 失敗ケースを明示する
+何が失敗とみなされるかを書くことで、曖昧な完了基準を防ぎます。
+## 完了の定義
+
+以下が全て満たされた場合のみ「完了」とする：
+- [ ] 全セキュリティ項目にHIGHが0件
+- [ ] 型チェックがエラー0件
+- [ ] テスト通過率100%
+- [ ] ファクトチェック済み（記事の場合）
+
+1つでも未達の場合は「完了」とせず、修正を促す。
+
+
+ テンプレート：新規Skill作成時の雛形
+# {skill-name}
+
+## description（50文字以内を目標）
+
+{このSkillが何をするかを1〜2文で記述。トリガーフレーズを含める。}
+
+**Triggered by**: "/{skill-name}", "{日本語トリガー}", "{英語トリガー}"
+**Use when**: {どんな状況で使うか}
+**Do NOT use when**: {使ってはいけない状況}
+**Model**: {claude-opus-4 / claude-sonnet-4 / claude-haiku} — {理由}
+
+---
+
+## 実行手順
+
+### Step 1: {最初のステップ名}
+{具体的な処理内容}
+
+### Step 2: {次のステップ名}
+{具体的な処理内容}
+
+---
+
+## 合理化防止テーブル
+
+| 合理化パターン | 正しい対応 |
+|---|---|
+| {よくある例外理由} | {正しい対応} |
+
+## Iron Law（絶対ルール）
+
+- {例外なく守るルール1}
+- {例外なく守るルール2}
+
+---
+
+## 完了の定義
+
+- [ ] {完了条件1}
+- [ ] {完了条件2}
+
+
+ まとめ
+Claude Code Skillsの設計で重要な原則をまとめます。
+
+
+
+原則
+具体的な実践
+
+
+
+
+段階的開示
+descriptionは20〜50文字、詳細はSKILL.md
+
+
+コンテキスト2%ルール
+description合計を16,000文字以内に収める
+
+
+3層構造
+SKILL.md / agents / references で分離
+
+
+Iron Law
+合理化防止テーブルで品質を担保
+
+
+日英トリガー
+日常会話からの自然な発火を実現
+
+
+
+Skillsは「プロンプトを再利用する仕組み」ではなく、「AIの振る舞いを設計する仕組み」です。段階的開示の思想を取り入れることで、コンテキスト消費を抑えながら高品質な作業を実現できます。
+
+ 関連記事
+
+Claude CodeのCLAUDE.mdで作業品質を担保する
+Claude Code Knowledge Filesでチーム知識を外部化する
+Claude Code Parallel Agentsで複数タスクを同時処理する
+
+GitHubで編集を提案
+
+---
+
+## 40. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
+- **優先度**: High
+- **スコア**: 88
+- **解析日時**: 2026/6/16
+- **AI要約**:
+  AIエージェント用の「原則」をRulesやSkillsのファイル構造として運用する具体的手法を提案
+  Markdown作成やコード設計の原則をSKILL.mdと関連ドキュメントに分割して定義する設定例を提示
+  原則を構造化して参照させることでAIの自己判断や推測を防ぎ、コンテキストを適切に管理可能にする
+- **今読む理由**: AI駆動開発において、プロンプトの記述量を削減しながらAIの出力品質を劇的に高めるための具体的な「SKILL.md」の設定と運用ディレクトリ構造が明記されており、今すぐプロジェクトに導入可能であるため。
+- **タグ**: #AI駆動開発, #プロンプトエンジニアリング, #Cursor, #コンテキスト管理
+
+### 本文
+Rules や Skills をメンテナンスするのが大変なので「実装例」をたくさんに用意するよりも「原則」を優先して Rules や Skills に起こして運用してみました。
+同じように構成している方も多そうですが、感触が良かったので Agentic Coding の 1 例として紹介します。
+特に 0 → 1 のあまりパターン化されていないドキュメント作成やコーディング作業に効きます。
+品質やコストなど、何かしら理由があってドキュメントやコードにこだわる必要があるなら尚更おすすめします。
+
+ 構成例
+
+
+「原則」の Rules/Skills：一番抽象度・視点が高い本当に共通の指針
+
+ドキュメントの扱い
+コード（プログラム）の扱い（責務分離の原則、境界の設計）
+テストの扱い
+
+
+
+「原則」を適用する Rules/Skills：ドキュメントの種類・言語・フレームワーク・アーキテクチャごと
+
+DesignDoc ではどうする
+CONTRIBUTING.md ではどうする
+README.md ではどうする
+コミットメッセージではどうする
+Go ではどうする
+React ではどうする
+
+
+
+具体的な説明や指示をする Rules/Skills + AGENTS.md (CLAUDE.md)：プロジェクト・作業・ワークフローごと
+
+パターンごとの実装方法
+レビュー方法
+テスト方法
+コミットメッセージのフォーマット
+プロジェクトの概要、目的、設計
+他ワークフロー
+
+
+
+
+
+ 「原則」の Rules/Skills
+0 → 1 のドキュメント作成やコーディングにおいて、「DesignDoc を作って」や「Clean Architecture で作って」と作るものの情報を 20〜30 行程度書いた上で指示すると出来上がるのはそこそこかそれ以下の出来だと感じることが多いです。
+※こだわり強めの個人的な感覚
+具体例やスタイルガイドを参照させても抜け落ちる部分がありますし、「追加情報や判断が必要な場合は質問して」と指示を入れると自分の手で大枠を作ったほうが早くなってしまう場合もあります。
+つまり、AI Agent の出力に対する期待値に対してコンテキスト管理が不十分なのです。
+
+ ドキュメントを作らせるときの困りごと
+以下のプロンプトの構成では、何が足りないでしょうか。
+
+情報を 20〜30 行程度
+DesignDoc を作って
+追加情報や判断が必要な場合は質問して
+
+少し視点を変えて見る必要がありますが、以下は明確な指示がありません。
+
+DesignDoc の役割は？
+（一般的にではなくこのプロジェクトではどうなのか）
+このプロジェクトにおいてドキュメントはどういう扱い？
+（README・DesignDoc・ADR の使い分けは？）
+誰が読む？（エンジニア？ 非エンジニア？ チーム内？）
+どこまで書く？
+どういう構成で書く？
+
+明確な指示がないこれらは、質問攻めされて時間がかかるか、
+勝手に判断・推測されて AI Agent やモデルの癖・特徴に引っ張られたものになります。
+
+ ドキュメントに関する「原則」をスキルにする
+以下の styleguide-markdown-document/SKILL.md と参照させている document.md が「原則」に当たります。
+他は「原則」を適用するためのガイドのようなことを書いてあります。
+styleguide-markdown-document/SKILL.md
+---
+name: styleguide-markdown-document
+description: Write, review, and refactor Markdown documentation (README, PRD, DesignDoc, ADR, CONTRIBUTING) using the project's styleguide. Use when working on .md docs to enforce document boundaries, required sections, and link hygiene. Consult the referenced styleguide files under docs/styleguide/documents/*. Outputs are in English by default; also applicable to Japanese documents.
+---
+
+# Styleguide: Markdown Document
+
+When writing or updating Markdown docs (README, PRD, DesignDoc, ADR, CONTRIBUTING), consult the corresponding styleguide file:
+
+- **README**: ./README.md
+- **PRD**: ./PRD.md
+- **DesignDoc**: ./DesignDoc.md
+- **ADR**: ./ADR.md
+- **CONTRIBUTING**: ./CONTRIBUTING.md
+- **Document System Guide**: ./document.md (Entry point and index for all document types and boundaries)
+
+Follow the required sections, boundaries, and link hygiene defined in each styleguide file.
+Apply the same structure for Japanese documents.
+この「原則」と「原則を適用するガイド」を使用して作成した DesignDoc とプロンプト
+
+ プロンプト
+月単位で google calendar の予定を sync する機能の DesignDoc を作成してください。 
+決めなければならないこと、分からないことは聞いてください。 
+
+入力： 
+- calendar id 
+- 予定名 
+- 期間 
+- 追加する予定の名 (optional) 
+
+結果：
+- 該当する予定がカレンダーに sync される 
+- 期間、予定名が該当する予定がカレンダーに全く同じものがなければ追加される 
+- sync 元に全く同じ予定が無く、カレンダーにある場合は削除される
+  （このツールで作成されたものかどうかを判定する必要あり。更新があれば変更ではなく置き換え処理を行う）
+
+Usage
+\```
+# Login with Google
+gcal-sync login
+
+# Sync events to personal (or specified) calendar
+gcal-sync <src calendar id> [--dest <dest calendar id>] [--name <sync event name>] [--all] [[--month YYYYMM]] [--next-month]
+\```
+
+Options と仕様
+--dest, -d: イベントの同期先
+--name: コピーするイベントの名前（完全一致）（指定なしの場合は警告を出して y/n をプロンプトで入力させる）
+--all: --name で一致したイベントをすべて同期する（指定なしでその日以降で最近の合致イベントを同期する）
+--month: イベントの同期範囲（月指定）
+--next-month: --month の省略用
+
+
+ 成果物 (所要時間 20 分程度)
+※ 上記のプロンプトに加えて 5 往復くらい訂正・追加指示はしています。
+
+
+
+ コーディングさせるときの困りごと
+DesignDoc や Plan にディレクトリ構成と共に「Clean Architecture を採用する。」や「DDD に準拠する。」とした場合も同様に不足している情報があります。
+
+何を重視する？
+何を無視する？
+どう実装する？
+DDD はどこまで？
+レイヤー構成は？
+テストはどこに重み？
+キャッシュはどこ？
+どう責務を分離する？
+
+プロダクトや運用方針によって採用したアーキテクチャやデザインパターンの上で更に判断が必要なはずです。
+ここを勝手に判断・推測されてしまっては困ります。
+
+ コーディングに関する「原則」をスキルにする
+以下の styleguide-sourcecodes/SKILL.md 及び参照させているファイルすべてが「原則」に当たります。
+主に「責務の分離」「境界の設計」についてまとめています。
+styleguide-sourcecodes/SKILL.md
+---
+name: styleguide-sourcecodes
+description: Apply the repository's source-code design principles (separation of concerns, sliced iterations, root ownership) when designing, reviewing, or refactoring code. Use for any language to keep responsibilities thin, testable, and referencable.
+---
+
+# Styleguide: Source Codes
+
+Use these design principles to shape code structure and reviews:
+
+- **Separation of Concerns**: ./design-principles-separation-of-concerns.md
+- **Sliced Iterations**: ./design-principles-for-sliced-iterations.md
+- **Versioned Codebase Cleanup**: ./version-control-cleanup.md
+
+Key expectations for agents:
+
+- Treat a concern as a reason for change; assign one responsibility per concern.
+- Keep state owned by a clear Root Owner; avoid scattered or ambient state.
+- Prefer referential transparency; keep external dependencies thin at boundaries.
+- Express cross-iteration concerns as sliced iterations with explicit boundaries; keep pure per-item work as non-iterative functions.
+- Avoid invalid states by construction; push invariants to creation points.
+- Use testability as a signal—if tests are hard, re-check concern separation and state ownership.
+
+ 「原則」の Rules/Skills による効果
+判断材料・指針をしっかり原則としてまとめることができればその基準を使って不足情報を補完できるため、以下の流れで進めさせることができます。
+原則 + コンテキスト → 判断 → 実装
+特に DesignDoc の作成では、完成までの壁打ち回数が 10〜20 往復程度から 5〜10 往復程度まで減ることが多くなりました。
+また、嬉しい誤算として Claude Sonnet 4.6 や GPT-5.4 mini などの比較的軽量なモデルでも不満を感じる場面が減りました。
+
+ 「原則」の言語化
+もちろん、この「原則」を整理するためには相応の時間が必要です。
+私の場合も、styleguide や Skills を作る段階では AI やチームメンバーとかなりの壁打ちを行いました。
+
+ プロンプトの例
+〇〇についての設計原則をドキュメント化してください。
+
+### ゴール
+
+以下の認識をチームメンバー及び AI Agent で合わせ、踏襲、応用が可能
+
+- 〇〇
+  - 何を重視するのか
+  - 何を避けたいのか
+  - どのような認知負荷を減らしたいのか
+  - どのような変更容易性を得たいのか
+  - どのようなテスト容易性を得たいのか
+  - どのような責務分離を目指すのか
+
+### あなたの役目
+
+- 特定の技術やフレームワークに囚われない
+- 背後にある設計意図や判断基準を抽出する
+- 個別ルールではなく原則へ一般化する
+- AI Agent が応用できるレベルまで抽象化する
+
+
+ 原則や考え方を書いた Rules/Skills をレビューする (2026/06/15 追記)
+原則や考え方を書いた Rules/Skills についてはレビュー方法に少し工夫が必要でした。
+「特定パターンで期待する判断をしてくれるか」は実際に動かして確認することができますが、「未知のパターンでどう判断するか」は直接確認することはできません。
+私の場合は、代わりに「どう理解するか」「どう認識するか」を聞いて齟齬がないか確認する方法でレビューしました。
+この確認作業は実際の業務で使用する AI Agent・モデルで行っておくと良いでしょう。
+
+ プロンプト例
+このドキュメントをレビューしてください。
+AI や人間が読んだときにどのような理解・認識するかをまとめてください。
+
+「書いてあるルールが守られるか」ではなく、
+「どのように解釈されるか」を中心に評価してください。
+
+---
+
+## 41. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
+- **優先度**: High
+- **スコア**: 88
+- **解析日時**: 2026/6/16
+- **AI要約**:
+  Claude CodeからMCP経由でAntigravity CLIを呼び出す環境構築手順を解説。
+  agyの標準出力バグを回避するため、transcriptを読むPythonブリッジを採用。
+  Windows環境でのフリーズ、モデル固定失敗、PATHの不具合に対する具体的な解決策を提示。
+- **今読む理由**: AI駆動開発において、Claude Codeと無料枠Geminiを連携させる具体的なMCP設定に加え、agy CLIの致命的なバグである「標準出力が空になる問題」や「対話フリーズ」を回避するためのPythonブリッジの構成・設定手順が網羅されており、構築時の大幅な時間ロスを即座に防げるため。
+- **タグ**: #Claude Code, #Gemini, #Antigravity CLI, #MCP, #AI駆動開発
+
+### 本文
+はじめに
+
+当初は Claude Fable 向けに記事を書いていたのですが、環境構築中にClaude Fable が使えなくなるという大事件 が発生してしまいました(笑) ※Claude Opus でも問題なく使える方法ですので、ご参考ください。
+
+
+それなりに反響があるようですので、Claude Code × Antigravity CLI 協業環境 超簡単作成.md を公開しました。内容に冗長なところもありますが、これを使えば、初心者の方でも比較的簡単に環境を構築できると思います。
+
+
+「設計とレビューは Claude、コード生成は爆速の Gemini 3.5 Flash に任せる」── この役割分担をローカルで実現する環境を構築したので、手順とハマりどころを共有します。
+ポイントは3つです。
+
+
+Claude Code を司令塔にし、Google の Antigravity CLI（agy）を MCP 経由でサブエージェントとして呼び出す
+実装役は Gemini 3.5 Flash (High)（速くて安い、エージェント型コーディング向け）
+
+従量課金ゼロ ── API キーではなく AI Ultra/Pro のサブスク枠（OAuth） で動かす
+
+
+この記事は実際に構築してハマった罠と解決策が本体です。同じ構成を試す方の時間を節約できれば幸いです（2026年6月13日時点 / agy 1.0.8 / Windows 11）。
+
+
+
+なぜこの構成なのか
+
+
+
+担当
+役割
+理由
+
+
+
+
+Claude Fable or Opus
+設計・仕様策定・生成コードの検証・確定
+規約適合やセキュリティ等を正確に検証できる
+
+
+Gemini 3.5 Flash (High)
+コード生成の主力（実装・テスト）
+生成が爆速。まとまった実装を一気に出せる
+
+
+
+
+Antigravity は MCP の "クライアント" 側
+Antigravity（agy）自身は、外部 MCP サーバーを呼び出して使う"クライアント"側の製品です。そのため Claude Code から直接 MCP で繋ぐことはできず、agy を呼び出すブリッジを挟む構成になります。
+Claude Code ──(MCP)──▶ ブリッジ server.py ──(subprocess)──▶ agy -p ──(OAuth)──▶ Gemini 3.5 Flash (High)
+                                                                  ▲ AI Ultra/Pro 枠（従量課金なし）
+
+
+なぜ「ブリッジ」が必要なのか（← ここが今回の肝）
+「agy を Claude Code から呼ぶだけなら、コマンドを叩く単純な MCP サーバーで十分では？」と思うはずです。ところが、それでは動きません。 理由は agy 側のバグです。
+agy -p "プロンプト"（非対話モード）には、モデルとの往復は完了しているのに、応答を標準出力に一切返さないというバグがあります（公式 issue #76。exit code は 0、stderr も空という厄介な挙動）。
+つまり、コマンドの標準出力をそのまま受け取る素朴な連携では、応答がまったく取れません。しかし、実際の応答は agy 自身が書き出す transcript ファイル
+~/.gemini/antigravity-cli/brain/<会話ID>/.system_generated/logs/transcript.jsonl
+
+の PLANNER_RESPONSE エントリに入っています。
+そこで、「agy -p を実行しつつ、応答は stdout ではなく transcript ファイルから読み取る」という一手間が必要になります。
+これを肩代わりしてくれるのが今回のブリッジで、単なる薄いラッパーではなく stdout バグを回避するための実装になっているわけです。今回は OSS の SinanTufekci/Claude-Code-Antigravity-CLI-MCP-Server を利用しました。
+
+つまり「MCP を使う理由」は2段構えです。①Claude Code の拡張は MCP が標準だから。②agy -p が応答を返さないので、transcript を読む特殊なサーバー（ブリッジ）が必要だから。
+
+
+
+前提条件
+
+
+
+項目
+確認コマンド
+備考
+
+
+
+
+Antigravity CLI
+agy --version
+1.0.8 で検証。AI Ultra/Pro で OAuth ログイン済みであること
+
+
+Python
+python --version
+3.10+
+
+
+git
+git --version
+ブリッジの取得に使用
+
+
+
+
+補足：Google の Gemini CLI（gemini）は、Antigravity CLI（agy）へ移行しました。個人の AI Pro/Ultra ユーザーは agy を使います。
+
+
+
+Antigravity CLI（agy）のインストール
+すでに導入済みなら読み飛ばしてください。未導入の場合は 公式（Google 所有ドメイン） からインストールします。
+Windows（PowerShell）:
+irm https://antigravity.google/cli/install.ps1 | iex
+
+
+インストール先: C:\Users\<ユーザー名>\AppData\Local\agy\bin
+
+PATH が変更されるので、ターミナル（および Claude Code）を再起動する
+初回に agy を起動して認証 ── Google OAuth を選び、AI Ultra/Pro アカウントでログイン（これがサブスク枠 ＝ 従量課金ゼロの起点）
+確認: agy --version
+
+
+
+⚠️ インストールは必ず 公式ドキュメント（antigravity.google/docs/cli-install）で最新を確認してください（CLI 導入はシステムに変更を加えるため、出所が 公式ドメインであることが重要。macOS / Linux 版も公式に記載があります）。
+
+
+構築手順
+
+0. 【重要】従量課金を避ける設定確認
+agy の認証は --api-key フラグ → 環境変数 → OAuth の順に解決されます。GEMINI_API_KEY などが設定されていると、サブスク枠の OAuth をバイパスして従量課金 API に流れます。
+まず全スコープで未設定を確認します（すべて「未設定」になればOK）。
+'GEMINI_API_KEY','ANTIGRAVITY_API_KEY' | %{ $n=$_; 'Process','User','Machine' | %{ "{0,-20}{1,-8}: {2}" -f $n,$_,$(if([Environment]::GetEnvironmentVariable($n,$_)){'★設定あり'}else{'未設定'}) } }
+
+
+1. モデルを High に固定
+%USERPROFILE%\.gemini\antigravity-cli\settings.json に "model" を追記します。
+{
+  "model": "Gemini 3.5 Flash (High)"
+}
+
+
+後述しますが、--model フラグではなくこの settings.json 方式がオススメです。
+
+
+2. ブリッジを取得
+
+"$env:USERPROFILE\tools\agy-mcp-bridge" は、環境に合わせて任意の場所に変更してください。
+
+$dest = "$env:USERPROFILE\tools\agy-mcp-bridge"
+git clone https://github.com/SinanTufekci/Claude-Code-Antigravity-CLI-MCP-Server.git $dest
+
+
+clone 後、server.py の中身は必ず目視確認を。2026年6月13日時点では、標準ライブラリ + fastmcp のみで、~/.gemini 配下を読むだけの薄い実装でした（ただし後述のセキュリティ注意あり）。
+
+
+3. 仮想環境 + fastmcp
+python -m venv "$dest\.venv"
+& "$dest\.venv\Scripts\python.exe" -m pip install fastmcp
+
+
+4. Claude Code に登録
+claude mcp add agy -s user -- "$dest\.venv\Scripts\python.exe" "$dest\server.py"
+claude mcp list   # "agy: ... ✓ Connected" を確認
+
+
+5. Claude Code を再起動
+再起動後、mcp__agy__agy_ask / agy_continue / agy_status などのツールが使えるようになります。※agy_status はクレジット消費ゼロの診断ツールです。
+
+
+ハマりどころ4選（実装・運用の罠）
+
+※ 最大の罠「agy -p が stdout に応答を返さない」は、前述（ブリッジが必要な理由）の通りです。ブリッジを使えば吸収されますが、自前で連携を組むなら transcript を読む実装が必須です。
+
+
+① 【必須】非対話実行は stdin を閉じる
+agy -p を stdin を開いたまま呼ぶと起動直後にフリーズします。
+解決：subprocess なら stdin=subprocess.DEVNULL、シェルなら $null | agy -p "..." のように stdin を閉じます（ブリッジは実装済み）。
+
+② High モデルは --model ではなく settings.json で
+直感的には agy -p --model "Gemini 3.5 Flash (High)" "..." としたくなりますが、この順序だと無視され、会話すら作られません。※--model を -p の前に置くと効きます。
+解決：手順1のとおり settings.json の "model" で固定するのが確実。これなら素の agy -p でも High が適用されます（実機で transcript の Model Selection ... to Gemini 3.5 Flash (High) を確認）。
+
+③ 再起動後に agy が PATH から消える（Windows）
+agy_status で agy CLI [!!] not found on PATH が出ました。調べると User 環境変数の PATH には agy\bin があるのに、MCP サーバーからは見えない。Claude Code が起動時の古い PATH を継承していて、既存プロセスは環境変数の変更を引き継がないためです（Windows でありがち）。
+解決：PATH の反映に依存せず、agy のフルパスを明示します。
+
+
+server.py の agy 呼び出しを環境変数対応にする（["agy", …] → [os.environ.get("AGY_BIN") or "agy", …]、2箇所）
+env 付きで再登録：
+
+claude mcp add agy -s user -e AGY_BIN="%LOCALAPPDATA%\agy\bin\agy.exe" -- "<python>" "<server.py>"
+
+
+事前検証のコツ：$env:AGY_BIN="<フルパス>" を設定してスモークを走らせ、PASS すれば再起動後の MCP でも確実に動きます。
+
+
+④ サブスク枠にもレート制限はある
+AI Ultra/Pro 枠は追加課金なしですが、デイリー上限はあります。枯渇すると一時停止するので、重い生成を agy に寄せ、軽微な編集は司令塔（Claude）が直接やるといった配分が有効です。
+
+⚠️ セキュリティ注意：agy -p は承認ゲートなしでファイル書き込み・コマンド実行・ネット送信を行う自律エージェントです。--sandbox も完全な境界にはなりません。信頼できるプロンプト・内容のみに使い、重要な変更はコミット前に git diff でレビューしましょう。
+
+
+
+協業フローと実演
+司令塔（Claude）に AI 協業ポリシーを SKILL.md として持たせ、こんな感じで回します。
+① Claude が設計   →  ② agy が High で爆速生成  →  ③ 静的検査（テスト）  →  ④ Claude が精査  →  ⑤ 確定
+
+筆者は、自作のAIコーディング特化 PHP フレームワークLattice （規約を静的検査テストで機械的に強制する自己検証型）で試しました。
+「自動検査」を②と④の間に挟むのが強力で、agy の生成物が規約違反していれば即座に分かります。3層（爆速生成・自動検査・人間級レビュー）が噛み合うと、速くて正確な開発ループになります。
+
+
+まとめ
+
+Claude Code から Antigravity CLI を MCP ブリッジで呼び、Claude = 設計/検証・Gemini Flash = 生成の分業が実現できた
+
+ブリッジが必要な理由は、agy -p の stdout バグ（公式 issue #76）── 応答は transcript から読む
+
+従量課金ゼロ（OAuth サブスク枠、GEMINI_API_KEY を設定しないのが鍵）
+運用の罠は stdin・モデル指定・PATH 継承・課金経路 の4つ
+フレームワークの静的検査テストを協業ループに組み込むと、品質が機械的に担保される
+
+API キーを使う「プロキシ方式」は、Google の ToS 違反で BAN 報告があるため不採用としました。サブスク枠を正規に使う本構成が、コスト面でも規約面でも安心です。
+
+---
+
+## 42. [Claude × Codex × Gemini を"併用"する設計 ─ セカンドオピニオン運用フレーム #AI - Qiita](https://qiita.com/nogataka/items/b2b4a84ba611ccaf8447)
 - **優先度**: High
 - **スコア**: 85
 - **解析日時**: 2026/5/4
@@ -16343,456 +17991,6 @@ Claude Code を主に据えて、Codex / Gemini を Skill 経由で呼ぶ構成�
 
 最後に、本記事はあくまで筆者の環境で落ち着いたフレームの一例です。各ツールは短いスパンでアップデートされており、半年後には棲み分けが変わっている可能性も十分あります。自分の手元で試して、自分のルールを書き直していくのが、結局のところ一番効くのではないかと思います。
 同じように 3 ツール併用で運用している方のフィードバックや、「自分はこう棲み分けている」という知見もぜひ伺いたいです。
-
----
-
-## 39. [毎回プロンプトで頑張らないためのPromptOps Templates｜hirokaji](https://note.com/tasty_dunlin998/n/n68eb27bc3b59)
-- **優先度**: High
-- **スコア**: 85
-- **解析日時**: 2026/5/7
-- **AI要約**:
-  AIへの指示を棚卸しし、常設ファイル・Hook・Skill・Subagentへ分離する運用戦略を提示
-  完了条件を定義する「Done when」テンプレートにより、AIによる自己評価と出力精度を改善
-  CLAUDE.mdを肥大化させず、AIとの作業契約として最小限に保つための具体的な構成案を解説
-- **今読む理由**: Claude Code等のAIエージェント導入時に直面する、プロンプトの冗長化や設定ファイルの肥大化を解決する実戦的なYAML形式のテンプレートと設計原則が含まれているため。
-- **タグ**: #PromptOps, #AI駆動開発
-
-### 本文
-Claude Code / Codexで使う、Done when・Hook・Skill・承認境界の実務テンプレート前回のDaily記事では、AIが賢くなったことで、昔ながらのプロンプト術が少しずつ変わってきている、という話をしました。昔は、AIにうまく働いてもらうには、人間が長く、詳しく、丁寧に説明することが重要でした。もちろん今でも、丁寧な説明は大事です。ただ、Claude Code や Codex のように、AIがファイルを読み、コマンドを実行し、テストし、差分を確認できる環境では、毎回プロンプトで頑張るよりも、AIが動ける環境を整える方が効く場面が増えています。この記事は、その実務テンプレートです。扱うのは、次の7つです。Done when テンプレートCLAUDE.md / AGENTS.md 棚卸しチェックリストHook化候補リストSkill化候補リストSubagent分離判断メモApproval / Sandbox 境界設計メモCLI化できる作業の棚卸しワークシート目的はひとつです。毎回プロンプトでお願いしていることを、再利用できる実行環境へ移すことです。まず、毎回お願いしていることを書き出す最初にやることは自動化ではなく、毎回AIに言っている依頼を見える化し、置き場を分けること。いきなりHookやSkillを作ろうとすると、だいたい重くなります。最初にやるべきことは、自分がAIに毎回言っていることを棚卸しすることです。たとえば、こういうものです。最後にテストして変更ファイルを列挙して勝手に本番へつながないでまず関連ファイルを読んで実装前に方針を出して既存の文体に合わせてセキュリティ観点も見てやったことと不安点を最後にまとめて変更前に影響範囲を確認して形式が崩れていないか確認してこうした依頼は、毎回チャットに書くよりも、常設ファイル、Hook、Skill、Subagent、承認境界へ分けた方が安定します。まずは、次のメモをコピーして使ってください。routine_prompt_inventory:
-  repeated_requests:
-    - request: ""
-      example_phrase: ""
-      happens_every_time: false
-      important_for_quality: false
-      important_for_safety: false
-      can_be_checked_deterministically: false
-      needs_human_judgment: false
-      should_be:
-        - prompt
-        - claude_md_or_agents_md
-        - hook
-        - skill
-        - subagent
-        - approval_boundary
-        - cli_pipeline
-      note: ""書き方の例です。routine_prompt_inventory:
-  repeated_requests:
-    - request: "変更後にテストを実行してほしい"
-      example_phrase: "最後に npm test を実行して、結果を書いてください"
-      happens_every_time: true
-      important_for_quality: true
-      important_for_safety: false
-      can_be_checked_deterministically: true
-      needs_human_judgment: false
-      should_be:
-        - hook
-        - cli_pipeline
-      note: "コード変更がある場合だけ必須にする"
-
-    - request: "認証まわりはセキュリティ観点でレビューしてほしい"
-      example_phrase: "token handling と session 周りも見てください"
-      happens_every_time: false
-      important_for_quality: true
-      important_for_safety: true
-      can_be_checked_deterministically: false
-      needs_human_judgment: true
-      should_be:
-        - skill
-        - subagent
-      note: "特定領域に触れた時だけ発火させる"この棚卸しの時点で、すべてを自動化しようとしなくて大丈夫です。むしろ最初は、「これは毎回書く必要があるのか」「これは環境側に逃がせるのか」「これは人間が判断すべきなのか」を分けるだけで十分です。Template 1：Done when テンプレート曖昧な依頼は、完了条件に変換する。何をするかより、何を満たせば完了かを先に揃える。まず一番使いやすいのが、Done when、つまり完了条件です。AIに仕事を頼むとき、「何をするか」だけを書くと、完了判断が曖昧になります。一方で、「何を満たせば完了か」を渡すと、AIは自分で確認しやすくなります。基本形はこれです。以下の作業を行ってください。
-
-目的:
-- 
-
-対象範囲:
-- 
-
-制約:
-- 
-
-完了条件:
-- 
-- 
-- 
-
-作業後に返すもの:
-- 変更した内容の要約
-- 変更ファイル一覧
-- 実行した確認コマンド
-- 確認結果
-- 残っている不安点コード作業なら、こうです。以下のバグを修正してください。
-
-目的:
-- ログイン後にセッション更新が失敗する問題を直す
-
-対象範囲:
-- src/auth/
-- tests/auth/
-
-制約:
-- 認証方式そのものは変えない
-- 既存のAPIレスポンス形式は変えない
-- 影響範囲が広がる場合は、実装前に一度止める
-
-完了条件:
-- 再現テストが追加されている
-- 既存テストが通る
-- セッション更新の正常系と異常系が確認されている
-- 変更ファイルを最後に列挙している
-- 実行した確認コマンドを書いている
-
-作業後に返すもの:
-- 原因
-- 修正内容
-- 変更ファイル
-- 実行した確認コマンド
-- テスト結果
-- まだ不安が残る点文章作業なら、こうです。以下の記事本文をレビューしてください。
-
-目的:
-- note向けに読みやすくする
-- 主張の流れを明確にする
-- AIっぽい言い回しを減らす
-
-対象範囲:
-- 本文全体
-- 見出し
-- 導入と結論
-
-制約:
-- 主張の芯は変えない
-- 文体は論考調を維持する
-- 表形式にはしない
-- 過剰な箇条書きにしない
-
-完了条件:
-- 導入で読者メリットが伝わる
-- 見出しが結論に必要な部品だけになっている
-- 1段落1役割に近づいている
-- 文末に次の行動がある
-- 不自然なAI定型句が減っている
-
-作業後に返すもの:
-- 修正方針
-- 修正文
-- 迷った点
-- 追加で改善できる点Done when は、軽いプロンプト改善のように見えます。しかし実際には、AIに小さな評価回路を渡しているのに近いです。完了条件があると、AIは自分の出力を照らし合わせやすくなります。だから、最初にテンプレ化するなら、HookよりもSkillよりも、まずDone whenです。Template 2：CLAUDE.md / AGENTS.md 棚卸しチェックリストCLAUDE.md / AGENTS.md は百科事典ではなく作業契約。毎回守ることだけを残し、長い手順や確認は別の部品へ逃がす。次に見るべきなのが、CLAUDE.md や AGENTS.md のような常設ファイルです。ここに何でも書くと、すぐ太ります。常設ファイルに残すべきなのは、毎回守らないと壊れることです。逆に、特定作業だけで使う長い手順は、Skillへ逃がします。毎回起きてほしい確認は、Hookへ逃がします。人間が判断すべき境界は、Approvalへ逃がします。まずはこのチェックリストで見直します。persistent_contract_audit:
-  file:
-    - CLAUDE.md
-    - AGENTS.md
-
-  keep_if:
-    - "毎回の作業で必要"
-    - "このプロジェクト固有"
-    - "守らないと壊れる"
-    - "短く書ける"
-    - "更新責任者が明確"
-
-  move_to_skill_if:
-    - "特定作業でだけ使う"
-    - "手順が長い"
-    - "入力と出力が決まっている"
-    - "再利用するワークフローである"
-
-  move_to_hook_if:
-    - "毎回確認したい"
-    - "機械的に判定できる"
-    - "忘れると品質や安全性が落ちる"
-    - "人間の判断を待たずに検査できる"
-
-  move_to_approval_if:
-    - "失敗時の影響が大きい"
-    - "本番環境や外部送信に触れる"
-    - "秘密情報や権限に関わる"
-    - "破壊的な操作を含む"
-
-  remove_if:
-    - "一般論すぎる"
-    - "古い"
-    - "今の運用と矛盾している"
-    - "誰も守っていない"
-    - "他の場所に正本がある"常設ファイルの最小形は、これくらいで十分です。# Project Working Contract
-
-## Purpose
-
-このプロジェクトでAIが作業するときの最小契約を定義する。
-
-## Always
-
-- 変更前に対象範囲を確認する
-- 既存の設計方針と矛盾する変更を避ける
-- 不明点が成果物の品質に影響する場合は、実装前に確認する
-- 作業後に変更内容、変更ファイル、確認結果をまとめる
-
-## Commands
-
-- lint: `npm run lint`
-- test: `npm test`
-- typecheck: `npm run typecheck`
-
-## Before Editing
-
-- 関連ファイルを読む
-- 既存テストを確認する
-- 影響範囲が広い場合は、実装前に変更方針を出す
-
-## Do Not
-
-- 本番環境へ接続しない
-- secretやcredentialを出力しない
-- 破壊的な操作を承認なしに実行しない
-- 仕様が不明なまま大きな設計変更をしない
-
-## Output
-
-作業後は、以下を返す。
-
-- 変更内容
-- 変更ファイル
-- 実行した確認コマンド
-- 確認結果
-- 残るリスクポイントは、ここに全部を書かないことです。常設ファイルは、AIに読ませる百科事典ではありません。毎回守るべき作業契約です。ここまでで、毎回プロンプトでお願いしていたことを、Done when と常設ファイルへ分けるところまで整理しました。ここから先は、さらに一段実務寄りです。毎回の確認を Hook にする。再利用する手順を Skill にする。調査やレビューを Subagent に分ける。危ない操作を Approval / Sandbox で止める。定型作業を CLI へ流す。つまり、AIにお願いする文章を整えるだけではなく、AIが動く環境そのものを整えていきます。PromptOps Templates では、こうした実務テンプレートを、そのまま自分の環境へ写せる形で蓄積していきます。Claude Code / Codex を、毎回のチャット相手ではなく、再現性のある実行環境として育てたい方は、ここから先のテンプレートもぜひ活用してください。
-
----
-
-## 40. [AIエージェントは「増やす」と壊れる｜hirokaji](https://note.com/tasty_dunlin998/n/n969899421173)
-- **優先度**: High
-- **スコア**: 85
-- **解析日時**: 2026/5/7
-- **AI要約**:
-  Sub-Agentは役割分担ではなく、親の文脈を汚さず探索・調査結果を圧縮して戻す隔離膜として機能する
-  Agent Teamは共有タスクリストとメッセージングを用い、状態を管理しながら協調する実行組織である
-  分割基準は職能（実装・テスト等）ではなく、同じ設計意図を共有すべきかという文脈の境界で判断する
-- **今読む理由**: AI駆動開発において、エージェントを増やすことで発生する「文脈の汚染」や「伝言ゲームによる情報劣化」を防ぐための具体的な設計原則が示されているため。Claude Codeの最新仕様に基づいたSub-AgentとTeamの使い分けは、即座に自動化パイプラインの構築に適用できる。
-- **タグ**: #AIエージェント設計, #ClaudeCode, #マルチエージェント, #コンテキスト管理
-
-### 本文
-PromptOps Runtime Tips #5 Sub-AgentとAgent Teamを分ける基準は、役割ではなく「文脈の境界」ですSub-Agent と Agent Team は、見た目はどちらも「複数AIを使う構成」に見えます。でも実際には、扱っている問題が違います。Sub-Agent は、文脈を汚さずに探索・検査・調査を外へ逃がす仕組みです。Agent Team は、複数の実行主体が、共有状態を見ながら協調する仕組みです。ここを取り違えると、AIシステムは一気に壊れます。1. Sub-Agent は「小さな部下」ではなく、文脈圧縮装置ですSub-Agent を単なる「専門家AI」と見ると、少し浅いです。本質は、メインエージェントの作業文脈を汚さず、外側で探索させ、最後に圧縮された結果だけを戻すことです。Claude Code の公式ドキュメントでも、Sub-Agent は「検索結果・ログ・ファイル内容などでメイン会話をあふれさせたくない副作業」を、自分の文脈で処理し、要約だけを返すものとして説明されています。各 Sub-Agent は独自の context window、system prompt、tool access、permissions を持ちます。つまり Sub-Agent の価値は、主に3つです。1つ目は、探索の隔離です。コードベース全体を grep する。大量のログを読む。複数資料を横断する。セキュリティ観点だけで見る。性能劣化の原因だけを探す。こういう作業は、途中経過が大量に出ます。そのまま親エージェントの文脈に入れると、メインの判断空間が汚れます。Sub-Agent に渡せば、泥臭い探索は外で行われ、親に返るのは「結論・根拠・残課題」だけになります。2つ目は、認知の分離です。1つのエージェントに、「実装もして」「セキュリティも見て」「性能も見て」「テスト観点も見て」「ドキュメントも整えて」と詰め込むと、注意が散ります。Sub-Agent を使うと、各エージェントに明確な観点を与えられます。セキュリティ担当はセキュリティだけを見る。性能担当は性能だけを見る。仕様整合性担当は仕様だけを見る。これは、人間の組織で言えば専門分業ですが、AIの場合はさらに重要です。なぜなら、AIは文脈内の情報に強く引っ張られるため、観点を混ぜると評価軸が濁りやすいからです。Anthropic のマルチエージェント研究でも、Sub-Agent は別々の context window で異なる観点を探索し、重要な情報だけを lead agent に返すことで、検索・調査の圧縮として機能すると説明されています。(Anthropic)3つ目は、権限の分離です。Sub-Agent ごとに使えるツールを制限できます。たとえば、調査専用 Sub-Agent は Read / Grep / Glob だけDB確認 Sub-Agent は SELECT だけレビュー Sub-Agent は編集不可実装 Sub-Agent は対象ディレクトリだけ編集可という切り方ができます。Claude Code の Sub-Agent でも、tools / disallowedTools / model / permissionMode / memory / isolation などを設定できます。さらに、description は「いつその Sub-Agent に委譲すべきか」を判断するルーティング信号として使われます。(Claude API Docs)ここが重要です。Sub-Agent は「AIを増やす仕組み」ではありません。親の文脈・注意・権限・コストを守るための分離膜です。2. Agent Team は「複数 Sub-Agent」ではなく、共有状態を持つ実行組織ですAgent Team はまったく別物です。Sub-Agent は基本的に、親から仕事を受けて、親に結果を返します。一方、Agent Team は、複数の Claude Code インスタンスがチームとして動き、共有タスク、エージェント間メッセージ、中央管理を使って協調します。Claude Code の Agent Teams は現時点で実験的機能として扱われ、共有 task list、inter-agent messaging、team lead、teammates を持つ構成として説明されています。この違いは大きいです。Sub-Agent は、基本的にこうです。親 → 作業者 → 親Agent Team は、こうです。Lead↕Shared Task List↕ ↔ ↕Teammate A / Teammate B / Teammate Cここで初めて、共有状態が出てきます。誰が何を担当しているか。どのタスクが pending か。どれが in progress か。何が completed か。どのタスクが他のタスクに依存しているか。誰が誰にメッセージを送るか。Claude Code の Agent Teams では、task list が pending / in progress / completed を持ち、依存関係のあるタスクはブロックされ、複数 teammate が同じタスクを claim しないよう file locking も使われると説明されています。つまり Agent Team は、単なる「並列実行」ではありません。状態管理つきの協調実行です。ここが Sub-Agent との決定的な違いです。3. 判断軸は「独立して進められるか」では足りませんよくある判断は、「独立タスクなら Sub-Agent」「依存タスクなら Team」です。これは方向性としては正しいです。ただ、実務ではまだ粗いです。本当に見るべきなのは、次の5つです。① 文脈結合度その作業は、同じ前提・同じ判断理由・同じ設計意図を共有し続ける必要があるか。必要があるなら、分けない方がよいです。たとえば、仕様理解実装方針テスト観点例外処理エラー設計が密接につながっているなら、「Planner」「Implementer」「Tester」に分けると危険です。Planner が考えた理由が Implementer に落ちない。Implementer が入れた判断が Tester に伝わらない。Tester は表面だけ見て、設計意図を外したテストを書く。これが、図にある “telephone game” です。AIの分業で一番よく起きる事故です。② 成果物の境界同じファイル、同じAPI、同じ仕様、同じ画面を触るなら、分けるほど衝突します。Agent Team の公式ドキュメントでも、同じファイルを複数 teammate が編集すると上書きが起きるため、ファイル所有範囲を分けるよう注意されています。つまり、並列化できるかどうかは「担当ロール」では決まりません。成果物の所有境界で決まります。Frontend / Backend / Test Writer のように分けても、全員が同じ API 仕様に依存しているなら、共有状態なしでは壊れます。一方で、auth/billing/notification/admin-ui/のように文脈と成果物が切れているなら、分けやすいです。③ 変更の同期頻度作業中に頻繁に「そっち変わった？」が発生するなら、Sub-Agent ではきついです。Sub-Agent は基本的に、途中で他 Sub-Agent と相談しません。Claude Code の比較でも、Sub-Agent は結果を main agent に返すだけで、Agent Teams は teammates 同士が直接メッセージし、shared task list で自己調整すると整理されています。つまり、同期頻度が高い作業は Team 向きです。たとえば、API構造が変わるDBスキーマが変わるフロントとバックエンドが相互に調整するテスト観点が実装中に変わる仕様の穴を見つけたら別担当に即共有したいこの場合は、Sub-Agent の「結果だけ返す」モデルでは遅いです。共有 task list と direct message が必要になります。④ 途中成果の価値途中経過が親にとって不要なら、Sub-Agent でよいです。たとえば、「このモジュールの脆弱性を洗って、重要度付きで返して」なら、途中の grep 結果は親に不要です。一方で、「仕様が固まりきっていない新機能を、フロント・バックエンド・テストを調整しながら作って」なら、途中の発見が全体設計に影響します。この場合、途中成果が共有状態になります。だから Team が必要になります。⑤ 失敗時の封じ込めSub-Agent の良さは、失敗が局所化しやすいことです。Security Reviewer が変な指摘をしても、親が採用しなければ終わりです。しかし Agent Team は、状態を共有します。間違った前提が shared task list や team message に流れると、チーム全体に伝播します。つまり Team は強いですが、失敗も増幅します。この意味で、Team は「高性能な協調構造」であると同時に、誤った状態を広げる回路にもなります。だから、Team を使うなら quality gate、plan approval、task ownership、evidence logging が必要です。Agent Teams でも、teammate の plan approval、task completed hook、quality gate などの制御が用意されています。4. 「役割で分けるな。文脈で分けろ」が本質です図の一番大事なところはここです。間違った分け方は、PlannerImplementerTesterです。一見、自然です。でも、これは人間組織の職能分解を、そのまま AI に持ち込んでいます。AIでは、この分け方がよく壊れます。なぜなら、AIにとって重要なのは「職能」ではなく、必要な文脈の集合だからです。たとえば、ある機能を作るとします。この機能には、実装テストエラー処理型定義ドキュメント軽いリファクタが必要です。これを職能で分けると、実装 Agentテスト Agentドキュメント Agentレビュー Agentになります。でも、本当はこう見るべきです。この機能を正しく作るために、同じ設計意図を共有すべき作業はどれか。実装とテストは、多くの場合、同じ文脈に入れるべきです。なぜなら、テストは実装の外側にある作業ではなく、仕様理解と例外設計をコード化する作業だからです。実装 Agent が「なぜこうしたか」を持っているなら、そのままテストも書いた方が、意図が落ちにくい。一方で、Auth Agent のように、まったく別のセキュリティ境界や権限境界を扱うものは分けた方がいい。つまり、分ける基準はこうです。同じ判断理由を共有するなら同じ Agent。違う文脈・違う権限・違う成果物なら分ける。これが、Sub-Agent / Agent Team 設計の中心原理です。5. 5つのパターンは「エージェント種別」ではなく、制御パターンです提示文にある5パターンは重要です。ただし、これらは「全部マルチエージェントにしろ」という話ではありません。Anthropic の “Building Effective Agents” でも、Prompt Chaining、Routing、Parallelization、Orchestrator-workers、Evaluator-optimizer は再利用可能な workflow pattern として整理されています。さらに、複雑な agentic system は必要になったときだけ追加すべきで、まず単純な構成から始めるべきだと述べられています。ここを誤解しない方がいいです。5パターンは、AIシステムの制御部品です。Pattern 1: Prompt Chainingこれは、直列パイプラインです。例：要件を整理する設計案を作るレビューする修正する最終出力するこれは Agent Team ではありません。むしろ、もっとも堅い workflow です。向いているのは、工程があらかじめ分かっている作業です。記事執筆なら、主題抽出構成案本文編集タイトルハッシュタグのような流れです。これは Team より Prompt Chaining の方が安定します。Pattern 2: Routingこれは、分類して適切な処理へ送る仕組みです。例：簡単な質問 → 軽量モデル難しい設計判断 → 高性能モデルセキュリティ関連 → Security ReviewerUI関連 → UI Contract Agent事実確認 → Research AgentClaude Code の Sub-Agent でも、description が「いつ委譲するか」の判断材料になります。Routing は、AIハーネス設計でいうと、かなり重要です。なぜなら、すべてを同じAIに渡すのではなく、仕事の性質に応じて処理面を変えるからです。Pattern 3: Parallelizationこれは、独立作業を並列に走らせるパターンです。例：セキュリティレビュー性能レビュー可読性レビューテストカバレッジレビュー反論・弱点探しAnthropic は Parallelization を、独立サブタスクを分ける sectioning と、同じタスクを複数回走らせて多様な出力を得る voting の2種類で整理しています。複数観点を分けることで、各 LLM call が1つの観点に集中できるとも説明されています。ここで使うのが Sub-Agent です。ただし、独立している場合だけです。Pattern 4: Orchestrator–Workerこれは、親が動的にタスクを分解し、Worker に割り振り、結果を統合するパターンです。Anthropic は Orchestrator-workers を、中央の LLM がタスクを動的に分解し、worker LLM に委譲し、結果を統合する workflow として説明しています。特に、事前にサブタスクを予測しにくい複雑なコーディングや探索タスクに向いています。これは Sub-Agent にも Team にもなり得ます。Worker 同士が話さなくていいなら Sub-Agent。Worker 同士が途中で調整する必要があるなら Agent Team。ここが分岐点です。Pattern 5: Evaluator–Optimizerこれは、生成と評価を分けるループです。Generator が作るEvaluator が評価するOptimizer が修正する基準を満たすまで回すAnthropic は Evaluator-optimizer を、生成する LLM call と評価・フィードバックする LLM call をループさせる workflow として整理し、明確な評価基準があり、反復改善に価値がある場合に有効だと述べています。これは、わたしの文脈でいうと「思考タスクのテスト」にかなり近いです。コードにはテストがある。文章には編集基準がある。要件には妥当性評価がある。AIハーネスには evaluation circuit がある。Evaluator–Optimizer は、評価回路の基本形です。6. Sub-Agent と Agent Team を、AIハーネスの4回路＋証跡基盤で見るこの話は、かなりきれいに「4回路＋証跡基盤」に乗ります。状態回路Sub-Agent は、状態を基本的に親へ持ち帰りません。親に戻るのは、圧縮された結果です。つまり、Sub-Agent は「状態を増やさないための設計」です。一方で Agent Team は、状態を共有します。shared task list、task dependency、message、progress、ownership が存在します。つまり、Agent Team は「状態を明示的に持つ設計」です。ここが根本差です。制御回路Sub-Agent の制御は親に集中します。親が投げる。Sub-Agent が作業する。親が採用・棄却する。Agent Team の制御は分散します。Lead が全体を見ますが、teammate は task list を見て自己 claim したり、互いに message したりします。Claude Code の Agent Teams でも、lead assigns と self-claim の両方が説明されています。つまり、Sub-Agent は中央制御。Agent Team は中央制御＋分散実行です。接続回路Sub-Agent の接続は、親との接続だけです。親から入力され、親へ返す。Agent Team は、teammate 間の connection を持ちます。ここで重要になるのが、接続面の設計です。誰が誰に何を伝えてよいか。何を shared task list に書くか。何を direct message にするか。何を lead に戻すか。何を証跡として残すか。これを決めないまま Team を動かすと、会話が増えすぎて、coordination cost が爆発します。Agent Teams は、単一セッションより token を大きく使い、active teammate の数に応じて token usage が増えると公式ドキュメントでも説明されています。評価回路Sub-Agent では、親が評価者になります。結果を見て、採用するか判断します。Agent Team では、評価も構造化しないと危険です。たとえば、Plan approvalTask completed hookLint / test gateEvidence requiredReviewer teammateLead synthesis checkが必要になります。Claude Code の Agent Teams では、TaskCreated / TaskCompleted / TeammateIdle などの hook によって、タスク作成や完了時に品質ゲートを差し込める設計が説明されています。ここまで入れて、ようやく Team は「実務に耐える協調構造」になります。証跡基盤Sub-Agent の証跡は、主に「結果レポート」です。Agent Team の証跡は、もっと重いです。task listdependenciesmessagesownershipplan approvalsfile changestest resultsfinal synthesisrejected assumptionsまで残す必要があります。これがないと、後から「なぜこの判断になったのか」が追えません。つまり Agent Team は、証跡基盤なしで運用すると危険です。7. 実務での使い分け単一 Agent でよいケースまず、単一 Agent で足りるなら、それが一番強いです。作業が短い文脈が1本で済む出力が1つ途中分岐が少ない評価基準が明確大量探索がないこの場合、エージェントを増やすと逆に悪化します。Anthropic も、最初から複雑な agentic system を組むのではなく、まず単純な prompt から始め、評価で必要性が示されたときだけ複雑さを足すべきだと述べています。Sub-Agent が効くケースSub-Agent が効くのは、探索・検査・観点分離・圧縮が必要なときです。たとえば、大きなコードベースの探索セキュリティレビューパフォーマンス調査ドキュメント整合性チェック反論・リスク洗い出し事実確認競合サービス調査大量資料の要点抽出記事本文の弱点レビュープロンプトテンプレの穴探しこの場合、Sub-Agent は非常に強いです。なぜなら、親に返ってくるのは「使える信号」だけだからです。Agent Team が効くケースAgent Team が効くのは、並列探索だけでなく、途中で協調が必要なときです。たとえば、フロント・バックエンド・テストが同時に変わる複数ファイル群を別々に担当するAPI設計の変更が複数担当に波及する仮説検証を複数方向で走らせ、途中で互いに反証する新規モジュールを複数パートに分けて作るPRレビューで複数観点が互いに指摘を突き合わせるClaude Code の Agent Teams も、research and review、新規モジュールや機能、競合仮説による debugging、frontend/backend/tests をまたぐ cross-layer coordination などを適用例として挙げています。ただし、Team は重いです。Agent Teams の公式ドキュメントでも、coordination overhead と token cost が増えるため、sequential tasks、same-file edits、依存が多い作業では single session や subagents の方がよいとされています。8. よくある設計ミスミス1：複雑そうだから、すぐマルチエージェントにするこれは危険です。複雑なタスクには、まず構造化が必要です。いきなり複数エージェントにすると、複雑さが減るのではなく、複雑さが分散して見えなくなることがあります。本来やるべき順番は、単一 Agent で文脈を保つ固定工程なら Prompt Chaining にする分類できるなら Routing を入れる独立探索なら Sub-Agent を使う協調が必要なら Agent Team にする継続運用するなら Harness にするです。ミス2：役職名で分けるPlanner / Developer / Tester は、見た目はきれいです。でも、文脈境界としては雑です。実装とテストが同じ判断理由を共有しているなら、分けない。逆に、セキュリティ監査のように観点も権限も違うなら、分ける。このように、役職ではなく知るべき情報の範囲で切るべきです。ミス3：Team にしたのに、shared task list が弱いAgent Team で一番重要なのは、会話ではありません。共有タスクです。会話だけで協調すると、状態が流れます。「さっき言った」「誰かがやると思った」「どのタスクが終わったか曖昧」「依存関係が分からない」こうなります。Team を使うなら、最低でも次が必要です。task:
-  id: api-contract-update
-  owner: backend-agent
-  status: in_progress
-  depends_on:
-    - schema-review
-  output:
-    - updated_openapi_schema
-    - migration_notes
-  evidence:
-    - changed_files
-    - test_results
-    - unresolved_questionsこのくらいまで落とすと、ようやく共有状態になります。ミス4：Sub-Agent に文脈を渡しすぎるSub-Agent に大量文脈を渡すと、本来の利点が消えます。Sub-Agent は、親文脈を丸ごとコピーするためのものではありません。必要なのは、目的対象範囲非対象範囲使用可能ツール出力形式根拠の出し方不確実性の扱いです。これだけで動くようにするのが理想です。なお Claude Code には forked subagent という形もあり、これは親会話を引き継ぐため説明コストは減りますが、入力分離は弱まります。公式ドキュメントでも、fork は通常の Sub-Agent と違って会話履歴を継承するため、入力隔離が落ちると説明されています。つまり、便利ですが乱用すると「文脈をきれいに保つ」という利点が減ります。ミス5：評価役を最後に置くだけEvaluator を最後に置くのは悪くありません。でも、それだけだと遅いです。本当に必要なのは、工程ごとの gate です。依頼を受けた時点で、曖昧さを評価する設計前に、前提不足を評価する実装前に、影響範囲を評価する完了前に、テストと証跡を評価する出力前に、読者・利用者にとっての妥当性を評価するEvaluator–Optimizer は最後の校正装置ではなく、途中でズレを検知する制御回路として使うべきです。ここまでで、Sub-Agent と Agent Team の違いはかなり見えてきたと思います。大事なのは、AIを何体に増やすかではありません。どこで文脈を切るか。 どこまでを同じAIに持たせるか。 どこから先を別の実行単位に逃がすか。 そして、共有状態を持たせるなら、どのように管理するか。ここを間違えると、マルチエージェント構成は一見すごそうに見えても、実務ではすぐに壊れます。ここから先は、メンバーシップ向けに、この記事の考え方をそのまま使える形へ落とします。具体的には、Sub-Agent を設計するときの contract。 Agent Team を組むときの shared task list 設計。 「単一Agent / Sub-Agent / Agent Team / Harness」の使い分けチェックリスト。 そして、note記事制作・コード開発・調査業務に応用するための実務テンプレート。考え方で終わらせず、実際に自分のAI運用へ組み込めるところまで整理します。メンバーシップでは、こうしたAIハーネス設計・プロンプト設計・実務テンプレート化の話を、より具体的な形で積み上げています。興味がある方は、ここから先も読んでみてください。
-
----
-
-## 41. [Gemini CLI で Subagents を活用し、ブログ執筆を Orchestrate してみた(情報収集→執筆→ファクトチェック→修正 をサイクリックに) #GoogleCloud - Qiita](https://qiita.com/hirosait/items/d43936339965618cafef)
-- **優先度**: High
-- **スコア**: 85
-- **解析日時**: 2026/5/7
-- **AI要約**:
-  Gemini CLIのSubagents機能を使い、情報収集から執筆、検閲までを行う多段階自動化フローを構築。
-  エージェントごとにツール権限やプロンプトを定義し、ファイル経由で工程間の情報を引き継ぐ設計を提示。
-  ファクトチェックの結果に応じてエラー判定エージェントが前工程へ差し戻す、自律的なサイクルを実現。
-- **今読む理由**: AI駆動開発において重要なマルチエージェント・オーケストレーションの具体的な定義ファイル（YAML形式）と、エラー時の差し戻しを含む動的パイプラインの構築手法が明記されているため。
-- **タグ**: #AgenticWorkflow, #GeminiCLI
-
-### 本文
-🤖 AI 利用について：本記事は生成 AI と共同で執筆しています。また、スクリーンショット以外の画像は生成 AI によって作成されたものです。
-
-
-はじめに
-この記事は、別記事の Gemini CLI にSubagents がやってきた。機能やメリット纏め。の続きのような形で記載しています。
-Gemini CLI にサブエージェントがやってきた。機能やメリット纏め。
-本記事では、上記に続いて、Subagents を使って Multi Agents Pipeline の解説と組み方例を纏めていきたいと思います。
-せっかく Gemini CLI 使うので、テーマは「Google Cloud Next '26 の速報ブログをSubagents で自動生成する」フローにしようかなと思います。
-※この記事公開時点では Google Next 26 が開催中でしたが、現在は終了しております。
-今回の Subagents 活用でこのような記事が、校正、ファクトチェックを行ったうえで、ポン出しできます。
-生成されたブログ抜粋
-# 「Agentic」が完全に現実になった！ Google Cloud Next '26 速報レポート
-
-## はじめに
-
-今年もやってきました Google Cloud Next '26 です。ラスベガスの会場は熱気に包まれていますが、発表内容の熱量も非常に高いものとなっています。今回のイベントで、至るところで耳にするキーワードが「Agentic（エージェンティック）」です。
-
-これまでの AI は「質問に答えてくれるもの」でしたが、これからは「自律的にタスクを完結させてくれるエージェント」へと完全にシフトしたことが明確になりました。Day 1 と Day 2 で発表された主要なアップデートを、事実に基づいた視点で纏めてお届けします。
-
-（本記事の内容は 2026 年 4 月時点の速報に基づいています）
-
-## Vertex AI が「Gemini Enterprise Agent Platform」へ進化
-
-まず大きな衝撃を与えたのがこの発表です。Google Cloud の AI 基盤として親しまれてきた Vertex AI が、新たに「Gemini Enterprise Agent Platform」へとリブランドされました。
-...
-
-
-
-
-
-今回作るもの
-速報ブログには相反する2つの要件があります。「早く出す」と「正確に出す」です。人間のチームで言うと、情報収集して、精査して、書いて、確認して、問題があれば差し戻したり修正する、という流れが必要になります。これをそのままサブエージェントに置き換えるとこんな設計になるかなと思います。
-orchestrator
-│
-├── Phase 1（並列）
-│   ├── researcher_official  : 公式ブログ・プレスリリースから収集 → report/01_official.md
-│   ├── researcher_sessions  : セッション情報を収集              → report/01_sessions.md
-│   └── researcher_news      : テックメディア・SNS速報を収集      → report/01_news.md
-│
-├── Phase 2
-│   └── google_ai_specialist : 収集情報を精査・キュレーション     → report/02_curated.md
-│
-├── Phase 3
-│   └── tech_writer          : 速報ブログを執筆                  → draft/03_blog.md
-│
-├── Phase 4
-│   └── fact_checker         : ソース証跡と照合・ファクトチェック  → review/04_factcheck.md
-│
-└── Phase 5（NG時のみ・最大2サイクル）
-    └── error_router         : 情報収集 or 執筆、差し戻し先を判定 → review/05_reroute.md
-
-可愛くするとこんな感じです。
-
-設計のポイントとしては、
-ファクトチェック → 差し戻しのサイクルを組み込んでいます。ライターが書いたブログをファクトチェッカーがソース証跡と照合し、NGなら error_router が「情報収集の問題か執筆の問題か」を切り分けて差し戻します。最大2サイクルで、それでも解決しなければ人間にエスカレーションする設計です。
-各エージェントはコンテキストが独立しているため、フェーズをまたいだ情報の引き継ぎはファイル経由で行います。どこかで意図と違う結果になっていた場合も中間ファイルを確認すればすぐに気づけるので、お気に入りな仕組みです。
-
-
-Google Cloud Next '26 速報ブログ作成フローを実際に組んでみる
-それでは先程のフローの簡易版として、おおよそのサブエージェント定義、簡易オーケーストレーター書いていきます。
-
-前提
-
-Gemini CLI がインストール済みであること
-Google アカウントで認証済みであること
-
-
-Step 1: ディレクトリを作成する
-mkdir -p .gemini/agents report draft review evidence
-
-
-Step 2: agents を定義する
-5つのエージェント定義ファイルを .gemini/agents/ に作成します。それぞれ frontmatter でツールを絞り込み、本文にシステムプロンプトを書く形式です。
-リサーチャー系の定義例（researcher_official.md）はこんな感じです。
----
-name: researcher_official
-description: Google Cloud Next '26 の公式ブログ・プレスリリース・Cloud Nextサイトから Agentic 関連情報を収集するエージェント。公式発表のみを対象とする。
-tools:
-  - google_web_search
-  - web_fetch
-  - write_file
-temperature: 0.1
-max_turns: 40
-timeout_mins: 20
----
-
-あなたは Google Cloud の公式情報を専門に収集するリサーチャーです。
-Google Cloud Next '26 Day 1 に関する公式ソースから「Agentic」に関連する情報を収集し、
-./report/01_official.md に保存してください。
-（以下、収集対象・出力形式の指示が続く）
-
-精査・執筆担当はツールを読み書きだけに絞るとこんな感じです。
----
-name: google_ai_specialist
-description: 収集された Agentic 関連情報を精査・キュレーションするエージェント。重要度・信頼性を評価し、ブログに使える情報を整理する。
-tools:
-  - read_file
-  - write_file
----
-
-あなたは Google AI プロダクトに精通したスペシャリストです。
-収集された情報の重要度・新規性・信頼性を評価してください。
-
-収集済みの情報ファイルを読み込み、以下の観点で精査した結果を ./report/02_curated.md にまとめてください。
-(以下、観点を記載していく)
-
----
-name: tech_writer
-description: キュレーション済みの情報をもとに速報技術ブログを執筆するエージェント。
-tools:
-  - read_file
-  - write_file
----
-
-./report/02_curated.md を読み込み、Google Cloud Next '26 Day 1 Agentic 速報ブログを ./draft/03_blog.md に執筆してください。
-
-ファクトチェッカーや error_router も同じ形式で定義します。
----
-name: fact_checker
-description: 執筆されたブログの内容をソース証跡と照合してファクトチェックするエージェント。事実誤認・誇張・出典不明の記述を検出する。
-tools:
-  - read_file
-  - write_file
----
-
-./draft/03_blog.md の内容を ./report/ 配下の収集済みファイルと照合し、
-事実誤認・誇張・出典が確認できない記述をチェックして ./review/04_factcheck.md に保存してください。
-チェック結果は OK / NG と、NG の場合は該当箇所と理由を明記してください。
-
-error_router はこんな感じです。
----
-name: error_router
-description: ファクトチェックがNGだったとき、問題の原因が情報収集にあるか執筆にあるかを判定して差し戻し先を決めるエージェント。
-tools:
-  - read_file
-  - write_file
----
-
-./review/04_factcheck.md を読み込み、NGの原因を分析してください。
-情報収集の不足・誤りが原因であれば Phase 1（researcher）への差し戻しを、
-執筆の表現・解釈の問題であれば Phase 3（tech_writer）への差し戻しを判定し、
-結果と差し戻し理由を ./review/05_reroute.md に保存してください。
-
-
-Step 3: オーケストレーターを作成する
-フロー全体の制御はオーケストレーター（orchestrator.md）に書きます。各フェーズで @エージェント名 を使って明示的に呼び出す形です。簡易版はこんな構成になります。
-# Google Cloud Next '26 Agentic ブログ作成
-
-## Pre-Phase: ディレクトリ作成
-
-mkdir -p ./report ./draft ./review
-
-## Phase 1: 情報収集
-
-@researcher_official Google Cloud Next '26 Day 1 の Agentic 関連情報を公式ソースから収集して ./report/01_official.md に保存して。
-
-## Phase 2: 専門家精査
-
-@google_ai_specialist ./report/01_official.md を精査して重要情報をキュレーションし ./report/02_curated.md に保存して。
-
-
-## Phase 3: ブログ執筆
-
-@tech_writer ./report/02_curated.md をもとに Google Cloud Next '26 Day 1 Agentic 速報ブログを執筆して ./draft/03_blog.md に保存して。
-
-## Phase 4: ファクトチェック
-
-@fact_checker ./draft/03_blog.md の内容を ./report/ 配下のソース証跡と照合してファクトチェックし ./review/04_factcheck.md に保存して。
-
-## Phase 5: 差し戻し判定（NG時のみ・最大2サイクル）
-<!-- ./review/04_factcheck.md を確認して NG だった場合のみ実行する -->
-
-@error_router ./review/04_factcheck.md を読んで原因を判定し、差し戻し先と理由を ./review/05_reroute.md に保存して。
-
-./review/05_reroute.md を読んで、差し戻し先が researcher なら Phase 1 を、tech_writer なら Phase 3 を再実行して。
-
-
-各フェーズの成果物はファイルに書き出して次フェーズに引き継ぐファイルリレー方式です。
-
-Step 4: Gemini CLI を起動して実行する
-gemini
-
-起動後に /agents list でエージェントが読み込まれていることを確認してから、オーケストレーターに一言投げるだけです。
-> orchestrator.md を読んで、Google Cloud Next '26 Day 1 の Agentic ブログ作成を開始して。
-
-Phase 1 から始まり、精査 → 執筆 → ファクトチェックと流れて、問題があれば自動で差し戻しサイクルが回ります。記載結果は冒頭のとおりです。
-
-
-まとめ
-Suagents を使った Multi Agents Pipelineを実際に組んでみました。
-改めて感じたのは、フローをファイルリレーで設計するというアプローチの堅牢さです。コンテキストが独立しているぶん、エージェント間の引き継ぎはファイル経由でやってみましたが、「どのフェーズで何が起きたか」を追いやすくしてくれました。今回のように差し戻しがあるような場合、人間の追うことができますね。
-並列実行(今回は実施していない)・フィードバックループと、シングルエージェントでは難しかった構成が Markdown ファイルでコントロールして、仮想チームのように、人員、役割を決めて、フローを決めて、チームを組めるのは、使っていて面白いし、可能性がかなり広がるなと思いました。今後も色々と活用シーン考えていきたいです。
-
-
-参考
-
-Gemini CLI Subagents ドキュメント
-Gemini CLI コマンドリファレンス（/agents）
 
 ---
 
