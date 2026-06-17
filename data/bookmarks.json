@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-16T02:50:17.429Z",
+  "updated_at": "2026-06-17T02:44:23.399Z",
   "articles": [
     {
       "id": "1702129693",
@@ -4908,6 +4908,116 @@
       "status": "unread",
       "analyzed_at": "2026-06-16T02:50:17.429Z",
       "markdown_path": "data/notebooklm_sources/サブエージェント活用で Claude Fable 5 をコスパよく運用する.md"
+    },
+    {
+      "id": "1760975731",
+      "url": "https://zenn.dev/sosa/articles/antigravity-how-works",
+      "title": "Antigravity 2.0の内部構造を理解する——プロンプト処理・ツール・コンテキスト・ルールファイルまで",
+      "summary": "Antigravity 2.0はシステム、LLMループ、ツール実行の3層からなるエージェント型AIである\n常時ロードするGEMINI.mdとオンデマンドのSKILL.mdの使い分けでコンテキストを節約する\n並列処理を可能にするサブエージェント構造や標準規格であるMCPによる外部拡張をサポートする",
+      "score": 82,
+      "read_now_reason": "AI駆動開発におけるエージェント制御の設計（常時読み込みとオンデマンド読み込みの分離など）や、並列サブエージェントの設計手法は、自律型自動化パイプラインのアーキテクチャ構築に直接適用できるため。",
+      "defer_reason": "Antigravity 2.0に特化した解説であり、自社専用のカスタムMCPサーバーの具体的なコード実装や、CI/CDパイプラインとの直接的な統合コードは含まれていないため。",
+      "tags": [
+        "AIエージェント",
+        "AI駆動開発",
+        "コンテキスト最適化",
+        "MCP",
+        "Antigravity"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-17T02:38:41.281Z",
+      "markdown_path": "data/notebooklm_sources/Antigravity 2.0の内部構造を理解する——プロンプト処理・ツール・コンテキスト・ルールファイルまで.md"
+    },
+    {
+      "id": "1760975715",
+      "url": "https://qiita.com/fallout/items/d699df3d6931c07eb38d",
+      "title": "Claude Code × Antigravity CLI 協業環境 超簡単作成.md - Qiita",
+      "summary": "Claude CodeからAntigravity CLIへ協業を可能にするMCP環境構築手順の解説\nWindows特有のPATH継承問題を解決する具体的なコード改修方法とMCP登録手順の提示\n従量課金の回避策やsettings.jsonによるモデル固定など、実運用における注意点を網羅",
+      "score": 85,
+      "read_now_reason": "AI駆動開発プロジェクトにおいて、Claude CodeとAntigravity CLI（Gemini）を連携させる具体的なMCP連携手順と、Windows環境で確実に発生するPATHエラーの回避コードが明記されており、即座に開発へ統合できるため。",
+      "defer_reason": "開発環境がWindows/PowerShellではない場合、またはClaude CodeとGeminiの連携を現在の開発スプリントで導入する予定がない場合は、後回しにしても影響はありません。",
+      "tags": [
+        "Claude-Code",
+        "Antigravity-CLI",
+        "MCP-Server",
+        "Gemini",
+        "Windows-PowerShell"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-17T02:39:46.679Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code × Antigravity CLI 協業環境 超簡単作成.md - Qiita.md"
+    },
+    {
+      "id": "1760975707",
+      "url": "https://speakerdeck.com/yuichi_hara7/mei-siiuiwozuo-rutameni-dezainagayi-shi-siteiru-tiyotutositakao-efang",
+      "title": "美しいUIを作るために デザイナーが意識している ちょっとした考え方",
+      "summary": "数値の正確性ではなく、人間の視覚的な重心を優先して要素を配置する手法を解説。\nマージンや色を意図的に微調整することで、直感的に美しく違和感のないUIを実現する。\nエンジニアとデザイナー間での「数値のズレ」に対する認識の不一致を解消する視点を提供。",
+      "score": 20,
+      "read_now_reason": "デザイナーが意図的に実装数値をずらす「視覚的調整」の意図を理解することで、フロントエンド実装時のコミュニケーションコストを削減できるため。",
+      "defer_reason": "現在の注力プロジェクトであるAI駆動開発や自動化パイプライン構築に直接活用できるコード、設定、アーキテクチャ等の技術情報が一切含まれていないため。",
+      "tags": [
+        "UI-Design",
+        "Front-end-Collaboration",
+        "Design-System"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-17T02:40:54.239Z",
+      "markdown_path": "data/notebooklm_sources/美しいUIを作るために デザイナーが意識している ちょっとした考え方.md"
+    },
+    {
+      "id": "1760975698",
+      "url": "https://webbigdata.jp/post-21381/",
+      "title": "WebBigData",
+      "summary": "Colab-CLIを用いてローカルからColab T4 GPU上にLLM環境を自動デプロイする手法を解説。\nSpeculative Decodingの活用で、Gemma 4 12Bを毎秒22トークンの実用速度で動作可能にする。\ncloudflaredにより、構築したLLMサーバーをローカル環境から安全にAPI接続する構成を示す。",
+      "score": 82,
+      "read_now_reason": "Colab-CLIによる自動デプロイスクリプトと、Speculative Decoding・Cloudflareトンネルを組み合わせたLLM推論環境の構築手法が具体的に示されており、AI駆動開発の検証用ローカルAPIサーバーとして即時流用可能であるため。",
+      "defer_reason": "ローカルにすでに潤沢なGPU環境がある、あるいは有料APIの利用のみで現在の開発パイプライン要件が完全に満たされており、無料GPUを用いたエッジ推論やコスト削減の必要性がない場合。",
+      "tags": [
+        "Colab-CLI",
+        "Gemma-4",
+        "llama.cpp",
+        "Cloudflare-Tunnel",
+        "Speculative-Decoding"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-17T02:42:08.709Z",
+      "markdown_path": "data/notebooklm_sources/WebBigData.md"
+    },
+    {
+      "id": "1760975689",
+      "url": "https://qiita.com/kawabe0201/items/2bc126be3502138698fb",
+      "title": "【Claude Code】別々のセッション同士を会話させるSkillを作った ─ 「ありがとう→いえいえ」無限ループを止めるまで - Qiita",
+      "summary": "共有フォルダとプロトコルを用いた、Claude Code複数セッション間の非同期通信の実装方法\n無限ループを防ぐメッセージタイプ定義と、最大往復制限によるトークン消費とコストの抑制対策\nバックグラウンド監視によるトークン消費ゼロの待機手法や、時刻ベースの衝突回避設計の実践",
+      "score": 85,
+      "read_now_reason": "AI駆動開発において、エージェント同士の連携時に発生する『無限ループ（お礼合戦）』によるトークン浪費を防ぐメッセージプロトコルや、ファイル衝突を避けるタイムスタンプ設計、待機中のトークン消費をゼロにするバックグラウンド処理の具体的なアプローチが明記されているため。",
+      "defer_reason": "現時点でClaude Codeを複数セッションで並行運用する予定がない場合、また監視スクリプト（PowerShell）をMacやLinuxなどの異なる環境へ移植する開発コストが今すぐには見合わないため。",
+      "tags": [
+        "Claude Code",
+        "AIエージェント協調",
+        "プロトコル設計",
+        "トークン最適化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-17T02:43:16.365Z",
+      "markdown_path": "data/notebooklm_sources/【Claude Code】別々のセッション同士を会話させるSkillを作った ─ 「ありがとう→いえいえ」無限ループを止めるまで - Qiita.md"
+    },
+    {
+      "id": "1760975676",
+      "url": "https://qiita.com/hiyoshiz/items/b63c2e7ff52b5554a8a5",
+      "title": "文系エンジニアがClaude Codeで学習アプリを自作して3か月でCISSP合格した話 - Qiita",
+      "summary": "Claude CodeとCloudflareを組み合わせ、個人用の問題演習Webアプリを迅速に構築した事例\nOCRによる誤認識に対して、アプリ側でフラグを付与しAIで一括再処理を行う運用で解決\nAIを思考の代行ではなく、学習や開発の「ボトルネック解消」として活用するアプローチ",
+      "score": 52,
+      "read_now_reason": "Claude Codeを使用した迅速なプロトタイピングの流れや、Cloudflareを用いた個人向けデプロイ環境の選定、OCRエラーを運用の工夫でカバーするAI駆動開発の実践的なアプローチが参考になるため。",
+      "defer_reason": "現在のプロジェクト（自動化パイプライン構築など）に直接適用できるソースコード、設定ファイル、具体的なシステム構成図などの技術的詳細が欠けているため、後回しにしても問題ありません。",
+      "tags": [
+        "Claude-Code",
+        "Cloudflare",
+        "AI駆動開発",
+        "プロトタイピング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-17T02:44:23.399Z",
+      "markdown_path": "data/notebooklm_sources/文系エンジニアがClaude Codeで学習アプリを自作して3か月でCISSP合格した話 - Qiita.md"
     }
   ]
 }
