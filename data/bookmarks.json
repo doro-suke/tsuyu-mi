@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-17T02:44:23.399Z",
+  "updated_at": "2026-06-20T02:23:00.477Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5018,6 +5018,183 @@
       "status": "unread",
       "analyzed_at": "2026-06-17T02:44:23.399Z",
       "markdown_path": "data/notebooklm_sources/文系エンジニアがClaude Codeで学習アプリを自作して3か月でCISSP合格した話 - Qiita.md"
+    },
+    {
+      "id": "1763735846",
+      "url": "https://news.yahoo.co.jp/articles/7a29f090807ee6c6c2238b4700ab837f5d8d86f7?page=2",
+      "title": "バイブコーディングはもう終わった、 起業家が進むべきは「エージェント型エンジニアリング」（Forbes JAPAN）",
+      "summary": "AIエージェントによる開発で機能デプロイやテストのサイクルが劇的に高速化する。\nタスクの指示、実行、修正のループを繰り返すことでエージェント活用の境界を把握できる。\nエージェント型ツールは土台となるモデルの性能を基準に選定し、迅速に乗り換えるべきである。",
+      "score": 50,
+      "read_now_reason": "現在のプロジェクトであるAI駆動開発において、Claude CodeやCursor等のエージェント型ツールの導入アプローチや、開発プロセスをスケールさせるための評価指標の作り方を学べるため。",
+      "defer_reason": "AI駆動開発の概念的な進め方やマインドセットに関する記事であり、今すぐパイプライン構築にコピー＆ペーストして使える具体的な設定コードやシステム構成図が含まれていないため。",
+      "tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "開発プロセス"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-20T02:12:51.121Z",
+      "markdown_path": "data/notebooklm_sources/バイブコーディングはもう終わった、 起業家が進むべきは「エージェント型エンジニアリング」（Forbes JAPAN）.md"
+    },
+    {
+      "id": "1763735759",
+      "url": "https://qiita.com/tanaka_taro_JP_KYUSYU/items/b2efbc628053b643a8d8",
+      "title": "Dynamic Workflowsを大名システムへ組み込んでみた - Qiita",
+      "summary": "大名システムにDynamic Workflowsを組み込み、エージェントの並列起動をスクリプトで制御。\n承認が必要な対話フェーズと並行可能なWorkflowフェーズを分離し、作業の効率化と待ち時間削減を実現。\n難易度に応じてモデルとeffortをスクリプトで固定し、口頭ルールに頼らないコスト最適化を機械的に保証。",
+      "score": 88,
+      "read_now_reason": "Claude CodeのAgent SDKを利用した複数エージェントの並行制御、worktreeによるコンテキスト隔離、および検証フェーズにおける『敵対的検証（Sonnetで広く拾い、Opusで反証する）』の実装コードが具体的に示されており、現在のAI駆動開発パイプラインの設計に即時適用できるため。",
+      "defer_reason": "独自にマルチエージェントによる開発自動化パイプラインを構築する予定がない場合、あるいはClaude Code/Agent SDKを用いた開発手法に興味がない場合は、具体的なコードや設計原則を今すぐ参照する必要はないため。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code",
+        "Agent-SDK",
+        "マルチエージェント",
+        "コスト最適化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-20T02:13:58.872Z",
+      "markdown_path": "data/notebooklm_sources/Dynamic Workflowsを大名システムへ組み込んでみた - Qiita.md"
+    },
+    {
+      "id": "1763735746",
+      "url": "https://qiita.com/kumai_yu/items/54ded70a5a68a5ca15d5",
+      "title": "Claude Codeでつくる「並列ループエージェント」実践！ハンズオンガイド - Qiita",
+      "summary": "Claude Codeを用いて並列・TDD・仕様駆動で自走するエージェントをゼロから構築する手順を解説。\nCLAUDE.mdを骨格とし、詳細な手順や知識を『スキル』に逃がすことでトークン消費を抑制する設計思想。\nビルトインExploreを活用した並列調査や、2つの人間レビュー停止ポイントを設けるルール定義を提示。",
+      "score": 85,
+      "read_now_reason": "Claude Codeを使用した開発自動化やコスト削減に直結する、CLAUDE.mdの具体的な設計テンプレートやディレクトリ構成が明記されており、現在のAI駆動開発プロジェクトに即時適用できるため。",
+      "defer_reason": "実践的なハンズオン内容であるため、Claude Codeの実環境での検証や、前提となるテスト自動化環境（TDD）が整っていない場合は、環境構築完了まで読了を後回しにしても安全です。",
+      "tags": [
+        "Claude-Code",
+        "AI-Driven-Development",
+        "Agentic-Workflow",
+        "Prompt-Engineering"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-20T02:15:05.235Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeでつくる「並列ループエージェント」実践！ハンズオンガイド - Qiita.md"
+    },
+    {
+      "id": "1763735724",
+      "url": "https://zenn.dev/hataluck/articles/0752919b305a9f",
+      "title": "AI が大量にアウトプットしてくるので認知負荷を下げる Skill を作った",
+      "summary": "AI出力の認知負荷を下げるため「意味」と「見せ方」を分離したYAMLを生成する手法を提案。\ncore.yamlで意味構造、view.yamlで見せ方の戦略を定義し、多様なHTML図解を出力する。\nClaude Code用プラグインとして実装されており、中間表現を挟むことで追加式のビュー拡張が可能。",
+      "score": 82,
+      "read_now_reason": "AI駆動開発プロジェクトにおける認知負荷の削減に直結する設計であり、中間表現（YAML）を用いて出力をパーソナライズするアーキテクチャは、自動化パイプライン構築の要件定義やドキュメント自動生成機能に即座に活用できるため。",
+      "defer_reason": "具体的なフロントエンドUIのレンダリングコードや、Claude CodeのカスタムプラグインSDKに関する詳細な内部実装コード自体は省略されているため、これら自体をスクラッチで開発する場合の参考情報としては不完全であるため。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code",
+        "ドキュメント自動化",
+        "ソフトウェアアーキテクチャ"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-20T02:16:11.644Z",
+      "markdown_path": "data/notebooklm_sources/AI が大量にアウトプットしてくるので認知負荷を下げる Skill を作った.md"
+    },
+    {
+      "id": "1763735661",
+      "url": "https://zenn.dev/manase/scraps/6bd12beaafd308",
+      "title": "【AI駆動開発 / Claude Code】AGENT.mdや、product.md, DESIGN.md などのAIエージェント向けのMDファイル・ドキュメントについて📝",
+      "summary": "AIエージェント向けドキュメントの役割を挙動、前提、仕様、見た目、手順の5系統に分類\nAGENTS.mdは業界標準規格でありClaude Code用のCLAUDE.mdとはシンボリックリンクで紐付ける\nGoogleのDESIGN.mdとKiroのdesign.mdの混同しやすい目的や記述法の違いを明確化",
+      "score": 88,
+      "read_now_reason": "現在のAI駆動開発において、Claude CodeやCursor等のAIエージェントの挙動を最適化するためのファイル選定と、CLAUDE.mdとAGENTS.mdのシンボリックリンクによる共通化の手法が即座に実務に適用できるため。",
+      "defer_reason": "Kiro独自のSDDプロセス（requirements.md等）やGoogle Stitch仕様のDESIGN.mdを今すぐ自社プロジェクトに導入する予定がない場合は、該当セクションの確認は後回しでも問題ないため。",
+      "tags": [
+        "AI駆動開発",
+        "Claude Code",
+        "Cursor",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-20T02:17:18.965Z",
+      "markdown_path": "data/notebooklm_sources/【AI駆動開発 _ Claude Code】AGENT.mdや、product.md, DESIGN.md などのAIエージェント向けのMDファイル・ドキュメントについて📝.md"
+    },
+    {
+      "id": "1763735647",
+      "url": "https://note.com/on_consul/n/n103dc815653d",
+      "title": "⚡️【8万バズ】寝てても動くGemini。「Workspace Studio」が一般公開！Gmail、Drive、スプシを早速自動化してみた｜たてばやし淳.エクセル兄さん@ ８万部ヒット「生成AI最速仕事術」著者",
+      "summary": "Workspace Studioが個人プランに公開され、GoogleサービスのAI連携自動化が可能となった。\nドライブ保存をトリガーに、GeminiでのOCRやスプレッドシート記録を自動で行うフローが構築できる。\n連携がGoogle内に限られる点やデバッグの弱さ、将来的な実行回数制限などの制約事項も判明した。",
+      "score": 45,
+      "read_now_reason": "Googleエコシステム内での自動化パイプライン構築における新たな選択肢として、利用可能なトリガー・アクションの仕様やGAS連携による拡張方法を早期に把握できるため。",
+      "defer_reason": "現在の開発プロジェクトに必要なソースコード、CI/CD統合手順、または具体的なアーキテクチャ設計図面などは含まれておらず、機能概要と個人のユースケース紹介に留まっているため。",
+      "tags": [
+        "Workspace Studio",
+        "Google Gemini",
+        "ワークフロー自動化",
+        "GAS"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-20T02:18:27.635Z",
+      "markdown_path": "data/notebooklm_sources/⚡️【8万バズ】寝てても動くGemini。「Workspace Studio」が一般公開！Gmail、Drive、スプシを早速自動化してみた｜たてばやし淳.エクセル兄さん@ ８万部ヒット「生成AI最速.md"
+    },
+    {
+      "id": "1763735574",
+      "url": "https://qiita.com/Humanophilic_development/items/63f2f28e5ceb753005eb",
+      "title": "[Claude Code] Opus4.8 を“Fable 5 級”に育てる — 公開 system prompt から役立つ原則だけ移植する - Qiita",
+      "summary": "システムプロンプトの丸ごと移植は避け、アプリやモデル依存のノイズを排除した原則抽出を推奨している\nツール探索の徹底や字義通りの解釈対策など、Opus 4.8等の挙動を最適化する15の原則を明記\nコピペで即座に導入可能な汎用版CLAUDE.mdの設定ファイルがGitHubで公開されている",
+      "score": 85,
+      "read_now_reason": "AI駆動開発でClaude Codeを使用している場合、AIが「ツール検索を怠り対応不可と誤認する」「指示を部分的にしか適用しない」といった実装ロスを防ぐためのCLAUDE.md設定を即座に導入できるため。",
+      "defer_reason": "現在Claude CodeやCLAUDE.mdによる常時プロンプト制御を用いておらず、別のLLMや自動化スクリプトのみでパイプラインを構築している場合は、個別プロンプトの微調整を急ぐ必要はありません。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code",
+        "プロンプトエンジニアリング",
+        "CLAUDE.md"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-20T02:19:34.329Z",
+      "markdown_path": "data/notebooklm_sources/[Claude Code] Opus4.8 を“Fable 5 級”に育てる — 公開 system prompt から役立つ原則だけ移植する - Qiita.md"
+    },
+    {
+      "id": "1763735556",
+      "url": "https://zenn.dev/pekopugu/articles/agent01-b5-test-execution",
+      "title": "【Claude Code活用】テスト実行と結果解釈を任せる",
+      "summary": "Claude Codeにテストを実行させ完了条件を自律判定させる具体的な指示方法を解説\nWindowsの文字エンコードエラーを自動検出し修正させた具体的なトラブル事例を提示\nCLAUDE.mdにルールを記述し動作確認から自動コミットまでを完結させる運用を提案",
+      "score": 82,
+      "read_now_reason": "AI駆動開発におけるClaude Codeの自律性を高めるための「完了条件」の記述テンプレートや「CLAUDE.md」の具体的な記述例が示されており、自動化パイプラインの品質向上に直結するため。",
+      "defer_reason": "既にClaude Codeを用いたテストの自動実行や、CLAUDE.mdによるコミット前自動検証フローを社内で確立できている場合は後回しにしても問題ありません。",
+      "tags": [
+        "Claude-Code",
+        "AI駆動開発",
+        "テスト自動化",
+        "LLMエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-20T02:20:41.193Z",
+      "markdown_path": "data/notebooklm_sources/【Claude Code活用】テスト実行と結果解釈を任せる.md"
+    },
+    {
+      "id": "1763735541",
+      "url": "https://note.com/ihayato/n/nbd667781cf61",
+      "title": "Unreal EngineがMCPに対応！「AI駆動ゲーム開発」は、今いちばん熱いフロンティアです。｜イケハヤ",
+      "summary": "Unreal Engine 5.8がMCPサーバーへ実験的に対応したことが発表された。\n著者はMCPを活用してRobloxゲームを短期間で開発し、AIによるUE開発も検証中。\nAIを活用したゲーム開発は放置での自動化が容易であり、今後の民主化を予測している。",
+      "score": 35,
+      "read_now_reason": "Unreal EngineがMCPに対応したというリリース情報は、AI駆動開発や自動化パイプライン構築における重要な技術トレンドとして把握しておく価値があるため。",
+      "defer_reason": "記事の大部分が個人の感想や今後の展望、教材の宣伝であり、具体的なUEでのMCP設定手順や自動化パイプライン用の実装コードは一切含まれていないため。",
+      "tags": [
+        "Unreal Engine",
+        "MCP",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-20T02:21:53.952Z",
+      "markdown_path": "data/notebooklm_sources/Unreal EngineがMCPに対応！「AI駆動ゲーム開発」は、今いちばん熱いフロンティアです。｜イケハヤ.md"
+    },
+    {
+      "id": "1763735462",
+      "url": "https://zenn.dev/ino_h/articles/2026-06-16-loop-engineering-goal",
+      "title": "Loop Engineeringの組み方：Claude Code /goal で「自走するループ」を設計する",
+      "summary": "人間を介さず自走するAIエージェントのループを設計する思想と構成要素の解説\nClaude Codeの`/goal`コマンドを活用した、自走ループの実行方法と具体的設定例\n評価器の制約を理解した、測定可能で安全な終了条件（ゴール）の具体的な設計手法",
+      "score": 88,
+      "read_now_reason": "AI駆動開発と自動化パイプライン構築において、人間が1ターンごとにプロンプトを入力する手間を排除し、自走型でタスクを完遂させる「Loop Engineering」の思想と、Claude Codeの`/goal`による具体的な実装・制御方法が明記されているため。特に評価器の制約（コンテキスト内の出力のみで判定する点）や、暴走を防ぐターン制限（or stop after 20 turns）などの実践的なパラメータ設定は即時導入可能です。",
+      "defer_reason": "現在ローカル環境へのClaude Code導入や、CI/CD等のパイプラインへの自律型エージェント（非対話モード）の組み込み予定が当面ない場合、具体的なコマンド仕様や評価器の制約に関する解説部分は後回しにしても問題ありません。",
+      "tags": [
+        "Loop-Engineering",
+        "Claude-Code"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-20T02:23:00.477Z",
+      "markdown_path": "data/notebooklm_sources/Loop Engineeringの組み方：Claude Code _goal で「自走するループ」を設計する.md"
     }
   ]
 }
