@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-20T02:23:00.477Z",
+  "updated_at": "2026-06-22T02:50:57.951Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5195,6 +5195,185 @@
       "status": "unread",
       "analyzed_at": "2026-06-20T02:23:00.477Z",
       "markdown_path": "data/notebooklm_sources/Loop Engineeringの組み方：Claude Code _goal で「自走するループ」を設計する.md"
+    },
+    {
+      "id": "1767397038",
+      "url": "https://knightli.com/ja/2026/06/20/ai-codex-godot-game-development-beginner-guide/",
+      "title": "AI Codex で Godot ゲーム開発を始める：環境構築からタイルマップまでの記事まとめ",
+      "summary": "GodotとAI Codexを組み合わせたゲーム開発手順や環境構築に関する一連の記事を体系的に整理。\nAIコーディング支援を最適化するツールやAgent技術の比較、コンテキストの渡し方を提示。\nエディタでの実作業とAIによるコード生成・デバッグを組み合わせた効率的な開発ワークフローを推奨。",
+      "score": 50,
+      "read_now_reason": "AIにプロジェクトコンテキストを効率的に渡す手法（GodotPrompter等）や、Agent技術の活用アプローチは、現在のAI駆動開発プロジェクトにおけるプロンプトエンジニアリングやコンテキスト設計の参考になります。",
+      "defer_reason": "内容はGodotエンジンおよびゲーム開発（TileMapや2Dゲーム作成など）に特化しており、汎用的なシステム開発における自動化パイプライン構築に即座に転用できるコードや設定ファイルが欠けているため。",
+      "tags": [
+        "AI駆動開発",
+        "Godot",
+        "AI-Agent",
+        "コンテキスト管理"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-22T02:41:00.639Z",
+      "markdown_path": "data/notebooklm_sources/AI Codex で Godot ゲーム開発を始める：環境構築からタイルマップまでの記事まとめ.md"
+    },
+    {
+      "id": "1767394008",
+      "url": "https://zenn.dev/yurinchi/articles/879883dc91c3d6",
+      "title": "Dccd",
+      "summary": "MCPの仕様と、Node.jsおよびWebSocketを用いたGodot連携のシステム構成を解説\nClaudeの構成ファイルとGodotアドオンによる具体的な双方向連携の手順を明記\nAIからゲームエンジンを直接操作し、数分でゲームを自動生成するプロセスを実証",
+      "score": 60,
+      "read_now_reason": "Claude Desktopと外部ツールを接続するMCP（Model Context Protocol）の具体的な設定手順やJSON設定、WebSocketを介した双方向通信アーキテクチャが解説されており、ローカル環境におけるAI駆動開発のパイプライン構築の設計パターンとして非常に参考になります。",
+      "defer_reason": "実践対象がGodotという特定のゲームエンジンに特化しているため、一般的なWebアプリケーション開発やCI/CDパイプラインに直接適用できるコードや設定そのものは含まれていません。",
+      "tags": [
+        "MCP",
+        "Claude-Desktop",
+        "AI駆動開発",
+        "Godot"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-22T02:42:06.272Z",
+      "markdown_path": "data/notebooklm_sources/Dccd.md"
+    },
+    {
+      "id": "1767387414",
+      "url": "https://note.com/doui_lab/n/n5e989efeee94",
+      "title": "AIに伴走してもらってUnityでゲームを作る（1）｜Doui Lab",
+      "summary": "20年以上の開発経験者がUnity未経験からChatGPT伴走で3Dゲーム開発に挑戦した1週間の日記。\nLLMによるコード生成やパラメータ解説は有用だが、UI操作やアセット仕様のトラブル解決には限界を指摘。\nライセンス確認や特定パラメータの解説など、ピンポイントな相談相手としてLLMが機能することを確認。",
+      "score": 25,
+      "read_now_reason": "GUI開発（Unity）におけるLLM伴走のリアルな限界や、プロンプトの工夫（ステップ実行の指示など）に関する実践的な知見が得られます。",
+      "defer_reason": "個人の試行錯誤を綴った日記であり、現在のプロジェクト（AI駆動開発、自動化パイプライン構築）に即時導入できる具体的なコードや設計アーキテクチャが含まれていないため。",
+      "tags": [
+        "AI駆動開発",
+        "Unity",
+        "VibeCoding",
+        "ChatGPT"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-22T02:43:14.100Z",
+      "markdown_path": "data/notebooklm_sources/AIに伴走してもらってUnityでゲームを作る（1）｜Doui Lab.md"
+    },
+    {
+      "id": "1767385383",
+      "url": "https://qiita.com/yuji_yasuhara/items/ba8ffd6d8973eafcc117",
+      "title": "Baffddeafcc",
+      "summary": "Unity個人開発におけるCursor等の生成AI活用プロセスと実践例の紹介\n意図的なエラーコード修正依頼や、PythonによるUI画像素材生成の自動化手法\nNativeList移行時のメモリ周りのバグなど、AI出力コードの検証の必要性",
+      "score": 48,
+      "read_now_reason": "Cursorを用いた『意図的なエラーコードによる補完誘導』や『Pythonによる画像アセット生成自動化』など、C#開発の現場で即座に応用できる開発効率向上のハックが含まれているため。",
+      "defer_reason": "Unityゲーム開発における個人の体験談が主軸であり、AI駆動開発のCI/CD自動化パイプライン構築や、エンタープライズ向けの堅牢なシステム設計に直結する具体的な設定・アーキテクチャの解説は欠如しているため。",
+      "tags": [
+        "Unity",
+        "Cursor",
+        "AI駆動開発",
+        "個人開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-22T02:44:22.388Z",
+      "markdown_path": "data/notebooklm_sources/Baffddeafcc.md"
+    },
+    {
+      "id": "1767376554",
+      "url": "https://zenn.dev/takerai/articles/9948c30df9905d",
+      "title": "Cdfd",
+      "summary": "心理的抵抗からClaude等を活用したAI駆動開発へ移行したエンジニアの体験談\nまず動くものを作り、後からリファクタリングを行う「リバースしない」開発手法を推奨\nGit Issueを起点にLLM Agentに調査から実装までを段階的に任せるワークフローを提示",
+      "score": 50,
+      "read_now_reason": "AI駆動開発における「動くものを先に作り、後から既存お作法に合わせる」というリファクタリング前提のプロセス設計は、開発効率化のヒントになります。",
+      "defer_reason": "具体的なコード、LLM Agentの設定ファイル、プロンプトテンプレートなどの即時適用可能な実装レベルの技術情報は含まれていないため。",
+      "tags": [
+        "AI駆動開発",
+        "開発プロセス",
+        "マインドセット"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-22T02:45:28.352Z",
+      "markdown_path": "data/notebooklm_sources/Cdfd.md"
+    },
+    {
+      "id": "1767376529",
+      "url": "https://note.com/tebasakigames/n/ne2cf77313bcb",
+      "title": "Necfbcb",
+      "summary": "テバサキゲームズによるUnityノベルゲーム開発の状況報告\n技術メモがエンジニア向けプラットフォームZennに投稿されている旨の紹介\n本記事自体には具体的なコードや技術的解説は含まれていない",
+      "score": 10,
+      "read_now_reason": "現在のプロジェクトに関連するAI駆動開発や自動化に関する情報は一切含まれていないため、今読む必要はありません。",
+      "defer_reason": "個人のゲーム開発に関するエッセイ・紹介記事であり、現在のプロジェクトに直結する具体的なコードや技術設計、自動化パイプラインの知見が完全に欠如しているため。",
+      "tags": [
+        "Unity",
+        "ゲーム開発",
+        "個人開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-22T02:46:33.913Z",
+      "markdown_path": "data/notebooklm_sources/Necfbcb.md"
+    },
+    {
+      "id": "1767376510",
+      "url": "https://qiita.com/YukiF0511/items/50be0ef5adfa24396c69",
+      "title": "Beefadfac",
+      "summary": "Amazon Q CLIを活用し日本語の指示のみでゲームのコード自動生成を行った体験談\nAIとの対話からゲームの企画書を補完し農業シミュレーションの仕様書を作成した事例\nAI開発の課題である予期せぬ機能破壊への対策としてGitによるバージョン管理を推奨",
+      "score": 45,
+      "read_now_reason": "Amazon Q CLIを用いたAI駆動開発における、仕様策定の進め方や「デグレ」といった現実的な課題と対策（Git連携）の知見が得られるため。",
+      "defer_reason": "具体的なAI駆動開発パイプラインの構築手順や、Amazon Q CLIの導入に必要な設定コード、独自のアーキテクチャ解説などは含まれていないため。",
+      "tags": [
+        "Amazon-Q",
+        "AI駆動開発",
+        "GitHub",
+        "ゲーム開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-22T02:47:39.570Z",
+      "markdown_path": "data/notebooklm_sources/Beefadfac.md"
+    },
+    {
+      "id": "1767375973",
+      "url": "https://gigazine.net/news/20260317-godogen/",
+      "title": "Godogen",
+      "summary": "ゲームの説明文からGodot 4プロジェクトを自動構築するAI「Godogen」が公開\nClaude Codeを活用し、計画と実行の2つの役割に分かれたパイプラインで動作する\n独自の言語リファレンスやGemini等の連携により、コードからアセットまで一貫して生成",
+      "score": 58,
+      "read_now_reason": "Claude Codeを用いた役割分離型の自動化パイプライン設計や、LLMの知識不足を補うカスタムリファレンスの統合手法は、現在のAI駆動開発プロジェクトに直接応用可能な設計パターンであるため。",
+      "defer_reason": "この記事自体にはGodogenの具体的なコードや設定ファイルの記述はなく、概要紹介に留まっているため、実際のパイプライン構築にはGitHubリポジトリを直接参照する必要があるため。",
+      "tags": [
+        "AI駆動開発",
+        "自動化パイプライン",
+        "Claude-Code",
+        "Godot"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-22T02:48:45.434Z",
+      "markdown_path": "data/notebooklm_sources/Godogen.md"
+    },
+    {
+      "id": "1767352779",
+      "url": "https://zenn.dev/kenimo49/articles/write-loops-not-prompts-goal-loop",
+      "title": "もうプロンプトは書かない、ループを書く — Claude Code作者とOpenClaw作者が辿り着いた /goal と /loop",
+      "summary": "プロンプト駆動から、完了条件や時間間隔に基づいてAIを自律稼働させるループ設計へのパラダイムシフト。\nClaude Codeは作業モデルと完了判定モデルを分離することで「やったつもり」による誤停止を構造的に防止。\nOpenClaw等でも変更エージェントと評価エージェントを分ける敵対的・自己検証設計が自律運用の鍵となる。",
+      "score": 88,
+      "read_now_reason": "AI駆動開発において致命的な問題となる『エージェントの誤終了・無限ループ』を解決する「作業と判定の分離」「自己検証」という極めて重要なアーキテクチャ設計原則が明記されており、自動化パイプライン構築の設計に即時反映できるため。",
+      "defer_reason": "具体的なインフラ設定コードやAPIの実装記述はなく、概念やCLIコマンドの紹介が主であるため、自律エージェントの評価機構を今すぐ自社システムに実装する予定がない場合は、後回しにしても安全です。",
+      "tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "ClaudeCode",
+        "自動化パイプライン",
+        "システム設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-22T02:49:52.288Z",
+      "markdown_path": "data/notebooklm_sources/もうプロンプトは書かない、ループを書く — Claude Code作者とOpenClaw作者が辿り着いた _goal と _loop.md"
+    },
+    {
+      "id": "1767352757",
+      "url": "https://note.com/nobel/n/n33b2a4e8eedf",
+      "title": "Claude Code のレビューを HTML で開くようにしたら、AI協業の歩留まりが変わった話｜tatsuki",
+      "summary": "AIの出力をHTML化し自動表示することで、コードレビューの可読性と対応率が劇的に向上する\nCLAUDE.mdでの指示だけでなく、PostToolUseフックを用いた確実な自動オープン設定を提示\n重要度色分けや折りたたみを含む、外部依存なしのHTML最小テンプレートと実装方法を公開",
+      "score": 85,
+      "read_now_reason": "AI駆動開発においてClaude Codeの大量のテキスト出力に認知負荷を感じている場合、本稿に記載されたフック設定とHTMLテンプレートを導入することで、今すぐレビュー歩留まりを改善できるため。",
+      "defer_reason": "開発ワークフローにおいてClaude Codeをまだ導入していない場合、またはCLIベースのAI協業プロセスを構築していない場合は、本設定の適用を後回しにしても問題ありません。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "開発プロセス自動化",
+        "コードレビュー"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-22T02:50:57.951Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code のレビューを HTML で開くようにしたら、AI協業の歩留まりが変わった話｜tatsuki.md"
     }
   ]
 }
