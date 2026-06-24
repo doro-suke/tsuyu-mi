@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-22T02:50:57.951Z",
+  "updated_at": "2026-06-24T02:17:51.899Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5374,6 +5374,43 @@
       "status": "unread",
       "analyzed_at": "2026-06-22T02:50:57.951Z",
       "markdown_path": "data/notebooklm_sources/Claude Code のレビューを HTML で開くようにしたら、AI協業の歩留まりが変わった話｜tatsuki.md"
+    },
+    {
+      "id": "1771258853",
+      "url": "https://qiita.com/udowanllc/items/42635251d8e2641cb50c",
+      "title": "AI駆動開発のセキュリティツール、結局なにを入れればいい？ - Qiita",
+      "summary": "AI駆動開発におけるセキュリティ対策を9つのカテゴリと3つのレベルに分類して整理。\nシークレット検出の2層防御構成やAIが幻覚したパッケージを検知する最新アプローチを解説。\n無料ツールのみで実装された即時導入可能なセキュリティフレームワークと導入手順を公開。",
+      "score": 88,
+      "read_now_reason": "自動化パイプラインに即時組み込めるGitleaksやTruffleHogを組み合わせた2層防御の具体的なアーキテクチャが明記されており、さらに無料ツールで実装済みの開発フレームワークが公開されているため、今すぐパイプライン構築に活用できます。",
+      "defer_reason": "個々のツール概要だけであれば後回しにできますが、本記事に掲載されている「AI Orchestrator」のコードを参考にしない場合、安全なAI駆動開発のパイプラインを一から自前で設計・検証することになり、大幅な時間ロスが発生します。",
+      "tags": [
+        "AI駆動開発",
+        "DevSecOps",
+        "CI/CDパイプライン",
+        "シークレットスキャン",
+        "SCA"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-24T02:09:08.166Z",
+      "markdown_path": "data/notebooklm_sources/AI駆動開発のセキュリティツール、結局なにを入れればいい？ - Qiita.md"
+    },
+    {
+      "id": "1770858820",
+      "url": "https://qiita.com/kamome_susume/items/467446c5a6cbd10a5ffa",
+      "title": "Claude Codeで設計書作成に使えるサブエージェントの作り方｜要件定義から詳細設計まで - Qiita",
+      "summary": "Claude Codeで設計書を自動生成する際、フェーズ別に5つのサブエージェントに分ける手法を提案。\n要件定義から詳細設計、DB設計、Mermaid図表生成までの具体的な設定ファイルのコードを明記。\n表記ブレや矛盾を防ぐため、CLAUDE.mdを用いた用語集の共有やコード読込権限の付与を推奨。",
+      "score": 85,
+      "read_now_reason": "Claude Codeを用いたAI駆動開発において、即座にコピー＆ペーストして使える5つのサブエージェント設定コードが記載されており、設計自動化の導入とCLAUDE.mdを用いた運用改善に直結するため。",
+      "defer_reason": "既存のプロンプト管理や、すでに設計書の自動生成フローが別のLLMツールで安定して運用されている場合は、直ちにClaude Code専用の定義を移行する必要がないため。",
+      "tags": [
+        "Claude-Code",
+        "AI駆動開発",
+        "設計自動化",
+        "LLMエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-24T02:17:51.899Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeで設計書作成に使えるサブエージェントの作り方｜要件定義から詳細設計まで - Qiita.md"
     }
   ]
 }
