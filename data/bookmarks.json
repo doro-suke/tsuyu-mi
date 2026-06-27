@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-24T02:17:51.899Z",
+  "updated_at": "2026-06-27T02:14:25.081Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5411,6 +5411,98 @@
       "status": "unread",
       "analyzed_at": "2026-06-24T02:17:51.899Z",
       "markdown_path": "data/notebooklm_sources/Claude Codeで設計書作成に使えるサブエージェントの作り方｜要件定義から詳細設計まで - Qiita.md"
+    },
+    {
+      "id": "1773471134",
+      "url": "https://zenn.dev/kenya0126/articles/triage-multiagent-mirror",
+      "title": "AIに『3人の専門家会議』をさせる ― マルチエージェントAI鏡『トリアージュ』を支える4つの実装",
+      "summary": "システムプロンプトをPrompt Cachingで共有しコストを大幅削減する具体的実装\n3つのエージェントをPromise.allで並列実行しSSEで個別ストリーミングする設計\nAPIエラー時の代替挙動やクライアント切断時の例外処理など実用的なエラー対策",
+      "score": 92,
+      "read_now_reason": "マルチエージェントを1つのLLMで実行する際のPrompt Cachingの最大化手法や、SSEによる並列ストリーミング制御（接続切断対策、エラーハンドリング含む）など、プロダクション実装に直結するTypeScriptコードが網羅されているため。",
+      "defer_reason": "マルチエージェントによる並列議論UIの構築や、キャッシュ最適化によるコスト削減を当面行う予定がない場合は、後回しにしても問題ありません。",
+      "tags": [
+        "マルチエージェント",
+        "Prompt-Caching",
+        "Server-Sent-Events",
+        "Claude-API",
+        "TypeScript"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-27T02:07:00.480Z",
+      "markdown_path": "data/notebooklm_sources/AIに『3人の専門家会議』をさせる ― マルチエージェントAI鏡『トリアージュ』を支える4つの実装.md"
+    },
+    {
+      "id": "1773102013",
+      "url": "https://qiita.com/TsuchiyaK/items/a3de1ac034bf94cf905b",
+      "title": "Unity AI × Claude Code でゲームを作ってみた - Qiita",
+      "summary": "公式Unity MCP ServerとClaude Codeを連携し、自然言語でエディタを直接操作する手順を解説\nClaude Code経由の操作はUnity AIのクレジットを消費せず、課金を抑えて利用可能と明記\n「ホラー風に」等の曖昧な指示からライティング調整や敵・ゲームオーバー処理の自動実装を確認",
+      "score": 45,
+      "read_now_reason": "MCP（Model Context Protocol）を実用的な開発環境に統合し、AIエージェントに自律的なリファクタリングや機能追加をさせるAI駆動開発の具体例として、パイプライン設計の参考になります。",
+      "defer_reason": "検証内容がゲームエンジン（Unity）および特定エディタに特化しており、一般的なシステム開発や自動化パイプラインに直接適用できるコードや汎用的な設定ファイルが含まれていないためです。",
+      "tags": [
+        "MCP",
+        "Claude Code",
+        "AI駆動開発",
+        "Unity"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-27T02:09:42.077Z",
+      "markdown_path": "data/notebooklm_sources/Unity AI × Claude Code でゲームを作ってみた - Qiita.md"
+    },
+    {
+      "id": "1773101992",
+      "url": "https://zenn.dev/kojikojiprg/articles/19475ded40ce16",
+      "title": "Claude Codeで複数プロジェクトを並行開発する技術 ― タスクスイッチとCLAUDE.md設計の実践",
+      "summary": "Claude Codeでのコンテキスト汚染を防ぐため1セッション1プロジェクトを徹底しセッションを再構築する\nCLAUDE.mdには「やってほしくないこと」と「検証コマンドの固定化」を記載することが最も効果的\n議論や背景蓄積はclaude.aiで行い、Claude CodeはCLAUDE.mdを元に実装に専念させる",
+      "score": 82,
+      "read_now_reason": "AI駆動開発において、Claude Codeを並行利用する際の実装ミスやコンテキスト汚染を防止するCLAUDE.mdの具体的な記述ルール（検証コマンド固定化、禁止事項リスト）が提示されており、即座に開発プロセスへ適用できるため。",
+      "defer_reason": "開発環境がClaude Codeをメインとしておらず、かつ単一プロジェクトのみを開発している場合は、コンテキスト汚染の対策が不要であるため後回しにできる。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "CLAUDE.md",
+        "コンテキスト設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-27T02:12:07.905Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeで複数プロジェクトを並行開発する技術 ― タスクスイッチとCLAUDE.md設計の実践.md"
+    },
+    {
+      "id": "1773101964",
+      "url": "https://qiita.com/nogataka/items/99b1ea9ba20877d54dba",
+      "title": "Claude Code コンテキスト管理パターン集：need-to-know だけ読ませる設計 - Qiita",
+      "summary": "Claude Codeのトークン消費と精度低下を防ぐコンテキスト設計原則を提示している。\nCLAUDE.mdの常時読込を薄くし、別ファイルをオンデマンドで読み込ませる手法を解説。\nサブエージェントへの観点別タスク委譲と、特定ファイル行の読み込み制御パターンを明記。",
+      "score": 88,
+      "read_now_reason": "AI駆動開発でClaude Codeを使用する際、コンテキストウィンドウの枯渇や精度低下を防ぐためのCLAUDE.md記述法やサブエージェントのプロンプト設計が具体的であり、即座に開発効率を向上させられるため。",
+      "defer_reason": "Claude Code自体のセットアップ方法やコマンドの基本解説は含まれておらず、ツールが未導入のフェーズであれば後回しにしても問題ないため。",
+      "tags": [
+        "Claude-Code",
+        "LLM-Context-Management",
+        "AI-Driven-Development",
+        "CLAUDE.md"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-27T02:13:16.197Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code コンテキスト管理パターン集：need-to-know だけ読ませる設計 - Qiita.md"
+    },
+    {
+      "id": "1773101949",
+      "url": "https://zenn.dev/tokium_dev/articles/tmux-multitab-context-management",
+      "title": "Claude Codeに全部抱え込ませるのをやめた。tmuxのタブを会話させてコンテキストを分割する",
+      "summary": "tmuxの各タブでClaude Codeを起動し物理的にコンテキストを隔離して精度低下を防ぐ\nオーケストレータと実行タブに役割を分け非同期の構造化メッセージで情報を圧縮してやり取りする\ntodo.mdのディスク保存とPreCompactフックでセッション圧縮時の文脈喪失を防止する",
+      "score": 85,
+      "read_now_reason": "AI駆動開発において直面するClaude Codeのコンテキストサイズ肥大化や、/compactによる記憶喪失という死活的な問題を、tmuxとhookスクリプトで解決する具体的なマルチエージェント的アーキテクチャが提示されているため。",
+      "defer_reason": "tmuxを用いた独自のローカル並行開発環境の構築が不要な場合や、Claude Codeを単一セッションの単純な作業にしか使用していない場合は、後回しにしても問題ありません。",
+      "tags": [
+        "Claude Code",
+        "tmux",
+        "コンテキスト管理",
+        "AI駆動開発",
+        "開発生産性"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-06-27T02:14:25.081Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeに全部抱え込ませるのをやめた。tmuxのタブを会話させてコンテキストを分割する.md"
     }
   ]
 }

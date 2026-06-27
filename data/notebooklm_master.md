@@ -1,5 +1,5 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/6/26 2:10:17
+最終更新日: 2026/6/27 2:16:31
 対象記事数: 47 件 (未読かつHigh優先度)
 
 ---
@@ -7008,7 +7008,285 @@ Anthropicが提唱する効果的なAIエージェント設計パターン解説
 
 ---
 
-## 17. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
+## 17. [AIに『3人の専門家会議』をさせる ― マルチエージェントAI鏡『トリアージュ』を支える4つの実装](https://zenn.dev/kenya0126/articles/triage-multiagent-mirror)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/6/27
+- **AI要約**:
+  システムプロンプトをPrompt Cachingで共有しコストを大幅削減する具体的実装
+  3つのエージェントをPromise.allで並列実行しSSEで個別ストリーミングする設計
+  APIエラー時の代替挙動やクライアント切断時の例外処理など実用的なエラー対策
+- **今読む理由**: マルチエージェントを1つのLLMで実行する際のPrompt Cachingの最大化手法や、SSEによる並列ストリーミング制御（接続切断対策、エラーハンドリング含む）など、プロダクション実装に直結するTypeScriptコードが網羅されているため。
+- **タグ**: #マルチエージェント, #Prompt-Caching, #Server-Sent-Events, #Claude-API, #TypeScript
+
+### 本文
+本記事は Zenn Fes Spring 2026 / YouCam API コンテスト 応募作品 「トリアージュ (Triage)」 の技術解説です。
+
+🔗 実際に動くデモ: https://mirror-council.vercel.app/ （スマホのカメラで顔を撮ると、3人の専門家AIがその場で会議します。サインアップ不要）
+
+ TL;DR
+カメラに映った顔を解析し、3人の専門家AIエージェント（美容皮膚科医・内科医・東洋医学師）が同時に議論、統合エージェントが優先度付きアクションプランへまとめる Web アプリ 「トリアージュ」 を作りました。
+本記事のテーマは 「1つのLLMに複数の人格で会議をさせる」マルチエージェント実装 です。次の4つを実コードとともに解説します。
+
+
+人格の分離 ― 1本の system prompt と <role> タグで3人格を出し分け、混線を防ぐ
+
+Prompt Caching ― 共有 system prompt を4コールで使い回し、2回目以降のコストを大幅削減
+
+SSE で"会議"をライブ配信 ― 3エージェントを並列実行し、発言を逐次ストリーム
+
+tool_use で構造化出力を強制 ― 統合結果を壊れない JSON で受け取り、検証＋リトライ
+
+
+
+ なぜ「会議型」なのか
+肌や健康の悩みに対して、1人の専門家が出す答えは 1つの視点 でしかありません。
+
+美容皮膚科医は「シミにはトラネキサム酸」と成分・施術で答える
+内科医は「クマは睡眠と鉄不足かも」と生活習慣から見る
+東洋医学師は「乾燥は肺の弱り、白い食材を」と体質・食養生で捉える
+
+同じ顔を見ても、立つ場所が違えば助言は変わる。本来この「重なり」の中に答えがあるのに、普通のAIアプリは1つの声しか返しません。
+トリアージュは、この複数視点を 明示的な「会議UI」 として可視化します。名前の由来は医療の トリアージュ（優先度判定） ―― 3つの視点で肌の課題を振り分け、「今夜やること／今週／今月」に優先度付けする、というコンセプトに直結しています。
+[撮影] → [3賢者が同時に観察] → [会議(チャットUI)] → [統合: アクションプラン]
+
+
+
+エージェント
+役割
+担当指標
+
+
+
+
+👩‍⚕️ Dr. Western
+西洋的・データドリブン
+wrinkle / pore / texture / acne / firmness / age_spot
+
+
+🩺 Dr. Internal
+全身の健康サインから推定
+dark_circle / eye_bag / radiance / tear_trough
+
+
+🍵 Master Toyo
+五臓と肌、食養生・漢方
+moisture / oiliness / redness / skin_type / 上下まぶた
+
+
+🪞 統合エージェント
+議論を整理し優先度付きプランへ
+(3者の所見を集約)
+
+
+
+肌の解析には YouCam Skin Analysis API（HDモード） を使い、14の健康度スコア + 肌質 + 推定肌年齢を取得しています。
+
+// src/lib/adapters.ts ― 賢者に渡すのは raw_score（ui_score ではない）
+for (const [k, v] of Object.entries(results.scores)) {
+  if (v) scores[k] = v.raw_score;
+}
+ui_score（盛った値）が議論に混ざると助言の前提が歪むので、system prompt にもルールを明文化して二重に防いでいます。
+// src/lib/claude/system.ts
+- スコアは raw_score (0-100) のままで論じます。ui_score は UI 表示専用で渡されません
+「見せるスコアは優しく、診るスコアは正直に」 ―― 同じAPIレスポンスの2値を役割で使い分けるのが、ビューティ×医療の橋渡しで効いてくる設計でした。
+
+ 🎬 デモ（実機フル疎通・58秒）
+撮影 → 3賢者の並列会議 → アクションプランまでの実機フローです。
+
+
+ 実装1: 1つの system prompt で3人格を出し分ける
+マルチエージェントというと「エージェントごとに別々のプロンプト」を思い浮かべますが、トリアージュは 全役割で system prompt を1本に統一 しています。理由は後述の Prompt Caching ですが、その代わり 人格の混線（クロストーク） という品質リスクが生まれます。Dr. Western が「気の巡りが…」と言い出したら台無しです。
+これを防ぐため、共有 system prompt の中に 役割ごとのトーン基準表 を明文化しました。
+// src/lib/claude/system.ts (抜粋)
+## Dr. Western (美容皮膚科医) の役割
+- トーン: 簡潔・定量的。エビデンスベース。一人称は「私」。
+- 専有語彙: レチノール、ナイアシンアミド、トラネキサム酸、エビデンス、ターンオーバー…
+- 禁止語彙: 気 / 養生 / 自律神経 / 五臓 / 漢方 / 巡り / 陰陽
+
+## Master Toyo (東洋医学師) の役割
+- トーン: 比喩的・ゆったり。一人称は「私」。
+- 専有語彙: 五臓(肝/心/脾/肺/腎)、気血水、陰陽、食養生、薬膳、白湯、巡り
+- 禁止語彙: ガイドライン / 自律神経 / 処方箋 / レチノール / エビデンス / ホルモン
+ポイントは 「専有語彙」と「禁止語彙」をペアで持たせる こと。「東洋医学っぽく」のような曖昧な指示ではなく、使ってよい単語 と 他役割の領域なので使ってはいけない単語 を具体語で線引きすると、人格境界が安定します。
+実際に演じる役割は user message 側の <role> タグ で切り替えます。
+// src/lib/claude/sage.ts (抜粋)
+return `<role>${role}</role>
+<skin_analysis>
+${skinAnalysis}
+</skin_analysis>
+<my_focus>${focus}</my_focus>
+
+上記の解析結果について、あなたの役割で観察→解釈→提案の順に120字以内で述べてください。`;
+system prompt（＝人格カタログ）は固定のまま、user message の <role> だけが変わる。変動部分を user 側に寄せるこの分離が、次の Prompt Caching を効かせる鍵になります。
+
+
+ 実装2: 共有 system prompt を Prompt Caching で使い回す
+トリアージュは1回の会議で Claude を4回呼びます（3賢者 + 統合）。4回とも同じ system prompt（肌指標の解説 + 3人格定義、約2,300トークン）を送るので、ここは Prompt Caching の出番です。
+system: [
+  {
+    type: "text",
+    text: SAGE_BASE_SYSTEM,
+    cache_control: { type: "ephemeral" },  // ← これ
+  },
+],
+1人目の賢者がキャッシュを書き込み（cache_creation）、続く2〜4人目は同じ system prompt を読むだけ（cache_read）になります。実測では2回目以降の呼び出しで cache_read = 13,257 トークン を確認できました。
+
+// src/lib/claude/system.ts
+const MIN_CHARS_FOR_CACHE = 3500; // ≒2,300 tokens（2,048の閾値にマージン）
+
+if (SAGE_BASE_SYSTEM.length < MIN_CHARS_FOR_CACHE) {
+  console.warn(`[SAGE_BASE_SYSTEM] length=... < ${MIN_CHARS_FOR_CACHE} — `
+    + `cache_control が無効化され単価が約3倍になります`);
+}
+さらにランタイム側にも二重の保険を入れています。最初の賢者のレスポンスで cache_read === 0 && cache_creation === 0（＝キャッシュが一切効いていない）なら、プロセスに1回だけ警告を出す ―― 静的な文字数チェックを、API が返す権威ある usage 値でバックストップする構成です。
+// src/app/api/council/route.ts (抜粋)
+if (!cacheMissWarned && evt.result.cacheRead === 0 && evt.result.cacheCreation === 0) {
+  cacheMissWarned = true;
+  console.warn(`[council] prompt cache inactive on first sage — `
+    + `system prompt が 2048 トークン未満か、無効化要因が混入`);
+}
+「キャッシュが効かなくなっても気づけない」のがこの手の罠の怖いところなので、静的見積もり＋実測値の二段構えで検知できるようにしました。
+
+
+ 実装3: SSE で"会議"をライブ配信する
+会議型UIの肝は 「3人が同時に考えて、書けた人から喋り出す」 体験です。これを Server-Sent Events で実現しました。
+
+↑ 3つの吹き出しがバラバラのタイミングで書き上がっていくのが SSE 並列配信の証拠。ソースは トリアージュ_会議ハイライト.gif
+3賢者は Promise.all で並列実行し、各賢者のストリーミング delta を western_delta / internal_delta / toyo_delta という役割ごとのイベント名でクライアントへ流します。
+// src/app/api/council/route.ts (抜粋・簡略化)
+await Promise.all(
+  SAGES.map(async (role) => {
+    write(`${role}_start`, {});
+    for await (const evt of runSage(client, role, results, signal)) {
+      if (evt.type === "delta") {
+        write(`${role}_delta`, { text: evt.text });   // ← 賢者ごとに逐次push
+      } else {
+        write(`${role}_done`, { text: evt.result.text, usage: {...} });
+      }
+    }
+  }),
+);
+役割ごとにイベント名を分けておくと、クライアントは「どの吹き出しに追記するか」をイベント名だけで判別でき、UI 実装がシンプルになります。
+設計上こだわった点：
+
+
+graceful degradation: 3賢者の try/catch は独立。1人が失敗しても *_error を流して残り2人で会議は続行。3人全員失敗したときだけ統合をスキップする
+
+クライアント切断のレース対策: controller.enqueue を closed フラグと try/catch でガード。ユーザーが途中で離脱しても enqueue/close の二重呼びで落ちない
+
+maxDuration = 60 / Vercel: 会議全体の実測は約20秒。Hobby プランでも fluid compute で上限まで回るため、これで足ります
+
+3人が並走して書き上がった順に喋り、最後に統合役が登場する ―― この時間軸そのものが会議の演出になります。
+
+
+ 実装4: tool_use で「壊れない構造化出力」を受け取る
+統合エージェントの出力は UI が描画する構造化データ（総括 + 優先度付きアクション配列 + トレードオフ + 受診フラグ）です。ここでLLMに自由テキストの JSON を書かせると、ときどき壊れます。
+そこで tool_use を強制 しました。tool_choice で emit_council_summary ツールの呼び出しを固定し、出力スキーマを JSON Schema で縛ります。
+// src/lib/claude/integrator.ts (抜粋)
+const stream = client.messages.stream({
+  model: "claude-sonnet-4-6",
+  tools: [EMIT_COUNCIL_SUMMARY_TOOL],
+  tool_choice: { type: "tool", name: "emit_council_summary" }, // ← 必ずこのツールを呼ばせる
+  system: [{ type: "text", text: SAGE_BASE_SYSTEM, cache_control: { type: "ephemeral" } }],
+  messages: [{ role: "user", content: userMessage }],
+});
+スキーマ側では actions を3〜5件、id を ^act-[1-9]$、timeframe を today|this_week|this_month|long_term の enum…と細かく制約しています。
+// src/lib/claude/tools.ts (抜粋)
+actions: {
+  type: "array", minItems: 3, maxItems: 5,
+  items: { /* id / priority / timeframe / category / task / from / rationale */ },
+},
+それでもLLM出力は信用しきれないので、受け取った後に自前バリデータで再検証し、失敗したら温度を下げてリトライします。
+// 1回目: temperature 0.3
+const attempt1 = await runOneAttempt(client, userMessage, 0.3, onPartial, signal);
+if (attempt1.ok) { yield { type: "done", summary: attempt1.summary, attempts: 1 }; return; }
+
+// 2回目: temperature 0.1 でリトライ
+const attempt2 = await runOneAttempt(client, userMessage, 0.1, null, signal);
+if (attempt2.ok) { yield { type: "done", summary: attempt2.summary, attempts: 2 }; return; }
+
+// それでもダメなら fallback（賢者の所見を生で見せる）
+yield { type: "fallback", reason: `validation failed twice`, observations };
+「スキーマで縛る → それでも検証する → ダメなら温度を下げて1回だけ再挑戦 → 最後は素の所見にフォールバック」 の4段構え。tool_use があってもアプリ側の検証を省かないのが、壊れないAI機能のコツだと思います。
+なお統合の partial_json も SSE で流しているので、UIではアクションプランが組み上がっていく様子もストリーム表示できます。
+
+
+ YouCam 実機連携で踏んだ罠（入力側）
+マルチエージェントが主役の記事ですが、入力（肌解析）側でも実機検証で何度か転びました。同じ API を使う人向けにメモを残します。
+
+
+エラーは文字列で返る: 解析失敗は data.error に error_no_face / error_below_min_image_size のような文字列で来る。オブジェクトの error.code だけ見ていると全エラーが unknown に潰れる
+
+最小画像サイズは「短辺」に効く: 短辺 1036px は却下、1450px は通過。短辺 ≥ 1500px なら確実に通る（アップスケールでも顔検出OK）
+
+iOS Safari の WYSIWYG 崩れ: プレビューは 3:4 表示なのに、getUserMedia のスナップショットはカメラ全フレーム（横長）を撮るため顔比率が縮小し error_src_face_too_small に。表示と同じ 3:4 にクロップして解消
+
+カメラUIは「見えている通りに撮れている」とは限らない、という良い教訓でした。
+
+
+ 技術スタック
+
+
+
+カテゴリ
+採用
+
+
+
+
+Framework
+Next.js 16 (App Router) + React 19
+
+
+言語
+TypeScript 5.9 (strict)
+
+
+UI
+Tailwind CSS 4 + shadcn/ui
+
+
+状態
+Zustand 5 + localStorage（サインアップ不要・local-first）
+
+
+PWA
+Serwist 9.5
+
+
+肌解析
+YouCam Skin Analysis API (HD)
+
+
+AI
+Claude Sonnet 4.6 × 並列3 + 統合1（Prompt Caching + SSE + tool_use）
+
+
+デプロイ
+Vercel
+
+
+
+
+
+ まとめ
+「複数の専門家に同時に診てもらう」という体験を、1つのLLMに複数人格で会議させることで実装しました。鍵は4つ：
+
+
+人格分離 ― system prompt 1本 + <role> タグ + 専有/禁止語彙でクロストークを防ぐ
+
+Prompt Caching ― 共有 system を4コールで使い回し、二重カナリアで無効化を検知
+
+SSE 並列ストリーム ― Promise.all + 役割別イベントで"会議"を時間軸ごと配信
+
+tool_use + 自前検証 + 温度下げリトライ ― 壊れない構造化出力
+
+LLMアプリは「賢いプロンプト1発」になりがちですが、役割を分けて議論させ、その過程を見せるだけで、体験の説得力が大きく変わります。医療×ビューティのように、本来複数の視点が重なって成立する領域とは特に相性が良いと感じました。
+
+---
+
+## 18. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -7255,7 +7533,7 @@ AIに渡すルールは、自然言語ドキュメント1枚から三つの仕�
 
 ---
 
-## 18. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
+## 19. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -7763,7 +8041,7 @@ Skillは「自分専用のClaude Code」を育てることに近いと感じて�
 
 ---
 
-## 19. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
+## 20. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -8268,7 +8546,7 @@ Building agents with the Claude Agent SDK - Anthropic Engineering
 
 ---
 
-## 20. [【CLAUDE.mdに貼るだけ】Claude Code x Gemini CLI x 人間による、三位一体開発術](https://zenn.dev/tksfjt1024/articles/5e88385bfb69fd)
+## 21. [【CLAUDE.mdに貼るだけ】Claude Code x Gemini CLI x 人間による、三位一体開発術](https://zenn.dev/tksfjt1024/articles/5e88385bfb69fd)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -8421,7 +8699,7 @@ Claude Code: https://docs.anthropic.com/claude-code
 
 ---
 
-## 21. [Gemini CLIとClaude Codeによるピンポンプログラミング](https://zenn.dev/yonekubo/articles/3a2da69cacaa73)
+## 22. [Gemini CLIとClaude Codeによるピンポンプログラミング](https://zenn.dev/yonekubo/articles/3a2da69cacaa73)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -8639,7 +8917,7 @@ Bash(mkdir:*)
 
 ---
 
-## 22. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
+## 23. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -8784,7 +9062,7 @@ banned_visual_motifs:
 
 ---
 
-## 23. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
+## 24. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/7
@@ -9020,7 +9298,7 @@ Slack, Google Calendar, Confluence等のMCPツールを活用して情報取得�
 
 ---
 
-## 24. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
+## 25. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -9214,7 +9492,7 @@ CLAUDE.mdにルールを書いて、WIP.mdに作業状態を残すようにし�
 
 ---
 
-## 25. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
+## 26. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -9523,7 +9801,7 @@ your-project/
 
 ---
 
-## 26. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
+## 27. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -9658,7 +9936,7 @@ Qiitaニュースを購読する
 
 ---
 
-## 27. [GitHub - unsolublesugar/tsuyu-mi: Fetch, summarize, and publish Raindrop.io articles as a priority-ranked HTML dashboard · GitHub](https://github.com/unsolublesugar/tsuyu-mi)
+## 28. [GitHub - unsolublesugar/tsuyu-mi: Fetch, summarize, and publish Raindrop.io articles as a priority-ranked HTML dashboard · GitHub](https://github.com/unsolublesugar/tsuyu-mi)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -9914,7 +10192,7 @@ MIT
 
 ---
 
-## 28. [GitHub - chaenmasahiro0425/exbrain: Exbrain — Your AI's External Brain. Claude Code × Obsidian × SOUL/MEMORY/DREAMS · GitHub](https://github.com/chaenmasahiro0425/exbrain)
+## 29. [GitHub - chaenmasahiro0425/exbrain: Exbrain — Your AI's External Brain. Claude Code × Obsidian × SOUL/MEMORY/DREAMS · GitHub](https://github.com/chaenmasahiro0425/exbrain)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -10514,7 +10792,7 @@ MIT
 
 ---
 
-## 29. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
+## 30. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -11316,7 +11594,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 30. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
+## 31. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -11367,7 +11645,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 31. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
+## 32. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -11626,7 +11904,7 @@ Claude Code や AI 自動化についてさらに深く学びたい方は、筆�
 
 ---
 
-## 32. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
+## 33. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -12169,7 +12447,7 @@ Prime 200銘柄
 
 ---
 
-## 33. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
+## 34. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -12349,7 +12627,7 @@ mainで作業 → worktreeを使う
 
 ---
 
-## 34. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
+## 35. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/12
@@ -13058,7 +13336,7 @@ Claude Code の 6種類のメモリと優先順位を理解して効率的に活
 
 ---
 
-## 35. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
+## 36. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/22
@@ -14298,7 +14576,7 @@ AIの「揮発性の高い記憶」を補うための「外部メモリ」とし
 
 ---
 
-## 36. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
+## 37. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/8
@@ -15890,7 +16168,7 @@ AI に相談して書いてもらいました。 ↩︎
 
 ---
 
-## 37. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
+## 38. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -16141,7 +16419,7 @@ hooks は決定論的な強制です。必ず同じ処理を再現したいも�
 
 ---
 
-## 38. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
+## 39. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -16640,7 +16918,7 @@ READMEが人間への手紙なら、AGENTS.md は、明日の自分・明日の�
 
 ---
 
-## 39. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
+## 40. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -17065,7 +17343,7 @@ GitHubで編集を提案
 
 ---
 
-## 40. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
+## 41. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -17294,7 +17572,7 @@ AI や人間が読んだときにどのような理解・認識するかをま�
 
 ---
 
-## 41. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
+## 42. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -17519,7 +17797,7 @@ API キーを使う「プロキシ方式」は、Google の ToS 違反で BAN �
 
 ---
 
-## 42. [Dynamic Workflowsを大名システムへ組み込んでみた - Qiita](https://qiita.com/tanaka_taro_JP_KYUSYU/items/b2efbc628053b643a8d8)
+## 43. [Dynamic Workflowsを大名システムへ組み込んでみた - Qiita](https://qiita.com/tanaka_taro_JP_KYUSYU/items/b2efbc628053b643a8d8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -17843,7 +18121,7 @@ Workflow が上乗せする価値は 「コスト削減（安価モデル＋低 
 
 ---
 
-## 43. [【AI駆動開発 / Claude Code】AGENT.mdや、product.md, DESIGN.md などのAIエージェント向けのMDファイル・ドキュメントについて📝](https://zenn.dev/manase/scraps/6bd12beaafd308)
+## 44. [【AI駆動開発 / Claude Code】AGENT.mdや、product.md, DESIGN.md などのAIエージェント向けのMDファイル・ドキュメントについて📝](https://zenn.dev/manase/scraps/6bd12beaafd308)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -17956,7 +18234,7 @@ AGENTS.md はこれらを一本化する狙いで登場した、という背景�
 
 ---
 
-## 44. [Loop Engineeringの組み方：Claude Code /goal で「自走するループ」を設計する](https://zenn.dev/ino_h/articles/2026-06-16-loop-engineering-goal)
+## 45. [Loop Engineeringの組み方：Claude Code /goal で「自走するループ」を設計する](https://zenn.dev/ino_h/articles/2026-06-16-loop-engineering-goal)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -18152,7 +18430,7 @@ WorkOS — Key takeaways from Boris Cherny on building Claude Code
 
 ---
 
-## 45. [もうプロンプトは書かない、ループを書く — Claude Code作者とOpenClaw作者が辿り着いた /goal と /loop](https://zenn.dev/kenimo49/articles/write-loops-not-prompts-goal-loop)
+## 46. [もうプロンプトは書かない、ループを書く — Claude Code作者とOpenClaw作者が辿り着いた /goal と /loop](https://zenn.dev/kenimo49/articles/write-loops-not-prompts-goal-loop)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/22
@@ -18308,7 +18586,7 @@ OpenAI hires OpenClaw founder Peter Steinberger -- SiliconANGLE
 
 ---
 
-## 46. [AI駆動開発のセキュリティツール、結局なにを入れればいい？ - Qiita](https://qiita.com/udowanllc/items/42635251d8e2641cb50c)
+## 47. [AI駆動開発のセキュリティツール、結局なにを入れればいい？ - Qiita](https://qiita.com/udowanllc/items/42635251d8e2641cb50c)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/24
@@ -19085,481 +19363,6 @@ Anthropic「Claude Code permissions documentation」
 
 
 ※ ツールの料金・機能は2026年央時点の情報です。導入時には最新の公式サイトを確認してください。
-
----
-
-## 47. [Claude × Codex × Gemini を"併用"する設計 ─ セカンドオピニオン運用フレーム #AI - Qiita](https://qiita.com/nogataka/items/b2b4a84ba611ccaf8447)
-- **優先度**: High
-- **スコア**: 85
-- **解析日時**: 2026/5/4
-- **AI要約**:
-  Claude、Codex、Geminiの強みを活かした役割分担と、相互補完的な運用設計を定義
-  タスク種別・速度・コストに基づいた棲み分けマップにより、最適なツール選択の判断基準を提示
-  Claude Codeから他ツールを呼び出すSkillの実装例と、実務での合議・判断ルールを解説
-- **今読む理由**: AI駆動開発における単一ツールの限界を補う具体的な運用ルールと、Claude CodeのSkillを用いた自動化への統合手法が示されており、開発効率向上に直結するため。
-- **タグ**: #AI駆動開発, #ClaudeCode, #LLMオーケストレーション, #自動化パイプライン
-
-### 本文
-はじめに
-Claude Code、Codex CLI、Gemini CLI の比較記事は、ここ半年で一気に増えました。
-多くは「どれが最強か」を問う記事です。読むと参考になる一方、結局どれか 1 つを選ばされる構図になりがちで、実務の体感とは少しずれます。私の手元では、3 ツールは互いに"置き換え"ではなく"補完"の関係で並んでいます。
-本記事では「どれが最強か」ではなく、「3 ツールを併用する前提で、どう役割分担させるか」を設計する視点でまとめます。具体的には、以下を扱います。
-
-各ツールの強みを中立的に整理
-タスク種別 × 速度 × コスト × 品質で見た棲み分けマップ
-セカンドオピニオンを呼ぶ条件の運用ルール化
-Claude Code から Codex / Gemini を呼ぶ Skill の疑似コード
-ユースケース 5 例とコスト試算
-
-「1 つに統一したほうが楽では？」という声にも触れつつ、使い分ける側の設計コストと、得られる精度・速度のトレードオフを中立に見ていきます。
-特定ベンダー推しの記事ではない、という前提でお読みください。
-
-
-各ツールの強み（中立に整理）
-まずは 3 ツールの得意領域を、あえてフラットに並べます。どれも弱点はあるので、そこも含めて書きます。
-
-Claude Code（Anthropic）
-
-対話型ターミナル CLI
-長時間セッションでの設計思考・リファクタに強い
-Skills / Hooks / Subagents / Agent Teams / MCP / Plugins と拡張機構が充実
-CLAUDE.md によるプロジェクト文脈の持ち込みが洗練されている
-弱点: 長時間運用するとコンテキストが膨らみ、auto-compact で品質が落ちる場面がある
-
-設計を詰める、アーキテクチャの判断基準を議論する、レビュー観点を整理する、といった"考える系"のタスクで手触りが安定する印象です。
-
-Codex CLI（OpenAI）
-
-対話型のターミナル CLI として、codex コマンドから同期的に質問・壁打ち・コード生成ができる
-
-resume / fork / review など、既存のセッションに途中介入して軌道修正するためのサブコマンドが揃っている
-GPT-5 系のモデル更新と足並みが揃っている
-弱点: Skill / Hook 的な高レベルの拡張機構は Claude Code と比べると薄めで、エコシステム面では後発感がある
-
-対話でさくっとセカンドオピニオンを取る用途や、まとまった粒度のコード生成タスクに向いています。
-
-Codex Cloud（OpenAI）
-
-Codex CLI とは別の機能として、クラウド側でタスクを非同期実行するワークフローが提供されている
-「タスクを投げて、一定時間後に PR として結果を受け取る」fire-and-forget 型の使い方はこちらが担う
-弱点: 非同期実行中の途中介入は限定的で、完成形のタスク記述が前提になりやすい
-
-CLI と Cloud は別レイヤーとして整理しておくと、役割分担を設計しやすくなります。本記事で「Codex」と書く場合は、断りがない限り Codex CLI を指します。
-
-Gemini CLI（Google）
-
-長文コンテキスト（1M トークン級）の受け取りがデフォルト感覚
-マルチモーダル対応（画像・PDF・音声の扱い）が素直
-無料枠が比較的広く、試し打ちのコストが低い
-Agent Skills / Hooks / Subagents / MCP といった拡張機構が一通り揃いつつあり、CLI 周辺のエコシステムは急速に整備されている
-
-「大きな資料を丸ごと渡して要約させる」「画像込みの仕様書を解釈させる」「雑な質問でまず当たりをつける」といった用途に向いています。
-
-誤解されがちな点
-
-「Claude Code は一番賢いから他は不要」という主張も見かけますが、ベンチマークは切り口次第で順位が変わります
-「Gemini は無料だから品質が低い」は単純化しすぎで、長文理解や画像扱いでは優位に立つ場面があります
-「Codex は PR を勝手に作るから危ない」という評価は Codex Cloud の非同期実行を指していることが多く、Codex CLI 単体の動作と混同されがちです。CLI と Cloud を切り分けて評価するのが前提になります
-
-どれも一面的な評価だと取りこぼしが出る、という認識からスタートします。
-
-
-3 ツールの棲み分けマップ
-ここからは、自分の手元で運用しているマトリクスを共有します。あくまで「筆者の環境と案件傾向ではこう落ち着いた」という一例です。
-
-タスク種別 × ツール
-
-
-
-タスク種別
-Claude Code
-Codex CLI
-Gemini CLI
-
-
-
-
-アーキテクチャ検討
-主
-セカンドオピニオン
-素材投入の下処理
-
-
-実装・リファクタ
-主
-並列バッチ処理
-使わないことも多い
-
-
-PR レビュー
-主
-並列レビュー
-追加視点として任意
-
-
-長文コード理解
-部分的に
-副次
-主（長文コンテキスト）
-
-
-画像・PDF の解釈
-条件付き
-弱い
-主
-
-
-論文・仕様書の要約
-セカンドオピニオン
-副次
-主
-
-
-バグ再現と切り分け
-主
-並列検証
-追加仮説の提示
-
-
-ドキュメント整形
-主
-副次
-下書きの雑打ち
-
-
-
-"主"は自分のデフォルト、"セカンドオピニオン"は別視点を取りに行く用途、"並列"は同じタスクを同時に走らせる用途、というニュアンスです。
-
-速度 × コスト × 品質の軸
-
-
-
-軸
-Claude Code
-Codex CLI
-Gemini CLI
-
-
-
-
-応答速度（対話）
-中〜速
-中〜速（CLI は同期、Cloud は非同期）
-速い
-
-
-応答品質（設計系）
-高い傾向
-高い傾向
-中〜高（タスク依存）
-
-
-応答品質（長文要約）
-中〜高
-中〜高
-高い傾向
-
-
-実行コスト
-中〜高
-中〜高
-低〜中（無料枠あり）
-
-
-オフライン化
-不可
-不可
-不可
-
-
-
-数字を断定しないのは、契約プラン・タスク複雑度・プロンプト設計で順位が簡単に入れ替わるためです。「自分の案件では概ねこう」という目安として扱うのが現実的だと思います。
-
-併用の副作用
-併用には副作用もあります。
-
-CLI を 3 本切り替えることで、思考のコンテキストスイッチコストが上がる
-結果のフォーマットが揃わず、比較に手間がかかる
-"意見が割れたときにどう決めるか"のルールを事前に決めておかないと、合議が機能しない
-
-後半で運用ルールに触れますが、併用が無条件で優れているわけではなく、1 ツールに統一するほうが合う案件も普通にあります。
-
-
-セカンドオピニオンを呼ぶ条件
-3 ツールを常時並列で走らせるのは現実的ではないため、「どのタイミングで別ツールを呼ぶか」を条件化します。自分のルールは以下の通りで、あくまで叩き台として紹介します。
-
-必須で呼ぶタイミング
-
-資料・成果物を作成した後（記事、レポート、提案書、分析結果）
-重要な意思決定の前（技術選定、アーキテクチャ判断、事業方針）
-
-この 2 つだけは、自分への戒めとして強制しています。自画自賛を避けるためです。
-
-推奨で呼ぶタイミング
-
-アプローチが 2 回以上失敗したとき（視点を変える）
-複数の選択肢で迷ったとき（トレードオフの整理）
-専門外の領域に踏み込むとき（壁打ち）
-バグの原因が特定できないとき（再現手順と試行内容を伝えて分析依頼）
-
-
-呼ばなくてよいタイミング
-
-単純なファイル操作やコマンド実行
-ユーザーが明確に手順を指定している作業
-既に確立されたパターンの繰り返し
-
-ここは"呼ばない勇気"の話でもあります。セカンドオピニオンは便利ですが、軽微な作業まで三重チェックにかけると速度が崩れます。線引きを決めておくのが実務寄りの工夫です。
-
-回答の扱い方
-
-セカンドオピニオンはあくまでセカンドオピニオン。最終判断は自分（もしくはユーザー）が行う
-指摘が妥当な場合は、修正案としてメインエージェントに差し戻す
-メインの判断と別ツールの見解が割れた場合は、両方の根拠を並べて提示する
-
-「割れたら合議で決める」ではなく、「割れたら人間の判断に戻す」を基本にしています。AI 同士の多数決は、意外なほど当てになりません。
-
-
-実装例: Claude Code から Codex / Gemini を呼ぶ Skill
-Claude Code を主（オーケストレーター）にして、必要なときに Codex / Gemini を叩く構成を採っています。Skill はプロジェクト配下の .claude/skills/ などに置いて、Claude Code 内から呼べるようにします。
-以下は疑似コードです。実装の細部はご自身の環境に合わせて調整してください。
-
-注意: SKILL.md は Claude Code 自身への指示書であり、shell スクリプトとして自動実行されるものではありません。以下のコード例は「Claude Code がこの Skill を参照したとき、最終的にどんな CLI 呼び出しへ落ちるか」を示した疑似コードです。実際の Skill 定義は Claude Code がプロンプトとして解釈し、必要な CLI コマンドを組み立てて実行します。
-
-
-/task-query-codex の疑似コード
----
-name: task-query-codex
-description: |
-  OpenAI Codex CLI をセカンドオピニオンとして呼び出す。
-  「Codexに聞いて」「別のAIの意見も聞きたい」「セカンドオピニオン」などで発火。
----
-
-# 使い方
-1. Claude Code で作業中に、セカンドオピニオンが必要と判断したら本 Skill を発火する
-2. 質問テンプレートを埋めて `codex` CLI に投入する
-3. 返答を Markdown として受け取り、そのまま会話に戻す
-
-# 実行イメージ（bash 擬似）
-cat <<'PROMPT' | codex exec --model gpt-5-codex
-以下の資料をレビューしてください。
-
-## 目的
-{{ purpose }}
-
-## 対象読者
-{{ audience }}
-
-## 確認してほしい観点
-- 内容の正確性
-- 論理の一貫性
-- 抜け漏れ
-- {{ extra_points }}
-
-## 資料
-{{ material }}
-PROMPT
-
-実体は単なる CLI 呼び出しですが、Skill として登録しておくと、Claude Code 側のセッションから自然に「Codex にも聞いてみて」と指示できるのが便利です。
-
-/task-query-gemini の疑似コード
----
-name: task-query-gemini
-description: |
-  Google Gemini CLI に対して壁打ち・長文要約・マルチモーダル質問を投げる。
-  「Geminiに聞いて」「長文を要約して」「画像を読んで」などで発火。
----
-
-# 使い方
-1. 長文・画像・PDF を含む質問や、無料枠で試したい雑打ちに使う
-2. `gemini` CLI に対してプロンプトとファイル添付を渡す
-3. 返答を Markdown として受け取る
-
-# 実行イメージ（bash 擬似）
-# Gemini CLI は `-m` でモデル指定、`-p` でプロンプト、`@<path>` でファイル参照する書式
-gemini -m gemini-2.5-pro -p "$(cat <<'PROMPT'
-@{{ attachment_path }}
-
-{{ question }}
-
-## 観点
-- {{ viewpoint }}
-
-## 出力形式
-Markdown の箇条書き
-PROMPT
-)"
-
-本記事では Claude Code をオーケストレーター、Codex / Gemini を呼ばれる側とする一方向の依存に絞り、「Claude Code から呼ぶ相手」として /task-query-codex と /task-query-gemini の 2 つだけを扱います。逆向きに Codex / Gemini 側から Claude を呼ぶ構成も作れますが、運用がカオス化しやすいため、本稿の範囲からは外します。
-
-ルールファイルとの接続
-Skill と併せて、.claude/rules/ 配下に運用ガイドラインを置いておくと、Claude Code が自動で参照してくれます。筆者の場合は以下のような要点をテキストで書いています。
-
-セカンドオピニオンを呼ぶ条件（上述）
-呼ばないケース
-回答の扱い方（最終判断は人間）
-依頼テンプレート（レビュー用・相談用）
-
-Skill と rules の二段構えにしておくと、「いつ・どうやって・何を」叩くかがプロジェクト横断で揃う、という使い方もできます。
-
-
-ユースケース 5 例
-ここからは、実際に 3 ツールを併用したシナリオを 5 件紹介します。どれも「Claude Code が主、Codex / Gemini が副」という構成で書きます。
-
-1. アーキテクチャ選定
-
-Claude Code で要件を整理し、候補 A / B / C を出す
-各候補のトレードオフを表にまとめる
-ここで重要判断の前のルールが発火し、/task-query-codex を呼ぶ
-Codex が「候補 B は運用コストが跳ねる」と指摘した場合、根拠を付き合わせて最終判断を人間に戻す
-
-"自分の推し案の粗を AI に探させる"という使い方です。Claude Code 単体だと、どうしても直近の会話に引きずられる場面があり、別モデルの目が効く局面です。
-
-2. PR レビュー
-
-PR の diff を Claude Code に読ませ、観点ごとのレビューコメントを生成
-必要に応じて Codex にも同じ diff を渡し、別視点のレビューを取る
-長大な変更や横断影響が気になる場合のみ、Gemini に「既存ドキュメントへの影響」を長文コンテキストで読ませる
-複数の結果が出た場合は、マージして投稿用ドラフトに落とす
-
-3 ツール並列レビューはトークンコストと運用負荷が一気に跳ね上がるため、常用はおすすめしません。デフォルトはメイン 1 本、重要度が高い PR に限って 2 本目を足す、という階段式の使い方が現実的です。軽い PR は Claude Code 単体で十分、という割り切りをしています。
-
-3. 長文コード理解
-
-レガシー repo（10 万行規模）をまず Gemini CLI に丸ごと渡して概要を得る
-その概要を Claude Code に渡して、気になる箇所だけピンポイントに読み込む
-詳細解析で詰まったら Codex にも同じ箇所を渡し、別視点の説明を取る
-
-長文を最初から Claude Code に渡すと、コンテキストが膨らんで auto-compact が発火しやすくなります。最初の当たりを Gemini に取らせて、そのサマリをメインに渡す、という流れが相性良いです。
-
-4. バグ切り分け
-
-Claude Code で再現手順とスタックトレースを整理
-2 回試しても原因が特定できない場合、/task-query-codex または /task-query-gemini を発火
-セカンドオピニオン側に「試したこと」と「仮説」を渡し、別の切り口の仮説を 3 つ提案させる
-仮説のうち 1 つが当たっていたら、Claude Code に戻して修正
-
-失敗 2 回で別ツールに投げる、という閾値を決めておくと、沼にハマる時間を抑えられます。Codex と Gemini のどちらを呼ぶかはケースバイケースで、コード寄りの切り分けなら Codex、ログや資料を丸ごと読ませたいなら Gemini、という使い分けにしています。
-
-5. 論文・仕様書の要約
-
-論文 PDF を Gemini にそのまま渡し、章立てごとの要約を取る
-重要な章だけ Claude Code で深掘り（疑問点の洗い出し、実装可能性の評価）
-必要なら Codex に「擬似コード化」を依頼
-
-「要約は Gemini、設計解釈は Claude、コード化は Codex」という役割分担に落ち着くことが多いです。もちろん、論文や業務ドメインによっては Claude 単体のほうが早い、というケースもあります。
-
-
-コストの考え方（筆者環境の参考）
-ここは具体金額ではなく、筆者が実際に採っている「課金モデルの組み合わせ方」だけを共有します。各サービスはサブスクリプション（定額）／API 従量／無料枠の組み合わせで提供されており、金額はプラン・為替・使用頻度で大きく変わります。最新の料金は各公式ページで確認してください。
-
-筆者の課金モデルの組み合わせ
-
-
-
-ツール
-採用している課金モデル
-主な用途
-
-
-
-
-Claude Code
-サブスクリプション型の上位プラン
-主・長時間運用
-
-
-Codex CLI
-ChatGPT 上位プラン付帯の利用枠を中心に、必要に応じて API 従量を併用
-対話でのセカンドオピニオン、コード生成
-
-
-Gemini CLI
-無料枠を中心に、重いタスクのみ有料プラン／API 従量を併用
-長文要約・画像解析
-
-
-
-課金モデルがサブスクと従量で混在している点は注意が必要です。「全部サブスクで常時契約」にすると固定費が積み上がるため、筆者はメインを 1 本サブスク、残りは従量 or 無料枠、という組み合わせに寄せています。
-
-コスト最適化の考え方
-
-
-主を 1 つに固定: メインの対話先を絞ると、コンテキストスイッチと課金の両方が減る
-
-セカンドは条件発火: 前述の必須・推奨条件に合致したときだけ呼ぶ
-
-無料枠を下見に使う: Gemini の無料枠は雑打ちの場として有用、という使い方もあります
-
-非同期に振れるものは振る: Codex 的な fire-and-forget は、同期応答を待たないぶん思考時間を取り戻しやすい
-
-「3 ツール契約＝生産性 3 倍」にはなりません。増えるのは選択肢であって、生産性はルール設計で決まる、という前提で試算するのが健全だと思います。
-
-
-運用ルールの設計
-ここまでの内容を、実際に回す運用ルールに落とし込みます。参考までに、自分が使っている簡易ルールを共有します。
-
-デフォルト動線
-
-すべての作業は Claude Code で開始する
-作業中に「必須」条件（資料作成後・重要判断前）に触れたら、Codex か Gemini を呼ぶ
-作業中に「推奨」条件（2 回失敗・選択肢に迷う・専門外・バグ原因不明）に触れたら、状況に合う別ツールを呼ぶ
-セカンドオピニオンの結果を Claude Code に戻し、最終案を人間がレビューする
-
-
-ツール選択のヒューリスティック
-
-対話で別視点の批判がほしい → Codex CLI
-非同期で PR まで自動生成したい → Codex Cloud（本記事では深追いしない）
-長文・マルチモーダルの下処理 → Gemini
-設計議論・リファクタ・長時間運用 → Claude Code
-迷ったら Claude Code で十分
-
-上記はあくまで筆者の手元での寄せどころで、Codex や Gemini を主役に据える構成も十分あり得ます。
-「迷ったら Claude Code」にしているのは、運用を Claude Code 中心に組んでいる、というだけの事情です。Codex や Gemini を主に据える選択肢も十分あり得ます。
-
-やりすぎないための工夫
-
-1 タスクに対して呼ぶ AI は最大 2 つまで（メイン＋セカンド）
-3 つ並列が必要と感じたら、タスクが分割不足のサイン
-セカンドオピニオンの結果は「採用／不採用／保留」のどれかを明示する
-会議ではなく人間の意思決定に戻す
-
-「多ければ多いほど良い」ではない、という点は繰り返しておきます。
-
-
-注意点
-併用フレームを運用していて、気になった点を率直に書きます。
-
-コンテキスト切り替えコスト
-3 ツールをまたぐと、プロンプトの書き方・結果フォーマット・ショートカットキーなどが微妙に異なり、思ったより脳のリソースを食います。筆者の体感では、「どのツールを呼ぶべきか」を考える時間そのものが、作業時間の 5〜10% ほどを占める感触です。
-
-意見が割れたときの扱い
-Claude と Codex で意見が割れたとき、「どっちを信じるか」を AI 同士に決めさせるのは避けたほうが無難です。両方の根拠を人間が読み、第三の案に着地するほうが、結果として失敗が少ない印象があります。
-
-使わない選択肢
-この記事の主張と一見矛盾しますが、「1 ツールに統一する」という選択肢も十分合理的です。たとえば以下のようなケースは、併用より単一運用のほうが相性が良いと感じます。
-
-短期の案件・MVP 開発で、ルール設計の時間が惜しい
-チーム構成員のスキルがバラバラで、ツール数を絞ったほうがオンボーディングが楽
-予算制約が厳しく、課金対象を 1 本に絞りたい
-
-併用は"選択肢"であって"正解"ではありません。向き不向きで選ぶのが健全だと思います。
-
-ベンダーロックの分散とその裏返し
-3 ツール併用はベンダーロックを分散させる効果もあります。ただしその裏返しで、どのツールが廃止・値上げになっても部分的に影響を受けます。分散はリスク低減であると同時にリスクの面積を広げる、とも言えるので、このあたりも含めて中立に見るべき論点です。
-
-
-まとめ
-
-3 ツールは「最強決定戦」より「併用の設計」として捉えるほうが、実務の肌感に近いと感じています
-各ツールの強みはフラットに把握し、タスク種別と速度・コスト・品質で棲み分けるのが基本線
-セカンドオピニオンは「必須条件」「推奨条件」「呼ばない条件」で運用ルール化すると、やりすぎを防げます
-Claude Code を主に据えて、Codex / Gemini を Skill 経由で呼ぶ構成は 1 つの選択肢です
-併用は無条件に優れているわけではなく、1 ツール統一のほうが向く案件もあります
-
-最後に、本記事はあくまで筆者の環境で落ち着いたフレームの一例です。各ツールは短いスパンでアップデートされており、半年後には棲み分けが変わっている可能性も十分あります。自分の手元で試して、自分のルールを書き直していくのが、結局のところ一番効くのではないかと思います。
-同じように 3 ツール併用で運用している方のフィードバックや、「自分はこう棲み分けている」という知見もぜひ伺いたいです。
 
 ---
 
