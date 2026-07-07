@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-06T02:18:32.326Z",
+  "updated_at": "2026-07-07T01:59:32.218Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5713,6 +5713,22 @@
       "status": "unread",
       "analyzed_at": "2026-07-06T02:18:32.326Z",
       "markdown_path": "data/notebooklm_sources/差分リスクでレビュー方式を自動振り分け：Claude Codeで作る3層コードレビュー・オーケストレーター【6体AI＋テンプレ全公開】 - Qiita.md"
+    },
+    {
+      "id": "1781653727",
+      "url": "https://zenn.dev/nexta_/articles/858e92ee22b4a4",
+      "title": "Claude Codeに同じバグを3回出すと、自動でルール化される話",
+      "summary": "Claude Codeのセッション履歴からAIの行動ルールを自動生成する学習機構の解説\n記憶の肥大化を防ぐため、短期記憶から確定知見へと段階的に絞り込む漏斗型の設計原則\n3回の失敗で共通ルールへ自動昇格させ、成功体験はスラッシュコマンドとして自動化する運用",
+      "score": 88,
+      "read_now_reason": "AI駆動開発における「AIが同じ失敗を繰り返す」という致命的な時間ロスを、Claude Codeの仕組みを用いて自動で解決する具体的なツールと設計思想が公開されており、現在のプロジェクトに即時適用可能であるため。",
+      "defer_reason": "AIエージェントの行動制御やプロンプト自動最適化のパイプライン構築を急がない場合は後回しにできるが、手動での指示繰り返しによる開発の非効率を許容することになる。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-07T01:59:32.218Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeに同じバグを3回出すと、自動でルール化される話.md"
     }
   ]
 }
