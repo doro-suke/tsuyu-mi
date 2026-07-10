@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-07T01:59:32.218Z",
+  "updated_at": "2026-07-10T01:59:50.060Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5729,6 +5729,127 @@
       "status": "unread",
       "analyzed_at": "2026-07-07T01:59:32.218Z",
       "markdown_path": "data/notebooklm_sources/Claude Codeに同じバグを3回出すと、自動でルール化される話.md"
+    },
+    {
+      "id": "1786063003",
+      "url": "https://xenospectrum.com/pxpipe-claude-token-image-compression/",
+      "title": "ClaudeのAPI費用が激減。システムプロンプトを「画像」として読ませる新ツールの仕組み",
+      "summary": "長大テキストを画像化してClaude APIに読み込ませる「pxpipe」が登場\n画像面積による課金仕様を利用し、開発コストを最大7割削減可能\nコスト削減の代償として、テキスト読み込み精度が低下するリスクが存在",
+      "score": 55,
+      "read_now_reason": "AI駆動開発においてClaude APIのコストを大幅に削減できるハック的な新手法のロジックを把握するため。",
+      "defer_reason": "精度低下のリスクがあり、現在のプロジェクトの自動化パイプラインに即時導入できる安定した設定やコードは不足しているため。",
+      "tags": [
+        "LLMコスト削減",
+        "Claude-API",
+        "pxpipe"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-10T01:50:57.607Z",
+      "markdown_path": "data/notebooklm_sources/ClaudeのAPI費用が激減。システムプロンプトを「画像」として読ませる新ツールの仕組み.md"
+    },
+    {
+      "id": "1786062970",
+      "url": "https://qiita.com/4q_sano/items/bb1c9ac0da9ed5f4a36e",
+      "title": "Fable 5が復活したので、Claude Codeの運用ルールを3つのプロンプトで棚卸しした【プロンプト全公開】 - Qiita",
+      "summary": "Fable 5を使いClaude Codeの肥大化した運用ルールを棚卸し・再構成する手法を提示。\n診断、最終構成の作成、回帰テストの策定を行う3つの具体的なプロンプトを公開。\nルールを共通、ガードレール、コマンド、Skill、プロジェクト個別へ役割分担する設計を推奨。",
+      "score": 82,
+      "read_now_reason": "AI駆動開発において、肥大化しがちなClaude Codeの運用ルール（CLAUDE.md等）を、Fable 5を用いて自律的に整理・最適化するための実用的な3つのプロンプトが即座に利用できるため。",
+      "defer_reason": "ルール最適化の具体的な実行プロセスを示すものであり、Claude Code自体の初期導入や基本的な環境構築がまだ完了していない場合は、優先度を下げて後回しにできる。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "プロンプトエンジニアリング",
+        "エージェント運用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-10T01:52:04.000Z",
+      "markdown_path": "data/notebooklm_sources/Fable 5が復活したので、Claude Codeの運用ルールを3つのプロンプトで棚卸しした【プロンプト全公開】 - Qiita.md"
+    },
+    {
+      "id": "1786062946",
+      "url": "https://zenn.dev/pdfractal/articles/6c3fddd61b06ff",
+      "title": "なぜ、2025～2026年頃にプロンプトエンジニアリングはコンテキストエンジニアリングに変化したのか？",
+      "summary": "LLMの推論力向上により、指示文の工夫からAIに渡す文脈の設計へ主戦場が移行した\nコンテキストエンジニアリングの本質は、情報の選択・圧縮・分離による業務の情報設計である\nプロンプトは不要になるのではなく、システム指示やツール結果と並ぶ構成部品となる",
+      "score": 55,
+      "read_now_reason": "AI駆動開発において、今後のLLMの推論モデル（Claude 4.5やGPT-5等）を前提としたエージェント設計や自動化パイプラインにおける文脈情報の持たせ方の方向性を理解するのに役立つため。",
+      "defer_reason": "概念的な技術トレンドや思想に関する論考であり、現在のプロジェクトに即座に導入できる具体的なAPI設定、ソースコード、またはインフラ構成図が提示されていないため。",
+      "tags": [
+        "コンテキストエンジニアリング",
+        "LLMシステム設計",
+        "AIエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-10T01:53:10.254Z",
+      "markdown_path": "data/notebooklm_sources/なぜ、2025～2026年頃にプロンプトエンジニアリングはコンテキストエンジニアリングに変化したのか？.md"
+    },
+    {
+      "id": "1786062934",
+      "url": "https://newspicks.com/news/17000616/body/",
+      "title": "【完全版】Claude CodeでAI社員OSを作る",
+      "summary": "Claude Codeを「作業環境」として扱い、役割や安全制御などを7つのレイヤーに分けて設計する。\n恒久ルールはCLAUDE.md、特定手順はSKILL.mdに分離し、権限を絞ったSubagentsで分業する。\n外部接続にはMCPやPlaywrightを使用し、Hooksによる自動検証や実行制御で安全性を担保する。",
+      "score": 75,
+      "read_now_reason": "Claude Codeを用いた開発自動化において、CLAUDE.md/SKILL.mdの使い分けや、Subagents・Hooksを活用した自律型エージェント設計のアーキテクチャ思考を即座に実プロジェクトへ適用できるため。",
+      "defer_reason": "概念的な設計レイヤーや構成案の提示が中心であり、具体的なHooksの定義コードやPlaywrightのスクリプトといった即座にコピー可能な実装コード自体は含まれていないため。",
+      "tags": [
+        "Claude-Code",
+        "AI-Agent",
+        "MCP",
+        "Automation-Pipeline",
+        "Software-Architecture"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-10T01:54:16.473Z",
+      "markdown_path": "data/notebooklm_sources/【完全版】Claude CodeでAI社員OSを作る.md"
+    },
+    {
+      "id": "1786062901",
+      "url": "https://fullswing.dena.com/pdf/AI_100tips_slide.pdf",
+      "title": "AI tips slide",
+      "summary": "DeNAの実務から得られたAI活用・開発の100個のノウハウをまとめた資料\n企画、開発、プロンプトエンジニアリング、運用まで幅広いプロセスを網羅\n汎用的なTips集であり、個別のプロジェクトに特化したコード実装は含まない",
+      "score": 55,
+      "read_now_reason": "AI開発やプロンプトデザインにおけるエラー回避策や品質向上のノウハウが体系化されており、プロジェクトの設計方針策定に役立つため。",
+      "defer_reason": "網羅的なTips集であるため、現在の自動化パイプライン構築プロジェクトに直接適用できる設定ファイルやコードレベルの解決策は含まれていないため。",
+      "tags": [
+        "AIベストプラクティス",
+        "プロンプトエンジニアリング",
+        "プロジェクトマネジメント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-10T01:56:29.987Z",
+      "markdown_path": "data/notebooklm_sources/AI tips slide.md"
+    },
+    {
+      "id": "1786062886",
+      "url": "https://zenn.dev/yui/articles/e4f8268ab5c6c1",
+      "title": "Fable 5が使えなくなる前に、その「働き方」をOpus/Sonnetに引き継がせた",
+      "summary": "曖昧なプロンプトを排し、検証・実行可能なルールでシステムプロンプトを構成する原則を提示\n失敗パターンを「症状・間違い・正しい一手」で明文化し、AIの自己修正力を高める手法を解説\n「diffは主張、実行が証拠」とし、実機検証とレポート作成をAIに義務付けるプロンプトの工夫",
+      "score": 88,
+      "read_now_reason": "AI駆動開発において、中位モデル（Opus/Sonnet）の出力精度をFable 5（o1-preview等）レベルに引き上げるための、具体的かつ再利用可能なシステムプロンプト構築・制約設計の手法が明記されているため。特に「失敗パターンと解決策の定義」や「意思決定の分岐」のルール化は、現在の自動化パイプライン構築に即時導入可能です。",
+      "defer_reason": "具体的なCLIツール（ccteams）に依存した解説が含まれる点、およびプロジェクト固有のPlaybookの完全なコードやテンプレート自体は記事内にすべて公開されていないため、自社環境へ適用するには自らドキュメントを設計し直す必要があります。",
+      "tags": [
+        "AI駆動開発",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-10T01:57:36.848Z",
+      "markdown_path": "data/notebooklm_sources/Fable 5が使えなくなる前に、その「働き方」をOpus_Sonnetに引き継がせた.md"
+    },
+    {
+      "id": "1786062840",
+      "url": "https://zenn.dev/pingu_00/articles/2a8a5b48fc36ab",
+      "title": "Webデザイン学習5ヶ月目、ここまでに学んだこと",
+      "summary": "未経験からWebデザインを5ヶ月間学習した個人による、気づきと成長プロセスの振り返り。\nデザインをゼロから作らず既存サイトを分析することや、AIツールをたたき台にする手法に言及。\n細部の余白やズレの確認習慣、およびデザイン知識が開発での協業に活きる点を展望として提示。",
+      "score": 15,
+      "read_now_reason": "AIを用いた制作において、生成アウトプットに人間の目を入れて微調整する協働プロセスが述べられており、AI駆動開発におけるマインドセットの参考になります。",
+      "defer_reason": "Webデザイン初学者の学習体験談であり、現在のプロジェクト（自動化パイプライン構築やAI駆動開発）に即時適用できる具体的なソースコードやシステム設計、自動化手法が含まれていないため。",
+      "tags": [
+        "デザイン学習",
+        "AI協働",
+        "フロントエンド"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-10T01:59:50.060Z",
+      "markdown_path": "data/notebooklm_sources/Webデザイン学習5ヶ月目、ここまでに学んだこと.md"
     }
   ]
 }
