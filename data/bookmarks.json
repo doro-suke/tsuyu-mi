@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-13T01:44:25.540Z",
+  "updated_at": "2026-07-16T01:46:38.562Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5866,6 +5866,186 @@
       "status": "unread",
       "analyzed_at": "2026-07-13T01:44:25.540Z",
       "markdown_path": "data/notebooklm_sources/デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ.md"
+    },
+    {
+      "id": "1791771801",
+      "url": "https://zenn.dev/tacky_exception/articles/4d77fef5a36e42",
+      "title": "ハーネスエンジニアリングとループエンジニアリングの違いとは？ aws aidlc workflow kitから整理する",
+      "summary": "AIが動く環境を整える「ハーネス」と、仕事を反復させる「ループ」の概念を体系的に整理。\nハーネスはコンテキスト、ツール、ガードレール、フィードバック、状態・記憶の5要素で構成。\nループはゴール設定、計画・タスク分解、オーケストレーション等の5要素で実行フローを前進。",
+      "score": 85,
+      "read_now_reason": "AI駆動開発や自動化パイプラインを構築する際、単なるプロンプト調整に留まらない「自律型エージェントのシステム設計原則」が具体的に解説されており、アーキテクチャ設計に即時応用できるため。",
+      "defer_reason": "特定のプログラミング言語による実装コードやAPI連携の直接的な実装スクリプト自体は含まれておらず、概念とワークフローの設計論が主であるため。",
+      "tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "aidlc-workflows",
+        "システム設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-16T01:27:45.191Z",
+      "markdown_path": "data/notebooklm_sources/ハーネスエンジニアリングとループエンジニアリングの違いとは？ aws aidlc workflow kitから整理する.md"
+    },
+    {
+      "id": "1791771761",
+      "url": "https://zenn.dev/test_myname/articles/gua-game-ui-automation",
+      "title": "ゲームにもPlaywrightのようなUIテストを。Guaを作りました",
+      "summary": "ゲームのUIを構造化してWebのDOMのように操作可能にするプロトコル「Gua」の開発\nMCPサーバーを介し、AIエージェントが自律的にゲームを起動してテスト・動作確認を行う仕組み\n現時点のサポート環境はGodot 4.7（GDScript）に特化しており、他エンジンは実験的",
+      "score": 45,
+      "read_now_reason": "DOMを持たない非Web環境において、AIエージェントに「意味のあるUIツリー」を観測させて自律的な操作・テストを行わせるためのMCP設計思想やアーキテクチャが具体的に示されているため。",
+      "defer_reason": "現状の正式対応がGodot 4.7でのゲーム開発に限定されており、一般的なWeb/APIの自動化パイプラインやAI駆動開発に直接適用できるコードやテンプレートは含まれていないため。",
+      "tags": [
+        "AI駆動開発",
+        "UIテスト自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-16T01:30:15.670Z",
+      "markdown_path": "data/notebooklm_sources/ゲームにもPlaywrightのようなUIテストを。Guaを作りました.md"
+    },
+    {
+      "id": "1791771696",
+      "url": "https://zenn.dev/r_kaga/articles/c9fcb75f1ff284",
+      "title": "AIにルールファイルを数ヶ月自動更新させ続けたら、ルールは\"良く\"育ったのか",
+      "summary": "AIエージェント用の指示ファイルの形骸化を防ぐ自動更新プロセスの数ヶ月に及ぶ運用知見を解説。\n不要な記述を削るentropyと失敗からルールを作るfeedbackの2系統で自動化を検証。\nルール追加の効果測定として、変更前後の指示書で同じタスクを実行させ比較する評価ループを導入。",
+      "score": 68,
+      "read_now_reason": "AI駆動開発において避けて通れない「プロンプトやルールファイルの陳腐化・肥大化」に対し、エージェント自身にメンテナンスをさせる自動化パイプラインの設計原則が具体的に示されているため。",
+      "defer_reason": "自動更新を担うエージェントの具体的なコード、プロンプト、設定ファイルそのものは掲載されておらず、設計思想や運用の分析が主であるため。",
+      "tags": [
+        "AI駆動開発",
+        "Agentic-Automation",
+        "コンテキスト管理",
+        "LLM-Ops"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-16T01:32:52.360Z",
+      "markdown_path": "data/notebooklm_sources/AIにルールファイルを数ヶ月自動更新させ続けたら、ルールは_良く_育ったのか.md"
+    },
+    {
+      "id": "1791771681",
+      "url": "https://zenn.dev/yuche/articles/advisor-executor-pattern",
+      "title": "Fable 5 × Sonnet 5の二刀流！ClaudeDevsが提唱する「エージェント連携3パターン」徹底解説",
+      "summary": "Fable 5とSonnet 5を協調させ、APIコストと処理速度を最適化する3つの設計パターンを解説。\nAdvisorパターンでは、Sonnetがメインの実行を担い、複雑な判断時のみFableを呼び出す。\nOrchestratorやSandwichパターンを用い、役割分担によってコンテキストロスを防ぎつつ並列化する。",
+      "score": 82,
+      "read_now_reason": "AI駆動開発において、APIコスト削減と高精度な推論を両立するためのマルチエージェント連携パターン（Advisor/Orchestrator/Sandwich）が具体的に示されており、自動化パイプラインの設計に即時適用できるため。",
+      "defer_reason": "登場するモデル（Fable 5、Sonnet 5）が一部仮定のものであり、特定のPythonやTypeScriptのAPIライブラリにそのままコピペできる実装レベルのソースコード自体は含まれていないため。",
+      "tags": [
+        "AI駆動開発",
+        "マルチエージェント",
+        "LLMアーキテクチャ",
+        "コスト最適化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-16T01:34:09.779Z",
+      "markdown_path": "data/notebooklm_sources/Fable 5 × Sonnet 5の二刀流！ClaudeDevsが提唱する「エージェント連携3パターン」徹底解説.md"
+    },
+    {
+      "id": "1791771671",
+      "url": "https://note.com/ashizawakamome/n/n45c6798bf944",
+      "title": "Fable 5を使って、2時間半でBlenderで3Dモデリングして、4時間でゲーム作って公開した話｜葦沢かもめ",
+      "summary": "Claude Fable 5とBlender MCPを使い、約2時間半で3Dモデルを自動作成した事例\n作成した3DモデルをThree.jsで読み込み、4時間でWebゲームを開発・公開した実績\n画像生成AIによるテクスチャ作成など、複数のAIツールを連携させた効率的な開発プロセス",
+      "score": 35,
+      "read_now_reason": "AIエージェントを用いた3Dアセット生成からゲーム実装までの一連のワークフローと、ツールの組み合わせのアイデアを把握できるため。",
+      "defer_reason": "具体的なモデリング用ハーネスの設定手順や、Three.jsの実装コード、自動化パイプラインの具体的なコード記述が欠けているため。",
+      "tags": [
+        "AI駆動開発",
+        "3Dモデリング",
+        "Three.js",
+        "Fable-5"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-16T01:35:34.643Z",
+      "markdown_path": "data/notebooklm_sources/Fable 5を使って、2時間半でBlenderで3Dモデリングして、4時間でゲーム作って公開した話｜葦沢かもめ.md"
+    },
+    {
+      "id": "1791771657",
+      "url": "https://note.com/isaot/n/nfc1861775ec3",
+      "title": "実際のデザインプロセスに従う7つの Claude Code デザインスキル｜Isao",
+      "summary": "AI駆動開発における「プロンプトして祈る」弊害を防ぐ、デザインプロセス統合型の7つのスキルを提唱\n要件定義からタスク分解、トークン生成、意図のあるフロントエンド実装までを体系的に自律化\nPlaywright MCPを活用し、自律的なブラウザ操作による自動デザインレビューまでを実行する手法",
+      "score": 72,
+      "read_now_reason": "Claude Codeを用いたAI開発パイプラインに、構造化された「要件検証・タスク分割・自動レビュー」を組み込むための超実践的なメタ設計アプローチが明記されているため、今すぐ自動化設計に反映できる。",
+      "defer_reason": "7つの各カスタムスキルの具体的なプロンプト定義ファイルやMCP構成コード自体は記事中に直接添付されていないため、今すぐコードをコピペしてデプロイする必要はない。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code",
+        "MCP",
+        "自動UIテスト",
+        "デザインシステム"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-16T01:38:34.728Z",
+      "markdown_path": "data/notebooklm_sources/実際のデザインプロセスに従う7つの Claude Code デザインスキル｜Isao.md"
+    },
+    {
+      "id": "1791771523",
+      "url": "https://qiita.com/hrk-m/items/855132ecc5ace8164b95",
+      "title": "Eccaceb",
+      "summary": "Claude Codeを用いて対話とコードから仕様を自動生成・維持するプロセスの提案\n設計、実装、完了の3フェーズに役割を分離し、サブエージェントを活用する開発手法\n検証ゲートを挟んだTDDループと、GitHub Actionsによる仕様PRの自動生成",
+      "score": 92,
+      "read_now_reason": "Claude Codeを用いたAI駆動開発において、仕様書の自動生成や自動検証ゲートをCIに組み込む具体的なアーキテクチャが提示されており、現行プロジェクトのパイプライン構築に即座に移植可能であるため。",
+      "defer_reason": "ドキュメント管理の自動化やAIエージェントの品質管理プロセスを導入せず、手動での仕様管理と単一エージェントへの依存による品質低下リスクを許容する場合に限り、後回しが可能です。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "自動化パイプライン",
+        "仕様駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-16T01:41:16.077Z",
+      "markdown_path": "data/notebooklm_sources/Eccaceb.md"
+    },
+    {
+      "id": "1791771486",
+      "url": "https://zenn.dev/cutlet_of_pork/articles/llm-token-saving-delegation-design",
+      "title": "小さいトークン枠でAIエージェントを回すための委任アーキテクチャ設計【Claude Code】",
+      "summary": "メインモデルを統合・検証に特化させ、重い処理をLSPや安価なモデルに委任するアーキテクチャ設計\n委任のオーバーヘッドを考慮したbreak-even判断と、タスクごとのモデル階層化を実行する\n状態をHANDOFF.mdなどのファイルに永続化し、セッションクラッシュ時のトークン浪費を防ぐ",
+      "score": 92,
+      "read_now_reason": "AI駆動開発プロジェクトにおいて直面する、AIエージェント（Claude Code等）のトークン消費とコストの急増を劇的に抑えるための具体的かつ実践的なアーキテクチャ（LSP連携、モデル階層化、状態永続化など）が詳細に解説されており、今すぐ開発パイプラインの設計に適用可能であるため。",
+      "defer_reason": "AIコーディングエージェントを実開発に導入する予定が直近でない場合、またはトークン消費量やAPIコストに関する課題を現在抱えていない場合は、急ぎで読む必要はありません。",
+      "tags": [
+        "AI駆動開発",
+        "Claude_Code",
+        "LLMアーキテクチャ",
+        "コスト最適化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-16T01:43:54.470Z",
+      "markdown_path": "data/notebooklm_sources/小さいトークン枠でAIエージェントを回すための委任アーキテクチャ設計【Claude Code】.md"
+    },
+    {
+      "id": "1791771474",
+      "url": "https://zenn.dev/nenene01/articles/loop-engineering-claude-code",
+      "title": "「プロンプトを打つ」から「ループを設計する」へ",
+      "summary": "ループエンジニアリングはAIに目標・検証・停止条件を明示し、自律的に試行錯誤させる設計技術である。\nClaude Codeの機能を基に、ループをターン型、ゴール型、時間型、プロアクティブ型の4つに分類して解説。\n成功には状態の維持（Memory）と、検証手順をSKILL.md等へ言語化して落とし込むことが不可欠。",
+      "score": 68,
+      "read_now_reason": "AI駆動開発や自動化パイプライン構築において、単なるプロンプト実行から「自律的に検証・修正を繰り返すループ構造」へと実装アプローチをシフトするための具体的な設計フレームワークとClaude Codeの機能対応表が示されているため。",
+      "defer_reason": "概念や設計思想、ツールの機能分類が主軸であり、今すぐコピー＆ペーストして動作する具体的なコードや自動化スクリプト自体の記述は含まれていないため。",
+      "tags": [
+        "AI駆動開発",
+        "Claude-Code",
+        "ループエンジニアリング",
+        "自動化パイプライン",
+        "エージェント設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-16T01:45:05.035Z",
+      "markdown_path": "data/notebooklm_sources/「プロンプトを打つ」から「ループを設計する」へ.md"
+    },
+    {
+      "id": "1791771464",
+      "url": "https://zenn.dev/ke_furuya/articles/974a3031e208fc",
+      "title": "AIで競馬に勝とうとして、代わりに「まぐれ発見器」を作った話",
+      "summary": "AI競馬の検証から得た統計的規律を、LLMプロンプト評価の信頼性検証に応用した事例を解説。\n少数データでの評価はまぐれである可能性があり、信頼区間と検出力による検証の必要性を指摘。\n同一のプロンプト改善が、モデルの種類によって逆効果になり得ることをマルチモデルで実証。",
+      "score": 65,
+      "read_now_reason": "LLM自動化パイプライン構築において、プロンプトの変更が「本当に効果があるか（まぐれではないか）」を統計的（信頼区間・検出力）に検証する評価設計の極めて実践的なアプローチが提示されているため。",
+      "defer_reason": "統計的な概念設計や評価アプローチの解説が中心であり、現在の自動化パイプラインに即時統合可能な具体的なライブラリのコードや検証用スクリプトの実装例は含まれていないため。",
+      "tags": [
+        "LLMプロンプト評価",
+        "統計的検証",
+        "MLOps",
+        "信頼性工学"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-16T01:46:38.562Z",
+      "markdown_path": "data/notebooklm_sources/AIで競馬に勝とうとして、代わりに「まぐれ発見器」を作った話.md"
     }
   ]
 }
