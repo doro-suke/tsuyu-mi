@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-16T01:46:38.562Z",
+  "updated_at": "2026-07-17T01:35:49.628Z",
   "articles": [
     {
       "id": "1702129693",
@@ -6046,6 +6046,80 @@
       "status": "unread",
       "analyzed_at": "2026-07-16T01:46:38.562Z",
       "markdown_path": "data/notebooklm_sources/AIで競馬に勝とうとして、代わりに「まぐれ発見器」を作った話.md"
+    },
+    {
+      "id": "1792752961",
+      "url": "https://zenn.dev/okamyuji/articles/agent-driven-workflow-feedflow",
+      "title": "Claude CodeでAgentic Engineeringを個人開発での本番運用につなぐ",
+      "summary": "人間が「監督役（意思決定と違和感察知）」、AIが「実装役」を担う明確な役割分担を定義している。\nClaude Codeを中心に、設計・実装・レビュー・検証の各段階で目的の異なるAIツールを使い分ける。\n要件・設計・品質の合格基準を先に固定することで、AIによる超高速な実装と手戻り防止を両立する。",
+      "score": 68,
+      "read_now_reason": "AI駆動開発における人間とAIの協調設計（Agentic Engineering）の原則や、Playwright MCPや自動レビューを用いた品質パイプラインの構築思想が、現在の自動化プロジェクトのプロセス設計に直結するため。",
+      "defer_reason": "AIを組み込んだ開発プロセスや役割分担といった設計思想の解説が主であり、すぐにコピーして適用できる具体的なコードや設定ファイルの記述自体は不足しているため。",
+      "tags": [
+        "Agentic Engineering",
+        "Claude Code",
+        "AI駆動開発",
+        "品質ゲート",
+        "テスト駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-17T01:31:42.850Z",
+      "markdown_path": "data/notebooklm_sources/Claude CodeでAgentic Engineeringを個人開発での本番運用につなぐ.md"
+    },
+    {
+      "id": "1792752947",
+      "url": "https://zenn.dev/sonicmoov/articles/8712598f532b18",
+      "title": "Claude Codeが化けた。今使っている3つのプラグイン+標準機能の活用法",
+      "summary": "Claude Codeのステータスライン設定によりコンテキスト使用量やレートリミットを常時可視化する手法\n定時実行スケジュール機能を利用して、5時間制限のローリングウィンドウを業務時間に合わせて最適化する運用法\n日本語トークンを約8割削減するプラグインや、TDDと前提検証を強制する開発用プラグインの導入・連携方法",
+      "score": 82,
+      "read_now_reason": "現在のAI駆動開発において、Claude Codeのレートリミット制限やコンテキスト消費を劇的に改善する具体的な設定方法（JSON）や、要件定義・TDDワークフローを強制するプラグインの導入手順が実例付きで示されているため。",
+      "defer_reason": "現時点でClaude Codeを開発の主力ツールとして使用しておらず、CursorやGitHub Copilotなど他のGUIエディタやエージェントツールのみで開発を回している場合は、後回しにしても開発プロセス自体に影響を及ぼさないため。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "開発効率化",
+        "LLM運用ツール"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-17T01:33:00.203Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeが化けた。今使っている3つのプラグイン+標準機能の活用法.md"
+    },
+    {
+      "id": "1792752907",
+      "url": "https://zenn.dev/sho_matsu_1013/articles/yado-lp-css-only",
+      "title": "写真素材ゼロでも旅館のLPは作れる — CSSだけで「月夜の海」を描いた話",
+      "summary": "画像素材を使わずCSSのグラデーションとシャドウのみでLPの世界観を構築するアプローチの提示\nClaude Codeを利用したAI駆動開発における、業界知識の注入や世界観の言語化という人間の役割を解説\n宿泊施設LPの王道構成に則り、デモ段階で写真に差し替え可能な構造のテンプレートを作成した事例",
+      "score": 28,
+      "read_now_reason": "Claude Codeを活用した実制作プロセスにおいて、AIに対してどのような業界知識やデザイン言語を注入すべきかという、人とAIの分業のヒントが得られます。",
+      "defer_reason": "現在のプロジェクトである自動化パイプライン構築に直結するシステムアーキテクチャや具体的なプログラムソース、CI/CDに関する技術情報の記述がないため後回しで問題ありません。",
+      "tags": [
+        "CSS",
+        "Claude-Code",
+        "LPデザイン",
+        "AI協働開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-17T01:34:17.085Z",
+      "markdown_path": "data/notebooklm_sources/写真素材ゼロでも旅館のLPは作れる — CSSだけで「月夜の海」を描いた話.md"
+    },
+    {
+      "id": "1792752892",
+      "url": "https://zenn.dev/bokuwalily/articles/asmr-factory-local-1",
+      "title": "ASMR環境音動画を無料ローカルで量産する （全2回の第1回）：前編 ― 静止画に「本物の雨」を降らせる物理シミュとシームレスループ",
+      "summary": "ComfyUIとPython、ffmpegを統合したASMR動画自動生成パイプラインのアーキテクチャを提示。\n物理シミュレーションによる変位マップをキャッシュ化し、GPUコストゼロでループ動画を生成する手法を解説。\nlaunchdを用いた無人運用におけるリトライ処理や冪等性設計が施されたシェルスクリプトを明記。",
+      "score": 88,
+      "read_now_reason": "自動化パイプラインの構築に不可欠なリトライ処理、冪等性設計、ComfyUIの自動起動など、具体的なシェルスクリプトとPythonの実装パターンが明記されており、現在のプロジェクトに直接応用可能なため。",
+      "defer_reason": "動画合成処理（ffmpegのdisplaceフィルタなど）やメディア系APIの自動統合を必要としない開発フェーズであれば、具体的なスクリプト分析は後回しにしても問題ないため。",
+      "tags": [
+        "自動化パイプライン",
+        "ComfyUI",
+        "シェルスクリプト",
+        "ffmpeg",
+        "冪等性設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-17T01:35:49.628Z",
+      "markdown_path": "data/notebooklm_sources/ASMR環境音動画を無料ローカルで量産する （全2回の第1回）：前編 ― 静止画に「本物の雨」を降らせる物理シミュとシームレスループ.md"
     }
   ]
 }
