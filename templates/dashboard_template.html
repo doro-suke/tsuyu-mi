@@ -112,6 +112,9 @@
                         <button onclick="toggleShowRead()" id="toggleReadBtn" class="px-3 py-2 bg-[#1a1a1f] border border-[#2c2c34] rounded-md text-xs text-[#a1a1aa] hover:bg-[#222228] whitespace-nowrap transition-colors">
                             既読を表示中
                         </button>
+                        <button onclick="copyReadIds()" class="px-3 py-2 bg-[#1a1a1f] border border-[#2c2c34] rounded-md text-xs text-green-400 hover:bg-green-950/20 transition-colors" title="既読にした記事のIDをコピーしてAIやスクリプトに渡せる">
+                            ✔️
+                        </button>
                         <button onclick="copyDeletedIds()" class="px-3 py-2 bg-[#1a1a1f] border border-[#2c2c34] rounded-md text-xs text-red-400 hover:bg-red-950/20 transition-colors" title="削除した記事のIDをコピーしてAIに渡せます">
                             🗑️
                         </button>
@@ -275,6 +278,23 @@
                 updateDisplay();
                 renderTags();
             }
+        }
+
+        function copyReadIds() {
+            const readIds = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('status_') && localStorage.getItem(key) === 'read') {
+                    readIds.push(key.replace('status_', ''));
+                }
+            }
+            if (readIds.length === 0) {
+                alert('既読にした記事はありません。');
+                return;
+            }
+            navigator.clipboard.writeText(readIds.join(', ')).then(() => {
+                alert(`${readIds.length}件の既読IDをクリップボードにコピーしました。これをAIまたはスクリプトに渡して「以下のIDの記事をbookmarks.jsonで既読にして」と指示できます。`);
+            });
         }
 
         function copyDeletedIds() {

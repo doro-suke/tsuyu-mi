@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-17T01:35:49.628Z",
+  "updated_at": "2026-07-17T22:30:21.050Z",
   "articles": [
     {
       "id": "1702129693",
@@ -144,24 +144,6 @@
       "markdown_path": "data/notebooklm_sources/統計検定：Japan Statistical Society Certificate.md"
     },
     {
-      "id": "1702129685",
-      "url": "https://www.jdla.org/",
-      "title": "一般社団法人日本ディープラーニング協会【公式】",
-      "summary": "日本のディープラーニング推進を担うJDLAの公式サイトで、資格試験や最新ニュースを集約している。\nG検定・E資格の最新試験日程や合格発表、公式の学習コンテンツに関する詳細情報を掲載している。\n各企業のAI導入事例やDX人材育成のインタビューなど、ビジネス活用に直結する知見が豊富である。",
-      "priority": "medium",
-      "read_now_reason": "AIスキルの客観的証明となるG検定・E資格の最新日程や、他社のAI導入・人材育成事例を網羅的に把握できるため。",
-      "defer_reason": "特定の資格取得を急いでいない場合や、具体的な技術実装コードを求めている段階では、定期的な確認に留めても問題ない。",
-      "tags": [
-        "AI資格",
-        "リスキリング",
-        "ディープラーニング",
-        "DX事例"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-03T11:48:15.494Z",
-      "markdown_path": "data/notebooklm_sources/一般社団法人日本ディープラーニング協会【公式】.md"
-    },
-    {
       "id": "1702129684",
       "url": "https://dev.classmethod.jp/articles/shuntaka-claude-code-tmux-personal-tips",
       "title": "Claude Code × tmuxの個人的活用術 | DevelopersIO",
@@ -197,24 +179,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-03T11:48:34.971Z",
       "markdown_path": "data/notebooklm_sources/【LP改善AI戦略】たった1日で成約率を2倍にする生成AI活用の実践ロードマップ｜Yossy 🎙️ AI mentor.md"
-    },
-    {
-      "id": "1702135550",
-      "url": "https://note.com/kajiken0630/n/n1b427707c3e9",
-      "title": "Biz職のための \"頑張らなくてもできる\" AI自動化ワークフロー構築｜KAJI | 梶谷健人",
-      "summary": "Dify等の開発者向けツールに対し、非エンジニアでも直感的に扱えるZapierの優位性を解説。\n7,000以上の外部アプリ連携とLLM処理を組み合わせ、業務を自動化する具体的手法を提示。\nニュースレター要約などの実例を通じ、ルーティンワークをAIに任せるワークフロー構築法を紹介。",
-      "priority": "high",
-      "read_now_reason": "AIを単なるチャットツールから実用的な自動化武器に変えるための、非エンジニア向け最速ガイドであるため。",
-      "defer_reason": "すでにZapierやDifyを使いこなし、自前で複雑な自動化ワークフローを構築・運用できている場合は後回しで良い。",
-      "tags": [
-        "AI自動化",
-        "Zapier",
-        "生産性向上",
-        "ノーコード"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-03T11:48:43.901Z",
-      "markdown_path": "data/notebooklm_sources/Biz職のための _頑張らなくてもできる_ AI自動化ワークフロー構築｜KAJI _ 梶谷健人.md"
     },
     {
       "id": "1702135749",
@@ -679,22 +643,6 @@
       "markdown_path": "data/notebooklm_sources/AIに渡す指示書の役割分担_ AGENTS.md_SKILL.md_DESIGN.mdと仕様駆動開発の現在地.md"
     },
     {
-      "id": "1705374287",
-      "url": "https://zenn.dev/466548/articles/tetsudori-snap-game-experience-01",
-      "title": "個人開発ゲームの「つまらない」を3軸で分解して改善した話",
-      "summary": "漠然とした「つまらない」という感覚を、視覚・ゲーム性・演出の3つの軸で構造的に分解し分析した。\n「効果の大きさ×工数の小ささ」を基準に、コードのみで体験価値を高める演出面の改善を最優先とした。\n天候による難易度変化や重み付きランダムによるレア演出など、具体的で再利用可能なロジックを実装した。",
-      "score": 20,
-      "read_now_reason": "プロダクトの質を向上させるための課題分析手法や、低リソースでの優先順位決定のプロセスが参考になるため。",
-      "defer_reason": "内容はゲームデザインの改善記録であり、AI開発や自動化パイプラインに即時適用できる技術情報が欠如しているため。",
-      "tags": [
-        "UXデザイン",
-        "プロダクトマネジメント"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-04T23:12:37.601Z",
-      "markdown_path": "data/notebooklm_sources/個人開発ゲームの「つまらない」を3軸で分解して改善した話.md"
-    },
-    {
       "id": "1705374281",
       "url": "https://zenn.dev/mecharhythm/articles/bf4df65cbadb87",
       "title": "売上予測ツールを個人開発してリリースした話——FastAPI + Prophet + React",
@@ -853,24 +801,6 @@
       "markdown_path": "data/notebooklm_sources/Gemini が生成するインタラクティブ3Dモデルと Interactions API 入門 #Python - Qiita.md"
     },
     {
-      "id": "1702135548",
-      "url": "https://zenn.dev/akasara/articles/8387058078309d",
-      "title": "Claude Code vs Gemini CLI ｜ 実務的な使い分けガイド【2026年版】",
-      "summary": "Claude Codeを実装の主戦力、Gemini CLIを大規模探索・調査の偵察役とする役割分担を推奨。\n1Mコンテキストを持つGeminiで全体走査を行い、その結果をClaudeに渡す具体的な連携フローを提示。\nカスタムスラッシュコマンドの作成やヘッドレス呼び出しによる、実務的なツール統合とコスト最適化手法に言及。",
-      "score": 92,
-      "read_now_reason": "AI駆動開発において、Claudeの実装力とGeminiの広域探索力を組み合わせる具体的な「ハイブリッド構成」と設定例が示されており、開発効率とコストを即座に改善できるため。",
-      "defer_reason": "既存のAIツール（GitHub Copilot等）の標準機能のみで現状のタスクが完結しており、CLIベースの自律型エージェントの導入を検討していない場合は優先度が下がる。",
-      "tags": [
-        "Claude Code",
-        "Gemini CLI",
-        "AI駆動開発",
-        "開発ワークフロー"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-04T23:15:29.213Z",
-      "markdown_path": "data/notebooklm_sources/Claude Code vs Gemini CLI ｜ 実務的な使い分けガイド【2026年版】.md"
-    },
-    {
       "id": "1702135599",
       "url": "https://xenospectrum.com/articlegoogle-chrome-gemini-skills-productivity",
       "title": "Google ChromeにGemini「Skills」が登場：定型プロンプトのワンクリック実行がもたらすブラウザ体験と生産性の変革 — XenoSpectrum",
@@ -889,62 +819,6 @@
       "markdown_path": "data/notebooklm_sources/Google ChromeにGemini「Skills」が登場：定型プロンプトのワンクリック実行がもたらすブラウザ体験と生産性の変革 — XenoSpectrum.md"
     },
     {
-      "id": "1702135233",
-      "url": "https://zenn.dev/syncable_tech/articles/5afedbbbefc7cf",
-      "title": "調査タスクをGemini CLIに委譲してClaude Codeの使用量を節約する",
-      "summary": "Claude CodeのSkills機能を活用し、調査タスクをGemini CLIに自動委譲してトークン消費を抑える手法を解説\nFlashモデルの指定とBashツールのタイムアウト設定（10分）により、Claudeの待機失敗とProモデルの遅延を解決\n具体的なSKILL.mdの設定ファイルが公開されており、そのままコピー＆ペーストでプロジェクトに即時導入可能",
-      "score": 82,
-      "read_now_reason": "AI駆動開発においてClaude Codeの利用制限は開発速度のボトルネックになるが、本記事にはそれを解消する具体的なSkills設定ファイルと設定値が明記されており、即座に開発環境を改善できるため。",
-      "defer_reason": "既にClaude Codeの最上位プラン等で制限を気にする必要がない場合や、Gemini CLIの利用環境が整っていない組織的な制約がある場合は、実装の優先度が下がる。",
-      "tags": [
-        "Claude Code",
-        "Gemini CLI",
-        "AI駆動開発",
-        "コスト最適化",
-        "AIエージェント"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-04T23:15:53.991Z",
-      "markdown_path": "data/notebooklm_sources/調査タスクをGemini CLIに委譲してClaude Codeの使用量を節約する.md"
-    },
-    {
-      "id": "1702135547",
-      "url": "https://zenn.dev/azumag/articles/a0d375832747fb",
-      "title": "Claude Code と Gemini CLI による全自動コードレビューループ",
-      "summary": "Claude CodeのStop Hookを利用し、Gemini CLIを自動起動してコードレビューを完結させる手法の提案\ntranscript(JSONL)からClaudeの最終出力を抽出し、Geminiにgit diffと併せて渡すシェルスクリプトを公開\nレートリミット対応やタイムアウト管理、文字数制限など、自動ループを安定させるための実用的な実装例",
-      "score": 92,
-      "read_now_reason": "AI駆動開発と自動化パイプライン構築に直結する内容であり、Claude CodeとGeminiを連携させる具体的なコードとフックの設定が明記されているため、即座に実装に適用できる。",
-      "defer_reason": "特定のAIツール（Claude Code, Gemini CLI）に依存した実装であるため、現在他のツールセットを優先している場合には優先度が下がる可能性がある。",
-      "tags": [
-        "ClaudeCode",
-        "GeminiCLI",
-        "自動レビュー",
-        "AIエージェント",
-        "シェルスクリプト"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-04T23:16:05.166Z",
-      "markdown_path": "data/notebooklm_sources/Claude Code と Gemini CLI による全自動コードレビューループ.md"
-    },
-    {
-      "id": "1702135528",
-      "url": "https://zenn.dev/noah11/articles/9cb8b4db8d4380",
-      "title": "Gemini CLIで爆速ファイル整理！AIに「ぽいっ」と投げたらフォルダが片付いた話",
-      "summary": "npm経由でインストール可能なGemini CLIを用いて、ターミナルから直接AIと対話する方法を解説\n曖昧な指示からフォルダ整理の手順をAIが提案し、実行前に内容を「壁打ち」で確認するワークフロー\n具体的なファイル移動の自動化をAIに委ねることができ、手動作業の時間を大幅に削減する可能性を提示",
-      "score": 40,
-      "read_now_reason": "GeminiをCLIから操作する際の基本的なインターフェースと、AIにシステム操作を提案させる際のプロンプトの挙動を確認できるため。",
-      "defer_reason": "内容はデスクトップ整理というライトな用途に留まり、AI開発やCI/CDパイプラインへの組み込みなど、現在のプロジェクトに直結する技術的実装が含まれていないため。",
-      "tags": [
-        "Gemini",
-        "CLIツール",
-        "生産性向上",
-        "自動化"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-04T23:16:16.863Z",
-      "markdown_path": "data/notebooklm_sources/Gemini CLIで爆速ファイル整理！AIに「ぽいっ」と投げたらフォルダが片付いた話.md"
-    },
-    {
       "id": "1702135746",
       "url": "https://zenn.dev/tomotomobile/articles/b5cf31891b77e2",
       "title": "1行もコードを書かずにGeminiだけでUnityの大富豪ゲームを作って公開した話",
@@ -961,63 +835,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-04T23:16:28.421Z",
       "markdown_path": "data/notebooklm_sources/1行もコードを書かずにGeminiだけでUnityの大富豪ゲームを作って公開した話.md"
-    },
-    {
-      "id": "1702135441",
-      "url": "https://zenn.dev/tksfjt1024/articles/5e88385bfb69fd",
-      "title": "【CLAUDE.mdに貼るだけ】Claude Code x Gemini CLI x 人間による、三位一体開発術",
-      "summary": "Claude Codeを「実行者」、Geminiを「技術調査役」として役割分担させる三位一体の開発手法\nCLAUDE.mdに具体的な指示を追記するだけで、AI間での自律的な壁打ちとタスク分散が可能になる\nGemini MCPを活用しWeb検索を外出しすることで、Claudeのトークン消費と無限ループを抑制",
-      "score": 88,
-      "read_now_reason": "AI駆動開発におけるClaudeのトークン制限や推論のループを、Geminiとの連携で解決する具体的な設定（CLAUDE.md）が明記されており、即座に導入可能であるため。",
-      "defer_reason": "Claude CodeおよびGemini CLIの双方を開発環境に導入済み、または導入予定がない場合は優先度が下がる。",
-      "tags": [
-        "AI駆動開発",
-        "ClaudeCode",
-        "GeminiCLI",
-        "MCP",
-        "CLAUDE.md"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-04T23:16:39.784Z",
-      "markdown_path": "data/notebooklm_sources/【CLAUDE.mdに貼るだけ】Claude Code x Gemini CLI x 人間による、三位一体開発術.md"
-    },
-    {
-      "id": "1702135527",
-      "url": "https://zenn.dev/yonekubo/articles/3a2da69cacaa73",
-      "title": "Gemini CLIとClaude Codeによるピンポンプログラミング",
-      "summary": "Gemini CLIとClaude Codeを連携させ、AIエージェント間でTDD（テスト駆動開発）を行う手法の解説\nClaude Codeの非対話モードやセッションID再開機能を活用し、プログラムから制御する具体的な実装案\n役割分担、許可ツール、ワークフローを定義したプロンプト（GEMINI.md）の具体的な構成を提示",
-      "score": 88,
-      "read_now_reason": "AI駆動開発において、テスト作成と実装を別々のエージェントに担当させるマルチエージェント・オーケストレーションの具体例であり、Claude CodeのCLIオプションを活用した自動化パイプライン構築に即座に活用できるため。",
-      "defer_reason": "すでに独自のマルチエージェント環境が構築済みであるか、CLIベースの自動化よりも対話型IDE（Cursorなど）での手動開発を優先している場合に限られる。",
-      "tags": [
-        "AI駆動開発",
-        "ClaudeCode",
-        "TDD",
-        "自動化パイプライン",
-        "GeminiCLI"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-04T23:16:51.250Z",
-      "markdown_path": "data/notebooklm_sources/Gemini CLIとClaude Codeによるピンポンプログラミング.md"
-    },
-    {
-      "id": "1702135745",
-      "url": "https://www.techno-edge.net/article/2026/04/30/5035.html",
-      "title": "“なんちゃってゲーム”を超えて複雑なWebゲームを自動生成するローカルAI「OpenGame」、Claude Opus 4.5に迫る精度のAIモデル「Qwen3.6-27B」など生成AI技術5つを解説（生成AIウィークリー） | テクノエッジ TechnoEdge",
-      "summary": "DeepSeek-V4が競技プログラミング等のコーディングタスクでGPT-5.4やClaude 4.6を上回る性能を記録\nQwen3.6-27Bは軽量なDense構造ながら、SWE-bench等の主要ベンチマークで上位モデルを凌駕\nGenericAgentとOpenGameによる、情報密度圧縮と自律デバッグを用いた次世代開発自動化の枠組みが登場",
-      "score": 82,
-      "read_now_reason": "AI駆動開発において最高効率・最高精度を更新したDeepSeek-V4や、エージェントのトークン消費を抑えるGenericAgentの設計思想は、現在の自動化パイプライン構築に直結する重要情報であるため。",
-      "defer_reason": "本記事は最新技術の概要紹介であり、個別のモデルをローカル環境やCI/CDに組み込むための具体的なライブラリ導入コードや設定ファイルの詳細は、参照先のGitHub等を確認する必要があるため。",
-      "tags": [
-        "AI駆動開発",
-        "DeepSeek",
-        "AIエージェント",
-        "コーディング自動化",
-        "LLM効率化"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-04T23:17:03.622Z",
-      "markdown_path": "data/notebooklm_sources/“なんちゃってゲーム”を超えて複雑なWebゲームを自動生成するローカルAI「OpenGame」、Claude Opus 4.5に迫る精度のAIモデル「Qwen3.6-27B」など生成AI技術5つを解説.md"
     },
     {
       "id": "1702135231",
@@ -1251,22 +1068,6 @@
       "markdown_path": "data/notebooklm_sources/DESIGN.mdは「どんなサイトもスキャンして再構築できる」のか — advanced-design-mdによる既存3手段の検証と再設計.md"
     },
     {
-      "id": "1702135925",
-      "url": "https://note.com/hashtag/%E6%9B%B8%E8%A9%95",
-      "title": "「#書評」の人気タグ記事一覧｜note ――つくる、つながる、とどける。",
-      "summary": "note上の「#書評」タグが付与された、多様なジャンルの一般投稿が並ぶ検索結果ページ\nアドラー心理学、現代文学、自己啓発、AIの倫理性など多岐にわたるトピックを網羅\n特定の技術的解決策や自動化コード、実装手順に関する記述は一切含まれていない",
-      "score": 12,
-      "read_now_reason": "AIに関する倫理観や一般消費者の反応といった非技術的な社会的背景を、市場調査の一環として俯瞰する場合にのみ有効",
-      "defer_reason": "AI駆動開発やパイプライン構築に直結するコード、アーキテクチャ、設計原則などの具体的実装情報が皆無であるため",
-      "tags": [
-        "人文・社会",
-        "トレンド調査"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-07T23:50:59.170Z",
-      "markdown_path": "data/notebooklm_sources/「#書評」の人気タグ記事一覧｜note ――つくる、つながる、とどける。.md"
-    },
-    {
       "id": "1702135924",
       "url": "https://note.com/yusuke_motoyama/n/n492a559582bf",
       "title": "ビジネス書評家が1500冊読んで選んだ「至高の50冊」（2025/4/23更新）｜もとやま",
@@ -1299,22 +1100,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-07T23:51:45.647Z",
       "markdown_path": "data/notebooklm_sources/【超実践】本20冊を試して思い知った「仕事に役立つ勉強法」｜もとやま.md"
-    },
-    {
-      "id": "1702135526",
-      "url": "https://qiita.com/hirosait/items/d43936339965618cafef",
-      "title": "Gemini CLI で Subagents を活用し、ブログ執筆を Orchestrate してみた(情報収集→執筆→ファクトチェック→修正 をサイクリックに) #GoogleCloud - Qiita",
-      "summary": "Gemini CLIのSubagents機能を使い、情報収集から執筆、検閲までを行う多段階自動化フローを構築。\nエージェントごとにツール権限やプロンプトを定義し、ファイル経由で工程間の情報を引き継ぐ設計を提示。\nファクトチェックの結果に応じてエラー判定エージェントが前工程へ差し戻す、自律的なサイクルを実現。",
-      "score": 85,
-      "read_now_reason": "AI駆動開発において重要なマルチエージェント・オーケストレーションの具体的な定義ファイル（YAML形式）と、エラー時の差し戻しを含む動的パイプラインの構築手法が明記されているため。",
-      "defer_reason": "Gemini CLI特有の記述形式に基づいているため、独自のSDKやフレームワーク（LangGraph等）での直接的な実装を求めている場合は、設計概念の抽出に留まる可能性がある。",
-      "tags": [
-        "AgenticWorkflow",
-        "GeminiCLI"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-07T23:52:07.588Z",
-      "markdown_path": "data/notebooklm_sources/Gemini CLI で Subagents を活用し、ブログ執筆を Orchestrate してみた(情報収集→執筆→ファクトチェック→修正 をサイクリックに) #GoogleCloud - Qii.md"
     },
     {
       "id": "1702129680",
@@ -1351,23 +1136,6 @@
       "markdown_path": "data/notebooklm_sources/Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略.md"
     },
     {
-      "id": "1702129679",
-      "url": "https://www.watch.impress.co.jp/docs/news/2104171.html",
-      "title": "グーグルのAI認定講座、先着1万人に無料提供 「Google AI Pro」3カ月利用権も - Impress Watch",
-      "summary": "日本リスキリングコンソーシアムがGoogle AI認定講座の無料アカウントを先着で配布。\nGeminiやAI Studioを用いた実践的演習により、AI活用スキルの習得と認定証取得が可能。\n2024年4月24日時点で募集定員の1万名に達し、現在は新規申し込みが終了している。",
-      "score": 15,
-      "read_now_reason": "Googleが推奨するAI活用スキルの体系的な学習内容を確認し、今後の学習の指針とするため。",
-      "defer_reason": "募集が既に終了しており、現在のプロジェクトに対するコードや設計の即時適用が不可能であるため。",
-      "tags": [
-        "GoogleAI",
-        "リスキリング",
-        "教育プログラム"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-08T00:06:21.958Z",
-      "markdown_path": "data/notebooklm_sources/グーグルのAI認定講座、先着1万人に無料提供 「Google AI Pro」3カ月利用権も - Impress Watch.md"
-    },
-    {
       "id": "1702135229",
       "url": "https://www.sbbit.jp/article/cont1/184269",
       "title": "【神アプデ】「Google AI Studio」のヤバい新機能、秒で“アプリ完成”させる全手順 ｜ビジネス+IT",
@@ -1383,23 +1151,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-08T00:06:45.320Z",
       "markdown_path": "data/notebooklm_sources/【神アプデ】「Google AI Studio」のヤバい新機能、秒で“アプリ完成”させる全手順 ｜ビジネス+IT.md"
-    },
-    {
-      "id": "1702129678",
-      "url": "https://www.gamespark.jp/article/2026/04/21/165452.html",
-      "title": "5分で決着！ハイスピード陣取りバトル『One King is Enough』はビルドで殴るローグライク×ストラテジー | Game*Spark - 国内・海外ゲーム情報サイト",
-      "summary": "Steam向け新作ストラテジー『One King Is Enough』の先行プレイレポート。\nデッキ構築と街づくりを融合させた、非同期対戦型の自動化ローグライクゲーム。\n維持費管理やカードのシナジーが重要だが、UIの反応速度など操作性に課題が残る。",
-      "score": 5,
-      "read_now_reason": "現在の業務に関わる技術的解決策ではないが、自動化メカニクスの設計思想に触れることができる。",
-      "defer_reason": "AI駆動開発や自動化パイプラインに直結するコード、設定、技術的洞察が一切含まれていないため。",
-      "tags": [
-        "ゲームレビュー",
-        "ローグライク",
-        "ストラテジー"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-08T00:07:07.185Z",
-      "markdown_path": "data/notebooklm_sources/5分で決着！ハイスピード陣取りバトル『One King is Enough』はビルドで殴るローグライク×ストラテジー _ Game_Spark - 国内・海外ゲーム情報サイト.md"
     },
     {
       "id": "1702135436",
@@ -1453,22 +1204,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-08T00:08:12.783Z",
       "markdown_path": "data/notebooklm_sources/ComfyUI でクリエイティブな自由を手に入れろ！①『Z-Image-Turbo』LoRA + Amazing Z-Image Workflow v4.0｜One More Vision.md"
-    },
-    {
-      "id": "1702129672",
-      "url": "https://baae.top/",
-      "title": "無料でお試しください - 無料でお試しください。気に入った場合は、正規版の漫画を購入してください。",
-      "summary": "漫画の無料試読および検索機能を提供するウェブサイトの案内ページ。\n気に入った作品については正規版の購入をユーザーに推奨している。\n作品リクエスト用の掲示板や、紛失防止のブックマーク登録を案内している。",
-      "score": 0,
-      "read_now_reason": "技術的な情報やAI開発に関連するリソースは一切含まれておらず、即時性の価値はない。",
-      "defer_reason": "開発プロジェクトとは無関係なエンターテインメントサイトであり、技術的洞察や実装案が欠如しているため。",
-      "tags": [
-        "非技術",
-        "エンタメ"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-08T00:22:12.801Z",
-      "markdown_path": "data/notebooklm_sources/無料でお試しください - 無料でお試しください。気に入った場合は、正規版の漫画を購入してください。.md"
     },
     {
       "id": "1709405521",
@@ -1699,40 +1434,6 @@
       "markdown_path": "data/notebooklm_sources/ComfyUI でクリエイティブな自由を手に入れろ！①『Z-Image-Turbo』LoRA + Amazing Z-Image Workflow v4.0｜One More Vision.md"
     },
     {
-      "id": "1702129674",
-      "url": "https://www.google.com/search?client=ms-android-kddi-jp-rvc3&ie=UTF-8&q=Awesome+Design+MD&sourceid=chrome-mobile",
-      "title": "Awesome Design MD - Google 検索",
-      "summary": "Google検索の検索結果ページであり、具体的な技術解説やコードは含まれていない。\n「Awesome Design MD」というキーワードに関連するリソース群のリストアップ段階である。\n現在のAI駆動開発や自動化パイプラインに直接適用できる技術情報は存在しない。",
-      "score": 10,
-      "read_now_reason": "デザイン関連のキュレーションサイトをこれから探す必要がある場合の入り口としてのみ機能する。",
-      "defer_reason": "単なる検索結果画面であり、具体的な実装方法やアーキテクチャの解説といった一次情報が欠如しているため。",
-      "tags": [
-        "デザインリソース",
-        "検索結果",
-        "UI/UX"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-09T10:04:10.849Z",
-      "markdown_path": "data/notebooklm_sources/Awesome Design MD - Google 検索.md"
-    },
-    {
-      "id": "1702129673",
-      "url": "https://dulcet-torte-468ddb.netlify.app/",
-      "title": "Design System Gallery",
-      "summary": "54種類の有名Webサイトのデザインシステムを網羅したMarkdown形式のギャラリー\n各システムのコンポーネント構成やデザイン原則をHTMLプレビュー付きで確認できる\nAwesome Design MDをベースに構築された、UI/UX設計の標準化に役立つリソース集",
-      "score": 15,
-      "read_now_reason": "UIの構成要素をAIにプロンプトとして指示する際の、構造的なデザイン定義のテンプレートとして活用できる",
-      "defer_reason": "現在のプロジェクトの主眼であるAI駆動開発や自動化パイプライン構築に直接関わる実装コードが含まれていないため",
-      "tags": [
-        "UI-Design",
-        "Design-System",
-        "Resource-Gallery"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-09T10:04:32.653Z",
-      "markdown_path": "data/notebooklm_sources/Design System Gallery.md"
-    },
-    {
       "id": "1702129671",
       "url": "https://civitai.com/models/1188071/animagine-xl-40",
       "title": "Animagine XL 4.0 - v4 Opt | Stable Diffusion XL Checkpoint | Civitai",
@@ -1749,22 +1450,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-09T10:04:57.097Z",
       "markdown_path": "data/notebooklm_sources/Animagine XL 4.0 - v4 Opt _ Stable Diffusion XL Checkpoint _ Civitai.md"
-    },
-    {
-      "id": "1702129670",
-      "url": "https://www.gamespark.jp/article/2026/04/10/165020.html",
-      "title": "【2,300円→0円】続編も発表された倫理観ぶっ飛び墓場管理シム『Graveyard Keeper』が期間限定で配布中！Steamでは“非常に好評” | Game*Spark - 国内・海外ゲーム情報サイト",
-      "summary": "墓場管理シム『Graveyard Keeper』が4月14日2時まで期間限定で無料配布中\n続編『Graveyard Keeper 2』の制作発表を記念したキャンペーンとして実施\n対象プラットフォームはSteamやPS4、Xboxで、高いユーザー評価を得ている",
-      "score": 5,
-      "read_now_reason": "無料配布の期限が4月14日午前2時に迫っており、入手を希望する場合のみ即時の確認が必要なため",
-      "defer_reason": "AI駆動開発や自動化パイプライン等の技術プロジェクトとは無関係なゲームニュースであり、実装に寄与しない",
-      "tags": [
-        "ゲーム",
-        "無料配布"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-09T10:05:18.272Z",
-      "markdown_path": "data/notebooklm_sources/【2,300円→0円】続編も発表された倫理観ぶっ飛び墓場管理シム『Graveyard Keeper』が期間限定で配布中！Steamでは“非常に好評” _ Game_Spark - 国内・海外ゲーム情報.md"
     },
     {
       "id": "1702129669",
@@ -1799,41 +1484,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-09T10:06:03.426Z",
       "markdown_path": "data/notebooklm_sources/あとで読む（読まない）を何とかしたい｜星影｜Tech Hunter.md"
-    },
-    {
-      "id": "1702135915",
-      "url": "https://github.com/unsolublesugar/tsuyu-mi",
-      "title": "GitHub - unsolublesugar/tsuyu-mi: Fetch, summarize, and publish Raindrop.io articles as a priority-ranked HTML dashboard · GitHub",
-      "summary": "Raindrop.ioの保存記事をAIで自動要約し、優先度付きのHTMLダッシュボードを生成するツール。\nGeminiやOpenAI等の複数LLMに対応し、GitHub Actionsによる定期的な自動実行が可能。\n各記事に対し「今読む理由」「後回し理由」を明示し、効率的なトリアージを支援する設計。",
-      "score": 88,
-      "read_now_reason": "AI駆動の自動化パイプラインの具体的実装例であり、GitHub ActionsとLLM APIの連携手法を即座にコードレベルで確認できるため。",
-      "defer_reason": "Raindrop.ioを情報収集の主要ツールとして利用していない場合、ツール自体の導入メリットが限定的になる可能性がある。",
-      "tags": [
-        "AI自動化パイプライン",
-        "GitHubActions"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-09T10:06:35.703Z",
-      "markdown_path": "data/notebooklm_sources/GitHub - unsolublesugar_tsuyu-mi_ Fetch, summarize, and publish Raindrop.io articles as a priority-r.md"
-    },
-    {
-      "id": "1702129668",
-      "url": "https://github.com/chaenmasahiro0425/exbrain",
-      "title": "GitHub - chaenmasahiro0425/exbrain: Exbrain — Your AI's External Brain. Claude Code × Obsidian × SOUL/MEMORY/DREAMS · GitHub",
-      "summary": "Claude Codeの内部状態やスキルをObsidian Vaultとして構造化し可視化するナレッジシステム。\nSlackやXからの自動収集、FirecrawlによるWeb記事のMarkdown化と自動要約を統合パイプラインで実現。\nDreaming機能により日次の内省とパターンの抽出を行い、AIの記憶と成長の軌跡を自動的に構築する。",
-      "score": 88,
-      "read_now_reason": "AI駆動開発において課題となる「コンテキストの消失」を、Claude CodeとObsidianの連携によって解決する具体的なアーキテクチャが示されており、即座に自身の開発環境に適用可能なため。",
-      "defer_reason": "Claude Code（AnthropicのCLIツール）を主力として利用していない場合や、モバイルでの閲覧・同期を必要としない場合は、導入の優先度が下がる。",
-      "tags": [
-        "ClaudeCode",
-        "Obsidian",
-        "AI自動化",
-        "ナレッジマネジメント",
-        "コンテキストエンジニアリング"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-09T10:06:58.343Z",
-      "markdown_path": "data/notebooklm_sources/GitHub - chaenmasahiro0425_exbrain_ Exbrain — Your AI's External Brain. Claude Code × Obsidian × SOU.md"
     },
     {
       "id": "1702135743",
@@ -1904,23 +1554,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-09T10:08:29.412Z",
       "markdown_path": "data/notebooklm_sources/【AIミニゲーム開発 1日目】Streamlitでじゃんけんゲームを作ってみた（uv + Python） #個人開発 - Qiita.md"
-    },
-    {
-      "id": "1702129676",
-      "url": "https://news.denfaminicogamer.jp/news/260413h",
-      "title": "病原体を操作し人類を絶滅させるゲーム『Plague Inc: Evolved』がSteamにて80%オフとなるセール開催中",
-      "summary": "Steamにて『Plague Inc: Evolved』が80%オフの340円でセール中\n新DLC「エイリアン＆反ワクチン派」の配信開始と、関連バンドルの割引も実施\n病原体を進化させて人類を絶滅させる、現実的な戦略シミュレーションゲーム",
-      "score": 5,
-      "read_now_reason": "4月24日までの期間限定セールであり、格安でシミュレーションゲームを入手したい場合にのみ有効。",
-      "defer_reason": "技術的なコード、AI開発、自動化パイプラインに関する情報は皆無であり、業務上の優先度は極めて低い。",
-      "tags": [
-        "ゲームセール",
-        "Steam",
-        "エンタメ"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-10T02:36:40.872Z",
-      "markdown_path": "data/notebooklm_sources/病原体を操作し人類を絶滅させるゲーム『Plague Inc_ Evolved』がSteamにて80%オフとなるセール開催中.md"
     },
     {
       "id": "1702135740",
@@ -2406,22 +2039,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-11T11:08:45.698Z",
       "markdown_path": "data/notebooklm_sources/新しいアイデアの生み出し方｜もりもりせーじ.md"
-    },
-    {
-      "id": "1702131915",
-      "url": "https://note.com/hirokazutakenaka/n/nd228caf8b57e",
-      "title": "新規事業アイデアの出し方と具��化の手順｜失敗パターンとフレームワーク活用法｜竹中寛和（Hirokazu Takenaka）",
-      "summary": "指定されたURLのページは現在削除されており、コンテンツへのアクセスが不可能な状態である\n記事タイトルは新規事業のアイデア創出やフレームワーク活用に関するビジネス手法の紹介\nAI駆動開発や自動化パイプライン構築に直接活用できる技術的知見や実装コードは存在しない",
-      "score": 0,
-      "read_now_reason": "リンク切れのため内容の確認ができず、現在の開発プロジェクトに寄与する情報は含まれていない",
-      "defer_reason": "404エラーによりソースが消失しており、またトピック自体が技術実装ではなくビジネス論であるため",
-      "tags": [
-        "リンク切れ",
-        "新規事業企画"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-11T11:09:52.536Z",
-      "markdown_path": "data/notebooklm_sources/新規事業アイデアの出し方と具��化の手順｜失敗パターンとフレームワーク活用法｜竹中寛和（Hirokazu Takenaka）.md"
     },
     {
       "id": "1702131916",
@@ -3255,58 +2872,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-14T14:02:22.937Z",
       "markdown_path": "data/notebooklm_sources/Claude Codeのトークン消費を半減させる5フェーズ運用術.md"
-    },
-    {
-      "id": "1702129664",
-      "url": "https://community.fants.jp/?gad_campaignid=23621705647&gad_source=1&gclid=Cj0KCQjws83OBhD4ARIsACblj1_af6O55n1u0YpAVAneECR1_2fLju5N0351arLNLikXGMIT_hiGzOMaAowWEALw_wcB&hsa_acc=5713925741&hsa_ad=&hsa_cam=23611531632&hsa_grp=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_src=&hsa_tgt=&hsa_ver=3",
-      "title": "オンラインサロン・コミュニティ専用サービス「FANTS（ファンツ）」",
-      "summary": "オンラインコミュニティ運営に必要な決済・配信・会員管理を統合したノーコードプラットフォーム。\n400以上の立ち上げ実績に基づき、コンサルタントによる戦略策定やコンテンツ企画の支援を提供。\n専用アプリの提供やUIのカスタマイズに対応し、独自の世界観を持つ会員制ビジネス構築が可能。",
-      "score": 12,
-      "read_now_reason": "将来的にコミュニティ機能を自社サービスに組み込む際の要件定義や、SaaSの機能構成のリサーチとして参照できる程度です。",
-      "defer_reason": "現在のプロジェクト（AI駆動開発・自動化パイプライン）に直結する具体的なコード、技術設計、自動化手法が含まれていないため。",
-      "tags": [
-        "SaaS調査",
-        "コミュニティマネジメント",
-        "ノーコード"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-14T14:03:29.680Z",
-      "markdown_path": "data/notebooklm_sources/オンラインサロン・コミュニティ専用サービス「FANTS（ファンツ）」.md"
-    },
-    {
-      "id": "1702129663",
-      "url": "https://www.gamespark.jp/article/2026/04/05/164792.html",
-      "title": "【完全無料】『シムアース』系の復活を願って開発された惑星SLG『Gaia Maker』プレイレポ。細かなデータと遊びやすさのバランスが秀逸！じっくり見守るのも、介入も管理者の仕事 | Game*Spark - 国内・海外ゲーム情報サイト",
-      "summary": "惑星シミュレーションゲーム『Gaia Maker』のゲーム内容とプレイレポートの紹介\nテラフォーミングから文明進化までを管理し、気候や大気組成がリアルタイムで変化する仕組み\n個人開発者により『シムアース』を参考に開発され、SteamやGitHubで無料公開中",
-      "score": 12,
-      "read_now_reason": "シミュレーションアルゴリズムやエージェントベースのモデル構築における着想を得るための参考情報",
-      "defer_reason": "ゲームのプレイレポートであり、現在のAI駆動開発や自動化パイプラインに直結する技術仕様やコードが含まれないため",
-      "tags": [
-        "ゲームレビュー",
-        "シミュレーション",
-        "個人開発"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-14T14:04:37.409Z",
-      "markdown_path": "data/notebooklm_sources/【完全無料】『シムアース』系の復活を願って開発された惑星SLG『Gaia Maker』プレイレポ。細かなデータと遊びやすさのバランスが秀逸！じっくり見守るのも、介入も管理者の仕事 _ Game_Spa.md"
-    },
-    {
-      "id": "1702135912",
-      "url": "https://www.kaggle.com/code/yyzz1010/predict-the-winning-horse-100-on-small-test-data/notebook",
-      "title": "Predict the Winning Horse(100% on small test data)",
-      "summary": "香港競馬のデータを用いた勝ち馬予測モデルのKaggleノートブック実装\n少量のテストデータセットにおいて正解率100%を達成した手法を公開\nデータ探索（EDA）からモデル構築、評価までのPythonコード一式を含む",
-      "score": 15,
-      "read_now_reason": "競馬予測という特定のドメインにおいて、どのような特徴量選択が有効であったかの実装例を素早く確認できる。",
-      "defer_reason": "現在のプロジェクト（AI駆動開発・自動化）と無関係であり、小規模データでの100%正解は過学習やリーケージの可能性が高く技術的汎用性が低い。",
-      "tags": [
-        "Kaggle",
-        "Machine Learning",
-        "EDA",
-        "Niche Domain"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-14T14:05:44.003Z",
-      "markdown_path": "data/notebooklm_sources/Predict the Winning Horse(100% on small test data).md"
     },
     {
       "id": "1702135428",
@@ -4338,22 +3903,6 @@
       "markdown_path": "data/notebooklm_sources/Claude Codeの作業フォルダ設計〜初心者が最初に作るべきディレクトリ構成〜.md"
     },
     {
-      "id": "1748986002",
-      "url": "https://qiita.com/rex0220/items/53cc389d2c92ecaff070",
-      "title": "Google Antigravity 2.0で専門技術記事はどこまで作れるか：時計編 - Qiita",
-      "summary": "Google Antigravity 2.0を用いた専門技術記事の作成検証に関する記事。\nアクセス制限（403 Error）により、現時点で詳細な本文内容が取得不可。\nタイトルから実験的なコンテンツ作成の試みと推測される。",
-      "score": 10,
-      "read_now_reason": "なし。アクセスエラーが発生しており、現在のプロジェクトに即時適用可能な技術情報も含まれていません。",
-      "defer_reason": "403エラーにより本文が閲覧できない状態であり、かつタイトルから判断して自動化パイプラインやAI駆動開発に直結する技術要素が欠如しているため。",
-      "tags": [
-        "アクセスエラー",
-        "検証・実験"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-06-08T02:37:29.416Z",
-      "markdown_path": "data/notebooklm_sources/Google Antigravity 2.0で専門技術記事はどこまで作れるか：時計編 - Qiita.md"
-    },
-    {
       "id": "1748985957",
       "url": "https://zenn.dev/flinters_blog/articles/02540e0b0429b7",
       "title": "「モデルが悪い」をやめる — Learn Harness Engineering を読んで考えた、AIエージェントの失敗を層に分ける習慣",
@@ -4426,23 +3975,6 @@
       "markdown_path": "data/notebooklm_sources/データサイエンティストのためのAGENTS.mdとSkills.md"
     },
     {
-      "id": "1748985833",
-      "url": "https://note.com/kawaidesign/n/ndfa4afa6d5ca",
-      "title": "【完全保存版】広告生成プロンプト大全｜KAWAI",
-      "summary": "広告生成に特化したプロンプトのまとめ記事と推測される\nアクセス制限エラーが発生しており本文の具体的な内容が取得できない\nAI駆動開発や自動化パイプラインに直結する技術情報であるかは不明",
-      "score": 15,
-      "read_now_reason": "現時点ではエラーにより内容が確認できないため、今すぐ読むべき技術的優先度は極めて低いです。",
-      "defer_reason": "本文が取得できないことに加え、広告用プロンプトというテーマ自体が現在の開発プロジェクトに直結しないため。",
-      "tags": [
-        "プロンプトエンジニアリング",
-        "マーケティング",
-        "エラー記事"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-06-08T02:44:02.181Z",
-      "markdown_path": "data/notebooklm_sources/【完全保存版】広告生成プロンプト大全｜KAWAI.md"
-    },
-    {
       "id": "1748985762",
       "url": "https://qiita.com/tateishi-t/items/03529caccd796a8a8dcf",
       "title": "Claude Codeのフックで「自分専用セカンドブレイン」を作る ─ 10本超のフック構成と実装例 - Qiita",
@@ -4459,23 +3991,6 @@
       "status": "unread",
       "analyzed_at": "2026-06-08T02:45:09.466Z",
       "markdown_path": "data/notebooklm_sources/Claude Codeのフックで「自分専用セカンドブレイン」を作る ─ 10本超のフック構成と実装例 - Qiita.md"
-    },
-    {
-      "id": "1748985714",
-      "url": "https://note.com/npaka/n/n3ad5e2331e00",
-      "title": "Google Colab CLI を試す｜npaka",
-      "summary": "提供されたソーステキストがCloudFrontの403エラーにより取得できない状態である\nタイトルからGoogle Colab CLIに関する検証記事であることが推測される\n本文が欠損しているため具体的なコマンドや実装プロセスの確認は不可能である",
-      "score": 5,
-      "read_now_reason": "記事コンテンツがエラーにより取得できないため、現時点で読むメリットはありません。",
-      "defer_reason": "CloudFrontによるアクセス制限（403エラー）が発生しており、具体的な技術情報が一切含まれていないため。",
-      "tags": [
-        "Google Colab",
-        "CLI",
-        "アクセスエラー"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-06-08T02:46:14.747Z",
-      "markdown_path": "data/notebooklm_sources/Google Colab CLI を試す｜npaka.md"
     },
     {
       "id": "1751517358",

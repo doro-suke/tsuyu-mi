@@ -1,13 +1,13 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/7/17 1:36:49
-対象記事数: 50 件 (未読かつHigh優先度)
+最終更新日: 2026/7/18 7:30:21
+対象記事数: 48 件 (未読かつHigh優先度)
 
 ---
 
 ## 1. [n8nで「三権分立AIエージェント」を構築したら、寝ている間にバグのないコードが勝手に完成した話 #LLM - Qiita](https://qiita.com/YushiYamamoto/items/9a53b6f957f809089881)
 - **優先度**: High
 - **スコア**: 92
-- **解析日時**: 2026/5/4
+- **解析日時**: 2026/5/5
 - **AI要約**:
   n8nをハブにClaude、GPT、Geminiの3つのLLMで役割を分散し、相互監視を行う自動開発手法を解説
   E2Bサンドボックスによる実行検証と最新モデルを組み合わせ、物理的な品質保証を自動化する仕組みを提示
@@ -167,7 +167,7 @@ ITPRODX.COM（https://itprodx.com/）にて、中堅企業向けに「n8n×AI」
 ## 2. [Claude Code を Level 5 まで育てたら、開発が「指示と確認だけ」になった — 実ファイル構成で解説 #個人開発 - Qiita](https://qiita.com/teppei19980914/items/8da88b33ffa8cf88dfa2)
 - **優先度**: High
 - **スコア**: 92
-- **解析日時**: 2026/5/4
+- **解析日時**: 2026/5/5
 - **AI要約**:
   Claude Codeを5段階で進化させ、開発を指示と確認に集約する実用的なファイル構成を提示。
   Hooks機能でテストやコード整形を自動化し、Agents機能で並行レビューを自動化する設計を詳述。
@@ -474,7 +474,7 @@ Claude Code は「使うツール」ではなく「育てるパートナー」�
 ## 3. [Claude Codeの「サブエージェント」完全ガイド——AIに仕事を分担させる公式テクニック｜小畑タカユキ│3ヶ月でAIエージェントを実装する人](https://note.com/no_ai_no_life/n/ndccab63ad022)
 - **優先度**: High
 - **スコア**: 92
-- **解析日時**: 2026/5/4
+- **解析日時**: 2026/5/5
 - **AI要約**:
   Claude Codeのサブエージェント機能の概要と、役割別の3つの組み込みタイプ（汎用、プラン、探索）を詳説
   並列作業や客観的レビューなど、開発効率を劇的に向上させる5つの具体的ユースケースと適用基準を提示
@@ -495,632 +495,10 @@ tools: Read, Grep, Glob
 
 ---
 
-## 4. [Claude Code vs Gemini CLI ｜ 実務的な使い分けガイド【2026年版】](https://zenn.dev/akasara/articles/8387058078309d)
+## 4. [Anthropic公式「skill-creator」完全活用ガイド — SKILL.md設計・eval最適化・チーム運用・トラブルシューティングまで全部入り #Anthropic - Qiita](https://qiita.com/TaichiEndoh/items/8b8ed06bb76a80bb34c2)
 - **優先度**: High
 - **スコア**: 92
-- **解析日時**: 2026/5/4
-- **AI要約**:
-  Claude Codeを実装の主戦力、Gemini CLIを大規模探索・調査の偵察役とする役割分担を推奨。
-  1Mコンテキストを持つGeminiで全体走査を行い、その結果をClaudeに渡す具体的な連携フローを提示。
-  カスタムスラッシュコマンドの作成やヘッドレス呼び出しによる、実務的なツール統合とコスト最適化手法に言及。
-- **今読む理由**: AI駆動開発において、Claudeの実装力とGeminiの広域探索力を組み合わせる具体的な「ハイブリッド構成」と設定例が示されており、開発効率とコストを即座に改善できるため。
-- **タグ**: #Claude Code, #Gemini CLI, #AI駆動開発, #開発ワークフロー
-
-### 本文
-なぜ「どちらか一択」という問いが間違いなのか
-一部の開発者コミュニティでは、「両方使う」という声が目立つ。
-「Claude Code vs Gemini CLI」という対立構図で語られることが多いが、実際の現場では一択ではなく、タスクの性質に応じて役割を分担するハイブリッド構成を取る例が見られる。
-本記事では、実際の開発者がどうツールを使い分けているかを、具体的な事例・ベンチマーク数値・コミュニティの声をもとに整理する。
-
-
- まず押さえる：2ツールの立ち位置
-┌─────────────────────────────────────────────────────────┐
-│                     あなたの開発環境                        │
-│                                                           │
-│  ┌──────────────────────┐   ┌──────────────────────┐     │
-│  │     Claude Code       │   │     Gemini CLI        │     │
-│  │                       │   │                       │     │
-│  │  ・複雑な実装         │   │  ・広域コード探索     │     │
-│  │  ・設計判断           │   │  ・Web検索            │     │
-│  │  ・テスト生成         │   │  ・CVE・changelog調査 │     │
-│  │  ・マルチファイル改修 │   │  ・試作・スクリプト   │     │
-│  │  ・MCP統合            │   │  ・Google Cloud系     │     │
-│  │                       │   │  ・無料枠で大量実行   │     │
-│  └──────────┬───────────┘   └───────────┬───────────┘     │
-│             │                            │                  │
-│             └────────────┬───────────────┘                  │
-│                          │                                  │
-│                  連携して使うのが最強                         │
-└─────────────────────────────────────────────────────────┘
-一言で言えば、「Claude Code は主戦力、Gemini CLI は偵察と補給」。
-
-
- 実測ベンチマーク：Composio が 10M トークン使って比べた結果
-【単発ベンチ】Composio が同一タスクを両ツールに課した実測比較（出典：DEV Community）。
-
-
-
-指標
-Claude Code
-Gemini CLI
-
-
-
-
-所要時間
-1時間17分
-2時間2分
-
-
-コスト
-$4.80
-$7.06
-
-
-入力トークン
-260.8K
-432K
-
-
-試行回数
-1回で成功
-複数回試行
-
-
-コード品質
-テスト構造化済み・本番品質
-良好だがテストが散乱
-
-
-UX
-スムーズ
-設定オプション少・出力が冗長
-
-
-
-
-結論：この実装タスクでは Claude Code が速度・コスト・品質の全指標で上回った。
-ただしこれは Composio 筆者による複雑な実装1件での比較。探索・調査タスクでの比較ではなく、一般性能の断定には使いすぎないこと。
-
-
-
- 3つの実際のハイブリッドワークフロー事例
-
- 事例① Flutter GetXバグ修正（byjos.dev）
-非同期エラー LateInitializationError のデバッグに両ツールを組み合わせた例。
-[ステップ1] Gemini CLI
-  └─ 1M+トークンでコードベース全体を走査
-  └─ エラー発生箇所を特定
-
-[ステップ2] 原因の絞り込み
-  └─ Get.put() と Get.lazyPut() の不一致を発見
-
-[ステップ3] Claude Code
-  └─ 実装を担当
-
-[ステップ4] Gemini CLI
-  └─ 最終レビュー（外部視点として）
-
-著者の言葉：「2つを組み合わせると、それぞれの合計を超える結果が出る」
-
-なぜGeminiが走査担当なのか：Gemini CLI は公式に 1M context window を提供しており、大規模コードベースを一度に読める。Claude Code も対応モデル・プランでは 1M context を利用可能だが、「広く拾う」フェーズを Gemini に任せるのがコスト面で合理的という判断。
-
-
- 事例② フロントエンドUIリデザイン（paddo.dev）
-paddo.dev では、~/.claude/commands/gemini.md を作成してカスタム slash command /gemini を自作し、Claude セッション内から Gemini CLI を呼び出す「2層構造」ワークフローを構築している。
-スクリーンショット撮影
-       ↓
-/gemini fix the spacing issues  ← カスタムコマンド経由でGeminiがビジュアル解析
-       ↓
-CSS修正案を出力
-       ↓
-Claude Codeが実装・整合性チェック
-       ↓
-完成
-
-
-
-作業種別
-担当
-理由
-
-
-
-
-画像・スクリーンショット解析
-Gemini CLI
-画像/PDF入力での視覚タスクが強い
-
-
-ランディングページ全体の分析
-Gemini CLI
-1Mコンテキストで全体を把握
-
-
-実装・コード品質チェック
-Claude Code
-構造化された出力・テスト生成
-
-
-
-
-注：/gemini は Claude の built-in コマンドではなく、paddo.dev が自作したカスタム slash command。
-
-
-
- 事例③ ヘッドレスモードでClaude内からGeminiをサブルーティン化
-最もシンプルな統合パターン。Claude Code のセッション内で以下を実行する。
-gemini -p "<分析してほしい内容>"
-この1行でGeminiに大規模分析を委ね、結果をClaude Codeが受け取って実装に使う。
-Composio 筆者は、この構成で以前は何度も失敗していたタスクを1回で通せたと述べている。Geminiの1Mコンテキストを、Claudeの「外部ツール」として使う形。
-
-
- タスク別の使い分け早見表
-
-
-
-タスク
-Claude Code
-Gemini CLI
-推奨
-
-
-
-
-非同期バグ・状態管理の修正
-◎
-△
-Claude
-
-
-大規模コードベース全体の走査
-△〜◎（プラン依存）
-◎（1M標準）
-Gemini（コスト面で合理的）
-
-
-フロントエンド・スクリーンショット修正
-○〜◎（UI検証・スクショ比較）
-◎（画像/PDF入力が強い）
-Gemini優位
-
-
-ユニットテスト自動生成・構造化
-◎
-△
-Claude
-
-
-スクリプト・小さなユーティリティ
-○
-◎（高速・無料枠）
-Gemini
-
-
-Web検索・CVE確認・changelog調査
-△
-◎
-Gemini
-
-
-Google Cloud・GKE系の調べもの
-△
-◎
-Gemini
-
-
-多段階タスク自動化（Playwright等）
-◎（MCP連携・成熟度高）
-○〜◎（公式MCP対応）
-Claude優位
-
-
-セキュリティレビュー・アーキテクチャ判断
-◎
-△
-Claude
-
-
-マルチファイルのリファクタリング
-◎
-△
-Claude
-
-
-
-
-表内の ◎△ は「得意条件」の目安。変化の速い製品のため、詳細は各公式ドキュメントを確認のこと。
-
-
-
- コミュニティの声（Hacker News #47582539）
-【コミュニティ観測】Ask HN スレッドで見られた傾向の要約（直接引用ではなく、複数コメントの観測まとめ）。
-
-
-大規模コードベースの検査を Gemini CLI に任せ、その結果を Claude に引き渡すという分担が複数のコメントで言及されていた。
-Claude はセキュリティ問題のキャッチやアーキテクチャ判断に優れているという声が見られた。一方 Gemini はトークン枯渇なく広く拾えるが、文脈の深さでは劣るという評価もあった。
-Google Cloud・GKE 系の調べものは Gemini をそのまま使うが、複雑なリファクタは Claude に回すという使い分けも報告されていた。
-「claude make the plan, and let gemini implement」のように役割を完全に分離するケースや、両方を並行して使うケースも見られた。
-
-スレッド全体を通じると、Claude 優位・Gemini は調査向き・両者併用といった声が混在しており、一定数の開発者が何らかのハイブリッド構成を試みている様子が読み取れる。
-
-
- 価格と仕様の現実
-【公式仕様】2026年4月11日確認。変更が頻繁なため、最新情報は各公式ページを参照。
-
-
-
-項目
-Claude Code
-Gemini CLI
-
-
-
-
-ライセンス
-プロプライエタリ
-オープンソース（Apache 2.0）
-
-
-最低コスト
-Pro $20/月〜（Claude Code含む） / Maxは$100/月〜
-無料枠あり
-
-
-無料枠
-なし
-60 req/min・1,000 req/day
-
-
-コンテキスト上限
-対応モデル・プランで 1M トークン利用可
-1M トークン（標準）
-
-
-MCP統合
-◎（成熟度が高い）
-○〜◎（公式MCP対応、Google Cloud連携が強い）
-
-
-マルチモーダル
-○〜◎（スクショ比較・UI検証が強い）
-◎（画像/PDF入力や視覚タスクで強みが出やすい）
-
-
-
-コスト最適化パターン：試作・探索・大量呼び出しは Gemini の無料枠で。本番実装・品質重視の作業は Claude Code に絞る。これで月次コストを抑えながら品質を担保できる。
-
-
- 「標準パターン」まとめ
-複数のソースで繰り返し確認された構成を4パターンに整理する。
-パターン1：探索→実装分割型
-─────────────────────────────────────
-Gemini CLI でコードベース全体を探索
-    ↓
-計画書・分析結果を Claude Code に引き渡し
-    ↓
-Claude Code が詳細実装を自律実行
-
-パターン2：カスタムスラッシュコマンド統合型
-─────────────────────────────────────
-~/.claude/commands/ にカスタムコマンドを自作
-Claude セッション内で必要な時だけ Gemini の能力を借りる
-実装は Claude が一貫して担当
-
-パターン3：ヘッドレス並行型
-─────────────────────────────────────
-gemini -p "<prompt>" を Claude から呼び出し
-Gemini をサブルーティンとして利用
-Gemini の 1M コンテキストを Claude の外部ツール化
-
-パターン4：コスト最適化型
-─────────────────────────────────────
-試作・探索 → Gemini（無料枠 60req/min・1000/day）
-本番実装  → Claude（品質とコスト効率を両立）
-
-
- まとめ：どう使い分けるか
-あなたのタスクは？
-       │
-       ├─ 広くコードを読みたい・調べたい
-       │    → Gemini CLI（1M コンテキスト、コスト面で有利）
-       │
-       ├─ Web検索・CVE・changelog確認
-       │    → Gemini CLI（ネイティブ統合）
-       │
-       ├─ 複雑な実装・リファクタ・テスト生成
-       │    → Claude Code（構造化出力・MCP連携）
-       │
-       ├─ アーキテクチャ判断・セキュリティレビュー
-       │    → Claude Code（推論の深さ）
-       │
-       └─ その両方が必要な大きなタスク
-            → Gemini で探索 → Claude で実装
-              （ハイブリッド構成）
-「どちらが優れているか」ではなく、「どの局面でどちらを使うか」という問いに変えると、答えは自然に出る。
-一部の開発者コミュニティでは、両ツールを組み合わせるワークフローが目立つ。複数のソースを横断して共通して見えた知見は、「Geminiで広く拾い、Claudeで深く掘る」という分担だ。
-
- 参考書籍
-本記事の「AIを使いこなす側に回る」という話題に関連して、手元で読み返しているClaude Code関連の書籍を挙げておきます。Claude Designを触る前段として、Claude Codeの作法を押さえておくとハンドオフ後の理解が段違いに楽になります。
-『実践Claude Code入門―現場で活用するためのAIコーディングの思考法』（西見公宏・吉田真吾・大嶋勇樹、技術評論社）
-Claude CodeとMCPを業務で回す前提の思考法にフォーカスした一冊。「ツールの使い方」ではなく「AIと一緒に開発する姿勢」寄りの内容なので、この記事で書いた"オーケストレーター側に回る"話と地続きで読めます。
-→ Amazonで見る
-『Claude CodeによるAI駆動開発入門』（平川知秀、技術評論社）
-環境構築から実際に動くWebアプリをハンズオンで組み立てる構成。Claude Designから Claude Code へのハンドオフを実務で回すなら、この本で扱っている「AIと協働するワークフロー」の土台感覚があると迷子になりにくいです。
-→ Amazonで見る
-
- 出典
-
-
-Anthropic — Plans & Pricing（価格情報）
-
-Claude Code Docs — モデル設定（コンテキスト上限）
-
-Google Cloud Docs — Gemini CLI（MCP対応）
-DEV Community（Composio）— I burnt 10M tokens to compare Claude Code and Gemini CLI
-byjos.dev — When AIs start gossiping about your code
-paddo.dev — Hybrid AI Workflows: Spawning Gemini from Claude Code
-Hacker News — Ask HN: Gemini CLI vs Claude Code #47582539
-sreeninet.wordpress.com — The Rise of CLI-Based AI Coding Agents
-shipyard.build — Claude Code vs Gemini CLI（January 2026）
-DataCamp — Gemini CLI vs Claude Code: Differences and Use Cases
-
----
-
-## 5. [Claude Code と Gemini CLI による全自動コードレビューループ](https://zenn.dev/azumag/articles/a0d375832747fb)
-- **優先度**: High
-- **スコア**: 92
-- **解析日時**: 2026/5/4
-- **AI要約**:
-  Claude CodeのStop Hookを利用し、Gemini CLIを自動起動してコードレビューを完結させる手法の提案
-  transcript(JSONL)からClaudeの最終出力を抽出し、Geminiにgit diffと併せて渡すシェルスクリプトを公開
-  レートリミット対応やタイムアウト管理、文字数制限など、自動ループを安定させるための実用的な実装例
-- **今読む理由**: AI駆動開発と自動化パイプライン構築に直結する内容であり、Claude CodeとGeminiを連携させる具体的なコードとフックの設定が明記されているため、即座に実装に適用できる。
-- **タグ**: #ClaudeCode, #GeminiCLI, #自動レビュー, #AIエージェント, #シェルスクリプト
-
-### 本文
-Claude Code の Stop Hook をトリガーに、Gemini CLI を呼んで自動でコードレビューしてもらいたいと思ってました。なぜ Stop なのか？ CLAUDE.md や途中の Hooks で Gemini CLI に対して対話を指示することもコード品質をあげる上で有効ですが、Claude Code の作業はそれはそれで一旦完結させて、その結果をレビューし、レビュー結果を Claude Code に戻して... というループを作って、人間が寝ている間にコードを洗練していって欲しい、実際はそんなにはうまくいかないだろうけれど、そんなロマンを追い求めたのです。
-
-細かいセットアップはリポジトリを参照のこと。長いですが一応 hooks で呼ぶシェルスクリプトは以下です。
-#!/bin/bash
-
-# Cleanup function for temporary files
-cleanup() {
-    [ -n "$TEMP_STDOUT" ] && rm -f "$TEMP_STDOUT" 
-    [ -n "$TEMP_STDERR" ] && rm -f "$TEMP_STDERR"
-}
-
-# Function to extract last assistant message from JSONL transcript
-extract_last_assistant_message() {
-    local transcript_path="$1"
-    local line_limit="${2:-0}"  # 0 means no limit
-    
-    if [ ! -f "$transcript_path" ]; then
-        return 1
-    fi
-    
-    local jq_input
-    if [ "$line_limit" -gt 0 ]; then
-        jq_input=$(tail -n "$line_limit" "$transcript_path")
-    else
-        jq_input=$(cat "$transcript_path")
-    fi
-    
-    echo "$jq_input" | jq -r --slurp '
-        map(select(.type == "assistant")) |
-        if length > 0 then
-            .[-1].message.content[]? |
-            select(.type == "text") |
-            .text
-        else
-            empty
-        end
-    ' 2>/dev/null
-}
-
-# Set trap for cleanup on script exit
-trap cleanup EXIT
-
-INPUT=$(cat)
-
-TRANSCRIPT_PATH=$(echo "$INPUT" | jq -r '.transcript_path')
-if [ -f "$TRANSCRIPT_PATH" ]; then
-    LAST_MESSAGES=$(extract_last_assistant_message "$TRANSCRIPT_PATH" 100)
-    if [ -n "$LAST_MESSAGES" ] && echo "$LAST_MESSAGES" | grep -q "REVIEW_COMPLETED"; then
-        exit 0
-    fi
-    if [ -n "$LAST_MESSAGES" ] && echo "$LAST_MESSAGES" | grep -q "REVIEW_RATE_LIMITED"; then
-        exit 0
-    fi
-fi
-
-PRINCIPLES=$(cat << 'EOF'
-## 原則
-Gemini のレビューにて改善点を指摘された場合は、その改善点に従って修正せよ。
-Gemini から、これ以上の改善点は特に無しとレビューをもらったときのみ「REVIEW_COMPLETED」とだけ発言せよ。
-Gemini の Rate Limit で制限された場合は 「REVIEW_RATE_LIMITED」とだけ発言せよ。
-----
-EOF
-)
-
-CLAUDE_SUMMARY=""
-if [ -f "$TRANSCRIPT_PATH" ]; then
-    # Extract Claude's last summary from transcript (JSONL format)
-    # NOTE: This depends on Claude Code's transcript JSONL structure
-    # If Claude Code changes its output format, this may need updates
-    CLAUDE_SUMMARY=$(extract_last_assistant_message "$TRANSCRIPT_PATH" 0)
-    
-    # Check if extraction was successful
-    if [ -z "$CLAUDE_SUMMARY" ]; then
-        echo "[gemini-review-hook] Warning: Failed to extract Claude summary from transcript (no assistant messages found)" >&2
-    fi
-    
-    # Limit CLAUDE_SUMMARY to 1000 characters to avoid token limit
-    if [ ${#CLAUDE_SUMMARY} -gt 1000 ]; then
-        # Try to preserve important parts: first 400 chars + last 400 chars
-        # Only if text is longer than 800 chars to avoid overlap
-        if [ ${#CLAUDE_SUMMARY} -gt 800 ]; then
-            FIRST_PART=$(echo "$CLAUDE_SUMMARY" | head -c 400)
-            LAST_PART=$(echo "$CLAUDE_SUMMARY" | tail -c 400)
-            CLAUDE_SUMMARY="${FIRST_PART}...(中略)...${LAST_PART}"
-        else
-            # For texts between 800-1000 chars, just truncate
-            CLAUDE_SUMMARY=$(echo "$CLAUDE_SUMMARY" | head -c 1000)
-            CLAUDE_SUMMARY="${CLAUDE_SUMMARY}...(truncated)"
-        fi
-    fi
-fi
-
-REVIEW_PROMPT=$(cat << EOF
-作業内容をレビューして、改善点や注意点を指摘してください。
-重要: 自分で git diff を実行して作業ファイルの具体的な変更内容も把握してからレビューを行ってください。
-
-## Claude の最後の発言（作業まとめ）:
-${CLAUDE_SUMMARY}
-EOF
-)
-
-# Try Pro model first with timeout and process monitoring
-TEMP_STDOUT=$(mktemp)
-TEMP_STDERR=$(mktemp)
-GEMINI_TIMEOUT=120
-
-if command -v timeout >/dev/null 2>&1; then
-    timeout ${GEMINI_TIMEOUT}s bash -c "echo '$REVIEW_PROMPT' | gemini -s -y" >"$TEMP_STDOUT" 2>"$TEMP_STDERR"
-    GEMINI_EXIT_CODE=$?
-else
-    # Manual timeout management 
-    echo "$REVIEW_PROMPT" | gemini -s -y >"$TEMP_STDOUT" 2>"$TEMP_STDERR" &
-    GEMINI_PID=$!
-    
-    # Wait for process with timeout
-    WAIT_COUNT=0
-    GEMINI_EXIT_CODE=124 # default timeout
-    while [[ $WAIT_COUNT -lt $GEMINI_TIMEOUT ]]; do
-        if ! kill -0 $GEMINI_PID 2>/dev/null; then
-            wait $GEMINI_PID
-            GEMINI_EXIT_CODE=$?
-            break
-        fi
-        sleep 1
-        ((WAIT_COUNT++))
-    done
-    
-    # Kill if timed out
-    if [[ $WAIT_COUNT -ge $GEMINI_TIMEOUT ]]; then
-        kill -TERM $GEMINI_PID 2>/dev/null || true
-        sleep 2
-        kill -KILL $GEMINI_PID 2>/dev/null || true
-        wait $GEMINI_PID 2>/dev/null || true
-        GEMINI_EXIT_CODE=124
-    fi
-fi
-
-GEMINI_REVIEW=$(cat "$TEMP_STDOUT" 2>/dev/null)
-ERROR_OUTPUT=$(cat "$TEMP_STDERR" 2>/dev/null)
-
-# Check for rate limit errors
-IS_RATE_LIMIT=false
-if [[ $GEMINI_EXIT_CODE -eq 124 ]]; then
-    # Timeout - treat as rate limit
-    IS_RATE_LIMIT=true
-elif [[ $GEMINI_EXIT_CODE -ne 0 ]] || [[ -z "$GEMINI_REVIEW" ]]; then
-    if [[ "$ERROR_OUTPUT" =~ "status 429" ]] || \
-       [[ "$ERROR_OUTPUT" =~ "rateLimitExceeded" ]] || \
-       [[ "$ERROR_OUTPUT" =~ "Quota exceeded" ]] || \
-       [[ "$ERROR_OUTPUT" =~ "RESOURCE_EXHAUSTED" ]] || \
-       [[ "$ERROR_OUTPUT" =~ "Too Many Requests" ]] || \
-       [[ "$ERROR_OUTPUT" =~ "Gemini 2.5 Pro Requests" ]]; then
-        IS_RATE_LIMIT=true
-    fi
-fi
-
-if [[ $IS_RATE_LIMIT == "true" ]]; then
-    # Rate limited - try Flash model
-    >&2 echo "[gemini-review-hook] Rate limit detected, switching to Flash model..."
-    
-    if command -v timeout >/dev/null 2>&1; then
-        timeout ${GEMINI_TIMEOUT}s bash -c "echo '$REVIEW_PROMPT' | gemini -s -y --model=gemini-2.5-flash" >"$TEMP_STDOUT" 2>"$TEMP_STDERR"
-        GEMINI_EXIT_CODE=$?
-    else
-        echo "$REVIEW_PROMPT" | gemini -s -y --model=gemini-2.5-flash >"$TEMP_STDOUT" 2>"$TEMP_STDERR" &
-        FLASH_PID=$!
-        
-        WAIT_COUNT=0
-        GEMINI_EXIT_CODE=124
-        while [[ $WAIT_COUNT -lt $GEMINI_TIMEOUT ]]; do
-            if ! kill -0 $FLASH_PID 2>/dev/null; then
-                wait $FLASH_PID
-                GEMINI_EXIT_CODE=$?
-                break
-            fi
-            sleep 1
-            ((WAIT_COUNT++))
-        done
-        
-        if [[ $WAIT_COUNT -ge $GEMINI_TIMEOUT ]]; then
-            kill -TERM $FLASH_PID 2>/dev/null || true
-            sleep 2
-            kill -KILL $FLASH_PID 2>/dev/null || true
-            wait $FLASH_PID 2>/dev/null || true
-            GEMINI_EXIT_CODE=124
-        fi
-    fi
-    
-    GEMINI_REVIEW=$(cat "$TEMP_STDOUT" 2>/dev/null)
-    if [[ $GEMINI_EXIT_CODE -ne 0 ]] || [[ -z "$GEMINI_REVIEW" ]]; then
-        GEMINI_REVIEW="REVIEW_RATE_LIMITED"
-    fi
-elif [[ $GEMINI_EXIT_CODE -ne 0 ]]; then
-    # Other error
-    exit 0
-fi
-
-ESCAPED_PRINCIPLES=$(echo "$PRINCIPLES" | jq -Rs .)
-ESCAPED_REVIEW=$(echo "$GEMINI_REVIEW" | jq -Rs .)
-
-# Note: Cleanup is handled by trap on script exit
-
-COMBINED_REASON=$(echo -e "$GEMINI_REVIEW\n\n$PRINCIPLES" | jq -Rs .)
-cat << EOF
-{
-  "decision": "block",
-  "reason": $COMBINED_REASON
-}
-EOF
-シェルじゃなくてもっと簡潔に書ける何かあっただろとは思うんですが、何かインストールするのもめんどいのでシェルで作りました。
-基本的に以下記事の hooks の使い方を真似させていただきました。そこに Gemini レビュー固有の設定を入れていった感じです。
-
-
- 重要ポイント
-
- Stop hooks の戻り値に "decision": "block" をつかう
-詳しくは上記記事を参考にしたほうがわかりやすいのですが、これを使うと stop 時に claude が停止せず、 reason の指示をみて再度動いてくれます。この reason に gemini のレビューを入れることによって、フィードバックループを作り出します。
-
- Gemini　を呼び出すとき -s -y をつける
-git diff を見て欲しい場合は必須になります。diff　がないと claude の作業報告に対してだけのレビューになるため、レビューの質が落ちるので見て欲しいのですが、-y オプションをつけないと、非対話モードでは「diffを見ます」だけ返ってきて終わることがよくありました。-y をつけると比較的ちゃんと diff をみてからレビューしてくれる様になります。 -s はサンドボックスモード。保険でつけときます。
-
- レートリミットに対応
-gemini-2.5-pro のレートリミットに引っかかると、-p の非対話モードで呼び出したときの応答に時間がかかる様になり、最後にレートリミットエラーが返ってきます。この場合は　--model で gemini-2.5-flash を指定すれば回避可能なので、スクリプトの処理としてレートリミットを検知して、--model 指定するようにしてあります。そのためにちょっと複雑なプロセス監視をしています。
-
- プロンプト
-微妙な違いで gemini は解釈をかえて意味わからない挙動をするので、試行錯誤の結果、今使っているプロンプトがそれなりによいですが、改善の余地ありです。なかなかレビューラリーが終了しない、というか無限ループに近いので、人によっては終了条件をゆるくするのもありかもしれません。
-
- 動作例
-わりかしうまくいっています。
-
-
-
- おわりに
-寝ている間もレートリミットまで限界に自動で動かしたい、というケースはあまり多くないとは思いますし、朝起きて見てみたらとんでもない謎のものが出来上がってる可能性もあるのですが、ロマンを感じてやってみました。gemini レビューに限らず、この stop hook で decision block を使って再起的に claude を働かせる方法は、設定の仕方によっては、github の issue が空になるまで全自動で動かすこともでき,寝てても全部開発が実現するわけで、なかなか面白い試みかなと思っています。終了条件が LLM 頼りなのが怖すぎるところではありますが、まあ、stop hook は Esc でもキャンセルできるし、常用する hook でもないのはそうでしょう。
-ではごきげんよう。
-
----
-
-## 6. [Anthropic公式「skill-creator」完全活用ガイド — SKILL.md設計・eval最適化・チーム運用・トラブルシューティングまで全部入り #Anthropic - Qiita](https://qiita.com/TaichiEndoh/items/8b8ed06bb76a80bb34c2)
-- **優先度**: High
-- **スコア**: 92
-- **解析日時**: 2026/5/7
+- **解析日時**: 2026/5/8
 - **AI要約**:
   Anthropic公式のスキル構築支援ツール「skill-creator」の設計と運用の詳細解説
   スキルの自動評価（eval）機能により、トリガー率向上や品質改善のループを自動化可能
@@ -2037,10 +1415,10 @@ X：@endoh_taichi
 
 ---
 
-## 7. [【完全版】Claude Code運用40選｜KAWAI](https://note.com/kawaidesign/n/nce2f82c62f1f)
+## 5. [【完全版】Claude Code運用40選｜KAWAI](https://note.com/kawaidesign/n/nce2f82c62f1f)
 - **優先度**: High
 - **スコア**: 92
-- **解析日時**: 2026/5/7
+- **解析日時**: 2026/5/8
 - **AI要約**:
   Claude Codeを対話ツールではなく「自律的に動作する作業環境」として再設計する40の手法を提示
   CLAUDE.md、Skills、Hooksを用いた文脈の外部化と、安全なコマンド実行の自動制御方法を解説
@@ -2053,10 +1431,10 @@ Claude Codeは、便利なチャットではありません。設定、文脈、
 
 ---
 
-## 8. [DESIGN.mdは「どんなサイトもスキャンして再構築できる」のか — advanced-design-mdによる既存3手段の検証と再設計](https://zenn.dev/marycache/articles/03011f881e36f7)
+## 6. [DESIGN.mdは「どんなサイトもスキャンして再構築できる」のか — advanced-design-mdによる既存3手段の検証と再設計](https://zenn.dev/marycache/articles/03011f881e36f7)
 - **優先度**: High
 - **スコア**: 92
-- **解析日時**: 2026/5/7
+- **解析日時**: 2026/5/8
 - **AI要約**:
   AI用デザイン仕様書「DESIGN.md」の抽出と生成を統合するツールキットの設計・検証の記録。
   機械的観測、意味付け解釈、要求仕様の3層構造により、AIによる推測と事実の混同を防止する設計。
@@ -3927,7 +3305,7 @@ anthropics/skills Issue #1008 (2026). frontend-design: consider consuming/produc
 
 ---
 
-## 9. [Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita](https://qiita.com/ot12/items/06420caf41a34a910c53)
+## 7. [Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita](https://qiita.com/ot12/items/06420caf41a34a910c53)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/12
@@ -4216,7 +3594,7 @@ Claude Code 公式ドキュメント
 
 ---
 
-## 10. [Claude Code でスマホアプリ個人開発を加速する実践ガイド【React Native / Expo】 #Firebase - Qiita](https://qiita.com/similarmetal/items/9847e0b0b85024a29179)
+## 8. [Claude Code でスマホアプリ個人開発を加速する実践ガイド【React Native / Expo】 #Firebase - Qiita](https://qiita.com/similarmetal/items/9847e0b0b85024a29179)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/14
@@ -4644,7 +4022,7 @@ TypeScript の資産を活かしたい・Web 開発経験者が多いチーム�
 
 ---
 
-## 11. [Claude Codeのトークン消費を半減させる5フェーズ運用術](https://zenn.dev/yamato_snow/articles/8eff833984b842)
+## 9. [Claude Codeのトークン消費を半減させる5フェーズ運用術](https://zenn.dev/yamato_snow/articles/8eff833984b842)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/14
@@ -5023,7 +4401,7 @@ Sonnetをデフォルトに（Opusは必要な時だけ）
 
 ---
 
-## 12. [Antigravityを事故らせない運用設計｜hirokaji](https://note.com/tasty_dunlin998/n/n0dd53c5c4406)
+## 10. [Antigravityを事故らせない運用設計｜hirokaji](https://note.com/tasty_dunlin998/n/n0dd53c5c4406)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/14
@@ -5095,7 +4473,7 @@ Antigravityは強力ですが、Rules を増やせば安全になる道具では
 
 ---
 
-## 13. [Claude Codeのコスト爆発を3つのhookで防ぐ——月$200を超えないための安全装置 - Qiita](https://qiita.com/yurukusa/items/b79edb07bebc794a4a17)
+## 11. [Claude Codeのコスト爆発を3つのhookで防ぐ——月$200を超えないための安全装置 - Qiita](https://qiita.com/yurukusa/items/b79edb07bebc794a4a17)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/24
@@ -5453,7 +4831,7 @@ Claude Code Incident Postmortems (Gumroad、 ¥4,350)
 
 ---
 
-## 14. [Claude Codeのコンテキスト枯渇に立ち向かう──大規模リファクタリングのセッション設計](https://zenn.dev/miyan/articles/claude-code-context-exhaustion-strategy)
+## 12. [Claude Codeのコンテキスト枯渇に立ち向かう──大規模リファクタリングのセッション設計](https://zenn.dev/miyan/articles/claude-code-context-exhaustion-strategy)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/26
@@ -6028,7 +5406,7 @@ Claude Code のトークン消費を最適化する（ECC シリーズ）
 
 ---
 
-## 15. [Claude Code「Dynamic Workflows」完全ガイド：6つのパターンと14ステップ](https://zenn.dev/aria3/articles/claude-code-dynamic-workflows-6-patterns)
+## 13. [Claude Code「Dynamic Workflows」完全ガイド：6つのパターンと14ステップ](https://zenn.dev/aria3/articles/claude-code-dynamic-workflows-6-patterns)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/6/8
@@ -6239,7 +5617,7 @@ Dynamic Workflowsはまだベストプラクティスが発展中の機能です
 
 ---
 
-## 16. [Claude Code Hooks×Routines×Workflowで開発自動化パイプラインを構築する](https://zenn.dev/0h_n0/articles/3a4fdda1d5c743)
+## 14. [Claude Code Hooks×Routines×Workflowで開発自動化パイプラインを構築する](https://zenn.dev/0h_n0/articles/3a4fdda1d5c743)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/6/16
@@ -7008,7 +6386,7 @@ Anthropicが提唱する効果的なAIエージェント設計パターン解説
 
 ---
 
-## 17. [AIに『3人の専門家会議』をさせる ― マルチエージェントAI鏡『トリアージュ』を支える4つの実装](https://zenn.dev/kenya0126/articles/triage-multiagent-mirror)
+## 15. [AIに『3人の専門家会議』をさせる ― マルチエージェントAI鏡『トリアージュ』を支える4つの実装](https://zenn.dev/kenya0126/articles/triage-multiagent-mirror)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/6/27
@@ -7286,7 +6664,7 @@ LLMアプリは「賢いプロンプト1発」になりがちですが、役割�
 
 ---
 
-## 18. [差分リスクでレビュー方式を自動振り分け：Claude Codeで作る3層コードレビュー・オーケストレーター【6体AI＋テンプレ全公開】 - Qiita](https://qiita.com/4q_sano/items/1bed8709843fe6811f32)
+## 16. [差分リスクでレビュー方式を自動振り分け：Claude Codeで作る3層コードレビュー・オーケストレーター【6体AI＋テンプレ全公開】 - Qiita](https://qiita.com/4q_sano/items/1bed8709843fe6811f32)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/7/6
@@ -8533,7 +7911,7 @@ Claude Code実務運用シリーズ ― 暴走させない、から仕組みに�
 
 ---
 
-## 19. [Eccaceb](https://qiita.com/hrk-m/items/855132ecc5ace8164b95)
+## 17. [Eccaceb](https://qiita.com/hrk-m/items/855132ecc5ace8164b95)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/7/16
@@ -8791,7 +8169,7 @@ main にマージ → CI がそのコードから要件・フローを生成し�
 
 ---
 
-## 20. [小さいトークン枠でAIエージェントを回すための委任アーキテクチャ設計【Claude Code】](https://zenn.dev/cutlet_of_pork/articles/llm-token-saving-delegation-design)
+## 18. [小さいトークン枠でAIエージェントを回すための委任アーキテクチャ設計【Claude Code】](https://zenn.dev/cutlet_of_pork/articles/llm-token-saving-delegation-design)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/7/16
@@ -8974,7 +8352,7 @@ HANDOFF.md 運用
 
 ---
 
-## 21. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
+## 19. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/7/13
@@ -9012,10 +8390,10 @@ HANDOFF.md 運用
 
 ---
 
-## 22. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
+## 20. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
 - **優先度**: High
 - **スコア**: 88
-- **解析日時**: 2026/5/4
+- **解析日時**: 2026/5/5
 - **AI要約**:
   AI指示書を動き方・個別タスク・見た目の3層に分離し、仕様として定義する手法を解説している。
   DESIGN.mdはYAMLトークンとCLI検証ツールを備え、AIによるUI生成の一貫性を機械的に保証する。
@@ -9259,10 +8637,10 @@ AIに渡すルールは、自然言語ドキュメント1枚から三つの仕�
 
 ---
 
-## 23. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
+## 21. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
 - **優先度**: High
 - **スコア**: 88
-- **解析日時**: 2026/5/4
+- **解析日時**: 2026/5/5
 - **AI要約**:
   Claude Codeの振る舞いを制御するSkillの定義方法とYAMLフロントマターの各フィールドを詳説。
   個人環境やプロジェクト単位での配置ルール、および引数渡しや自動発動の仕組みを具体的に解説。
@@ -9767,10 +9145,10 @@ Skillは「自分専用のClaude Code」を育てることに近いと感じて�
 
 ---
 
-## 24. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
+## 22. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
 - **優先度**: High
 - **スコア**: 88
-- **解析日時**: 2026/5/4
+- **解析日時**: 2026/5/5
 - **AI要約**:
   単一AIエージェントが陥る「コンテキスト不安」と自己評価の甘さを構造的に解決する手法を解説
   Anthropic公式の「計画・生成・評価」の3分離設計により、生成物の品質と信頼性を大幅に向上させる
@@ -10272,381 +9650,10 @@ Building agents with the Claude Agent SDK - Anthropic Engineering
 
 ---
 
-## 25. [【CLAUDE.mdに貼るだけ】Claude Code x Gemini CLI x 人間による、三位一体開発術](https://zenn.dev/tksfjt1024/articles/5e88385bfb69fd)
+## 23. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
 - **優先度**: High
 - **スコア**: 88
-- **解析日時**: 2026/5/4
-- **AI要約**:
-  Claude Codeを「実行者」、Geminiを「技術調査役」として役割分担させる三位一体の開発手法
-  CLAUDE.mdに具体的な指示を追記するだけで、AI間での自律的な壁打ちとタスク分散が可能になる
-  Gemini MCPを活用しWeb検索を外出しすることで、Claudeのトークン消費と無限ループを抑制
-- **今読む理由**: AI駆動開発におけるClaudeのトークン制限や推論のループを、Geminiとの連携で解決する具体的な設定（CLAUDE.md）が明記されており、即座に導入可能であるため。
-- **タグ**: #AI駆動開発, #ClaudeCode, #GeminiCLI, #MCP, #CLAUDE.md
-
-### 本文
-TL;DR
-CLAUDE.mdを書き換えるだけで、意思決定と最終成果物のチェック以外をすべてAIにお任せすることができます (できるかもしれません)
-
-
-
- はじめに
-Gemini CLI がリリースされたものの現時点で Claude Codeのような「定額使い放題プラン」がないため、どうにか両者の強みを活かせないか考えていました。
-そこで、各社のAIに壁打ちをしつつ試行錯誤していたところ、 “人間・Claude・Gemini” の三位一体フレームワーク を簡単に実現できる方法を思いつき、実際に良かったため備忘録として残しておきます。
-このフレームワークを定量的に評価するのは難しいのですが、Claude Code が沼にはまって抜け出せなくなる頻度が減ったような気がします。
-と書いていて気がつきましたが、MAXプラン ($200の方) にしても到達しまくっていた Claude usage limit reached. Your limit will reset at ~ (Asia/Tokyo). を全然見なくなった気がします。もしや効果絶大・・・？
-なお、この方法を 四位一体開発術 バージョンへ昇格させた記事はこちらを、
-
-N位一体開発術 バージョンへ昇格させた記事はこちらをご覧ください。
-
-
-
- 本記事の内容
-
-三位一体フレームワークの概要
-導入手順 (Claude Code、Gemini CLIのインストール)
-CLAUDE.md (一部抜粋)
-
-
-
- 三位一体フレームワーク
-三者のそれぞれの強み・責任領域をフレームワークに落とし込みました。
-
-
-
-ロール
-得意領域
-
-
-
-
-人間
-目的・要件・最終ゴールの定義・意思決定
-
-
-Claude Code
-正確な計画力・高品質な実装力
-
-
-Gemini CLI
-優秀な Web 検索・多角的な視点からの助言・技術的検証
-
-
-
-
- 壁打ちの効果
-Gemini の強みを活かすという目的以外に、Claudeに言語化を促すことで、改めて思考を整理させる効果も期待しています。
-なお、ClaudeがGeminiを実際に使っている様子を眺めると、Geminiに投げているプロンプトが秀逸すぎて結構感動します。勉強になる〜
-
-
-
- トークン消費の分散効果について
-付随する効果として、調査をGeminiに丸投げする分、Claude側のトークン消費削減が期待できます。
-gemini -p <質問内容> のコマンドがテキストを結構短め (内容は濃いめ) で返してくれるのもポイントです。
-
- それぞれの苦手領域
-得意領域があれば、苦手な領域もあります。それぞれのツールが、苦手領域について自分で自覚を持っていない、というのが痛いところ。
-なお、かなり個人的な意見を含みます🙇
-
- Claude Code
-計画力・実装力に優れる反面、意志があまりにない。
-「それは違うのでは？」に対して「おっしゃる通りです。違います」と、明らかに深く考えないで即答しがち。もうちょっと考えてくれ笑。
-そして、1回沼にハマると永遠にハマり続ける。無限auto-compact、挙げ句の果てにRate Limitに。
-
- Gemini CLI
-俯瞰して情報を整理する力はあるが、実装力は・・・
-なんでそこ直した？？？最初の目的はどこへ？？？となる。
-質問しただけなのに勝手にコードいじり始めるのもやめてくれ。
-
- 人間 (エンジニア)
-なんでも効率化・自動化・仕組み化したくなってしまう生き物です。あとは頼んだ。
-(Claude Codeのアウトプットをいちいち細かくレビューしてゴールへ導くのがめんどくさいという意味です)
-
-
- 導入手順
-一応書いておきます。
-# Claude Codeのインストール
-$ npm install -g @anthropic-ai/claude-code
-
-# Gemini CLIのインストール
-$ npm install -g @google/gemini-cli
-
-# Gemini CLI MCPの追加 (推奨)
-# plan modeではBashツールが利用不可っぽいので、MCPの方が良さそうです
-$ claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool
-Gemini CLI MCPはこちらを利用しています
-
-
-
- CLAUDE.md (一部抜粋、2025/07/03更新)
-以下を CLAUDE.md に含めるだけです。
-なんとなくですが、上の方に書くと良いでしょう。
-意外と思ったような挙動をしないことがあり、改善して随時更新しています。
-## 【MUST GLOBAL】Gemini活用（プロジェクトのCLAUDE.mdより優先）
-
-### 三位一体の開発原則
-人間の**意思決定**、Claude Codeの**分析と実行**、Gemini MCPの**検証と助言**を組み合わせ、開発の質と速度を最大化する：
-- **人間 (ユーザー)**：プロジェクトの目的・要件・最終ゴールを定義し、最終的な意思決定を行う**意思決定者**
-  - 反面、具体的なコーディングや詳細な計画を立てる力、タスク管理能力ははありません。
-- **Claude Code**：高度なタスク分解・高品質な実装・リファクタリング・ファイル操作・タスク管理を担う**実行者**
-  - 指示に対して忠実に、順序立てて実行する能力はありますが、意志がなく、思い込みは勘違いも多く、思考力は少し劣ります。
-- **Gemini MCP**：API・ライブラリ・エラー解析など**コードレベル**の技術調査・Web検索 (Google検索) による最新情報へのアクセスを行う**コード専門家**
-  - ミクロな視点でのコード品質・実装方法・デバッグに優れますが、アーキテクチャ全体の設計判断は専門外です。
-
-### 壁打ち先の自動判定ルール
-- **ユーザーの要求を受けたら即座に壁打ち**を必ず実施
-- 壁打ち結果は鵜呑みにしすぎず、1意見として判断
-- 結果を元に聞き方を変えて多角的な意見を抽出するのも効果的
-
-### 主要な活用場面
-1. **実現不可能な依頼**: Claude Code では実現できない要求への対処 (例: `最新のニュース記事を取得して`)
-2. **前提確認**: 要求の理解や実装方針の妥当性を確認 (例: `この実装方針で要件を満たせるか確認して`)
-3. **技術調査**: 最新情報・エラー解決・ドキュメント検索 (例: `Rails 7.2の新機能を調べて`)
-4. **設計立案**: 新機能の設計・アーキテクチャ構築 (例: `認証システムの設計案を作成して`)
-5. **問題解決**: エラーや不具合の原因究明と対処 (例: `このTypeScriptエラーの解決方法を教えて`)
-6. **コードレビュー**: 品質・保守性・パフォーマンスの評価 (例: `このコードの改善点は？`)
-7. **計画立案**: タスク分解・実装方針の策定 (例: `ユーザー認証機能を実装するための計画を立てて`)
-8. **技術選定**: ライブラリ・フレームワークの比較検討 (例: `状態管理にReduxとZustandどちらが適切か？`)
-9. **リスク評価**: 実装前の潜在的問題の洗い出し (例: `この実装のセキュリティリスクは？`)
-10. **設計検証**: 既存設計の妥当性確認・改善提案 (例: `現在のAPI設計の問題点と改善案は？`)
-
-
- おわりに
-この方法は、Gemini以外にも簡単に拡張可能なので、また模索していきたいと思っています。
-食わず嫌いしないでいろんなツール試していかないとだ……🥹
-
-
- 参考
-
-Gemini CLI: https://github.com/google-gemini/gemini-cli
-
-Gemini CLI MCP: https://github.com/jamubc/gemini-mcp-tool
-
-Claude Code: https://docs.anthropic.com/claude-code
-
----
-
-## 26. [Gemini CLIとClaude Codeによるピンポンプログラミング](https://zenn.dev/yonekubo/articles/3a2da69cacaa73)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/5/4
-- **AI要約**:
-  Gemini CLIとClaude Codeを連携させ、AIエージェント間でTDD（テスト駆動開発）を行う手法の解説
-  Claude Codeの非対話モードやセッションID再開機能を活用し、プログラムから制御する具体的な実装案
-  役割分担、許可ツール、ワークフローを定義したプロンプト（GEMINI.md）の具体的な構成を提示
-- **今読む理由**: AI駆動開発において、テスト作成と実装を別々のエージェントに担当させるマルチエージェント・オーケストレーションの具体例であり、Claude CodeのCLIオプションを活用した自動化パイプライン構築に即座に活用できるため。
-- **タグ**: #AI駆動開発, #ClaudeCode, #TDD, #自動化パイプライン, #GeminiCLI
-
-### 本文
-TL;DR
-本記事では、Gemini CLIとClaude Codeとを用いて、AIコーディングエージェント同士でピンポンプログラミングを実行させる方法について解説します。
-
- ピンポンプログラミングとは
-ピンポンプログラミングは、テスト駆動開発（TDD）をペアプログラミングで実行する手法です。
-卓球のラリーのように役割を交代しながら開発を進めることからその名が付けられました。
-以下の2つの役割を交互に担当します。
-
-失敗するテストコードを書く
-そのテストをパスする最小限のコードを書く
-
-もちろん、テストがパスするようになったら必要に応じてコードのリファクタリングも行います。
-
- 今回の技術的な構成
-今回は、ピンポンプログラミングの2つの役割をそれぞれAIコーディングエージェントに担当させます。
-
-失敗するテストコードを書く役割: Gemini CLI
-テストをパスするコードを書く役割: Claude Code
-
-ユーザーとのインターフェースになるのはGemini CLIです。開発ワークフローや諸々のルールはGEMINI.mdに記載します。Claude Codeとのやりとりは、Claude Code SDK（コマンドライン版の非対話モード）を利用します。
-
- GEMINI.md の記載内容（抜粋）
-全文はちょっと長いので、記事の末尾に載せています。
-
- 開発ワークフロー
-正しいTDDのやり方を引き出すマジカルフレーズ t-wada を使ってます。
-# 開発ワークフロー
-- t-wadaさんのやり方に従う
-- AI(あなた)は Ping-Pong Programming における、失敗するテストコードを書く役割を担う
-- テストをパスするコードを書く実装者は別のAIであり、AI(あなた)自身がコードを実装することは強く禁止する
-- 一度に一つのテストケースを作成し、実装者に指示を出す
-- もっともシンプルなテストケースから始め、段階的に複雑なテストケースを追加していく
-- AI(あなた)は、テストコード以外のコードは絶対に書いてはいけない
-
- Claude Codeの非対話モード
--p オプションをつけると非対話モードでClaude Codeを起動できます。--resume オプションでセッションIDを付与することで、会話を継続させるのがポイントです（会話履歴がコンテキストに含まれるようになります）。
-## コマンド
-- Claude Codeの非対話モードを用いる
-
-```bash
-% claude -p "指示" --output-format=json --system-prompt "システムプロンプト" --allowedTools "許可されたツール" 
-```
-
-- 出力結果のJSONには "session_id" が含まれるので、次回からはセッションIDを指定してセッションを再開する
-
-```bash
-% claude -p "指示" --output-format=json --resume <session_id> --system-prompt "システムプロンプト" --allowedTools "許可されたツール"
-```
-
- ツールの使用（Claude Code）
-非対話モードで呼び出すClaude Codeがタスクを遂行する上で必要なパーミッションを一通り指定しています。面倒なら、自己責任のもと、 --dangerously-skip-permissions を指定してもいいですが。
-## 許可されたツール
-`--allowedTools` オプションを使用して、以下のツールを許可する。毎回以下の全てのツールを指定すること。
-```
-Read
-ReadFile
-Edit
-MultiEdit
-WriteFile
-DeleteFile
-Grep
-LS
-Glob
-Bash(npm run:*)
-Bash(npm test)
-Bash(cat:*)
-Bash(ls:*)
-Bash(tree:*)
-Bash(find:*)
-Bash(mkdir:*)
-```
-
-オプション指定例
-```
---allowedTools "Read,Edit,Bash(ls:*),Bash(npm run *)"
-```
-
- FizzBuzzでサンプル実装
-ターミナルからGemini CLIを起動します。
-% gemini
-指示を出します。
-> FizzBuzzを実装して。
-ちゃんとt-wadaさんのやり方に従って、実装者（Claude Code）と連携しながらピンポンプログラミングを進めてくれます。
-✦ 承知いたしました。FizzBuzzの実装を開始します。
-  t-wadaさんのやり方に従い、まずは最もシンプルな、失敗するテストコードを作成します。
-
-  (中略)
-
-　src/fizzbuzz.tsにはfizzbuzz関数を空の状態で定義し、src/fizzbuzz.test.tsには、
-　数値を文字列に変換する最もシンプルなテストケースとして「1を渡したら"1"が返ってくる」
-　ことを確認するコードを記述します。
-
-  (中略)
-
-  次に、実装者にFizzBuzzの実装を依頼します。
-  実装者には、src/fizzbuzz.test.tsのshould return "1" when given 1
-　テストケースをパスするように実装を依頼します。
-  │ Shell claude -p "FizzBuzzの実装をお願いします。
-　　src/fizzbuzz.test.ts の `should return \"1\" when given 1` を
-　　パスしてください。" -… │
-
-  (中略)
-
-✦ 実装者は、現在のテストケースはすでにパスしていると判断しています。
-  npm test を実行して、本当にテストが成功するのかを確認します。
-
-  (中略)
-
- ✦ テストが成功しました。
-  次のステップとして、3の倍数の場合に "Fizz" を返すテストケースを追加します。
-  src/fizzbuzz.test.ts に、fizzbuzz(3) が "Fizz" を返すことを確認する
-　テストコードを追記します。
-
-  (中略)
-
-✦ すべてのテストが成功しました。
-  これでFizzBuzzの基本的な実装は完了です。
-  実装者から、コードの可読性や保守性について特に指摘はなかったため、リファクタリング
-　は不要と判断します。以上で、FizzBuzzの実装を終了します。
-
- まとめ
-一年前の今頃は、「人間とAIでピンポンプログラミングができるようになった。すごい！」と言っていたのですが、AI同士でそれが実現できるようになるなんて！
-（補足）Gemini CLIのキャッチアップ中のため、今回はGemini - Claudeで実施しましたが、もちろんClaude - Claudeでやらせても構いません。
-
- GEMINI.md の記載内容（全文）
-# 開発ワークフロー
-- t-wadaさんのやり方に従う
-- AI(あなた)は Ping-Pong Programming における、失敗するテストコードを書く役割を担う
-- テストをパスするコードを書く実装者は別のAIであり、AI(あなた)自身がコードを実装することは強く禁止する
-- 一度に一つのテストケースを作成し、実装者に指示を出す
-- もっともシンプルなテストケースから始め、段階的に複雑なテストケースを追加していく
-- AI(あなた)は、テストコード以外のコードは絶対に書いてはいけない
-
-# 実装者(別のAI)とのやり取り
-このセクションの記載内容に**厳密に**従うこと。
-## コマンド
-- Claude Codeの非対話モードを用いる
-
-```bash
-% claude -p "指示" --output-format=json --system-prompt "システムプロンプト" --allowedTools "許可されたツール" 
-```
-
-- 出力結果のJSONには "session_id" が含まれるので、次回からはセッションIDを指定してセッションを再開する
-
-```bash
-% claude -p "指示" --output-format=json --resume <session_id> --system-prompt "システムプロンプト" --allowedTools "許可されたツール"
-```
-
-**重要** コマンドを実行する前に、必ず上記の形式で必要なオプションが指定されていることを確認すること。
-
-## 指示
-以下の情報を伝える。
-- タスクの目的
-- 失敗するテストコードの情報（プロジェクトルートからの相対パス、テストケース名）
-
-## システムプロンプト
-`--system-prompt` オプションを使用して、以下の内容を設定する。
-
-```
-- t-wadaさんのやり方に従う
-- あなたは Ping-Pong Programming における、失敗するテストコードをパスするコードを書く役割を担う
-- テストコード自体を修正したり、削除したりすることは禁止する
-- テストコードの修正が必要な場合は、ユーザーへ知らせること
-- 指定されたテストケースがパスするだけでなく、既存のテストケースもすべてパスするように実装すること
-- 作業を遂行する上で権限が不足している場合は、ユーザーへ何の権限が不足しているかを伝えること
-```
-
-## 許可されたツール
-`--allowedTools` オプションを使用して、以下のツールを許可する。毎回以下の全てのツールを指定すること。
-```
-Read
-ReadFile
-Edit
-MultiEdit
-WriteFile
-DeleteFile
-Grep
-LS
-Glob
-Bash(npm run:*)
-Bash(npm test)
-Bash(cat:*)
-Bash(ls:*)
-Bash(tree:*)
-Bash(find:*)
-Bash(mkdir:*)
-```
-
-オプション指定例
-```
---allowedTools "Read,Edit,Bash(ls:*),Bash(npm run *)"
-```
-
-## 結果確認
-- 実装者からの出力結果を確認し、テストコードが成功するかチェックする
-- テストが失敗する場合は再度実装者に指示を出す
-- 権限不足の場合、ユーザーに不足している権限情報を伝えて、処理を中断する。権限を与えるなどAIが勝手な判断で進めることを禁止する
-- テストコードが成功する場合、コードを評価し、可読性や保守性に問題があるなら、実装者にリファクタリングを依頼する
-
-# 使用技術
-- node.js
-- jest
-- TypeScript
-
----
-
-## 27. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/5/4
+- **解析日時**: 2026/5/5
 - **AI要約**:
   LLMによる創作とスクリプトによる決定論的処理を分離した、執筆自動化パイプラインの設計思想。
   中間成果物やマニフェストを活用し、本文・画像・証跡を再現可能な形で一括管理する具体的構成。
@@ -10788,10 +9795,10 @@ banned_visual_motifs:
 
 ---
 
-## 28. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
+## 24. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
 - **優先度**: High
 - **スコア**: 88
-- **解析日時**: 2026/5/7
+- **解析日時**: 2026/5/8
 - **AI要約**:
   プロンプト修正ではなく環境側でミスを防ぐ「ハーネスエンジニアリング」の概念を解説
   非コーディング領域でも指示ファイルを用いてエージェントの振る舞いを固定する手法を提示
@@ -11024,7 +10031,7 @@ Slack, Google Calendar, Confluence等のMCPツールを活用して情報取得�
 
 ---
 
-## 29. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
+## 25. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -11218,7 +10225,7 @@ CLAUDE.mdにルールを書いて、WIP.mdに作業状態を残すようにし�
 
 ---
 
-## 30. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
+## 26. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -11527,7 +10534,7 @@ your-project/
 
 ---
 
-## 31. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
+## 27. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -11662,863 +10669,7 @@ Qiitaニュースを購読する
 
 ---
 
-## 32. [GitHub - unsolublesugar/tsuyu-mi: Fetch, summarize, and publish Raindrop.io articles as a priority-ranked HTML dashboard · GitHub](https://github.com/unsolublesugar/tsuyu-mi)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/5/9
-- **AI要約**:
-  Raindrop.ioの保存記事をAIで自動要約し、優先度付きのHTMLダッシュボードを生成するツール。
-  GeminiやOpenAI等の複数LLMに対応し、GitHub Actionsによる定期的な自動実行が可能。
-  各記事に対し「今読む理由」「後回し理由」を明示し、効率的なトリアージを支援する設計。
-- **今読む理由**: AI駆動の自動化パイプラインの具体的実装例であり、GitHub ActionsとLLM APIの連携手法を即座にコードレベルで確認できるため。
-- **タグ**: #AI自動化パイプライン, #GitHubActions
-
-### 本文
-日本語
-
-
-
-
-
-
-
-Periodically fetches articles from a Raindrop.io collection, extracts their content, summarizes them with AI, and outputs a priority-ranked HTML dashboard.
-
-The name Tsuyu-mi comes from: Raindrop → shizuku (雫, droplet) → tsuyu (露, dew) → tsuyu-mi (露見, "seeing the dew").
-
-Purpose
-Triage your "read later" articles saved in Raindrop — before reading the full text.
-
-Read now — timely or high-value
-Defer — interesting but not urgent
-Drop — safe to discard
-
-Setup
-1. Clone the repository
-git clone https://github.com/unsolublesugar/tsuyu-mi.git
-cd tsuyu-mi
-2. Prepare the Python environment
-NotePython 3.11 or later is required. uv can install Python itself alongside dependencies.
-
-# Using uv (recommended)
-uv venv --python 3.11
-source .venv/bin/activate
-uv pip install -e ".[dev]"
-
-# Using pip
-python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
-3. Obtain API keys
-This tool requires a Raindrop.io API token and an LLM API key.
-Raindrop.io test token
-
-Go to Raindrop.io Integrations
-Click Create new app under "For Developers"
-Enter an app name (e.g. RaindropSummarizer) and create it
-Click the app → Create test token
-Copy the displayed token
-
-Collection ID
-
-Open Raindrop.io
-Navigate to the target collection (e.g. "Unsorted")
-Check the URL: https://app.raindrop.io/my/{collection_id} — the numeric part is the collection ID
-
-LLM API key
-Obtain an API key from one of the following providers:
-Google Gemini (recommended — has a free tier)
-
-Go to Google AI Studio
-Create API Key → Create API key in new project
-Recommended model: gemini-2.5-flash
-
-
-OpenAI
-
-Go to OpenAI API Keys
-Create new secret key
-Recommended model: gpt-4.1-mini
-
-Anthropic
-
-Go to Anthropic Console
-Create Key
-Recommended model: claude-haiku-4-5-20251001
-
-4. Configure environment variables
-Local execution
-cp .env.example .env
-Edit .env with your keys:
-RAINDROP_TOKEN=your-raindrop-token
-RAINDROP_COLLECTION_ID=your-collection-id
-LLM_PROVIDER=gemini
-LLM_API_KEY=your-llm-api-key
-LLM_MODEL=gemini-2.5-flash
-WarningNever commit .env to the repository — it contains secrets.
-
-GitHub Actions
-Add the following to your repository: Settings → Secrets and variables → Actions → Repository secrets.
-
-
-
-Secret name
-Value
-
-
-
-
-RAINDROP_TOKEN
-Raindrop.io API test token
-
-
-RAINDROP_COLLECTION_ID
-Target collection ID
-
-
-LLM_PROVIDER
-gemini / openai / anthropic
-
-
-LLM_API_KEY
-LLM API key
-
-
-LLM_MODEL
-Model name (e.g. gemini-2.5-flash)
-
-
-
-5. Verify
-# Test Raindrop API connectivity only (no LLM required)
-python -m src fetch-only
-
-# Summarize a small batch
-MAX_SUMMARIZE_PER_RUN=3 python -m src run
-
-# Full run
-python -m src run
-Usage
-# Full pipeline (fetch → extract → summarize → generate HTML)
-python -m src run
-
-# Dry run — preview target articles without processing
-python -m src run --dry-run
-
-# Verbose logging
-python -m src run --verbose
-
-# Fetch from Raindrop only
-python -m src fetch-only
-
-# Regenerate HTML
-python -m src build-html
-
-# Reprocess a specific article
-python -m src reprocess --id 123456789
-
-# Retry all failed articles
-python -m src reprocess-failed
-Output
-An article dashboard is generated at docs/index.html. Open it in a browser to review.
-
-Color-coded by priority (HIGH = red / MEDIUM = yellow / LOW = gray)
-Filter buttons to narrow by priority
-Each article shows a 3-line summary, read-now reason, defer reason, and keywords
-
-Configuration
-
-
-
-Environment variable
-Description
-Default
-
-
-
-
-RAINDROP_TOKEN
-Raindrop.io API test token
-(required)
-
-
-RAINDROP_COLLECTION_ID
-Target collection ID
-(required)
-
-
-LLM_PROVIDER
-openai / gemini / anthropic
-openai
-
-
-LLM_API_KEY
-LLM API key
-(required)
-
-
-LLM_MODEL
-Model name
-(required)
-
-
-MAX_SUMMARIZE_PER_RUN
-Max articles to summarize per run
-10
-
-
-REQUEST_TIMEOUT_SECONDS
-HTTP request timeout (seconds)
-20
-
-
-USER_AGENT
-HTTP User-Agent header
-Tsuyu-mi/0.1
-
-
-OUTPUT_DIR
-HTML output directory
-docs
-
-
-DATA_DIR
-Data storage directory
-data
-
-
-STATE_DIR
-State management directory
-state
-
-
-LOG_LEVEL
-Log level
-INFO
-
-
-
-Automated operation with GitHub Actions
-1. Set up GitHub Secrets
-See "4. Configure environment variables → GitHub Actions" above.
-2. Enable GitHub Pages
-Settings → Pages → Source: GitHub Actions
-ImportantPrivate repositories require GitHub Pro or higher to use GitHub Pages.
-
-3. Execution schedule
-
-Automatic: Every 3 days at JST 7:00 (UTC 22:00)
-Manual: Run on demand from the Actions tab via "Run workflow"
-
-Changes are auto-committed and pushed only when new content is generated.
-Testing
-pytest
-License
-MIT
-
----
-
-## 33. [GitHub - chaenmasahiro0425/exbrain: Exbrain — Your AI's External Brain. Claude Code × Obsidian × SOUL/MEMORY/DREAMS · GitHub](https://github.com/chaenmasahiro0425/exbrain)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/5/9
-- **AI要約**:
-  Claude Codeの内部状態やスキルをObsidian Vaultとして構造化し可視化するナレッジシステム。
-  SlackやXからの自動収集、FirecrawlによるWeb記事のMarkdown化と自動要約を統合パイプラインで実現。
-  Dreaming機能により日次の内省とパターンの抽出を行い、AIの記憶と成長の軌跡を自動的に構築する。
-- **今読む理由**: AI駆動開発において課題となる「コンテキストの消失」を、Claude CodeとObsidianの連携によって解決する具体的なアーキテクチャが示されており、即座に自身の開発環境に適用可能なため。
-- **タグ**: #ClaudeCode, #Obsidian, #AI自動化, #ナレッジマネジメント, #コンテキストエンジニアリング
-
-### 本文
-An AI knowledge system that automatically remembers, organizes, and reflects.
-  Claude Code × Obsidian × SOUL/MEMORY/DREAMS
-  🇯🇵 日本語版はこちら · Inspired by Karpathy's LLM Wiki
-What is Exbrain?
-Exbrain turns Claude Code's hidden internal state — Memory files, CLAUDE.md configs, Skills — into a human-readable Obsidian vault. It adds a Dreaming layer that automatically reflects on your day, detects patterns, and builds a growth trajectory over time.
-Your laptop can be closed. Your phone shows everything. You just open Obsidian and read.
-How It Works — For Beginners
-If you're new to Claude Code or Obsidian, here's the big picture:
-┌──────────────────────────────────────────────────────────────┐
-│                    YOU (Human)                                │
-│                                                              │
-│   Work with Claude Code    Bookmark on X    Send URL in Slack│
-│         ↓                      ↓                  ↓          │
-└─────────┬──────────────────────┬──────────────────┬──────────┘
-          │                      │                  │
-          ▼                      ▼                  ▼
-┌─────────────────┐  ┌───────────────────┐  ┌──────────────────┐
-│  Claude Code    │  │  Cron Job (Auto)  │  │  Always-On Agent │
-│  (Local CLI)    │  │  Every 4 hours    │  │  (e.g. OpenClaw) │
-│                 │  │                   │  │                  │
-│ • /clip skill   │  │ • X bookmark sync │  │ • Slack listener │
-│ • Hooks (auto)  │  │ • xurl API        │  │ • URL detection  │
-│ • Session logs  │  │                   │  │ • firecrawl      │
-└────────┬────────┘  └────────┬──────────┘  └────────┬─────────┘
-         │                    │                      │
-         └────────────────────┼──────────────────────┘
-                              │
-                              ▼
-                 ┌──────────────────────┐
-                 │   ~/vault/ (Git)     │
-                 │                      │
-                 │  SOUL.md   MEMORY.md │
-                 │  DREAMS.md           │
-                 │  daily/  clips/      │
-                 │  clients/ insights/  │
-                 └──────────┬───────────┘
-                            │
-                   ┌────────┼────────┐
-                   │        │        │
-                   ▼        ▼        ▼
-                GitHub   iCloud   Obsidian
-                (backup) (sync)   (Mac+iPhone)
-
-Components Explained
-
-
-
-Component
-What it is
-Role in Exbrain
-
-
-
-
-Claude Code
-Anthropic's AI coding CLI (docs)
-Your main AI assistant. Runs skills like /clip, writes to vault, manages hooks
-
-
-Obsidian
-Free markdown note app (obsidian.md)
-Where you read everything. Vault = folder of .md files. Works on Mac, iPhone, Android
-
-
-Always-On Agent
-A background AI (e.g. OpenClaw)
-Monitors Slack/Discord 24/7. Runs cron jobs even when Claude Code is closed
-
-
-Cloud Scheduled Tasks
-Claude Code's built-in scheduler (docs)
-Runs morning/evening Dreaming without your PC. Updates MEMORY.md and DREAMS.md
-
-
-xurl
-X API CLI tool
-Fetches tweets and bookmarks from X (Twitter)
-
-
-Firecrawl
-Web scraping CLI
-Converts any URL into clean markdown
-
-
-iCloud
-Apple's cloud sync
-Syncs vault between Mac and iPhone automatically
-
-
-GitHub
-Code hosting
-Backup + version history for your vault
-
-
-
-Data Flow: What Happens When You Clip
-You find an interesting article
-         │
-         ▼
-  ┌─ Pick your method ──────────────────────────────────┐
-  │                                                      │
-  │  A) /clip URL          B) Slack DM         C) Just  │
-  │     in Claude Code        send URL         bookmark │
-  │         │                    │              on X     │
-  │         ▼                    ▼                │      │
-  │    Claude Code          Agent detects    (wait 4h)   │
-  │    runs instantly       URL in real-time      │      │
-  └──────┬───────────────────┬───────────────────┬──────┘
-         │                   │                   │
-         └───────────────────┼───────────────────┘
-                             │
-                             ▼
-                   ┌─────────────────┐
-                   │  AI Processing  │
-                   │                 │
-                   │ 1. Fetch content│
-                   │ 2. Summarize    │
-                   │ 3. Tag (auto)   │
-                   │ 4. Save .md     │
-                   └────────┬────────┘
-                            │
-                            ▼
-               vault/clips/x/2026-04-08_slug.md
-                            │
-                  ┌─────────┼─────────┐
-                  │         │         │
-                  ▼         ▼         ▼
-            _index.md   daily note   git push
-            updated     updated      to GitHub
-                                        │
-                                        ▼
-                                   iCloud sync
-                                        │
-                                        ▼
-                                 📱 Read on iPhone
-
-System Relationship Map
-┌─────────────────────────────────────────────────────────┐
-│                                                         │
-│  ┌──────────────┐         ┌──────────────┐              │
-│  │ Claude Code  │────────▶│  ~/vault/    │◀──────┐      │
-│  │ (CLI agent)  │ writes  │ (Obsidian)   │       │      │
-│  │              │         │              │  writes│      │
-│  │ Skills:      │         │ SOUL.md      │       │      │
-│  │  /clip       │         │ MEMORY.md    │  ┌────┴────┐ │
-│  │  /auto-mins  │         │ DREAMS.md    │  │ Cloud   │ │
-│  │  30+ more    │         │ daily/       │  │Schedule │ │
-│  └──────────────┘         │ clips/       │  │ Tasks   │ │
-│                           │ clients/     │  │         │ │
-│  ┌──────────────┐         │ meetings/    │  │ Morning │ │
-│  │ Always-On    │────────▶│ insights/    │  │ Evening │ │
-│  │ Agent        │ writes  │              │  └─────────┘ │
-│  │ (OpenClaw)   │         └──────┬───────┘              │
-│  │              │                │                      │
-│  │ Cron jobs:   │          git push/pull                │
-│  │  X bookmarks │                │                      │
-│  │  Slack DM    │         ┌──────▼───────┐              │
-│  │  Reports     │         │   GitHub     │              │
-│  └──────────────┘         │  (private)   │              │
-│                           └──────────────┘              │
-│                                                         │
-│          ─── All connected via ~/vault/ ───             │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-
-The SOUL / MEMORY / DREAMS Trinity
-The core of Exbrain is three files at the root of your vault:
-~/vault/
-├── SOUL.md      ← WHO you are (identity, values, boundaries)
-├── MEMORY.md    ← WHAT you've experienced (decisions, patterns, lessons)
-└── DREAMS.md    ← WHERE you're going (insights, growth, open questions)
-
-SOUL.md — Identity
-Defines who you are and how the AI should behave. Merged from Claude Code's CLAUDE.md and any external agent personality configs.
-## Identity
-- Your name, role, company
-
-## Values
-- "Ship fast, iterate later"
-- "API-first, no manual work"
-
-## Boundaries (non-negotiable)
-- "Never send emails — drafts only"
-- "Never post to Slack without confirmation"
-
-## Tech Ecosystem
-- APIs, MCP servers, CLI tools
-MEMORY.md — Experience
-A digest of everything the AI has learned. Auto-synced from Claude Code's Memory (.claude/projects/*/memory/) + enriched by Cloud Scheduled Tasks.
-## Recent
-- [2026-04-07] Built Obsidian vault with SOUL/MEMORY/DREAMS
-- [2026-04-06] Shipped new feature for Project Alpha
-
-## Decisions
-- Hybrid design: static mirror + Karpathy pattern + Dreaming
-
-## Patterns
-- Fridays are meeting-heavy (3 weeks in a row)
-- Email replies concentrate in the afternoon
-
-## CC Memory Summary (35 files)
-- feedback/21: "Never send emails", "Always git commit after GAS edits"
-- reference/7: API locations, tool configs
-- project/4: Active project statuses
-- user/1: User profile and preferences
-DREAMS.md — Reflection
-Updated automatically by Dreaming (morning + evening + weekly). Tracks patterns that emerge over time.
-## Current Insights
-- Meeting density peaks on Mondays (10+ meetings, 3 consecutive weeks)
-
-## Emerging Patterns
-| Pattern | Count | Trend |
-|---------|-------|-------|
-| Tool → Skill → Automation cycle | 10+ | Consistent |
-| Email/Slack send caution | 5+ | Critical boundary |
-
-## Growth Trajectory
-- Q1: Built 26 skills, automated 32 cron jobs
-
-## Open Questions
-- Should CC Memory duplicates be consolidated?
-Clips — Knowledge Clipping
-Clips automatically captures tweets and articles into your vault. Like Karpathy's compounding knowledge pattern, everything you read accumulates and becomes searchable in Obsidian.
-Three Ways to Clip
-
-
-
-Method
-Trigger
-Best for
-
-
-
-
-/clip skill
-/clip <URL> in Claude Code
-Working at your desk, high-quality summaries
-
-
-Slack DM
-Post URL in Slack DM to your agent
-On the go (phone), instant capture
-
-
-X Bookmark Sync
-Automatic every 4 hours
-Passive — just bookmark on X, it syncs
-
-
-
-1. /clip — Manual Clip in Claude Code
-/clip https://x.com/karpathy/status/1234567890
-/clip https://example.com/great-article
-/clip https://url1.com https://url2.com          # multiple URLs
-
-Detects X tweet vs article automatically. Fetches content, generates summary + tags in Japanese, saves to clips/, updates daily note, and pushes to git.
-2. Slack DM — Clip from Your Phone
-Just send a URL to your agent's Slack DM:
-https://example.com/interesting-article
-
-The agent detects the URL, scrapes the content, generates a summary, saves to clips/, and replies in a thread:
-📎 Clipped!
-📄 How LLMs Will Change Everything
-🏷️ #ai #llm #future
-📁 vault/clips/articles/2026-04-08_llm-change-everything.md
-
-Setup: Requires an always-on agent (like OpenClaw) with Slack Socket Mode. Add the URL detection behavior to your agent's auto-actions. See Slack Clip Setup below.
-3. X Bookmark Auto-Sync
-Bookmark tweets on X as you normally would. A cron job syncs them to your vault automatically.
-Default schedule: Every 4 hours (8:00, 12:00, 16:00, 20:00)
-Requirements: xurl CLI with OAuth2 authentication.
-# Test manually
-xurl bookmarks -n 5 --auth oauth2
-Clip File Format
----
-date: 2026-04-08
-type: clip
-source: x | article
-url: https://...
-author: "@username"
-tags: [ai, claude-code, agent]
-via: slack | cli | cron          # how it was clipped
----
-
-## Summary
-(3-5 line summary in your language)
-
-## Key Points
-- Point 1
-- Point 2
-
-## Notes
-> Important quotes
-
-## Related
-[[insights/...]] | [[clips/...]]
-Daily Note Integration
-Each clip is automatically linked in the day's daily note:
-## Clips
-- [[clips/x/2026-04-08_sam-altman-social-contract]] — Sam Altman's social contract
-- [[clips/articles/2026-04-08_karpathy-llm-wiki]] — Karpathy LLM Wiki pattern
-Dataview Queries
-Browse clips by tag in Obsidian:
-TABLE rows.date, rows.source, rows.author
-FROM "clips"
-WHERE type = "clip"
-FLATTEN tags as tag
-GROUP BY tag
-SORT rows.date DESC
-
-Slack Clip Setup
-To enable Slack DM → clip, add this auto-action to your agent:
-
-Create skill files in your agent's workspace:
-
-workspace/skills/slack-clip/
-├── SKILL.md          ← Skill overview
-├── BEHAVIOR.md       ← Detection rules + processing flow
-└── processed-clips.json  ← Deduplication tracking
-
-
-Add auto-action to your agent's config (e.g., AGENTS.md):
-
-### URL Post → Vault Clip
-Automatically saves to vault/clips/ when a DM contains a URL.
-
-Detection:
-- Message text contains https:// (forwarded messages excluded)
-- Slack internal URLs and direct image links excluded
-
-Processing:
-1. Detect URL type (X tweet vs article)
-2. X tweet → xurl read / article → firecrawl scrape
-3. Generate summary + tags → save to vault/clips/
-4. git push + thread reply confirmation
-
-Ensure tools are available to the agent:
-
-xurl (X API CLI) with OAuth2 auth
-firecrawl (web scraping CLI)
-Git access to your vault repo
-
-
-
-X Bookmark Cron Setup
-Add a cron job to your agent scheduler:
-{
-  "name": "clip-x-bookmarks",
-  "schedule": "0 8-23/4 * * *",
-  "message": "Fetch X bookmarks with `xurl bookmarks -n 20 --auth oauth2`, check for duplicates in vault/clips/x/, summarize new ones, save to vault/clips/x/, update _index.md, git push."
-}
-Architecture
-┌─ Layer 1: Cloud Scheduled Tasks (no PC needed) ────────────┐
-│                                                              │
-│  07:00  vault-daily-morning                                  │
-│  ├── Read SOUL.md (understand user context)                  │
-│  ├── Read MEMORY.md (recent decisions & patterns)            │
-│  ├── Google Calendar → today's schedule                      │
-│  ├── Slack → overnight highlights                            │
-│  ├── Gmail → important unread emails                         │
-│  ├── Morning Dreaming (yesterday's review → today's focus)   │
-│  ├── Update MEMORY.md Recent section                         │
-│  └── git push                                                │
-│                                                              │
-│  18:30  vault-daily-evening                                  │
-│  ├── Read SOUL.md + MEMORY.md + DREAMS.md                    │
-│  ├── Evening Dreaming (today + 7-day pattern detection)      │
-│  ├── Update MEMORY.md + DREAMS.md                            │
-│  ├── Sunday: weekly Dreaming + Lint + Slack notification      │
-│  └── git push                                                │
-│                                                              │
-└──────────────────────┬───────────────────────────────────────┘
-                       │ push
-                       ▼
-┌─ GitHub (private repo) ──────────────────────────────────────┐
-│  All vault files                                              │
-└──────────────────────┬───────────────────────────────────────┘
-                       │ pull (hourly via launchd)
-                       ▼
-┌─ Layer 2: Local Automation ──────────────────────────────────┐
-│                                                               │
-│  Claude Code Hooks (async: true)                              │
-│  ├── PostToolUse → log file changes                           │
-│  └── Stop → append session end to daily note + MEMORY.md      │
-│                                                               │
-│  External Agent Cron (when PC is on)                          │
-│  ├── Additional data: Salesforce, Stripe, HERP, YouTube       │
-│  └── Skipped when PC is off (Layer 1 is self-sufficient)      │
-│                                                               │
-└──────────────────────┬───────────────────────────────────────┘
-                       │ iCloud sync
-                       ▼
-              Obsidian (Mac + iPhone)
-
-Vault Structure
-~/vault/
-├── SOUL.md                ← Identity, values, boundaries
-├── MEMORY.md              ← Experience digest (CC Memory mirror)
-├── DREAMS.md              ← Dreaming accumulation (auto-updated)
-├── CLAUDE.md              ← Schema (LLM rules for this vault)
-│
-├── daily/                 ← Daily notes (auto-generated morning & evening)
-│   └── 2026-04-07.md         Schedule / Gmail / Slack / AI Analysis /
-│                              Morning Reflection / Evening Reflection /
-│                              Claude Code Session / Thoughts
-│
-├── system/                ← Claude Code system mirror (SYNCED)
-│   ├── claude-md-tree.md     All CLAUDE.md files as a tree
-│   ├── global-rules.md       Rules & boundaries summary
-│   ├── api-inventory.md      API list (no keys)
-│   ├── tech-stack.md         Technology stack
-│   └── cron-jobs.md          Running cron jobs
-│
-├── skills/                ← All skills with details (SYNCED)
-├── memory/                ← CC Memory individual file mirror (SYNCED)
-│   ├── feedback/             Behavioral guidelines
-│   ├── reference/            External system pointers
-│   ├── project/              Project statuses
-│   └── user/                 User profile
-│
-├── clips/                 ← Clipped tweets & articles (auto + manual)
-│   ├── x/                    X bookmarks (auto-synced every 4 hours)
-│   ├── articles/             Web articles (via /clip or Slack)
-│   ├── _index.md             Clip index (auto-updated)
-│   └── tags.md               Tag-based classification (Dataview)
-│
-├── clients/               ← Client knowledge (Karpathy pattern)
-├── meetings/              ← Meeting summaries (auto from /auto-mins)
-├── decisions/             ← Decision log
-├── insights/              ← Learnings + weekly Dreaming
-├── templates/             ← daily-note, meeting, decision
-└── scripts/               ← Hook scripts + sync scripts
-
-Hybrid Design: Three Personalities
-vault/
-├── system/, skills/, memory/
-│   → Static mirror (dashboard)
-│   → Auto-synced from Claude Code, read-only
-│   → <!-- SYNCED: DO NOT EDIT --> header
-│
-├── daily/
-│   → Auto log + handwritten diary
-│   → Calendar + Slack + Gmail + AI Analysis + Dreaming
-│   → Runs even with PC closed (Cloud Scheduled Tasks)
-│
-└── meetings/, clients/, insights/
-    → Karpathy pattern (compounding knowledge)
-    → Each meeting processed → client page auto-enriched
-    → No need to re-read 12 meeting transcripts
-
-Setup
-Prerequisites
-
-Claude Code (Pro or Max)
-Obsidian (free)
-GitHub account
-(Optional) Slack / Google Calendar / Gmail Connectors
-
-Step 1: Create Vault
-mkdir -p ~/vault/{daily,system,skills,memory/{feedback,reference,project,user},clients,meetings,decisions,insights,templates,scripts}
-
-# iCloud sync (for iPhone)
-mv ~/vault ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/exbrain
-ln -s ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/exbrain ~/vault
-Step 2: Copy Templates
-git clone https://github.com/YOUR_USERNAME/exbrain.git /tmp/exbrain
-cp -r /tmp/exbrain/vault-template/* ~/vault/
-Step 3: Configure Hooks
-Add to ~/.claude/settings.json:
-{
-  "hooks": {
-    "PostToolUse": [{
-      "matcher": "Write|Edit",
-      "hooks": [{
-        "type": "command",
-        "command": "bash ~/vault/scripts/on-file-change.sh",
-        "async": true
-      }]
-    }],
-    "Stop": [{
-      "hooks": [{
-        "type": "command",
-        "command": "bash ~/vault/scripts/on-session-end.sh",
-        "async": true
-      }]
-    }]
-  }
-}
-Step 4: Initial Sync
-In Claude Code:
-Please read all my skills from ~/.claude/skills/, all memory files from
-~/.claude/projects/*/memory/, and sync them to ~/vault/. Create SOUL.md
-with my identity and MEMORY.md with a digest of all memories.
-
-Step 5: GitHub Backup
-cd ~/vault
-git init && git add -A && git commit -m "Initial vault"
-gh repo create my-vault --private --source=. --push
-Step 6: Cloud Scheduled Tasks (PC-free automation)
-At claude.ai/code/scheduled:
-
-vault-daily-morning (07:00): Read SOUL.md → Calendar + Slack + Gmail → daily note + Morning Dreaming
-vault-daily-evening (18:30): Read SOUL.md + MEMORY.md + DREAMS.md → Evening Dreaming + pattern detection
-
-Daily Note Example
----
-date: 2026-04-07
-weekday: Monday
-type: daily
-score: 74
----
-
-## Schedule
-| Time | Event | Note |
-|------|-------|------|
-| 09:00 | Management meeting | |
-| 10:00 | Sales standup | |
-| 14:00 | Company standup | |
-
-## Gmail
-| From | Subject | Action |
-|------|---------|--------|
-| [Contact] | Project meeting request | Reply needed |
-
-## Slack Highlights
-- **#general**: Organization restructuring discussion
-- **#sales**: New lead from inbound campaign
-- **#daily-report**: Project Beta milestone reached
-
-## Morning Reflection
-- Yesterday's decision: Revised product roadmap
-- Today's focus: Follow up on pending proposals
-
-## Evening Reflection
-- Highlight: Project Beta milestone reached
-- Pattern: Mondays consistently have 10+ meetings (3 weeks)
-- Unresolved: Partner meeting follow-up
-
-## Thoughts
-<!-- Write your own reflection here -->
-Scripts Included
-
-
-
-Script
-Purpose
-
-
-
-
-on-session-end.sh
-Stop hook: appends session summary to daily note + MEMORY.md
-
-
-on-file-change.sh
-PostToolUse hook: logs CLAUDE.md/memory/skill changes
-
-
-weekly-sync.sh
-Weekly lint: broken links, orphan pages, stale content
-
-
-git-pull-sync.sh
-Hourly git pull with stash handling
-
-
-sync-agent-to-vault.sh
-Enriches daily notes from external agent JSON data
-
-
-sync-x-bookmarks.sh
-Auto-fetches X bookmarks + clips (every 4 hours)
-
-
-
-All scripts are macOS-compatible (no GNU extensions), reviewed for security (no shell injection, PID-based locking instead of flock).
-References
-
-Karpathy's LLM Wiki — The original pattern
-Claude Code Hooks — async hook documentation
-Cloud Scheduled Tasks — PC-free automation
-QMD — Markdown semantic search (for 100+ pages)
-
-License
-MIT
-
----
-
-## 34. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
+## 28. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -13320,10 +11471,10 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 35. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
+## 29. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
 - **優先度**: High
 - **スコア**: 88
-- **解析日時**: 2026/5/10
+- **解析日時**: 2026/5/11
 - **AI要約**:
   Claude CodeのChrome連携を活用し、ブラウザの計算値を基にサイトをNext.jsへ再構成する手法を解説
   デザイントークン抽出やVisual Diffを含む、再現性の高いUI実装自動化パイプラインの構築に言及
@@ -13371,10 +11522,10 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 36. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
+## 30. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
 - **優先度**: High
 - **スコア**: 88
-- **解析日時**: 2026/5/10
+- **解析日時**: 2026/5/11
 - **AI要約**:
   Claude Codeのカスタムコマンド「Skills」の定義方法とディレクトリ構造を具体的に解説
   引数の受け取りやBash操作を含む高度な自動化ワークフロー（テスト・修正等）の実装例を提示
@@ -13630,10 +11781,10 @@ Claude Code や AI 自動化についてさらに深く学びたい方は、筆�
 
 ---
 
-## 37. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
+## 31. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
 - **優先度**: High
 - **スコア**: 88
-- **解析日時**: 2026/5/10
+- **解析日時**: 2026/5/11
 - **AI要約**:
   LightGBMやRidgeを用いたスタッキング構成と、非負制約付きメタラーナーによる安定化手法の解説
   市場超過リターンの予測や外れ値処理、最新データを重視する時間的重み付けなど実践的な前処理手法
@@ -14173,10 +12324,10 @@ Prime 200銘柄
 
 ---
 
-## 38. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
+## 32. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
 - **優先度**: High
 - **スコア**: 88
-- **解析日時**: 2026/5/10
+- **解析日時**: 2026/5/11
 - **AI要約**:
   タスクごとにコンテキストを初期化し、精度低下や情報の埋没を防ぐ具体的な手法を提示
   CLAUDE.mdを用いた規約の自動適用やテスト自動実行による品質担保のワークフローを解説
@@ -14353,10 +12504,10 @@ mainで作業 → worktreeを使う
 
 ---
 
-## 39. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
+## 33. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
 - **優先度**: High
 - **スコア**: 88
-- **解析日時**: 2026/5/12
+- **解析日時**: 2026/5/13
 - **AI要約**:
   CLAUDE.mdを用いた開発環境設定やコーディング規約の具体例とテンプレートを提示。
   全域・個人・プロジェクト単位での階層的設定管理により、反復的な指示の手間を排除する手法を解説。
@@ -15062,10 +13213,10 @@ Claude Code の 6種類のメモリと優先順位を理解して効率的に活
 
 ---
 
-## 40. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
+## 34. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
 - **優先度**: High
 - **スコア**: 88
-- **解析日時**: 2026/5/22
+- **解析日時**: 2026/5/23
 - **AI要約**:
   Claude Codeの指示追従性を向上させるスキル（SKILL.md）の具体的な設定例を提示。
   スキルから他のスキルやサブエージェントを明示的に呼び出し、推論のブレを抑制する手法を解説。
@@ -16302,7 +14453,7 @@ AIの「揮発性の高い記憶」を補うための「外部メモリ」とし
 
 ---
 
-## 41. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
+## 35. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/8
@@ -17894,7 +16045,7 @@ AI に相談して書いてもらいました。 ↩︎
 
 ---
 
-## 42. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
+## 36. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -18145,7 +16296,7 @@ hooks は決定論的な強制です。必ず同じ処理を再現したいも�
 
 ---
 
-## 43. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
+## 37. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -18644,7 +16795,7 @@ READMEが人間への手紙なら、AGENTS.md は、明日の自分・明日の�
 
 ---
 
-## 44. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
+## 38. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -19069,7 +17220,7 @@ GitHubで編集を提案
 
 ---
 
-## 45. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
+## 39. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -19298,7 +17449,7 @@ AI や人間が読んだときにどのような理解・認識するかをま�
 
 ---
 
-## 46. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
+## 40. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -19523,7 +17674,7 @@ API キーを使う「プロキシ方式」は、Google の ToS 違反で BAN �
 
 ---
 
-## 47. [Dynamic Workflowsを大名システムへ組み込んでみた - Qiita](https://qiita.com/tanaka_taro_JP_KYUSYU/items/b2efbc628053b643a8d8)
+## 41. [Dynamic Workflowsを大名システムへ組み込んでみた - Qiita](https://qiita.com/tanaka_taro_JP_KYUSYU/items/b2efbc628053b643a8d8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -19847,7 +17998,7 @@ Workflow が上乗せする価値は 「コスト削減（安価モデル＋低 
 
 ---
 
-## 48. [【AI駆動開発 / Claude Code】AGENT.mdや、product.md, DESIGN.md などのAIエージェント向けのMDファイル・ドキュメントについて📝](https://zenn.dev/manase/scraps/6bd12beaafd308)
+## 42. [【AI駆動開発 / Claude Code】AGENT.mdや、product.md, DESIGN.md などのAIエージェント向けのMDファイル・ドキュメントについて📝](https://zenn.dev/manase/scraps/6bd12beaafd308)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -19960,7 +18111,7 @@ AGENTS.md はこれらを一本化する狙いで登場した、という背景�
 
 ---
 
-## 49. [Loop Engineeringの組み方：Claude Code /goal で「自走するループ」を設計する](https://zenn.dev/ino_h/articles/2026-06-16-loop-engineering-goal)
+## 43. [Loop Engineeringの組み方：Claude Code /goal で「自走するループ」を設計する](https://zenn.dev/ino_h/articles/2026-06-16-loop-engineering-goal)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -20156,7 +18307,7 @@ WorkOS — Key takeaways from Boris Cherny on building Claude Code
 
 ---
 
-## 50. [もうプロンプトは書かない、ループを書く — Claude Code作者とOpenClaw作者が辿り着いた /goal と /loop](https://zenn.dev/kenimo49/articles/write-loops-not-prompts-goal-loop)
+## 44. [もうプロンプトは書かない、ループを書く — Claude Code作者とOpenClaw作者が辿り着いた /goal と /loop](https://zenn.dev/kenimo49/articles/write-loops-not-prompts-goal-loop)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/22
@@ -20309,6 +18460,1651 @@ Run a prompt on a schedule（/loop）-- Claude Code Docs
 How Boris uses Claude Code
 Claude Code creators on agent loops -- The Neuron
 OpenAI hires OpenClaw founder Peter Steinberger -- SiliconANGLE
+
+---
+
+## 45. [AI駆動開発のセキュリティツール、結局なにを入れればいい？ - Qiita](https://qiita.com/udowanllc/items/42635251d8e2641cb50c)
+- **優先度**: High
+- **スコア**: 88
+- **解析日時**: 2026/6/24
+- **AI要約**:
+  AI駆動開発におけるセキュリティ対策を9つのカテゴリと3つのレベルに分類して整理。
+  シークレット検出の2層防御構成やAIが幻覚したパッケージを検知する最新アプローチを解説。
+  無料ツールのみで実装された即時導入可能なセキュリティフレームワークと導入手順を公開。
+- **今読む理由**: 自動化パイプラインに即時組み込めるGitleaksやTruffleHogを組み合わせた2層防御の具体的なアーキテクチャが明記されており、さらに無料ツールで実装済みの開発フレームワークが公開されているため、今すぐパイプライン構築に活用できます。
+- **タグ**: #AI駆動開発, #DevSecOps, #CI/CDパイプライン, #シークレットスキャン, #SCA
+
+### 本文
+はじめに
+前回の記事では、AI駆動開発のセキュリティを3つのレベルに分けて「どこまでやればいいか」を整理しました。ありがたいことに多くの反応をいただき、特に多かったのが 「考え方はわかった。で、具体的に何を入れればいいの？」 という声です。
+本記事はその実践編です。前回のレベル分け（レベル1：一般的 → レベル2：厳格 → レベル3：最厳格）を踏襲しつつ、各カテゴリで「どのツールを」「なぜ」「どう組み込むか」 を整理します。
+先に全体像を示してから、カテゴリごとに掘り下げていきます。
+
+📦 すぐ使えるフレームワークも公開しています
+本記事で解説するレベル2のセキュリティ構成（シークレットスキャン、SCA、SAST、ライセンススキャン、DAST、Content Exclusion、PRテンプレート、段階導入）を、無料ツールだけで実装済みのフレームワークを公開しています。Claude Codeで「設計 → 実装 → テスト → セキュリティチェック」のパイプラインを回す、一人SIer向けの開発基盤です。
+👉 AI Orchestrator — 一人SIerフレームワーク（MIT License）
+記事を読んで「自分で組むのは手間だな」と思ったら、こちらをフォークして使ってみてください。既存プロジェクトへの後付けにも対応しています。
+
+
+※ 本記事のツール情報は2026年央時点のものです。このジャンルは進化が速いので、導入時には必ず各ツールの最新ドキュメントを確認してください。
+
+
+
+全体マップ：何を守るために、何を入れるか
+AI駆動開発で必要なセキュリティツールは、大きく 9つのカテゴリ に分かれます。
+
+
+
+#
+カテゴリ
+何を守るか
+レベル1
+レベル2
+レベル3
+
+
+
+
+1
+シークレットスキャン
+APIキー・パスワードの漏洩
+✅ 必須
+✅ 必須
+✅ 必須
+
+
+2
+SCA（脆弱性スキャン）
+既知の脆弱性を持つ依存パッケージ
+✅ 必須
+✅ 必須
+✅ 必須
+
+
+3
+SCA（slopsquatting対策）
+AIが幻覚したパッケージの混入
+⚠️ 推奨
+✅ 必須
+✅ 必須
+
+
+4
+SAST（汎用）
+生成コードの脆弱性
+⚠️ 推奨
+✅ 必須
+✅ 必須
+
+
+5
+SAST（AI生成コード特化）
+プロンプトインジェクション・エージェント固有リスク
+⚠️ 推奨
+✅ 必須
+✅ 必須
+
+
+6
+ライセンススキャン
+オープンソースライセンス汚染
+⚠️ 推奨
+✅ 必須
+✅ 必須
+
+
+7
+Content Exclusion・権限制御
+機密ファイルのAIへの送信防止
+⚠️ 推奨
+✅ 必須
+✅ 必須
+
+
+8
+DAST（動的解析）
+実行時に現れる脆弱性
+—
+⚠️ 推奨
+✅ 必須
+
+
+9
+LLMゲートウェイ
+コスト・利用・アクセスの集中統制
+—
+—
+⚠️ 推奨
+
+
+
+読み方ガイド：自社のレベルに合わせて、必要なセクションだけ読んでください。
+
+
+レベル1（個人開発・社内ツール・スタートアップ）→ セクション1〜2だけ でまず十分。3〜7は余裕があれば。
+
+レベル2（受託・顧客データ扱うSaaS・中規模以上）→ セクション1〜7 を組み込む。8も推奨。
+
+レベル3（金融・医療・官公庁）→ すべて に加えてインフラレベルの統制が入る。
+
+
+
+1. シークレットスキャン ── 最初に入れるべきツール
+
+なぜ最優先か
+AIは周辺のコードを「文脈」としてクラウドに送ります。.env やAPIキーが一緒に送られるのを防ぐのが、このカテゴリの役割です（前回記事の「シークレットの漏洩」参照）。AI時代は「ツールが勝手に送信する」パスが加わるため、この基本の重要度がさらに上がっています。
+
+主要ツール比較
+
+
+
+ツール
+特徴
+料金
+推奨用途
+
+
+
+
+Gitleaks
+高速・軽量。regexベースでgit履歴をスキャン。pre-commitフックでミリ秒単位で検出
+無料（MIT）
+pre-commitフック（コミット前のブロック）
+
+
+TruffleHog
+800+のシークレット種別を検出。検出した認証情報が現在も有効かどうかをベンダーAPIに問い合わせて確認する「検証」機能が最大の差別化
+OSS版は無料、商用版あり
+CIパイプライン（深いスキャン）
+
+
+GitHub Secret Scanning
+GitHub側でpush時に自動スキャン。対応プロバイダーへの自動通知あり
+Public repoは無料、Private repoは有料プランが必要（※）
+GitHubユーザーの基盤スキャン
+
+
+GitGuardian
+エンタープライズ向け。リポジトリだけでなくCI/CDログ、コンテナイメージ、Slackまでスキャン範囲が広い。修復ワークフロー付き
+有料（エンタープライズ）
+大規模組織の統合管理
+
+
+
+
+どう組み合わせるか
+成熟したチームの多くは 2層構成 で運用しています。
+
+
+第1層（pre-commit）：Gitleaks ── コミット前にローカルで即座にブロック。速度重視。
+
+第2層（CI/CD）：TruffleHog ── プルリクエスト時にCI上で深いスキャン。検証機能で「まだ有効なシークレット」を特定。
+
+この組み合わせなら、速度と深さの両方をカバーできます。GitHubを使っているなら、Secret Scanningも並行で有効にしておくと三重の防御になります。
+重要：検出されたシークレットは「コードから消す」だけでは不十分です。TruffleHogの検証機能で「有効」と判定された鍵は、すでに外部に送信された可能性があります。鍵の無効化（revoke）→ 再発行（rotate）まで行って初めて対処が完了します。git履歴にも残っているため、コミットから削除しただけでは安全ではありません。
+
+導入の最小ステップ（レベル1）
+
+
+Gitleaksをpre-commitフックに設定する（所要時間：5分）。pip install pre-commit → .pre-commit-config.yaml にGitleaksを追加 → pre-commit install。これだけで、チームメンバー全員がコミット時にシークレットを自動チェックできます。
+
+.gitleaks.toml でプロジェクト固有のルールを追加。自社のAPIキーフォーマットなど、標準ルールにないパターンがあれば足します。
+
+
+
+2. SCA（脆弱性スキャン） ── 依存パッケージの既知の脆弱性
+
+なぜ必要か
+AIが提案するパッケージに既知の脆弱性（CVE）がないかを自動チェックする仕組みです。AIは古いバージョンや脆弱性のあるバージョンを平気で指定するため、人間が手動で書いていたときよりSCAの価値が上がっています。
+
+主要ツール比較
+
+
+
+ツール
+特徴
+料金
+推奨
+
+
+
+
+Snyk Open Source
+CVEデータベースが豊富。自動修正PR生成。IDE連携も強い
+無料枠あり（個人・小規模）、Team $25/月〜
+商用プロジェクトの標準
+
+
+Dependabot
+GitHubネイティブ。脆弱性検出＋自動バージョンアップPR
+GitHub利用者は無料
+GitHub利用者の基盤
+
+
+Trivy
+Aqua Security製のOSS。コンテナ・IaC・SBOMも対応。軽量で速い
+無料（Apache 2.0）
+コンテナも含めた統合スキャン
+
+
+OWASP Dependency-Check
+古参のOSS。NVD（National Vulnerability Database）ベース
+無料
+コスト重視の最小構成
+
+
+
+
+どう選ぶか
+
+
+GitHubを使っていて、まず始めたい → Dependabot を有効にするだけ（設定不要、数クリック）
+
+もう少し深い脆弱性管理がしたい → Snyk を追加。自動修正PRが現場に好評
+
+コンテナも含めて統合スキャンしたい → Trivy をCIに組み込む
+
+お金をかけたくない＋OSSで完結したい → OWASP Dependency-Check or Trivy
+
+
+レベル1ならDependabotを有効にするだけで最低限のカバーになります。レベル2以上では、Snyk or Trivyの追加を推奨します。
+
+
+3. SCA（slopsquatting対策） ── AIが幻覚したパッケージを検出する
+
+なぜ別カテゴリにしたか
+slopsquattingの仕組みは前回記事で詳しく解説しています。ここで押さえておきたいのは、従来のSCA（Snyk, Dependabot等）ではslopsquattingを検出できない という点です。従来のSCAは「CVE（既知の脆弱性）があるか」を見ますが、slopsquattingで登録された不正パッケージにはCVEが付いていないからです。必要なのは、CVEマッチングではなく パッケージの振る舞い分析（インストールスクリプトの挙動、難読化されたコード、外部への通信など）です。
+
+主要ツール
+
+
+
+ツール
+特徴
+料金
+
+
+
+
+Socket
+npm, PyPI, Go, Maven等10+エコシステム対応。振る舞い分析でタイポスクワッティング・依存関係の混乱・乗っ取りアカウントを検出。PRごとにセキュリティレポートを自動追加
+OSSプロジェクトは無料、商用は有料
+
+
+
+Snyk（補完として）
+CVEベースの検出がメインだが、サプライチェーンリスクの情報も提供
+上記参照
+
+
+
+
+Socket の位置づけ
+Socketは従来のSCA（Snyk, Dependabot）を 置き換えるものではなく、補完するもの です。
+
+
+第1層（インストール前）：Socket ── 新しいパッケージが追加されるPRで、そのパッケージの振る舞いを分析。悪意あるパッケージをインストール前にブロック。
+
+第2層（インストール後）：Snyk / Dependabot ── すでにインストール済みの依存に、後からCVEが発見された場合に通知。
+
+この2層構成が、2026年時点のベストプラクティスに近いです。
+
+運用面の対策（ツールに加えて）
+ツールだけでなく、運用でもカバーすべきポイントがあります。
+
+
+「AIが提案したパッケージをそのまま install しない」 を徹底する。npmやPyPIの公式ページでパッケージの存在を確認し、ダウンロード数・メンテナー・最終更新日をチェックする基本動作です。
+
+lockfileでバージョンを固定する。package-lock.json や poetry.lock をコミットし、CIでは npm ci / pip install --require-hashes のようにlockfileベースでインストールする。AIが新しいパッケージを提案したときの差分がlockfileに明確に出るため、レビューで気づきやすくなります。
+
+レベル2以上では、社内レジストリ（Artifactory, Verdaccio等）経由でのみパッケージを導入する 運用も有効です。許可されたパッケージだけを社内レジストリにミラーし、直接公開レジストリからのインストールを禁止する構成です。
+
+
+
+4. SAST（汎用） ── 生成コードの脆弱性を静的解析する
+
+なぜAI駆動開発でSASTがより重要か
+AIはセキュリティのベストプラクティスを常に守るわけではなく、CWE Top 25に載る高頻度の脆弱性パターンを普通に再生産します。前回記事の「AIが書いたコードは、インターンが書いたコードと同じ」── この原則を技術的に担保するのがSASTです。
+
+主要ツール比較
+
+
+
+ツール
+特徴
+料金
+推奨用途
+
+
+
+
+Semgrep（OSS CLI）
+パターンマッチベース。YAML形式でカスタムルールを書きやすい。30+言語対応。CIへの組み込みが簡単
+OSS版は無料（LGPL-2.1）
+カスタムルール重視のチーム
+
+
+SonarQube（Community）
+コード品質＋セキュリティの統合。35+言語、6,500+ルール。品質ゲート（基準を満たさないとマージ不可）が強力
+Community版は無料
+品質ゲートでマージを制御したいチーム
+
+
+CodeQL
+コードをデータベースとして扱い、クエリで検索。深いセマンティック解析。GitHub Advanced Securityの一部
+Public repoは無料、Private repoは有料プランが必要（※）
+GitHub利用者のセキュリティ深掘り
+
+
+Snyk Code
+IDE上でリアルタイムスキャン。開発者体験が良い
+無料枠あり、有料プラン別
+開発者のフィードバックループ最速
+
+
+
+
+どう選ぶか
+ここはチームの状況で分かれます。
+
+
+「まず1つ入れたい」なら → Semgrep OSS。無料、CIへの組み込みが簡単、カスタムルールの学習コストが低い。AI生成コード向けのルールセットも用意されている（後述の「AI生成コード特化」セクションで詳しく）。
+
+「品質ゲートでマージを制御したい」なら → SonarQube Community。ただし、Community版はクロスファイルのテイント追跡（データがファイルをまたいで汚染される流れの解析）ができない点に注意。深いセキュリティ解析には有料版が必要。
+
+「GitHubにオールインしている」なら → CodeQL。GitHub Advanced Securityの一部として動く。クエリ言語の学習コストは高めだが、検出の深さはトップクラス。
+
+「IDEでリアルタイムに指摘してほしい」なら → Snyk Code。書いている最中に脆弱性を教えてくれるので、フィードバックが最速。
+
+一つに絞る必要はありません。実務的には 「メインSAST（CI/CD）+ 定期的なディープスキャン」 の2段構成が推奨されています。例えば「Semgrepを毎PRで回し、CodeQLを週次リリース前に回す」といった使い分けです。
+
+※ GitHub Advanced Security（GHAS）の課金体系について：GitHubはGHASを「Secret Protection」「Code Security」に分割しており、無料で使える範囲が変動しています。Private repoでSecret ScanningやCodeQLを使う場合の正確な費用は、GitHubの最新の料金ページで確認してください。なお、Private repoでGHAS/Code Securityが無効の場合、SARIFファイルのCode Scanningアップロードは失敗します。その場合、スキャン結果はCIのアーティファクト（actions/upload-artifact）として保存するのが現実解です。
+
+
+
+5. SAST（AI生成コード特化） ── AI駆動開発ならではの脅威に対応する
+
+汎用SASTと何が違うか
+汎用SASTは「SQLインジェクション」「XSS」といった従来の脆弱性パターンを検出します。それに対し、AI生成コード特化のルールセットは AIコーディングツールやエージェントに固有の脅威 を検出します。
+具体的には以下のようなものです。
+
+
+プロンプトインジェクション：ユーザー入力がそのままLLMのプロンプトに連結されているコード
+
+エージェントスキルファイルの悪意あるパターン：AIエージェントのスキル定義に、データ持ち出しや不正な外部通信のパターンが含まれていないか
+
+シャドーAI利用の検出：承認されていないLLM APIの呼び出しがコードベースに含まれていないか（例：開発者が個人のOpenAIキーで直接API叩いているコード）
+
+
+Semgrep Guardian とルールパック
+この領域で先行しているのが Semgrep です。2026年5月に「Semgrep Guardian」をリリースし、Claude Code、Cursor、Windsurf、Kiroなどのエージェント型ツールの内部でリアルタイムにスキャンを実行できるようになりました。
+また、以下の3つのルールパックが提供されています（2026年6月時点。ルール数はアップデートで変動するため、最新はSemgrep公式レジストリで確認してください）。
+
+
+
+ルールパック
+ルール数
+検出対象
+料金
+
+
+
+
+AI Security
+27
+プロンプトインジェクション、制限なしのツール使用、データ持ち出し
+
+無料（OSS CLI）
+
+
+Agent Skills（Pro）
+122
+エージェントスキル定義ファイル内の悪意あるパターン
+
+有料（Semgrep Pro）
+
+
+Shadow AI
+186
+コードベース内の未承認LLM利用
+
+無料（OSS CLI）
+
+
+
+注意：Semgrep GuardianやProルールパックは有料製品です。無料で使えるのはOSS CLIとコミュニティルール（AI Security、Shadow AI含む）であり、「Semgrepは全部無料」ではありません。ただし、無料のルールパックだけでも十分な出発点になります。
+
+いつ導入すべきか
+
+
+レベル1：汎用SASTにSemgrepを選ぶなら、AI SecurityルールとShadow AIルールも一緒に有効にする。追加コストゼロなので、入れない理由がない。
+
+レベル2：エージェント型ツール（Claude Code, Copilot Agent Mode等）を使っているなら、AI SecurityルールとShadow AIルールは入れるべき。
+
+レベル3：全ルールパックを必須とし、Guardianでリアルタイム検出も組み込む。
+
+
+Semgrep以外の選択肢
+この領域は2026年時点でまだ新しく、Semgrepが先行しています。ただし、SonarQubeやSnyk Codeも「AI生成コードへの対応」を進めており、今後選択肢は増えるでしょう。現時点では、汎用SASTとしてSemgrepを選び、無料のルールパック（AI Security + Shadow AI）を一緒に有効にする のが、最もコスパの良い始め方です。
+
+
+6. ライセンススキャン ── オープンソース汚染を防ぐ
+
+なぜAI駆動開発で特に重要か
+AIが学習データ由来のGPL等のコードをそのまま出力するリスクについては前回記事で解説しました。出力時にライセンス表示は付かないので、気づかないまま混入します。セキュリティ脆弱性と違って テストでは見つからない法的リスク です。
+
+主要ツール比較
+
+
+
+ツール
+特徴
+料金
+推奨
+
+
+
+
+FOSSA
+ライセンスコンプライアンス特化。深い依存関係解析（推移的依存含む）、デュアルライセンスやバージョン間のライセンス変更まで追跡。SBOM生成。CI連携
+無料枠あり、有料プランあり
+ライセンスコンプライアンスが主要懸念のチーム
+
+
+
+Snyk Open Source（ライセンス機能）
+SCAの脆弱性スキャンに加え、ライセンスポリシー違反の検出も可能。レポートがわかりやすい
+上記参照
+すでにSnykを使っているチーム
+
+
+
+Trivy（ライセンス機能）
+脆弱性スキャンに加え、ライセンス検出も対応
+無料
+OSSで統合したいチーム
+
+
+FOSSology
+OSS。ファイル単位のライセンス検出。エンタープライズ向けの詳細レポート
+無料
+監査向けの詳細分析
+
+
+
+
+どう選ぶか
+
+
+すでにSnykを使っている → Snykのライセンス機能を有効にするだけで最低限カバーできる
+
+ライセンスコンプライアンスが契約上の要件（受託開発・エンタープライズ向けSaaS）→ FOSSA が最も強力。推移的依存（依存の依存）のライセンスまで追跡するのは、このカテゴリで最も深い。受託開発で顧客にライセンス保証を求められた場合、FOSSAのレポートがそのまま契約上の証跡になります。前回記事で触れた「AIを安全に使いこなしている会社としての差別化」を、ライセンス面でも実現できるポイントです。
+
+OSSで完結したい → Trivy のライセンス機能 + FOSSology で詳細分析
+
+
+スキャン結果を「納品物」にする（レベル2の差別化）
+レベル2、特に受託開発では、スキャンは「自社でチェックする」だけでなく 「顧客にどう担保したかを示す」 ところまでがゴールです。具体的には以下の成果物をプロジェクトの納品物・証跡に含めることを検討してください。
+
+
+SBOM（Software Bill of Materials）：使用しているOSSの一覧と各バージョン。Trivyの trivy sbom やFOSSAで自動生成できます。
+
+ライセンスレポート：各依存パッケージのライセンス種別と、ポリシー違反の有無。FOSSAのレポートがそのまま使えます。
+
+スキャン合否レポート：CI上で実行したSAST/SCA/シークレットスキャンの合否結果。CIのアーティファクトとして保存し、必要に応じて提出。
+
+これらを納品に含める体制を整えておくと、前回記事で触れた 「AIを安全に使いこなしている会社としての差別化」 がライセンス・品質の両面で具体化します。
+
+Copilot のコード参照フィルタ
+ツールとは別の観点ですが、GitHub Copilotには 「公開コードとの一致をブロックするフィルタ（Suggestions matching public code）」 があります。これを有効にすると、学習データ中の公開コードと一致する補完候補を出力しなくなります。
+このフィルタは、GitHub CopilotのIP補償（著作権侵害クレームへのベンダー補償）の 適用条件 でもあります。IP補償を受けたいなら、このフィルタは必ず有効にしてください。設定画面（Organization / Enterprise settings → Copilot → Policies）から切り替えられます。
+
+
+7. Content Exclusion・権限制御 ── 送る前に止める
+
+なぜ「入口で止める」が大事か
+ここまでのツールは「出力をチェックする」ものでしたが、このカテゴリは 「そもそもAIに送らない」 アプローチです。機密ファイルがAIのコンテキストに入らなければ、漏洩しようがありません。
+
+ツール別の設定方法
+AIコーディングツールごとに仕組みが異なるので、主要なものを整理します。
+
+GitHub Copilot：Content Exclusion
+Copilot Business / Enterpriseプランで利用可能。リポジトリ・Organization・Enterprise単位で、AIに参照させないファイルパスを指定できます。
+設定場所：Organization Settings → Copilot → Content exclusion
+# 例：設定できるパスパターン
+/src/secrets/**
+*.pem
+*.key
+.env
+internal-config.yaml
+
+注意点：2026年6月時点で、Content Exclusionは Copilot CLI、Cloud Agent、Agent Mode（VS Code等のEdit/Agent Mode）には未対応 です。通常のインラインサジェストとCopilot Chatには効きますが、AI駆動開発で多用されるCLIやエージェント型の動作では無視されます。「設定したから安心」とはいかない重要な制約です。エージェント型を使う場合は、シークレットスキャン（セクション1）との併用が必須になります。
+
+Claude Code：permissions.deny
+Claude Codeでは、.claude/settings.json の permissions.deny で、AIがアクセスできないファイルを指定します。
+{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(~/.ssh/**)"
+    ]
+  }
+}
+
+注意点：.claudeignore はClaude Codeに存在する仕組みで、Glob/Grepのスコープからファイルを除外できます。ただし、明示的な Read ツールによる読み取りは防げないバグが複数報告されています。確実に機密ファイルへのアクセスを制御するなら、permissions.deny を使ってください。プロジェクトのルートに .claude/settings.json を置いてチームで共有するのが正解です。
+
+Cursor：.cursorignore / .cursorindexignore
+Cursorでは .cursorignore（AIのコンテキスト全般から除外）と .cursorindexignore（インデックスから除外）の2種類があります。.gitignore と同じ書式です。
+
+エージェント権限の設計
+Content Exclusionは「ファイルを読ませない」制御ですが、エージェント型ツールでは 「何を実行してよいか」 の制御も必要です。
+
+
+Claude Code：permissions.deny でコマンド実行（Bash）やファイル書き込み（Write）も制御可能。allowedTools でホワイトリスト方式にもできる。
+
+GitHub Copilot：Agent Modeの管理者制御（有効/無効の切り替え、Visual Studioではグループポリシーでの無効化）が可能。
+
+レベル2以上では、「デフォルトは最小権限、必要に応じて解放」 の原則でエージェントの権限を設計してください。「とりあえず全権限」は、前回記事で触れた「エージェントの過剰な権限」リスクに直結します。
+
+
+8. DAST（動的解析） ── 実行時の脆弱性を検出する
+
+SASTとの違い
+SASTはコードを実行せずに解析する「ホワイトボックス」テスト、DASTはアプリケーションを実際に動かして外部からリクエストを送る「ブラックボックス」テストです。SASTでは見つけにくい認証・認可の不備、CORSの設定ミス、レスポンスヘッダの漏れなどを検出します。
+AI駆動開発だからといってDASTの要件が大きく変わるわけではありませんが、AIが生成したAPI実装をテストする 際にはSASTだけではカバーしきれない脆弱性が出やすいため、レベル2以上では組み込みを推奨します。
+
+主要ツール
+
+
+
+ツール
+特徴
+料金
+
+
+
+
+OWASP ZAP
+OSSのDASTツールの定番。自動スキャン＋手動テスト。CI統合可。活発なコミュニティ
+無料
+
+
+Burp Suite
+セキュリティテストの業界標準。Professional版は強力だが手動テスト寄り。CI統合はEnterprise版
+Community版は無料、Professional $449/年〜
+
+
+
+
+レベル別の推奨
+
+
+レベル1：基本は不要。社内ツールやAPIを外部公開しないプロダクトなら、機能テスト・結合テストで十分。ただし、ユーザー数が増えてきた段階や、決済・個人情報など機微な情報を扱い始めた段階では、レベル2への移行を待たずにDASTの導入を検討する価値がある。
+
+レベル2：OWASP ZAP をCIに組み込み、ステージング環境へのデプロイ後に自動スキャン。
+
+レベル3：ZAP + 専門家による手動ペネトレーションテストの併用
+
+
+
+9. LLMゲートウェイ ── AI利用を集中統制する
+
+何をするものか
+複数のチーム・複数のLLMプロバイダーをまたいでAIを使う組織で、予算・レート制限・アクセス制御・監査ログを一元管理するためのプロキシサーバーです。前回記事で触れた「ガバナンス用のゲートウェイ」の具体的な選択肢です。レベル3では必須に近く、レベル2でもコスト管理の目的で検討の価値があります。
+
+主要ツール比較
+
+
+
+ツール
+特徴
+料金
+推奨
+
+
+
+
+LiteLLM
+OSSのLLMプロキシ。100+プロバイダーをOpenAI互換のAPIで統一。仮想キーごとの予算管理、レート制限、フォールバック。Docker一発で起動
+自ホストなら無料（MIT）、エンタープライズ版あり
+セルフホスト派・コスト重視
+
+
+Portkey
+マネージドSaaS型ゲートウェイ。セマンティックキャッシュ、ガードレール、監査証跡、SOC 2対応
+$499/月〜
+エンタープライズ機能が必要な場合
+
+
+Kong AI Gateway
+Kong APIゲートウェイのLLMプラグイン。OIDCによるSSO、プラグインアーキテクチャ
+エンタープライズライセンス
+すでにKongを運用しているチーム
+
+
+
+
+いつ必要か
+
+
+レベル1〜2：通常は不要。ただしUberの事例（年間予算を4ヶ月で使い切った）のように、利用が急拡大するリスクがあるなら、LiteLLMで利用量の可視化だけでも始める価値がある。
+
+レベル3：仮想キーによるチーム別のアクセス制御と予算管理、全リクエストの監査ログが必要。LiteLLMのセルフホストか、Portkey（SOC 2対応が必要な場合）が候補。
+
+
+
+CIパイプラインの設計：レベル別の概念図
+ここまでのツールを、CIパイプラインにどう組み込むかの全体像を示します。
+
+レベル1：最小構成
+コミット前                          PR作成時（CI）
+┌──────────────┐                ┌─────────────────────┐
+│ Gitleaks     │                │ Dependabot          │
+│（pre-commit）│  ──→  push ──→ │（自動脆弱性チェック）│
+└──────────────┘                └─────────────────────┘
+                                         │
+                                    人間がレビュー
+                                         │
+                                      マージ
+
+所要時間：1〜2時間で設定完了。コストはゼロ。
+
+レベル2：標準構成
+コミット前              PR作成時（CI）
+┌──────────┐     ┌──────────────────────────────┐
+│ Gitleaks │     │ TruffleHog（シークレット）    │
+│（secret）│     │ Snyk / Trivy（SCA）           │
+└──────────┘     │ Socket（slopsquatting）       │
+                 │ Semgrep（SAST + AIルール）    │
+                 │ FOSSA / Snyk（ライセンス）    │
+                 │ OWASP ZAP（DAST）※ステージング│
+                 └──────────────────────────────┘
+                              │
+                      ┌───────┴────────┐
+                      │  品質ゲート判定  │
+                      └───────┬────────┘
+                     ┌────────┴────────┐
+                  ✅ PASS           ❌ FAIL
+                     │                 │
+              人間レビュー         マージブロック
+                     │             （自動で拒否）
+                  マージ
+
+所要時間：初期構築に1〜2日（既存CIがある前提）。ツール費用は、OSS構成（Gitleaks + TruffleHog + Trivy + Semgrep OSS + OWASP ZAP）＋ GitHub Actionsの無料枠内なら実質無料で組めます。有料ツール（Snyk Team, FOSSA, Socket等）を足すと月数万円〜。無料だけでもレベル2の要件はカバーできるので、まずはOSSで始めて、必要に応じて有料ツールを足すのが現実的です。
+ポイント：レベル1との本質的な違いは 「品質ゲートで自動ブロックするかどうか」 です。レベル1は人間のレビュー頼りですが、レベル2はツールが基準を満たさないPRのマージを自動で拒否します。
+
+注意：CIが赤くなるだけではマージは止まらない
+ここで見落とされがちな落とし穴があります。GitHub Actionsでスキャンが失敗しても、既定ではマージボタンは押せるままです。バツ印が出るだけで、人間が無視してマージできてしまう ── これでは実質レベル1と変わりません。
+自動ブロックを実現するには、ブランチ保護（Branch protection rules）でステータスチェックをRequiredにする 設定が必要です。
+設定手順：Repository Settings → Branches → Branch protection rules → 対象ブランチ（main 等）を選択 → 「Require status checks to pass before merging」を有効化 → CIジョブ名（例：security-scan、semgrep）をRequiredに追加。
+この設定で初めて「CIが赤 → マージ不可」が強制されます。レベル2のCI構成を組んだら、ブランチ保護の設定もセットで行ってください。
+
+既存リポジトリへの導入：いきなりblockにしない
+ここまでの説明は新規プロジェクト前提ですが、レベル2の読者の多くは 既存リポジトリに後付けで導入する はずです。このとき、最初から「CIが赤 → マージブロック」にすると、過去に蓄積された脆弱性やライセンス指摘（いわゆる技術的負債）が一斉に検出され、今回の変更とは無関係なPRまで全部赤になります。開発が完全に止まるので、チームに無効化されて終わりです。
+段階的に導入するのが現実的です。
+
+
+Report-only（助言モード）で導入する。CIにスキャンを組み込むが、結果をレポートするだけでマージはブロックしない。まずチームが「どんな指摘が出るか」を把握するフェーズ。
+
+既存指摘を棚卸しする。出てきた指摘を「すぐ修正」「リスクを受容（ベースライン化）」「後回し（チケット化）」に分類する。ツールによってはベースライン機能があり、既存の指摘を「既知」としてマークして新規の指摘だけを表示できます。
+
+block化する。棚卸しが終わったら、新規の指摘のみでCIを落とす設定に切り替える。
+
+ブランチ保護でRequiredにする。ここで初めて「マージブロック」が自動で効く状態になる。
+
+例外：シークレットスキャン（Gitleaks / TruffleHog）だけは最初からblockで構いません。APIキーやパスワードの漏洩は「後で直す」が許されない類のリスクなので、既存リポでも初日からブロックする価値があります。
+
+レベル3：上記 + インフラレベルの統制
+レベル2の構成に加えて以下が入ります。
+
+
+LLMゲートウェイ（LiteLLM / Portkey）を全チームのAI利用の前段に配置
+
+監査ログを改ざん不能な形で保存（SIEM連携）
+
+Content ExclusionをOrganization / Enterprise単位で強制設定
+
+定期的なペネトレーションテスト（四半期〜年次）
+
+所要時間：インフラ設計を含め数週間〜数ヶ月。専任のセキュリティエンジニアまたは外部コンサルが必要になることが多い。
+
+
+補足：AI生成コードのPRテンプレート
+前回記事で「プルリクエストに『AI生成を含むか』を書く欄を設ける」と提案しましたが、具体的にどう書くか。シンプルなテンプレート例を示します。
+## AI利用チェック
+
+- [ ] この変更にはAI生成コードを含む
+  - 使用ツール：（例：Claude Code / Copilot / Cursor）
+  - 生成箇所の概要：（例：認証モジュールのバリデーション部分）
+
+## AI生成コードの追加チェック（該当する場合）
+
+- [ ] 生成コードのロジックを理解し、意図どおりに動作することを確認した
+- [ ] ハードコードされたシークレットがないか確認した
+- [ ] AIが提案したパッケージの実在性・正規性を確認した
+- [ ] ライセンス上の問題がないか確認した（Copilotのフィルタ有効 / ライセンススキャン通過）
+
+このテンプレートを .github/PULL_REQUEST_TEMPLATE.md に置いておくだけで、レビュアーが「AI生成箇所に注意を向ける」習慣ができます。ツールの導入より先にできる、コストゼロの対策です。
+
+
+まとめ：自社のレベルに合わせて、小さく始める
+一気に全部入れようとすると挫折します。レベルに応じた優先順位を意識してください。
+
+最小で始めるなら（レベル1）
+
+
+Gitleaks（pre-commit） ── 5分で設定完了
+
+Dependabot（GitHub設定画面で有効化） ── 数クリック
+
+PRレビューの習慣 ── ツールではなく運用
+
+この3つだけで、AI駆動開発の基本的な安全網はできます。
+
+次に足すなら（レベル2に向けて）
+
+
+Semgrep をCIに追加 ── AI Securityルールパックも有効に
+
+Socket or Snyk をCIに追加 ── slopsquatting対策
+
+FOSSA or Snykのライセンス機能 ── ライセンス汚染対策
+
+Content Exclusion を各ツールで設定 ── 機密ファイルの送信防止
+
+
+企業として統制するなら（レベル3に向けて）
+
+
+LLMゲートウェイ で利用量とアクセスを集中管理
+
+DAST（OWASP ZAP）と定期的なペネトレーションテスト
+
+監査ログ基盤 の整備
+
+前回記事で「どのレベルで、どこまでリスクを取るか」という考え方を定め、本記事で具体的なツールを選ぶ。あとはCIに組み込んで回す段階です。ただし、CIの設定はローカルでは気づけない壊れ方をすることが多いので、実環境で一度グリーンになるまでは完成ではありません。最初のPRが通るところまで見届けてください。この2記事がセットで、AI駆動開発のセキュリティを「考え方」と「実装」の両面からカバーすることを目指しました。
+まずはレベル1の3点（Gitleaks + Dependabot + PRレビュー）から始めてみてください。1〜2時間後には、最低限の安全網が動いています。
+
+
+参考
+
+各ツールの公式ドキュメント（Gitleaks, TruffleHog, Snyk, Socket, Semgrep, FOSSA, OWASP ZAP, LiteLLM, Portkey）
+Semgrep「Detect risks in AI-generated code with Semgrep Guardian」（2026年5月）
+Socket.dev「2026 Software Supply Chain Security Report」
+GitHub Docs「Content exclusion for GitHub Copilot」
+Anthropic「Claude Code permissions documentation」
+前回記事：「AI駆動開発のセキュリティ、結局どこまでやればいい？」
+
+
+※ ツールの料金・機能は2026年央時点の情報です。導入時には最新の公式サイトを確認してください。
+
+---
+
+## 46. [Claude Code コンテキスト管理パターン集：need-to-know だけ読ませる設計 - Qiita](https://qiita.com/nogataka/items/99b1ea9ba20877d54dba)
+- **優先度**: High
+- **スコア**: 88
+- **解析日時**: 2026/6/27
+- **AI要約**:
+  Claude Codeのトークン消費と精度低下を防ぐコンテキスト設計原則を提示している。
+  CLAUDE.mdの常時読込を薄くし、別ファイルをオンデマンドで読み込ませる手法を解説。
+  サブエージェントへの観点別タスク委譲と、特定ファイル行の読み込み制御パターンを明記。
+- **今読む理由**: AI駆動開発でClaude Codeを使用する際、コンテキストウィンドウの枯渇や精度低下を防ぐためのCLAUDE.md記述法やサブエージェントのプロンプト設計が具体的であり、即座に開発効率を向上させられるため。
+- **タグ**: #Claude-Code, #LLM-Context-Management, #AI-Driven-Development, #CLAUDE.md
+
+### 本文
+はじめに
+Claude Code を使い続けると、あるタイミングで壁にぶつかります。
+「コンテキストウィンドウがいつも足りなくなる」「途中からモデルの返答が的外れになる」「長い会話の後半で、前半に決めたことを忘れている」。
+このような問題の根っこは、コンテキストに何を入れるかの設計にあることが多いです。
+LLM はコンテキストウィンドウに入っているものだけを見て返答します。
+裏を返せば、いま必要な情報だけを渡す設計ができれば、コンテキスト消費を抑えながら精度を保てます。
+本記事では、Claude Code を実業務で運用するなかで自分が実践している「need-to-know 原則」に基づくコンテキスト管理のパターンを6つに整理して紹介します。
+対象読者
+
+Claude Code を日常的に使っており、コンテキスト不足や精度の揺らぎを経験している方
+CLAUDE.md の設計や、サブエージェント活用を考え始めている方
+
+前提
+
+Claude Code の基本的な使い方（プロジェクト設定、CLAUDE.md）は知っている想定です
+「このパターンを使えば必ず改善する」という保証はできません。自分の環境・ユースケースで検証してください
+
+得られるもの
+
+コンテキストを浪費している箇所の見つけ方
+6つの管理パターン（命名・課題・やり方・効果）
+各パターンを組み合わせる考え方
+
+
+
+なぜコンテキストを「設計」する必要があるのか
+一文で言うと、LLM はコンテキストウィンドウに入っているものをすべて読んでいるからです。
+最近 Zenn で話題になった記事に「LLM はマークダウンファイル全体を読んでいる。その必要はない」という観察がありました。
+長いドキュメントを渡すと、関係のない部分まで処理に使われます。
+その結果、トークンを消費するだけでなく、ノイズが増えて精度が落ちることもあります。
+逆に考えると、必要な部分だけを渡すことは、コスト節約と精度向上を同時に達成できる手段です。
+もう一つ重要な観点があります。
+Claude Code は長い会話を続けると、会話の中だけで決めた事項が要約に丸められ、前半の方針が薄まることがあります。
+前半で合意した設計方針や制約が、後半では曖昧になってしまうのはこのためです。
+「どこに何を置くか」を最初から考えておくことが、長期的な精度維持につながります。
+
+
+パターン 1：オンデマンド読込（常時読込を最小化する）
+
+課題
+CLAUDE.md は常時読み込まれるため、何でも書くと関係のないタスクでもその内容がコンテキストに乗ります。
+「文書執筆のガイドライン」がコードデバッグ中にコンテキストを占有する、といった無駄が生まれます。
+
+やり方
+ガイドラインを「常時読込」と「オンデマンド読込」に分けます。
+常時読込：あらゆるタスクで参照が必要なもの（役割定義、ガードレール、判断軸など）
+オンデマンド読込：特定タスクのときだけ必要なもの（記事執筆規範、コードスタイル、テスト方針など）
+CLAUDE.md に「文章を書くタスクでは docs/writing-guidelines.md を読んでから着手する」と書いておき、ガイドライン本文は別ファイルに分離します。
+タスクが発生したときだけ Claude にそのファイルを読ませ、それ以外のタスクでは読まないままにします。
+なお、CLAUDE.md に @docs/writing-guidelines.md のように @ 付きでファイルを記載すると、起動時に常時インポートされます。
+ここで説明しているオンデマンド読込（「タスクのときだけ読む」という運用ルールをテキストで書く）とは別の仕組みです。混同しないよう注意してください。
+# CLAUDE.md（抜粋）
+
+## オンデマンドで読むファイル
+
+| タスク | 読むファイル |
+|--------|------------|
+| 文章・記事の執筆 | `docs/writing-guidelines.md` |
+| コード実装・レビュー | `docs/coding-standards.md` |
+| データベース操作 | `docs/db-conventions.md` |
+
+
+効果
+常時読込ファイルを薄くすることで、どのタスクでも最初から「使える余白」が増えます。
+自分の環境では、CLAUDE.md を「役割定義＋振り分け表＋ガードレール」だけに絞り、詳細規範はすべて別ファイルに切り出してから、長い作業セッションでの精度低下が体感的に減りました（定量測定はしていないため断言はできません）。
+
+
+パターン 2：サブエージェントへの委譲でコンテキストを隔離する
+
+課題
+調査・分析・執筆などの重い処理を親の会話でそのままやると、途中経過の思考がすべてコンテキストを消費します。
+「候補を10個調べて比較して」とお願いすると、10個分の調査内容がそのまま蓄積されていきます。
+
+やり方
+Claude Code のサブエージェント機能を使い、重い処理を別コンテキストで実行させます。
+親の会話では「依頼」と「結果の受取」だけを行います。
+途中の試行錯誤・調査ログ・比較過程はサブエージェントのコンテキストで完結し、親には最終結果だけが返ってきます。
+# 親への委譲指示の例
+
+以下の調査をサブエージェントとして実行してください。
+
+目的: ○○の実装方針を3案に絞る
+
+制約:
+- 最終メッセージに結論・根拠・未確認事項を含めること
+- 「完了しました」だけの回答は禁止
+- 調査過程ではなく、最終判断を返すこと
+
+ポイントは「最終メッセージに成果物を含めること」を明示することです。
+これを書かないと、期待した成果物ではなく短い完了報告だけが返ってくることがあります。
+
+効果
+親のコンテキストは「依頼の送受信」だけになります。
+10回の調査をすべて親でやれば10倍のコンテキストを使いますが、サブエージェントに委譲すれば親には要約が返るため、詳細を親で全部読むよりコンテキスト消費を大きく抑えられます（消費がゼロになるわけではありません）。
+並列実行も可能で、互いに依存しない調査タスクを同時に複数走らせれば、時間コストも下げられます。
+
+
+パターン 3：観点分担（複数の視点を別エージェントに割り当てる）
+
+課題
+「コードをレビューしてください」と一度に依頼すると、Claude は複数の観点（バグ・設計・テスト・セキュリティ）を同時に考えようとします。
+観点が多いほど、各観点の深さが浅くなりやすいです。
+Zenn で紹介されていた「7人の意地悪なQAを仕込んでテストケースの観点漏れを潰した」という記事はこの問題への回答でした。
+一つのエージェントに一つの観点だけを持たせると、その観点の深掘りに集中できます。
+
+やり方
+タスクを観点ごとに分解し、それぞれを別のサブエージェントに割り当てます。
+# 並列レビューの委譲例
+
+以下のコードを、観点ごとに分担してレビューしてください。
+
+[サブエージェント A]
+観点: バグ・ロジックの誤り のみ
+対象: （コード本文）
+出力: 問題箇所と修正案
+
+[サブエージェント B]  
+観点: セキュリティ（入力検証・認証・権限） のみ
+対象: （コード本文）
+出力: 問題箇所と修正案
+
+[サブエージェント C]
+観点: テスト容易性・境界値 のみ
+対象: （コード本文）
+出力: 見落としやすいケース一覧
+
+観点の割り方はユースケースによって変わります。
+コードレビューであれば「バグ/設計/セキュリティ/テスト」、記事の校正であれば「事実確認/文体/読者層への適合/機密漏れ」といった分け方が考えられます。
+
+効果
+各エージェントが一つの観点に集中するため、取りこぼしが減ります。
+また、結果を並列で集めることで時間を節約できます。
+全観点を一つのプロンプトに詰め込むより、観点ごとに分けたほうが各観点の深さが増す傾向があります。
+ただし、サブエージェントの数が増えるとコストも増えるため、観点を絞ることとのバランスが必要です。
+
+
+パターン 4：必要部分だけ読ませる（全文読み込みを避ける）
+
+課題
+「このファイルを参考にして」と長いファイルをそのまま渡すと、関係のないセクションもすべてコンテキストに乗ります。
+500行のドキュメントのうち、実際に参照が必要なのは30行だけ、というケースは珍しくありません。
+
+やり方
+Read ツールの offset・limit パラメータを活用する
+必要なセクションの行番号を特定してから、その範囲だけを読み込みます。
+まず対象ファイルの目次や見出しだけを確認してください（先頭30行）。
+必要なセクションの行番号がわかったら、その範囲だけを読んでから作業を始めてください。
+
+Grep で必要な箇所を先に特定する
+ファイル全体を読む前に、キーワードで必要な行を絞り込みます。
+「エラーハンドリング」に関する記述を grep で探してから、その周辺だけを読んでください。
+
+見出しだけ先に把握する
+ファイル全体を読む前に、見出しだけを抽出して構造を把握します。
+rg '^#' ファイル名 で Markdown の見出し行だけを取り出すか、Read の offset・limit で先頭数十行だけを読んで目次を確認します。
+必要なセクションの行番号がわかれば、そこだけを Read に渡せます。
+「全文を読んでから要約させる」方法は、全文読み込みが発生するため、省トークンにはなりません。
+
+効果
+ファイルの全文を渡す場合と比べて、コンテキスト消費量を大幅に削減できます。
+特に設計書・仕様書・ログファイルのような長いドキュメントを扱うときに効果が出やすいです。
+ただし、ファイルを部分的にしか読んでいない場合、Claude が「まだ読んでいない部分」に重要な情報があっても気づけないリスクがあります。
+「ファイル全体を把握する必要があるか、特定の情報だけでよいか」を自分で判断してから使い分けてください。
+
+
+パターン 5：コンテキスト注入マニフェスト（委譲先が読むべきファイルを列挙する）
+
+課題
+サブエージェントへの委譲で精度が出ない原因の一つは「文脈不足」です。
+CLAUDE.md やルールファイルはサブエージェントでも読み込まれますが、会話の中だけで積み上げた前提（先行調査・決定済みの方針）は、通常のサブエージェントには引き継がれません。
+その結果、的外れな出力が返ってきたり、既に決まったことを再考し始めたりします。
+
+やり方
+委譲するときに「読むべきファイルのリスト」を明示的に渡します。
+# 委譲プロンプトへの追記例
+
+着手前に、以下のファイルを読んでください。
+
+- `docs/writing-guidelines.md`（文体規範。遵守してください）
+- `outputs/research/2026-06-20-topic.md`（先行調査。これを一次情報として使ってください）
+- `docs/target-audience.md`（想定読者の定義）
+
+上記を読んでから、以下の作業を実行してください。
+
+さらに複数ファイルを繰り返し参照する場合は、リスト自体をファイルに書き出しておくと管理しやすくなります。
+{"file": "docs/writing-guidelines.md", "reason": "文体規範の遵守"}
+{"file": "outputs/research/2026-06-20-topic.md", "reason": "一次情報"}
+{"file": "docs/target-audience.md", "reason": "想定読者の定義"}
+
+委譲前にこのリストを展開して、委譲プロンプトの冒頭に貼り付けます。
+
+効果
+文脈の引き継ぎが構造化されるため、委譲先の出力品質が安定します。
+また「どのファイルを渡したか」が記録に残るため、後から振り返りやすくなります。
+
+
+パターン 6：会話セッションを意図的に分割する
+
+課題
+一つの会話を長く続けると、2つの問題が起きます。
+
+コンテキストウィンドウが埋まっていき、新しい情報を入れる余地が減る
+会話の先頭が圧縮され、初期に決めた方針や制約が薄まる
+
+Zenn で話題になった「tmux のタブを会話させてコンテキストを分割する」という記事は、この問題に対するアプローチの一つです。
+
+やり方
+フェーズで会話を区切る
+「調査フェーズ」「設計フェーズ」「実装フェーズ」のように、作業の区切り目で意図的に新しい会話（セッション）を始めます。
+次のセッションに渡すときは「引き継ぎメモ」を書き出しておきます。
+# 引き継ぎメモの例（次のセッションの冒頭に貼る）
+
+## 決定済みの方針
+- ○○ライブラリを使う（理由: △△）
+- エラーハンドリングは集約型で実装する
+
+## 残っている作業
+- ○○機能の実装
+- テストの追加
+
+## 参照すべきファイル
+- `src/api/types.ts`（型定義）
+- `docs/api-spec.md`（仕様書）
+
+タスクの種類ごとにタブ（tmux や IDE）を分ける
+長期にわたるプロジェクトでは、「機能Aの開発」「バグ調査」「ドキュメント整備」のように、タスクの種類ごとに別のセッションを持ちます。
+それぞれのセッションは独立したコンテキストを持つため、一方の調査ログがもう一方の実装作業を圧迫しません。
+
+効果
+各セッションを「目的に特化した状態」で保てます。
+引き継ぎメモを書く習慣は、作業の整理にもなります。
+ただし、セッションをまたいだ文脈は自動では引き継がれません。
+引き継ぎメモに書き忘れると、次のセッションで同じ調査をやり直すことになります。
+「どこまで決まっていて、何が残っているか」を確実に記録してから区切ってください。
+
+
+6つのパターンの組み合わせ
+各パターンは単独でも効果がありますが、組み合わせることで補い合います。
+
+
+
+状況
+使うパターン
+
+
+
+
+作業が始まった
+1（オンデマンド読込）で必要なガイドラインだけ読む
+
+
+重い調査・分析がある
+2（委譲・隔離）でサブエージェントに任せる
+
+
+品質を多角的に確認したい
+3（観点分担）で観点ごとに並列チェック
+
+
+長いファイルを参照する
+4（部分読み込み）で必要箇所だけ渡す
+
+
+サブエージェントに背景を伝えたい
+5（注入マニフェスト）で読むべきファイルを明示
+
+
+会話が長くなってきた
+6（セッション分割）で引き継ぎメモを書いて区切る
+
+
+
+「コンテキストが足りなくなってから対処する」より、「最初から必要なものだけを入れる」設計が有効です。
+
+
+まとめ
+本記事では、Claude Code でのコンテキスト管理を6つのパターンに整理しました。
+
+
+オンデマンド読込 — 常時読込ファイルを最小化し、必要なときだけ読む
+
+委譲による隔離 — 重い処理はサブエージェントで完結させ、親に結果だけ返す
+
+観点分担 — 複数の観点を別エージェントに割り当てて取りこぼしを減らす
+
+部分読み込み — ファイルの全文ではなく必要な箇所だけを渡す
+
+コンテキスト注入マニフェスト — 委譲先に読むべきファイルを明示して文脈を渡す
+
+セッション分割 — フェーズの区切りで会話を新しくし、引き継ぎメモで連続性を保つ
+
+共通するのは「need-to-know 原則」です。
+LLM がいま必要としている情報だけを渡すことで、コンテキストの余白を保ち、精度を安定させます。
+全パターンを一度に導入しようとすると混乱するので、まず自分の作業で「コンテキストが一番無駄に使われている場面」を一つ特定して、そこに一つのパターンを試してみてください。
+
+
+参考
+
+
+LLM はマークダウンファイル全体を読んでいる。その必要はない。（著者: oubakiou） — ファイル全体を渡すことのコスト
+
+Claude Codeに全部抱え込ませるのをやめた。tmuxのタブを会話させてコンテキストを分割する — セッション分割の実践
+
+Claude Code に「7人の意地悪なQA」を仕込んでテストケースの観点漏れを潰した — 観点分担の実践
+Claude Code 公式ドキュメント
+
+---
+
+## 47. [Claude Codeに同じバグを3回出すと、自動でルール化される話](https://zenn.dev/nexta_/articles/858e92ee22b4a4)
+- **優先度**: High
+- **スコア**: 88
+- **解析日時**: 2026/7/7
+- **AI要約**:
+  Claude Codeのセッション履歴からAIの行動ルールを自動生成する学習機構の解説
+  記憶の肥大化を防ぐため、短期記憶から確定知見へと段階的に絞り込む漏斗型の設計原則
+  3回の失敗で共通ルールへ自動昇格させ、成功体験はスラッシュコマンドとして自動化する運用
+- **今読む理由**: AI駆動開発における「AIが同じ失敗を繰り返す」という致命的な時間ロスを、Claude Codeの仕組みを用いて自動で解決する具体的なツールと設計思想が公開されており、現在のプロジェクトに即時適用可能であるため。
+- **タグ**: #AI駆動開発, #Claude-Code
+
+### 本文
+こんにちは。製造業向けSaaSを開発しているエンジニアです。
+AIエージェントを使い込むと、誰もが必ずぶつかる壁があります。「同じ失敗を、何度もAIに繰り返される」ことと、その対策で記録を増やすと今度は 「記憶が肥大化して、肝心なルールがノイズに埋もれる」ことです。
+私はこの2つを、セッション履歴を 「一次資料」 として扱い、アジャイル開発のふりかえりのようにAI自身の振る舞いを少しずつルール化していく学習機構（cc-retrospective-learner）で解こうとしました。仕組み自体は大げさなものではなく、自分の .claude 環境で開発の区切りごとに /retrospective を回すだけ。それを約3ヶ月続けた記録がこの記事です。
+先に結論を出します。385回のふりかえりが、55個の「次からこうしよう」 という再利用可能なルールに育ち、同じ型のバグは3回目で自動的に潰されるようになりました。
+この記事はこんな人向けです。
+
+AIに同じミスを繰り返され、その都度同じ指示を出し直している方
+メモリ機能を使い始めたが、記録が増えすぎて収拾がつかなくなってきた方
+Claude Codeのスキル／Hookを、自分の開発フローに「学習する仕組み」として組み込みたい方
+
+読み終えると、「失敗が3回で自動的にルール化される閾値設計」「記憶を肥大させない漏斗（ファネル）の作り方」という、そのまま真似できる型が持ち帰れます。 仕組みは GitHub（MIT） で公開しているので、読んだその日に導入できます。
+
+※前提となる仕組みの設計思想は前回の記事に書きましたが、本記事は単体で読めるようにしています。
+
+
+
+ 第1章：3ヶ月で、どれだけ回ったのか
+まずは数字から。2026年3月中旬から6月中旬までの約3ヶ月間で、仕組みがどれだけ回ったかを並べてみます。
+
+
+
+指標
+値
+
+
+
+
+ふりかえり済みセッション
+385
+
+
+短期記憶（short-term）ファイル
+255
+
+
+長期パターン（long-term）
+16
+
+
+確立したフィードバック（feedback）
+55
+
+
+プロジェクト知識（project）
+3
+
+
+参照情報（reference）
+3
+
+
+ユーザー傾向（user）
+1
+
+
+
+385回のセッションをふりかえり、最終的に55個の「フィードバック」——つまり 「次からこうしよう」という再利用可能なルール が手元に積み上がりました。
+
+ 「記憶肥大化」への答えは、漏斗（ファネル）だった
+AIエージェントを使い込むと、必ず「記憶の肥大化」という問題に直面します。些細なエラーや一時的な思考プロセスまで覚え込むと、ノイズに埋もれて肝心のルールが引き出せなくなる。
+この問題への答えが、まさに上の数字の並びです。ただの集計ではなく、段階的にノイズを絞り込む漏斗として設計しています。
+385 セッション
+   ↓  4視点でふりかえり、記録に値するものだけ残す
+255 short-term（短期記憶）
+   ↓  繰り返し現れたものだけパターン化
+ 16 long-term（長期パターン）
+   ↓  閾値を超え、ルールとして確立
+ 55 feedback（確立した知見）
+
+※short-term 255 から long-term 16 へ絞られる一方、feedback が 55 まで増えているのは、long-term 集約を経ずに直接 feedback 化された早期の知見や、複数パターンから派生した知見が含まれるためです。漏斗の「絞り込み」と「派生による増加」が同時に起きています。
+
+運用前に私が一番心配していたのは、「ノイズが多すぎて使い物にならない」 ことと、「運用コストが高すぎて続かない」 ことでした。
+3ヶ月後の実感としては——どちらもギリギリ回避できました。
+255個の短期記憶のうち、本当にルールに昇格したのは一部です。大半は「その場限りの作業ログ」として埋もれていきますが、それでいいのです。漏斗の上流が広いからこそ、下流に残るものの質が担保される。ノイズを恐れて記録を絞るより、たくさん記録して後で絞るほうが機能した、というのが正直な発見でした。
+
+
+ 第2章：知見が「育つ」4段の階段
+この仕組みでは、気づきは一段ずつ格上げされます。上に行くほど「AIの振る舞いを強く縛る」ものになります。
+
+
+
+レベル
+置き場所
+性質
+
+
+
+
+Lv.0
+short-term/
+その場のふりかえり記録
+
+
+Lv.1
+long-term/ + feedback_*.md
+繰り返し現れた定着パターン
+
+
+Lv.2
+CLAUDE.md
+毎セッション読み込まれるルール
+
+
+Lv.3
+スキル / Hook
+手順そのものを自動化
+
+
+
+「これはあくまで理論上の話では？」——そう思われるかもしれません。
+では3ヶ月運用して、知見は本当にこの階段を登ったのでしょうか？
+答えは Yes です。
+
+
+Lv.1（feedback化）：55個に到達。
+
+Lv.2（CLAUDE.md昇格）：「やめるべき失敗」「続けるべき成功」が閾値を超え、毎セッション読み込まれるルールに格上げされたものが複数。
+
+Lv.3（スキル/Hook化）：「毎回この手順を踏む」とまで定着した知見が、専用のスラッシュコマンド（スキル）として独立。
+
+抽象的な説明はここまでにして、次章からは実際に階段を登った3つの型を、具体的に物語ります。
+それぞれ「失敗を潰す型」「成功を資産にする型」「価値観が根付く型」の代表例です。どれもそのまま真似できるよう、閾値・データ構造・昇格の流れまで具体的に書きます。
+
+
+ 第3章：【型①】同じ失敗を、3回目で潰す
+開発をしていると、「あ、またこのバグを出してしまった……」という瞬間が必ずありますよね。
+まずは、その「あるある」を一番「仕組みらしく」拾ってくれた例から。
+
+ きっかけは、3回繰り返した同じ型のバグ
+ある設定値が未設定（null）のとき、その値をそのまま使おうとして例外が飛ぶ——という型のバグがありました。
+よくある話です。問題は、これが1回では終わらなかったことです。
+
+1回目：ある一覧画面で、設定が未投入の状態で例外が発生
+2回目：別の処理で、同じく未設定値を直接参照して落ちる
+3回目：また別の画面で、同型のバグ
+
+その都度ふりかえりは記録されていました。
+1回目・2回目の時点では、それぞれ独立した「short-term の作業ログ」でしかありません。仕組みはまだ「これはパターンだ」とは認識していませんでした。
+
+ 3回目で、仕組みが動いた
+転機は3回目です。
+週次の昇格処理（weekly-promoter）が、短期記憶を横断して 「同じ型の痛み（pain）が3回出ている」 ことを検出しました。
+fail（同型バグ）
+  ↓  ふりかえりで short-term に記録
+pain_count++（既存 feedback と照合してカウント加算）
+  ↓
+pain_count が 3 に到達
+  ↓  weekly-promoter がパターンとして検出
+long-term に集約（pattern_*.md）
+  ↓  閾値超過（pain_count ≥ 3）
+CLAUDE.md にルールとして昇格
+昇格後、フィードバックのファイルはこんな構造で残ります（中身は抽象化しています）。
+---
+name: feedback_nullable_value_safety
+pain_count: 3
+success_count: 1
+promoted_to: claude-md
+---
+
+WHY: 設定値が未設定のとき、値を直接参照して例外が発生するバグが
+     別画面・別処理で計3回再発した。
+
+HOW: 値を直接参照せず、未設定チェックまたはフォールバックを徹底する。
+     特に「設定が未投入だと未設定になりうる箇所」で注意する。
+ポイントは promoted_to: claude-md です。
+これが付くと、この知見は毎セッションの冒頭で読み込まれるルールに格上げされます。
+つまり次回以降、私が同じ型のコードを書こうとすると、Claude Code は書く前に「ここは未設定チェックが要りますよ」と言ってくれるようになりました。
+
+ 「3回」という閾値が、ちょうど良かった
+昇格の閾値は「3回」に設定しています。
+1回や2回で昇格させると、たまたまの出来事まで大げさにルール化してしまう。かといって5回も6回も待っていたら、その間に同じバグを作り続けてしまう。
+3ヶ月運用してみて、この 「3回で学習する」という設計は実際にちょうど良かったと感じています。
+人間のチームでも、「同じミスが3回続いたら仕組みで防ごう」という話をよくします。それをAIとの協働にそのまま持ち込めた、という手応えがありました。
+
+
+
+ 第4章：【型②】成功を、専用スキルに昇格させる
+この仕組みのこだわりは、 「失敗だけでなく成功も記録する」 ことです。
+ダメ出しばかりを覚えるAIは萎縮します。「これは良かった、続けよう」も同じだけ大事だ、という考えです。
+その成功記録が、3ヶ月で最も大きく育った例を紹介します。
+
+ AIの指摘を「鵜呑みにしない」という進め方
+私はコードレビューで、AIレビューツールの指摘を日常的に受け取ります。
+便利なのですが、AIの指摘はときどき間違っています。あるとき、AIが「コメントと実装が矛盾している」と指摘してきました。素直に従えば実装を変えるところでしたが、よく調べるとコメントのほうが間違っていて、実装が正しかった。指摘どおり直していたら、むしろバグを作り込むところでした。
+そこで私は、AIの指摘に対してこういう進め方を取るようになりました。
+
+指摘の内容を理解する
+
+指摘の前提そのものを疑う（本当にそれは問題なのか？）
+既存コードや関連システムで裏付けを取る
+業務フロー上の妥当性を確認する
+コメントと実装、どちらが正しいかを判断してから動く
+「対応不要」と判断したら、その理由をレビューに残す
+
+この進め方が、繰り返しうまくいきました。
+
+ success_count が積み上がり、スキルへ昇格した
+成功するたびに success_count が加算されていきます。
+この知見は最終的に success_count: 20 まで到達し——ついに専用のスラッシュコマンド（スキル）に昇格しました。
+---
+name: feedback_verify_ai_review
+pain_count: 1
+success_count: 20
+promoted_to: claude-md
+---
+
+WHY: AIレビューの指摘を鵜呑みにして実装を変更しかけたが、
+     実際はコメント側が誤りで、従えばバグを作り込むところだった。
+
+HOW: 指摘は前提から疑い、裏付け・業務妥当性を確認してから対応する。
+     対応不要なら理由をレビューに残す。
+この進め方は最終的に /review-ai-feedback という専用コマンドになりました。上の「前提を疑う→裏付けを取る→判断する」という6手順をそのまま定型化したスキルです。
+いまでは「AIレビューの指摘、裏取りして」と頼むだけでこのフローが起動します。失敗を避けるだけでなく、うまくいった進め方が"資産"として固定されたわけです。
+
+
+
+ 第5章：【型③】「進め方の価値観」まで宿す
+3つ目は、少し毛色が違います。
+個別のバグ知識でも、特定の作業手順でもなく、「仕事の進め方の価値観」そのものが蓄積された例です。
+
+ 「片方を直すなら、対も最初から見る」
+私が扱うシステムには、対称構造を持つ2つの業務概念があります（仮にAとBとします）。
+AとBは鏡写しのような関係で、片方のロジックを直すと、たいていもう片方も同じ修正が必要になります。
+ところが人は——AIも——目の前の依頼に集中すると、Aだけ直してBの存在を忘れがちです。
+後からBの不整合に気づき、調査範囲が膨らむ。これを何度かやりました。
+そこで「Aの依頼を受けたら、対になるBを最初から視野に入れる」という観点が、ふりかえりのたびに success として記録されていきました。
+
+ バグ知識ではなく、「設計の構え」が定着した
+この知見は success_count: 16 まで育ち、いまでは依頼を受けた瞬間に自動的に適用される構えになっています。
+たとえば「概念Aの改修をお願い」と頼むだけで、Claude Code が「承知しました。対になる概念Bへの影響も合わせて調べますね」と先回りして動く、といった具合です。
+---
+name: feedback_paired_design
+success_count: 16
+promoted_to: user-claude-md
+---
+
+WHY: 対称構造を持つ2業務概念は、片方だけ直すと対の側で不整合が出て、
+     後から調査範囲が膨らむ。
+
+HOW: 片方の依頼を受けたら、対になるもう片方の関連箇所
+     （サービス・画面・テスト）を最初から洗い出す。
+注目してほしいのは、これが「○○というバグを避けろ」ではないことです。
+「設計を考えるときの構え方」「調査を始めるときの視野の取り方」——つまり価値観のレベルです。
+個別の知識から始まったふりかえりが、ここまで来ると 「私がどう考えるか」をAIが学んでいる感覚になります。
+これは、3ヶ月回してみて一番うれしかった発見でした。
+
+
+
+ 第6章：運用してわかった、泥臭い話
+きれいな成功談だけ並べても嘘くさいので、うまくいかなかった点・工夫が要った点を正直に書きます。
+
+ short-term が増えすぎる問題
+255個の短期記憶。これは率直に言って多すぎます。
+ほとんどは二度と読み返さない作業ログです。漏斗の上流が広いのは設計上の意図ですが、放っておくと「記録のための記録」になりかねません。
+ここは「昇格に絡まなかった古い short-term は定期的に間引く」運用でバランスを取りました。
+
+ インデックスの肥大
+毎回読み込む索引（MEMORY.md）の行数を抑えるのにも苦労しました。
+3ヶ月でメモリが増え、索引も膨らみます。
+これは「1メモリ＝1行のフックだけ索引に載せ、本文は索引に書かない」という規律を徹底することで抑えています。索引はあくまで"目次"であって"本文"ではない、という割り切りです。
+
+ ふりかえり自体が、コンテキストを食う
+これが一番のテクニカルな発見でした。
+ふりかえりという作業そのものが、長時間セッションでAIのコンテキストを圧迫するのです。実際、入力が膨らみすぎてツール呼び出し（のJSON構造）が壊れる、という事象まで起きました。
+解決策は、シンプルですが効きました。
+ふりかえりの分析を、メインの作業コンテキストとは切り離した専用のサブエージェントに隔離し、結論だけを受け取る形にしたのです。重い分析でメインの文脈を汚さない。これにより、仕組み自身を仕組みで改善することになりました。
+皮肉なことに、この「ふりかえりの運用知見」自体も、ふりかえりによってフィードバック化されたものです。仕組みを使いながら、仕組み自体をふりかえって直す——そのループが図らずも回りました。
+
+
+ 第7章：複数プロジェクトを行き来しても、記憶が混ざらない
+運用していて想定以上にうまくいったのが、複数プロジェクトを並行したときのメモリ管理でした。
+記憶が増えるほど怖いのは、「別プロジェクトで決めたこと」が、いま触っているプロジェクトに顔を出してくることです。
+これを、知見を 「普遍 / 固有」で切り分けることで防ぎました。
+
+プロジェクトをまたぐ普遍的な知見（「未設定チェックを徹底する」「成功した進め方を資産化する」など）→ グローバル側に置く
+特定プロジェクト固有の業務判断（「このプロジェクトではこの方式で決めた」など）→ プロジェクトごとの project メモリに分離する
+
+実際に複数のプロジェクトを行き来しても、この切り分けのおかげで記憶が混ざりませんでした。
+別プロジェクトの固有判断が割り込んでこず、いま開いているプロジェクトの文脈だけがきれいに引き出される。記憶が増えるほど効いてくる設計で、これも3ヶ月運用しないと確信が持てなかった部分です。
+
+
+ 第8章：cc-retrospective-learner 本体も、3ヶ月で育った
+最後に。学習する対象（私の振る舞い）だけでなく、仕組みそのものも3ヶ月で進化しました。
+リポジトリのコミット履歴を時系列で振り返ります。
+
+
+
+時期
+変更内容
+変更の意図
+
+
+
+
+4/12
+初版リリース
+基本機構（4視点ふりかえり＋週次昇格）の実装
+
+
+4/12
+README充実・個人パスをプレースホルダ化
+配布・共有できる形へ
+
+
+4/14
+用語統一・Opt-in化・サブエージェントからBashツール削除
+
+サブエージェントにシェル実行権限を持たせない安全側の設計
+
+
+4/14
+オンデマンド方式の追加・CHANGELOG導入
+「毎セッション」だけでなく「明示的に呼んだとき」を選べる柔軟性
+
+
+4/15
+/retrospective スラッシュコマンド化
+自然言語トリガーを廃止し、確実なタイミングでの起動を実現
+
+
+
+特に効いたのが、最後のスラッシュコマンド化です。
+当初は「ふりかえって」と自然文で頼む方式でしたが、これだと言い回しの揺れで起動が曖昧でした。/retrospective という明示的なコマンドにしたことで、「いつふりかえるか」を自分で確実にコントロールできるようになりました。
+もうひとつ、サブエージェントの権限を絞った点にも触れておきます。
+ふりかえりや昇格の分析を担うサブエージェントには、ファイルの読み書きはさせても、シェルの実行権限は渡していません。「学習のための分析」に過剰な権限は要らない、という安全側の割り切りです。
+いずれも、使いながら気づいて直した結果です。仕組みを作って終わりではなく、仕組み自体をふりかえって改善する——その循環がここにもありました。
+
+
+ おわりに：AIを「育てる」は、実在した
+3ヶ月の実データを並べてみます。
+
+385回のふりかえりが、55個の再利用可能な知見になった。
+同じ失敗は3回目で自動的に潰されるようになった。
+うまくいった進め方は、専用スキルとして資産になった。
+個別の知識を超えて、「仕事の構え」までAIが学んだ。
+
+同じ失敗を繰り返しては落ち込み、そこからルールを見出し、成功体験を仕組み化し、自分の考え方をツールに宿らせていく。
+振り返ってみると、この3ヶ月でやってきたことは、新人を頼れるメンバーへと育てていくプロセスそのものでした。
+もちろん、万能ではありません。記録は増えすぎるし、運用には規律が要ります。
+それでも——自分のセッション履歴を「一次資料」として扱い、そこから少しずつ学ばせるというアプローチは、確かに機能しました。
+AIを便利な道具として使うだけでなく、一緒に仕事をしながら育てていく。
+もしそこに少しでも惹かれるものがあれば、あなたの手元のセッション履歴も、立派な「育てる素材」です。
+仕組みは GitHubリポジトリ（cc-retrospective-learner）（MITライセンス）で公開しています。/retrospective を1回回すところから、ぜひ試してみてください。
+
+---
+
+## 48. [Fable 5が使えなくなる前に、その「働き方」をOpus/Sonnetに引き継がせた](https://zenn.dev/yui/articles/e4f8268ab5c6c1)
+- **優先度**: High
+- **スコア**: 88
+- **解析日時**: 2026/7/10
+- **AI要約**:
+  曖昧なプロンプトを排し、検証・実行可能なルールでシステムプロンプトを構成する原則を提示
+  失敗パターンを「症状・間違い・正しい一手」で明文化し、AIの自己修正力を高める手法を解説
+  「diffは主張、実行が証拠」とし、実機検証とレポート作成をAIに義務付けるプロンプトの工夫
+- **今読む理由**: AI駆動開発において、中位モデル（Opus/Sonnet）の出力精度をFable 5（o1-preview等）レベルに引き上げるための、具体的かつ再利用可能なシステムプロンプト構築・制約設計の手法が明記されているため。特に「失敗パターンと解決策の定義」や「意思決定の分岐」のルール化は、現在の自動化パイプライン構築に即時導入可能です。
+- **タグ**: #AI駆動開発, #プロンプトエンジニアリング
+
+### 本文
+前回、Fable 5をトークン破産させずに使い倒す方法について書きました。
+
+簡単にいうとオーケストレーターに Fable 5をおいて、スコープ切り、設計、委譲、最終レビューを任せ、手を動かす実装・テスト・シッピング・コードレビューは Opus と Sonnet のサブエージェントが担う形式です。高いモデルが計画と判断を、安いモデルが実行を受け持つ構成です。これはかなりのタスクでうまく回っていました。
+ただ、みなさんご存知の通り、サブスクでのFable 5 アクセスは7月7日で終わります。（近い将来またサブスクに戻ってきてくれることを祈ってはいますが・・・🙏）
+追記: 7/12までに伸びましたね！このままずっとサブスク範囲で使わせて欲しい・・🙏
+オーケストレーションの仕組み自体はFable 5がなくても動くとはいえ、やはり最上位でスコープを切っていたオーケストレーターのモデルが下がれば、その分アウトプットの質も下がります。
+けど、Opus, Sonnet自体は悪いモデルというわけではありません。正しく使えばかなり良いアウトプットが出ます。大事なのは何をどのように行うのか、失敗した時にどうするのかの明文化です。そこで、Fable 5が使えなくなる前にFable 5がどのように働いているのかをドキュメント化して、スキルとしてOpus/Sonnetに引き継がせることにしました。
+この記事は今回Opus/SonnetをFable化するにあたって、私が行ったこととその方法についてです。Fable の代わりを探すのは難しかったので、チーム全体の能力を上げて、オーケストレーターに Opus が座っても崩れないようにすることを目標としました。
+
+ Fable 5とOpus/Sonnetの差は知能ではない
+サブスクからFable 5にアクセスできなくなった後も擬似的にFable 5を使い続けるために、まずはFable 5とOpus/Sonnetとの差を検証するところから始めました。
+Opus/Sonnetが日常のエンジニアリングで意図しないアウトプットが出てきた時にその中身を見てみると、ある程度決まった形式であることに気づきました。例えば・・
+
+ボタン1個に onClick が要るだけで、Next.js のページ先頭に "use client" を貼る
+
+その結果、ページ全体とその import ツリーがまるごとクライアントに落ちる
+
+
+
+fetch にキャッシュ指定を書かない
+
+Next.js 14 と 15 でデフォルトが逆なのに、「動いた」を dev サーバーだけで確認して本番でキャッシュにハマる
+
+
+Server Action を「フォームからしか呼ばれない関数」だと思って入力検証を省く
+
+実際は誰でも任意の引数で叩ける公開 POST エンドポイント
+
+
+初期データを useEffect の中で取りに行く
+
+Server Component で await すれば済むのに、リクエストのウォーターフォールとレイアウトのちらつきの原因になる
+
+
+落ちたテストを「直す」ためにアサーションの方を書き換える
+
+落ちた原因がコード側にあると証拠で確定するまで、アサーションは触らないべき
+
+
+何も実行せずに「これで動くはずです」と言う
+
+実行してから動くかどうかを結論づけるべき
+
+
+
+ここで重要なのは、これらはどれも知識の欠落ではないということです。Sonnet に「Next.js の Server Action は入力検証なしだと危険ですか?」と直接聞けば、正しく答えます。つまり知識は入っているが、正しい手順が欠けているとわかります。
+この点Fable 5だと頼まれなくても暗黙的に適切なチェックをして適度に差し戻してくれるので良いのですが、Opus/Sonnetだとその辺のチェック項目を明文化する必要があります。
+生の推論能力の差はもちろん実在しますが、定型的な実装・レビュー・デバッグにおいて、観測される品質差の大半は規律・順序・検証の差です。そしてこの3つは、すべてスキルとして書くことが可能です。
+
+ 「注意深く」というプロンプトは効かない
+Opus/SonnetをFable 5化するにあたって、まずは最初に「注意深く、検証を怠らず、ベストプラクティスに従ってください」と書くことを試してみました。その結果、何も起きませんでした（それはそう）。モデルの「次の一手」を変えない文章は、挙動を変えないからです。
+なので、今回Fable 5の働き方を明文化するにあたって、最初のルールは禁止リストを作ることから始めました。以下の表現を含む行はシステムプロンプトに含めないと決めました。
+
+「注意深く」/「ベストプラクティスに従え」/「よく考えて」/「品質を担保して」
+
+すべてのシステムプロンプトは実行可能または検証可能である必要があります。つまりコマンドで実行可能、閾値が定義されている、if/then、grep パターン等で何をするのか明確であるということです。
+
+ 5つの軸でFable 5の働き方を明文化しました
+さて、どのように「Fable 5化をしたか」を書く前に紹介ですが、私は ccteams という CLI をメンテしています。Claude Code のサブエージェントチームをコマンド一発で導入できるツールです。
+そこでv0.2.xからすべてのチームに2つのスキルが同梱されるようにしました。共有の working method(働き方) と、チーム別の playbook（計画書） です。
+ここではこのccteamsで実際に行ったことを順番に書いていきます。
+
+ 1. 作業ルーティンを固定する
+Opus/Sonnetでありがちなミスはいきなり書き始めることです。学習データ・又はこれまでのコンテキスト(「Go はだいたいこう書く」「このライブラリのAPIはこうだった」)を頼りに、目の前のリポジトリを確認せずに手を動かしてしまうということがあります。
+そこでまずは番号付きの手順を書くことで書く前の行動を強制します。例えば・・
+
+言語機能を使う前に go.mod(のバージョン)を読む
+ライブラリのドキュメントを信じる前に、ロックファイルで実際に入っているバージョンを読む
+パターンを選ぶ前に、隣接するファイルを2つ読む
+ヘルパーを書く前に grep する(たいてい別名で既に存在している)
+
+要は、記憶で判断するな、リポジトリを読んで判断しろということをあらかじめ書いておきます。
+
+ 2. 失敗パターンとその解決策を定義
+中位モデルに欠けているのは知識ではなく、誤った前提を持っていることです。もっともらしい実装を正しいという前提のもと進んでいってしまいます。まずはそこを徹底的に潰すことが重要です。
+そこで、各チームごとに、固定フォーマットのよくある失敗パターンと対応策を定義しました。
+
+症状 → ありがちな間違い → 正しい一手
+
+を書くことで、Opus/Sonnetがその現象に直面した時にどのように修正すればいいのかがわかるという仕組みです。
+例えばccteamsのNext.js playbookでは以下のように書いています。
+
+ボタン1個に onClick が必要 → ページ先頭に "use client" → ボタンだけを葉コンポーネントに切り出し、そのファイルだけをクライアントにマークし、ページは Server Component のまま保て。
+
+Go playbookでは以下のように書いています。
+
+ハンドラーの中でエラーが起きた → http.Error(w, msg, 500) を呼んでそのまま処理を続ける → 直後に return を足せ。http.Error は書き込んで戻るが、あなたのハンドラー自体は戻っていない。下にある成功時の処理が、確定済みの 500 レスポンスに2つ目のボディを書き込んでしまう。
+
+これをccteamsの各チーム（goチーム、react-nativeチーム、railsチームなどなど）ごとに10〜15件定義しています。誤った前提を明示的に名指しすることで、モデルがそのミスを犯そうとする瞬間に自己認識できるようになっています。知識ベースではなく、意思決定ポイントにパッチを当てているわけです。
+
+ 3. 意思決定の分岐を定義
+フロンティアモデルの優位は判断力です。判断力そのものは移植できませんが、繰り返し発生する8〜9割は明示的な分岐に落とし込めます。例えばGo playbookでは以下のように書いています。
+
+goroutine を起動する前の3つの質問 — 「誰もいない」という答えは禁止:
+
+誰がそれをキャンセルするのか?
+誰がそれを待つのか?
+そのエラーはどこへ行くのか?
+
+どれかの答えが「誰もいない」なら、起動するな。
+
+なぜこれを定義しているのかというと、goroutineは起動は一発で簡単なのに、後始末が難しいからです。中位モデルがgo doWork()と気軽に書くと、典型的に次が起きます:
+
+誰も止めない → プログラムが終わっても走り続ける、または永遠に残る(goroutine leak = メモリリーク)
+誰も待たない → main が先に終わって、その処理が完了しないまま終了する
+エラーが行き場を失う → goroutine内で起きた失敗が握りつぶされ、誰にも気づかれない
+
+これはVibeコーディングでGoを書くときに起こりがちな問題なので、Goチーム専用に定義しています。
+また、全チーム共通で
+
+コードに触る前に仮説を明示せよ。根本原因を確定していない修正は、当てずっぽうだ
+
+ということを書いています。これにより、中位モデルがやりがちな、根本原因が確定していないのに、それらしい修正を当てるという問題をブロックすることができます。
+デバッグに関しては「症状の場所を直して直った気になる」事故が頻発するので、debugチームでは専用の分岐をおいています。
+
+修正を書く前に、「X が Y を引き起こす。なぜなら Z だから」と言えなければならない — X と Y は観測済みで、Z がこの症状がまさにこう出る理由を説明していること。Z が埋められないなら、それは因果ではなく相関である。
+
+つまり、修正コードを書く前に「X が Y を引き起こす、なぜなら Z」という因果を言えなければ、fix のフェーズに進めずに、仮説の再検証に戻されます。
+このようにccteamsでは各チームごとに起こりがちな問題に応じてそれを止めるための意思決定の分岐を明文化しています。
+
+ 4. 検証方法を定義する
+検証は生成と比べると比較的安いので、中位モデル+強い検証ハーネスは、中位モデル単体に大差で勝ちます。だから各playbookには、正確な順序付きの検証レシピを書いています。
+「テストしてね」ではなく、どのコマンドを、どの順で、各失敗が何を意味するかまで書いています。例えばGo なら go build ./... → go vet ./... → go test -race ./...(-race は妥協不可と明記)。フロントエンドの playbook には、linterだけのテストではなく、キーボードだけの操作ウォークスルーと、320/768/1280px でのリサイズテストを含むようにしています。
+これに加えて、実行を根拠とするように共通のworking methodで書いています。
+中位モデルの典型的なサボりなのですが、しばしば「これで動くはず」と言って、一度も実行していないコードを返してくることがあります。
+このようなことが起きないように、
+
+diff は主張であり、実行が証拠である。実際にビルド・テスト・lint を走らせて、その出力を見て初めて、その主張が裏付けられる。
+
+ということを書いています。
+このルールを強制するために、実際に実行した証拠としてレポート内のすべての主張には VERIFIED(実行した)/ REASONED(コードを読んだ)/ ASSUMED(未確認)のラベルを義務付け、無断の昇格を禁止しています。
+
+ 5. 学習ループで失敗を1件ずつ吸収する
+上記まではFable が先読みで書いたものです。「中位モデルはたぶんここで間違える」という予測に基づくルールです。悪くはないのですが、所詮は予測です。プロジェクトで実際に起きたミスに基づいてルールを強化できる方がもちろん良いです。
+そこで、working method に学習ループを組み込みました。これにより、使えば使うほどエージェントチームがプロジェクトに応じて最適化されていく仕組みができます。
+書いているのはシンプルで、playbook が想定していなかったミスに出くわしたら、それをカタログエントリ化して人間の承認後に追加ルールとして追加するようにしています。
+ccteamsでは、v0.2.2以降のインストール後ccteams useを実行すると.claude/skills/team-lessons/SKILL.mdが自動で作成されるようになりました。このファイルは一度作成されたらその後ccteamsをアップデートしても上書きされることはありません。これはプロジェクト固有の失敗パターンとその解決策をまとめるために作っています。
+想定していないミスがあった場合は、それに関して症状 → ありがちな間違い → 正しい一手をAIが確定した上で、ここに書くべきか人間に承認を求めるようになっています。承認したらエージェントがteam-lessons/SKILL.mdにエントリを追記します。
+これにより、失敗を重ねれば重ねるほどどんどん賢くなっていく仕組みを実現しています。
+とはいえ、プロジェクト開発が長くなれば肥大化は避けれないので、一次対策として重複チェックと承認ゲートは入れていますが、長期運用は今後の課題だと思っています。
+
+ それをサブエージェントに確実に届ける設定
+Claude Code のスキルはオンデマンドです。つまり、モデルが「関連がある」と判断したときに呼ばれます。逆に言うと上記の働き方を定義したスキルは関連がない限りは使われません。また、実際に手を動かすサブエージェントは、スキルを自動では一切呼びません。
+これを解決するために、二つの仕込みをしました。
+
+ 1. エージェント定義に埋める
+全エージェントのシステムプロンプトがFIRST ACTION: .claude/skills/<team>-playbook/SKILL.md を読み、従えで始まるようにしました。「読め」とは言っていますが、「読め」と書くだけだと従われないことがあるので、フォールバックとしてplaybook の最重要ルール5〜6行をシステムプロンプト自体にも埋め込んでいます。
+
+ 2. オーケストレーターからサブエージェントを呼ぶときに埋める
+また、オーケストレーションルールで、オーケストレーターに共有working-methodスキルの圧縮版を全委譲プロンプトへ逐語コピーせよと義務付けています。
+そして両方がすり抜けた場合の最後の砦として、オーケストレーターはレポートを名前付きゲートに照らして差し戻すように定義しました。「build の出力が引用されていない? 差し戻し」と言う感じです。届ける仕組みが最悪失敗しても、規律に従っていない成果物は受理されません。
+全文をあちこちにベタ貼りすると、その分命令は増え1本あたりの遵守率が下がるので、常時ロードは5〜6行とし、エージェントあたりは約10行、そして必要な際（オンデマンドで呼ばれる時）は約200行を読み込むようにしています。
+
+ とはいえ設定するの大変ですよね？
+私が開発したccteamsではすでにFable 5の「働き方」をOpus/Sonnetに引き継がせることに成功しました。（v0.2.x以降）もし手っ取り早くとにかく良いチームを使いたい、雛形が知りたいと言う方はぜひ使ってみてください。
+npm install -g ccteams
+ccteams list
+ccteams use go-api   # next-ts, python-fastapi, rails, django, debug などお好きなチームを選んでください
+# Claude Code を再起動
+ちなみにチーム内でも、役割でモデルを分けています。OpusとSonnet間でももちろん差はあるので、判断が必要な席(スコープ切り・設計・レビュー)は Opus、決まった手続きに従う実装・シッピングの席はSonnetに設定するようにしています。playbookが実装の規律を支えてくれる分、実行席は Sonnetで十分速く・安く回り、規律だけでは埋まらない「判断」が必要な席にだけ Opusを置く、という配分です。オーケストレーターと作業者を分けたのと同じ原理を、チームの内側でもう一段繰り返している形ですね。
+もしこの設定で少しでも手間が省けましたら、リポジトリにスターをいただけると励みになります。
+また、issueや使ってみた感想なども大歓迎です！
+
+ あとがき
+最初はオーケストレーターとしてのルールだけを決めようと思ったのですが、弱くなるのがオーケストレーター自身のためそれは厳しそうでした。
+Fableの場合は、サブエージェントが書いたミスをレポート段階で高精度に捕まえ、差し戻すことが可能だったんですが、この部分に関してはどれだけオーケストレーターとしてルールを定義してもFableと同じ動きにはなりませんでした。
+また、予防よりも差し戻しの方がコストがかかるので、ミスを予防するということに重きを置いて、チーム全体の底上げを考えました。
+実際にリバースエンジニアリングをして検証しましたが結果は満足できるものでした。今までOpusでは検出できなかったバグを検出してくれるようになりました。定型的な作業に関してはこの設定でFableとその他モデルとの差はほとんどなくなったと思います。
+とはいえ、Fable独自の強みである予期できない場合の対応には対応できません。チェックリストのどこにも書いていないのに「何かおかしい」と気づくこと、まったく新しい問題の構造を一目で掴むことというのは、どうしてもスキルに書く程度のことでは埋まりません。
+その差分を、上述の学習ループが失敗1件ずつ削っていくようになっています。
+Opus/SonnetをFable 5化してみるアイデア自体は良く見るのですが、詳細まで書いている記事は少なかったので実際に行って書いてみました。
+少しでも参考になれば嬉しいです。
 
 ---
 

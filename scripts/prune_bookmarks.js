@@ -8,7 +8,6 @@ const { execSync } = require('child_process');
 const CONFIG = {
   BOOKMARKS_JSON: path.join(__dirname, '..', 'data', 'bookmarks.json'),
   NOTEBOOK_DIR: path.join(__dirname, '..', 'data', 'notebooklm_sources'),
-  INDEX_HTML: path.join(__dirname, '..', 'docs', 'index.html'),
   GENERATE_SCRIPT: path.join(__dirname, 'generate_dashboard.js')
 };
 
