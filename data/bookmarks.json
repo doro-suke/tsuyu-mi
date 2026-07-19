@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-17T22:30:21.050Z",
+  "updated_at": "2026-07-19T01:28:10.817Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5635,6 +5635,24 @@
       "status": "unread",
       "analyzed_at": "2026-07-17T01:35:49.628Z",
       "markdown_path": "data/notebooklm_sources/ASMR環境音動画を無料ローカルで量産する （全2回の第1回）：前編 ― 静止画に「本物の雨」を降らせる物理シミュとシームレスループ.md"
+    },
+    {
+      "id": "1792752973",
+      "url": "https://newspicks.com/news/17097950/body/",
+      "title": "【完全版】Claude Code・Codexのトークン消費を抑える技術30選〜CLAUDE.md、/compact、Skills、MCPを見直す〜",
+      "summary": "CLAUDE.mdは200行以下に抑え、ビルドやテスト等の必須規約以外は作業別Rulesに分離する\n`/context`で消費内訳を特定し、実装移行時などの節目で`/compact`や`/clear`を活用する\nSkillsの定義を最小限に留め、未使用のMCPサーバーは無効化して常時読み込みトークンを削る",
+      "score": 88,
+      "read_now_reason": "AI駆動開発において、Claude Codeのコンテキスト肥大化によるコスト急増と精度低下（指示無視）を防ぐための、CLAUDE.mdの具体的な記述制限（200行以内）やセッション管理コマンド（/compact, /clear）の適用手順が即座に実務に導入できるため。",
+      "defer_reason": "Claude CodeやCodex等のCLIツールを現在の自動化パイプラインでまだ常用しておらず、APIコストやトークン制限による実装精度の低下が現状の課題となっていない場合は、後回しにしても安全です。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "トークン最適化",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-19T01:28:10.817Z",
+      "markdown_path": "data/notebooklm_sources/【完全版】Claude Code・Codexのトークン消費を抑える技術30選〜CLAUDE.md、_compact、Skills、MCPを見直す〜.md"
     }
   ]
 }
