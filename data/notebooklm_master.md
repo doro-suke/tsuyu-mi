@@ -1,5 +1,5 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/7/21 1:27:44
+最終更新日: 2026/7/22 1:28:56
 対象記事数: 49 件 (未読かつHigh優先度)
 
 ---
@@ -8390,7 +8390,493 @@ HANDOFF.md 運用
 
 ---
 
-## 20. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
+## 20. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
+- **優先度**: High
+- **スコア**: 90
+- **解析日時**: 2026/7/22
+- **AI要約**:
+  CLI経由のClaude呼び出しで、launchd環境特有のstdinハングを防ぐ実装法を解説。
+  実行毎に未達分のみを計算し、1日の目標投稿数へ確実に収束させる冪等計算ロジックを提示。
+  APIエラー時のフォールバック処理や監査スクリプトによる自己修復パイプラインを構築。
+- **今読む理由**: CLI版Claudeの非対話実行時のハング回避（</dev/null指定）や、バッチ処理における冪等計算・自己修復ロジックなど、AI自動化パイプライン構築にそのまま転用できる具体的なシェルスクリプトコードが豊富に含まれているため。
+- **タグ**: #AI駆動開発, #自動化パイプライン, #ClaudeCode, #Bash, #冪等性
+
+### 本文
+LaunchDが朝5時に起動するたびに、私が寝ている間に収益化記事が生えていました。
+前回（第1回）では、Claude Codeを核にした記事生成の基本設計と、generate.sh が1本の記事ドラフトを作るまでの骨格を解説しました。今回は「収益化リンクをどう確実に埋めるか」「楽天APIが失敗したときにどう逃げるか」「何度実行しても1日5本で収束する冪等設計」「audit-heal.shによる自己修復ループ」という、システムを本当に動かし続けるための後半部分をすべて公開します。
+
+ なぜこの仕組みが効くのか
+
+ 「作業量 × 単価」という呪縛から逃げる
+月10万の大学生だったころ、副業でコンテンツを書いていた私の収入方程式は単純でした。「時間×単価」です。月60万まで伸ばせたのは、掛け持ちで稼働時間を限界まで積み上げたからであって、仕組みで稼いでいたわけではありませんでした。
+会社都合で解雇されたとき、収入は一瞬でゼロになりました。時間を売る副業は、売る先がなくなると即座に崩壊します。そこで気づいたのが、「稼ぐ環境を建てること」と「稼ぐ作業をすること」はまったく別の活動だということです。
+半年間、Claude Codeで自律環境を組み続けた結果、今の月商120万の大部分は私が作業していない時間に積み上がっています。このアフィリエイトファクトリーはその中核のひとつです。
+
+ 副業ライターが直面する構造的な天井
+アフィリエイト記事で稼ぐ最大のボトルネックは、「書く」というアクションです。1本8,000〜10,000字のレビュー記事を書くには、調査込みで最低3〜4時間かかります。それを毎日3〜5本続けることは、専業でなければ物理的に不可能です。
+多くのライターはここで「どうすれば速く書けるか」という方向に最適化します。テンプレートを作る、リサーチをAIに任せる、音声入力を使う。いずれも有効ですが、天井が見えています。1日の作業時間は有限だからです。
+アプローチを根本から変えると、問いが変わります。「どうすれば速く書けるか」ではなく、「どうすれば自分が書かなくて済むか」。この問いに正面から答えたのが、今回のシステムです。
+
+ 「環境」とは何か ― 寝ている間に動くということ
+このシステムをひとことで表現すると、「LaunchDが朝・昼・夜にdaily.shを叩き、今日まだ足りない本数だけ記事を生成・公開する」です。
+ポイントは私が何もしなくてよいという点ではありません。正確には、私が関与するとシステムが壊れるという設計になっている点です。手動でファイルを足したり消したりすると、冪等性が崩れます。launchdのスケジュールが自動で回ることを信頼して、人間は触らない。この割り切りがシステムを安定させています。
+朝5時にlaunchdがdaily.shを叩きます。記事が生成されてはてなブログに投稿され、監査ログが残り、問題があればmacOSの通知センターに警告が届く。私はその通知を7時に起きて確認するだけです。確認に使う時間は3分以下です。
+
+ 冪等設計という考え方
+冪等（べきとう） は、「何度実行しても結果が同じになる」という性質です。daily.shのコメントにも明記されています。
+# 1日複数回実行される自己回復ジョブ。「今日まだ公開できていない本数」だけを
+# 生成→公開する冪等設計。朝が使用量制限等で空振りしても、昼/夜の再実行が
+# 自動で残りを埋めるため、何度走らせても1日ちょうど TARGET 本で収束する。
+これはただのコメントではなく、設計の核心です。朝の実行でClaude Codeのレート制限に引っかかり0本しか生成できなくても、昼の実行が不足分を補充します。昼も失敗すれば夜が補充する。どのタイミングで何回実行しても、1日の終わりには目標本数に収束します。
+この設計がなければ、朝の実行が失敗するたびに「今日はダメだった」で終わります。冪等設計があれば、部分的な失敗はシステムが自動で吸収します。
+
+ Claude Codeを「道具」として使うとはどういうことか
+generate.shの中でClaudeを呼び出す核心部分は次の1行です（実際のスクリプト272行目）。
+RESP=$(timeout "$GEN_TIMEOUT" "$CLAUDE" -p "$PROMPT" --allowedTools WebSearch \
+  --model sonnet --permission-mode auto </dev/null 2>/dev/null)
+</dev/nullでstdinを閉じ、--permission-mode autoでWebSearch使用時の許可プロンプトをバイパスし、timeout "$GEN_TIMEOUT"でハング時に強制終了する。コメントには「</dev/null 必須: 無いとclaude -p がstdinを3秒待ってから進む（launchdではttyなしで毎回発生）」と書いてあります。launchd環境特有のハマりどころです。
+GEN_TIMEOUTは環境変数で上書きできますが、デフォルトは1200秒（20分）です。8,000〜10,000字の記事＋競合3製品のWebSearch込みで生成するため、これくらい確保しないと長文の途中でkillされ、空応答→0本公開という最悪の結果になります。コスト的には高く見えますが、1本あたりの記事単価と比べれば何も問題ありません。
+
+ 全体の流れ
+
+ システム全体のフロー図
+launchd (朝・昼・夜、1日複数回)
+  │
+  ▼
+daily.sh
+  │ NEED = TARGET - 本日公開済 - ドラフト残  ← 冪等計算
+  │ NEED=0 なら生成スキップ
+  │
+  ├─ [NEED > 0] generate.sh × NEED 本
+  │     │
+  │     ├─ Claude Code claude -p (timeout 1200s, 最大3回リトライ)
+  │     │   └─ WebSearch で製品調査 + 競合3製品比較
+  │     │
+  │     ├─ resp_is_valid() バリデーション
+  │     │   └─ PRODUCT:行なし / エラー文含む / 400文字未満 → 失敗扱い
+  │     │
+  │     ├─ rakuten_affiliate_url() ← 楽天APIで商品リンク取得
+  │     │   ├─ 資格情報あり → API検索 (resolve: 末尾語削り戦略)
+  │     │   │   ├─ 命中 + ブランド一致 → affiliateUrl 取得
+  │     │   │   ├─ 400 "keyword is not valid" → 語を削って再挑戦
+  │     │   │   └─ 全滅 → hgc 検索リンクfallback (報酬乗る)
+  │     │   └─ 資格情報なし → 素の検索URL (報酬ゼロ注意)
+  │     │
+  │     ├─ postprocess_body(): 素リンク・プレースホルダー → アフィリリンク全差替
+  │     │
+  │     └─ ~/Desktop/アフィリ記事/<YYYYMMDD_HHMMSS>.md
+  │
+  ├─ post-to-hatena.sh --publish --all
+  │     ├─ posted-hatena.log でスキップ判定 (冪等)
+  │     ├─ 壊れ記事 (不明な商品 / Request timed out) スキップ
+  │     ├─ blogsync post --title "$title" bokuwalily.hatenablog.com
+  │     └─ 公開済み → published/ にアーカイブ移動
+  │
+  └─ audit-heal.sh
+        ├─ 壊れ記事を Desktop キューから削除
+        ├─ published/ の全記事を hb.afl.rakuten.co.jp 含有チェック
+        ├─ 公開数 < TARGET → ⚠ 未達警告
+        └─ 問題あり → osascript macOS通知 + logs/audit-YYYY-MM-DD.log
+
+ daily.sh ― 冪等計算の実装
+daily.sh の核心は10行に満たない NEED 計算です。実際のコード（16〜23行目）を見てください。
+# 今日すでに公開できた本数（published/ の本日プレフィックス）
+PUB_TODAY=$(find "$ARCHIVE" -maxdepth 1 -name "${TODAY}_*.md" 2>/dev/null | wc -l | tr -d ' ')
+# Desktop直下に残っている未公開ドラフト（持ち越し＋前段で作ったが未投稿の分）
+DRAFTS=$(find "$OUT" -maxdepth 1 -name '*.md' 2>/dev/null | wc -l | tr -d ' ')
+# 目標到達に必要な新規生成本数 = 目標 − 本日公開済 − 手元ドラフト
+NEED=$((TARGET - PUB_TODAY - DRAFTS))
+[ "$NEED" -lt 0 ] && NEED=0
+
+echo "[daily] $TODAY $(date '+%H:%M')  本日公開済: ${PUB_TODAY}本 / ドラフト: ${DRAFTS}本 / 目標: ${TARGET}本 → 生成: ${NEED}本"
+TARGETはスクリプト上部でTARGET=5とハードコードされています（audit-heal.sh では環境変数 ${AFFILIATE_FACTORY_TARGET:-3} でデフォルト3本として外部から変更可能な設計です）。
+重要なのは「ドラフト残」を NEED 計算に含めている点です。前回の実行で生成まで完了したが投稿に失敗した記事が Desktop に残っていれば、次の実行では生成を増やさず、投稿だけ再試行します。これにより「生成コスト（Claude APIの消費）」と「投稿リトライ」を分離できています。
+
+ generate.sh ― Claude呼び出しと3回リトライ
+generate.sh の生成ループ（269〜276行目）は、1本の記事生成に最大3回のリトライを設けています。
+for attempt in 1 2 3; do
+  RESP=$(timeout "$GEN_TIMEOUT" "$CLAUDE" -p "$PROMPT" --allowedTools WebSearch \
+    --model sonnet --permission-mode auto </dev/null 2>/dev/null)
+  if resp_is_valid "$RESP"; then break; fi
+  echo "[generate] 生成失敗(試行${attempt}/3)。再試行します…" >&2
+  RESP=""
+done
+resp_is_valid() の判定ロジック（251〜257行目）も具体的です。
+resp_is_valid() {
+  local r="$1"
+  [ -z "$r" ] && return 1
+  # PRODUCT行が無い／タイムアウト等のエラー文／極端に短い応答は失敗扱い
+  printf '%s' "$r" | grep -q '^PRODUCT:' || return 1
+  printf '%s' "$r" | grep -qiE 'request timed out|error:|rate limit|usage limit' && return 1
+  [ "$(printf '%s' "$r" | wc -c | tr -d ' ')" -lt 400 ] && return 1
+  return 0
+}
+3回すべて失敗した場合、generate.sh は壊れ記事を書かずに exit 1 で終了します（280〜282行目）。壊れた状態でファイルを書き出すとキューが汚染され、後続の audit-heal.sh に掃除コストが発生します。そのコストを事前回避するための判定です。
+プロンプトの中では商品名の1行目出力フォーマット「PRODUCT: <正式商品名>」を厳命しています。この1行があることで商品名の抽出（285行目）と本文の切り出し（287〜289行目）が確実に行えます。モデルに曖昧な出力をさせると後段のパースが全部崩れるため、出力フォーマットの強制は必須です。
+
+ 楽天API 400エラーと末尾語削り戦略
+楽天APIの最大のハマりどころは、400 Bad Request: "keyword is not valid" エラーです。"Narwal Freo Z Ultra" のような製品名に含まれる "Z" や "Ultra" といった単独トークンが、楽天の検索エンジンに弾かれます。
+これを解決するのが resolve() 関数（152〜179行目）の「末尾語を1語ずつ削って再挑戦する」戦略です。
+def resolve():
+    words = product.split()
+    brand = words[0].lower() if words else ""
+    tried = set()
+    for n in range(len(words), 0, -1):
+        keyword = " ".join(words[:n]).strip()
+        if not keyword or keyword in tried:
+            continue
+        tried.add(keyword)
+        try:
+            result = fetch(keyword)
+        except Exception as exc:
+            print(f"[generate] 楽天API検索に失敗({keyword}): {exc}", file=sys.stderr)
+            return None
+        if result:
+            if not brand or brand in (result["name"] + " " + result["url"]).lower():
+                return result["url"]
+            # ブランド不一致=別商品に化けた。
+            print(f"[generate] 候補がブランド不一致({keyword}→{result['name'][:30]})。検索リンクへ。", file=sys.stderr)
+            return None
+        time.sleep(1.0)
+    return None
+"Narwal Freo Z Ultra" → "Narwal Freo Z"（400）→ "Narwal Freo"（命中）という流れです。ただし語を削りすぎると「Narwal」単独で全然別の高レビュー商品が引っかかる可能性があります。そのため ブランド名（先頭語）が取得商品名またはURLに含まれるかどうか を brand in (result["name"] + " " + result["url"]).lower() で検証し、一致しなければ「別商品に化けた」と判定してそれ以上削るのをやめます。
+429（レート制限）は time.sleep(1.5) を挟んで最大2回再試行します（130〜148行目の fetch() 内）。
+
+ APIが完全に取れないときの hgc フォールバック
+商品個別リンクがどうしても取れないとき、resolve() は None を返します。その後の処理（182〜190行目）が本質的なフォールバックです。
+affiliate_url = resolve()
+if not affiliate_url:
+    # 個別商品が取れない時は、アフィリ計測付き検索リンク(hgc)にフォールバック=必ず報酬が乗る。
+    search_url_enc = quote(search_url, safe="")
+    affiliate_url = (
+        f"https://hb.afl.rakuten.co.jp/hgc/{affiliate_id}/?pc={search_url_enc}&m={search_url_enc}"
+    )
+    print(f"[generate] 商品個別リンクを取得できず検索リンクにフォールバック: {product}", file=sys.stderr)
+print(affiliate_url)
+hb.afl.rakuten.co.jp/hgc/ は楽天アフィリエイトのアフィリ計測付き検索リンクです。個別商品へのリンクではなく「この商品名で楽天市場を検索した結果ページ」へのリンクになりますが、報酬は乗ります。
+環境変数 RAKUTEN_APPLICATION_ID / RAKUTEN_ACCESS_KEY / RAKUTEN_AFFILIATE_ID のいずれかが空の場合、API呼び出し自体を行わず、素の検索URL（https://search.rakuten.co.jp/search/mall/〜）にフォールバックします（83〜87行目）。この状態では報酬がゼロになります。.env の設定ミスで気づかずに運用してしまうのがアフィリ収益ゼロの典型的な原因です。
+
+ postprocess_body ― 素リンクをアフィリリンクへ全差替
+Claude Codeが生成した記事本文には、素の楽天検索URLが含まれることがあります。プロンプトでアフィリリンクを入れるよう指示しても、モデルが非アフィリのURLを書いてくる場合があります。これをそのまま公開すると報酬がゼロになります。
+postprocess_body()（201〜246行目）はこの問題を後処理で根治します。
+# 2) claudeが本文に書いた実リンク [楽天で「…」を探す](任意URL) を、正しいアフィリリンクに丸ごと差し替える。
+#    （これをやらないと claude が書いた非アフィリの検索URLがそのまま残る＝報酬ゼロになる）
+rakuten_md_link_re = re.compile(r"\[楽天で「[^」]*」を探す\]\([^)]*\)")
+body = rakuten_md_link_re.sub(lambda m: link, body)
+# 3) 念のため、楽天ドメインを指す素のmarkdownリンクも差し替える
+rakuten_any_re = re.compile(r"\[[^\]]+\]\((?:https?:)?//[^)]*rakuten\.co\.jp[^)]*\)")
+body = rakuten_any_re.sub(lambda m: link, body)
+さらにプレースホルダーへの対応もあります（219〜224行目）。Claudeが「（▼楽天で「〇〇」を検索してリンクを貼る）」のようなプレースホルダーを書いてくることがあり、これも正規表現で検出して置換します。
+3段階の差替ロジックにより、どんな形でリンクが記述されていても最終的には正しいアフィリエイトURLに収束します。これが「収益化リンクの確実な埋め込み」の実体です。
+
+ はてなブログへの冪等投稿
+post-to-hatena.shの--allモードは、posted-hatena.log でスキップ判定を行います（40〜61行目）。一度投稿したファイルのフルパスをログに記録し、次の実行時に同じファイルが残っていても二重投稿しません。
+for f in "$OUT"/*.md; do
+  [ -e "$f" ] || continue
+  if /usr/bin/grep -qxF "$f" "$POSTED_LOG"; then continue; fi
+  # 生成失敗の残骸は投稿しない
+  if /usr/bin/grep -qE '不明な商品|Request timed out' "$f"; then
+    echo "[hatena] スキップ(生成失敗の残骸): $f" >&2; continue
+  fi
+  if post_one "$f"; then
+    echo "$f" >> "$POSTED_LOG"; found=$((found+1))
+    [ -z "$DRAFT_FLAG" ] && mv "$f" "$ARCHIVE/" && echo "[hatena] アーカイブへ移動: $(basename "$f")"
+  fi
+done
+--publish フラグ付きで実行した場合のみ、投稿済みファイルを published/ ディレクトリに移動します。Desktop のキューから外すことで、「published/ にある本日分のカウント」が増え、次の daily.sh 実行時に PUB_TODAY が正しくカウントされます。このアーカイブ移動が冪等設計の歯車として機能しています。
+daily.sh は post-to-hatena.sh --publish --all として呼び出しているため（36行目）、公開と同時に自動でアーカイブに移動します。
+
+ audit-heal.sh ― 自己修復の実装
+最後のステップが audit-heal.sh です。3つの役割を順番に実行します。
+1. 壊れ記事の掃除（23〜29行目）
+for f in "$OUT"/*.md; do
+  [ -e "$f" ] || continue
+  if /usr/bin/grep -qE '不明な商品|Request timed out' "$f"; then
+    log "  [掃除] 壊れ記事を削除: $(basename "$f")"
+    rm -f "$f"
+  fi
+done
+resp_is_valid() で弾いて壊れ記事を書かない設計にはなっていますが、過去の実行や手動介入でキューに混入した場合のセーフティネットです。"不明な商品" や "Request timed out" を含むファイルは問答無用で削除します。
+2. アフィリリンク含有チェック（36〜44行目）
+for f in "$ARCHIVE/${TODAY}"_*.md; do
+  published=$((published+1))
+  title="$(sed -n 's/^# //p' "$f" | head -1 | cut -c1-30)"
+  if /usr/bin/grep -q 'hb.afl.rakuten.co.jp' "$f"; then
+    link="✓アフィリ"
+  else
+    link="✗非アフィリ"; bad_link=$((bad_link+1)); problems=$((problems+1))
+  fi
+  log "    ${link} | ${title}"
+done
+公開済みの全記事に hb.afl.rakuten.co.jp が含まれているかチェックします。postprocess_body() が正常に動作していれば全件 ✓アフィリ になりますが、何らかの理由で差替が失敗した場合にここで検出できます。
+3. 目標達成チェックとmacOS通知（52〜60行目）
+if [ "$published" -lt "$TARGET" ]; then
+  log "  ⚠ 公開が目標未達（生成 or 公開が失敗した可能性）"
+  problems=$((problems+1))
+fi
+
+if [ "$problems" -gt 0 ]; then
+  log "  ❌ 監査NG: 要確認 (${problems}件)"
+  notify "監査NG: 公開${published}/${TARGET}本・非アフィリ${bad_link}本。logs/audit-${TODAY}.log を確認"
+  exit 1
+else
+  log "  ✅ 監査OK: ${published}本すべてアフィリリンク付きで公開"
+  exit 0
+fi
+notify() は osascript -e "display notification..." でmacOSの通知センターに飛ばします。ログファイルは logs/audit-YYYY-MM-DD.log に残るため、問題の発生日時と内容を後から追跡できます。
+この監査が exit 1 で終わると、daily.sh 側でも「⚠ 監査NG」をコンソールに出力します（40行目）。launchdの実行ログを見れば、どの実行で何が起きたかが追跡できます。
+次回は、この仕組みを実際に立ち上げるときに私がぶつかった失敗（.env 消滅による報酬ゼロ再発・launchd plist破損・自己修復ウォッチドッグが自分でファイルを壊した事故）と、同じ轍を踏まないための設計指針を書きます。
+
+ 実装の詳細
+
+ 「除外リスト」で同じ商品を二度書かせない
+記事工場が最初に直面するのは、重複コンテンツです。LaunchDが毎日走るということは、毎日「あなたが決めたジャンルで新製品を1本書いて」とClaudeに指示することになります。なにも手を打たないと、ロボット掃除機の記事が30本並んでも全部「Roborock S8 Pro Ultra」という地獄になります。
+解決するのが posted-products.log（実際のパスは $AFFILIATE_FACTORY_LOG）と、それをプロンプトに埋め込む仕組みです。generate.sh の8〜19行目がその実装です。
+LOG="${AFFILIATE_FACTORY_LOG:-$DIR/posted-products.log}"
+# ...
+touch "$LOG"
+
+# 既出商品（重複回避用）
+EXCL=$(paste -sd '、' "$LOG" 2>/dev/null)
+[ -z "$EXCL" ] && EXCL="（まだ無し）"
+このEXCL変数がプロンプトの # 除外（これらの製品は今回選ばない） セクションに $EXCL として差し込まれます。1本生成するたびに、ファイル末尾に商品名が1行追記されるので（298行目）、100本溜まれば100製品が除外リストに並びます。
+[ "$PRODUCT" != "不明な商品" ] && echo "$PRODUCT" >> "$LOG"
+肝は「モデルへの制約はプロンプトで伝える」 という一点です。コードで重複チェックをしようとすると、タイトルの表記ゆれやブランド違いを吸収するための文字列マッチングが必要になり、例外処理が膨らみます。「過去に選んだ商品名一覧を渡して、これを選ばないよう指示する」だけで、Claudeがよしなに避けてくれます。モデルに任せていい仕事は積極的にモデルに投げる、という思想がここに出ています。
+
+ .env の自動ロードとスコープ
+generate.sh の12行目には1行だけこんな書き方があります。
+[ -f "$DIR/.env" ] && set -a && . "$DIR/.env" && set +a
+set -a は「以降に定義した変数を自動でexportする」モード、set +a で解除します。.env を source するだけだと、bashの挙動によっては変数がサブプロセスに引き継がれないことがあります。楽天APIの認証情報（RAKUTEN_APPLICATION_ID など）はPython3サブシェルに渡る必要があるため、set -a でexport込みロードしています。
+.env が存在しない場合は何も起きません。gitには .env を追加せず .env.example だけコミットするという標準的な構成ですが、「.env がなくてもスクリプトが落ちない」ことが意外と重要です。launchdはシステム起動時にも発火するため、.env がなければ環境変数が空のまま実行されます。その場合は RAKUTEN_APPLICATION_ID が未定義になり、generate.sh の83〜86行目の条件で rakuten_search_url() にフォールバック——つまり「報酬のつかない素リンク」で記事を書き続けます。スクリプトは落ちないが収益もゼロ、という最悪のサイレント失敗です。後述する「私が詰まった話」でこれを実際にやらかしています。
+
+ GEN_TIMEOUT の「ケチらない」哲学
+generate.sh の260〜263行目のコメントに、私が試行錯誤した跡がそのまま残っています。
+# フル記事生成の所要時間。従来(2500字・検索数回)で約260sだったが、本文を8000〜10000字＋
+# 競合3製品の追加WebSearchに増やしたため生成が伸びる。余裕を持って実測の数倍を確保する。
+# 短いと長文の途中でkillされ空応答→0本公開になるため、ここはケチらない。
+GEN_TIMEOUT="${AFFILIATE_FACTORY_GEN_TIMEOUT:-1200}"
+最初は GEN_TIMEOUT=300 で動かしていました。単純な生成ならWebSearch数回込みで4〜5分で終わります。ところが「競合3製品もWebSearchして実在スペックを確認してから書く」という指示を足した途端、平均が12〜15分に伸びました。timeout 300 は300秒でプロセスをkillするので、長文生成の途中でClaudeが強制終了され、RESP が空になります。resp_is_valid() が空を弾いて3回リトライ、全滅して exit 1——これが「今日は1本も生成されなかった」の正体でした。
+1200秒（20分）は実測の約1.5倍です。AFFILIATE_FACTORY_GEN_TIMEOUT で上書きできるようにしてあるのは、将来プロンプトを短く変えたときにコードを触らずに調整できるようにするためです。環境変数でデフォルト値を持ち、必要なら外から上書きというパターンは、スクリプト全体で統一しています（AFFILIATE_FACTORY_OUT・AFFILIATE_FACTORY_LOG・AFFILIATE_FACTORY_TARGET も同じ構造です）。
+
+ AFFILIATE_FACTORY_TEST_RESPONSE でモックテスト
+Claude APIは呼び出すたびに課金されます。ロジックの変更をテストするたびに実際にAPIを叩くのは、コストとしても時間としても非効率です。そのために generate.sh 265〜266行目に差し込んだのが AFFILIATE_FACTORY_TEST_RESPONSE です。
+if [ -n "${AFFILIATE_FACTORY_TEST_RESPONSE:-}" ]; then
+  RESP="$AFFILIATE_FACTORY_TEST_RESPONSE"
+else
+  for attempt in 1 2 3; do
+    RESP=$(timeout "$GEN_TIMEOUT" "$CLAUDE" -p "$PROMPT" ...)
+この環境変数にダミー応答を渡してスクリプトを動かすと、APIを呼ばずに resp_is_valid() → 商品名抽出 → postprocess_body() → ファイル書き出しまでを全部走らせられます。たとえば次のように使います。
+export AFFILIATE_FACTORY_TEST_RESPONSE='PRODUCT: テスト掃除機 X100
+# 【2025年】テスト掃除機 X100 全スペック解説
+
+> ※本記事はアフィリエイトプログラムを利用しています。
+
+[:contents]
+
+## この記事でわかること
+テスト記事です。'
+
+bash generate.sh 1
+これで「楽天リンクが正しく差し替わっているか」「ファイル名がタイムスタンプ付きで作られているか」「posted-products.logに商品名が追記されているか」を一気に確認できます。本番環境のコードパスをそのまま通るので、ユニットテストとは違う実際の挙動の確認になります。
+
+ はてなMarkdown特有の罠：[:contents] と免責 blockquote の空行
+postprocess_body() の最後に、最終的な出力の組み立て順がハードコードされています（generate.sh 240行目）。
+out = [title, "", disclaimer, "", contents]
+"" が2つあることに気づくでしょうか。タイトルの後ろに空行、disclaimer（免責のblockquote）の後ろにも空行を置いてから [:contents]（目次）を入れています。
+最初は [title, disclaimer, contents] と詰めて書いていました。このとき、はてなブログ上でなぜか目次が表示されなかったり、目次が免責blockquote内に吸い込まれて見た目が崩れたりする問題が起きました。原因を調べると、はてなのMarkdown処理系はblockquote（> で始まる行）の直後に空行なしで[:contents]が来ると、それを「blockquoteの継続」として処理してしまうことがあるという仕様上の挙動でした。
+空行を1行挟むことで、パーサーが「blockquoteがここで終わった」と判断し、[:contents] が独立した目次指令として解釈されます。これははてなMarkdown特有のクセです。普通のMarkdownレンダラーやnote、Zennでは起きません。
+
+ post-to-hatena.sh の config ガードと H1 分離
+post-to-hatena.sh にはスクリプト上部に1つのガード処理があります（19〜24行目）。
+CFG="$HOME/.config/blogsync/config.yaml"
+if [ ! -f "$CFG" ] || /usr/bin/grep -q 'REPLACE_' "$CFG"; then
+  echo "[hatena] スキップ: $CFG が未設定です（はてなID/APIキー未入力）。" >&2
+  exit 0
+fi
+blogsync の設定ファイルに REPLACE_ という文字列が残っている（＝テンプレのまま未設定）場合、静かに exit 0 して何もしません。daily.sh から呼ばれても「投稿0本」として扱われます。これがないと、設定忘れのままスクリプトが走って blogsync がエラーを吐き、daily.sh 全体が止まる可能性がありました。
+もうひとつ重要なのが post_one() 関数内のタイトル分離です（26〜38行目）。
+title="$(sed -n 's/^# //p' "$file" | head -1)"
+[ -z "$title" ] && title="$(basename "$file" .md)"
+body="$(awk 'NR==1 && /^# /{next} {print}' "$file")"
+Markdownファイルの1行目の # タイトル を抜き出してblogsyncの --title 引数に渡し、本文からはその1行目を除いて投稿します。これをしないとブログの見出しが「H1タイトル」として記事の中に丸ごと入り、はてなブログの記事タイトルと記事内H1が二重になります。SEO的にも見た目的にも最悪なので、本文からH1を剥がして --title に渡すのが正しい設計です。
+
+
+ 私が詰まった話
+
+ 1.「.env 消滅」で報酬ゼロ再発——2回目のやらかし
+最初にこの問題に気づいたのは、1週間ぶりに楽天アフィリエイトの管理画面を開いたときです。記録上は毎日5本公開されているのに、報酬のグラフがまったく動いていませんでした。
+audit-heal.sh のログを遡ると、✅ 監査OK が並んでいます。hb.afl.rakuten.co.jp を含有チェックしているはずなのに、なぜOKが出るのか。published/ 配下の記事を直接 grep hb.afl.rakuten.co.jp すると、1件も該当なしでした。
+generate.sh を手動で走らせてみると、コンソールに次のログが流れました。
+[generate] 商品個別リンクを取得できず検索リンクにフォールバック: Panasonic NA-LX129B
+このログは「個別商品が取れなかったからhgcリンクに落とす」ではなく、楽天APIを呼び出す前の、もっと手前の分岐で出ていました。RAKUTEN_APPLICATION_ID が空文字のとき、Pythonコードに入る前の83〜86行目で素の検索URLが返ります。
+if [ -z "${RAKUTEN_APPLICATION_ID:-}" ] || [ -z "${RAKUTEN_ACCESS_KEY:-}" ] || [ -z "${RAKUTEN_AFFILIATE_ID:-}" ]; then
+  rakuten_search_url "$product"
+  return
+fi
+rakuten_search_url() は search.rakuten.co.jp（報酬ゼロ）を返します。postprocess_body() はこれをアフィリリンクとして埋め込むため、リンク自体は存在します。しかし hb.afl.rakuten.co.jp ではないので、audit-heal.sh のチェックをすり抜けて「非アフィリ」と検出されないまま公開されるのです。
+原因は .env の消滅でした。このシステムとは別の自動化スクリプト（自己修復ウォッチドッグ）が同じディレクトリを対象に動いており、後述する事故で affiliate-factory/.env が上書き消去されていました。gitignoreで管理外なので、git checkoutでも復元できません。
+直し方は2段階です。
+①監査の検出ロジックを修正する：audit-heal.sh の含有チェックを hb.afl.rakuten.co.jp だけでなく search.rakuten.co.jp を「非アフィリ」として明示的に弾くように変えました。素の検索URLが混入した時点で ✗非アフィリ を立てれば、problems > 0 → macOS通知で即座に気づけます。
+②.env を自己修復の射程外に置く：秘密値を含むファイルは絶対にスクリプトが書き換えてはいけません。自己修復ウォッチドッグのスコープを「生成ログとドラフトファイルのみ」に限定し、.env や設定ファイル群を明示的に除外するように修正しました。
+2回目のやらかしだったので、さすがに怒りが自分に向きました。秘密値を持つファイルは「自動化の手が届かない聖域」として最初から設計に入れるべきでした。
+
+ 2. 自己修復ウォッチドッグが本体のファイルを破壊した
+これは「怖い話」系の失敗です。
+別のプロジェクトで「自己修復ウォッチドッグ」と呼んでいるスクリプトを作っていました。スクリプトが異常終了したり出力がおかしくなったりしたとき、既定のファイルセットを書き直して修復するという仕組みです。
+そのウォッチドッグに fd77c12 fix(self-repair) というコミットで修正を入れた直後、affiliate-factory ディレクトリが壊れ始めました。具体的には：
+
+
+.env が0バイトに上書きされた
+
+post-to-hatena.sh が別の内容（前バージョンのコード）に置き換わった
+launchd plist（後述）が文法エラーを含む内容に破損した
+
+すべてのファイルの mtime が同じ時刻になっており、「何かが一斉に書き直した」のは明らかでした。
+原因は、ウォッチドッグが出力を標準出力に書き出しながら同時にファイルを操作する処理で、シェル変数の展開とリダイレクトの順序がかみ合わず、ターゲットファイルが決まる前にリダイレクト先が開かれて内容が消えるというシェルの典型的な罠にはまっていました。結果として、意図していないパスのファイルが上書きされました。
+直し方は、ウォッチドッグの書き込み処理をすべて「一時ファイルに書いてから mv で原子的に差し替える」パターンに変えることでした。
+# NG: リダイレクトがファイルを開いた時点でTARGET_FILEが空になり得る
+some_command > "$TARGET_FILE"
+
+# OK: tmpに書いてからmvで原子置換
+some_command > "$TARGET_FILE.tmp" && mv "$TARGET_FILE.tmp" "$TARGET_FILE"
+さらに「自己修復スクリプトが書き換えてよいファイルは何か」を明示的にホワイトリスト化しました。それ以外のファイルには触れないようにガードを入れています。自己修復という「優しい機能」は、スコープ制限がなければ最凶の破壊者になります。
+
+ 3. launchd plist が壊れて2週間気づかなかった
+上記の事故で launchd plist が破損したとき、すぐには気づきませんでした。MacはSleep/Wakeを繰り返しているだけでlaunchdジョブが再登録されないため、plistが壊れていてもログに何も出ません。記事が生えてこない、でも手動で bash daily.sh を叩けば動く——この状態が2週間続きました。
+気づいたのは launchctl list | grep affiliate を叩いたとき、ジョブが一覧に出なかったからです。
+# ジョブが登録されているか確認
+launchctl list | grep affiliate
+# → 出力なし（登録されていない）
+
+# plist の文法チェック
+plutil ~/Library/LaunchAgents/com.affiliate-factory.daily.plist
+# → com.affiliate-factory.daily.plist: Unexpected character < at line 3
+
+# 修復：アンロードしてplistを直してリロード
+launchctl unload ~/Library/LaunchAgents/com.affiliate-factory.daily.plist 2>/dev/null || true
+# plistを正しい内容に書き直す
+launchctl load ~/Library/LaunchAgents/com.affiliate-factory.daily.plist
+再発防止として、audit-heal.sh の末尾に次の確認を追加しました。
+# launchdジョブが生きているか確認（停止中なら警告だけ出す）
+if ! launchctl list 2>/dev/null | grep -q 'affiliate-factory'; then
+  log "  ⚠ launchdジョブが未登録。plistを確認してください"
+  problems=$((problems+1))
+fi
+毎朝の監査でジョブ登録状況もチェックすることで、「動いていない状態」を翌朝には必ず検出できるようになりました。
+launchd plistについて1点だけ補足します。plistに書くコマンドは絶対パスでなければなりません。/bin/bash は良いですが、bash は不可です。また PATH 環境変数は /usr/bin:/bin 程度しか通っていないため、nvm 経由でインストールしたコマンドや、~/.local/bin/ のバイナリはフルパス指定が必須です。このシステムでは generate.sh 内の CLAUDE 変数（9行目）でclaudeのフルパスを指定しているのはそのためです。
+CLAUDE="${CLAUDE:-~/.local/bin/claude}"
+パスを環境変数で上書きできる設計にしておくことで、claudeのインストール先が変わったときもコードを触らずに対応できます。
+
+3つの失敗に共通するのは「自動化が自分自身を壊す」という構造です。壊れることを前提に設計してある audit-heal.sh が、壊れたことに気づかないまま壊れていたのが最大の皮肉でした。次のセクションでは、これらの失敗から導いた設計指針と、このシステムを0から立ち上げる最短ルートをまとめます。
+前回の中段では .env 消滅・自己修復の暴走・launchd plist 破損という3大失敗を解剖しました。この終段では、それ以外に実運用で踏んだ細かなつまずきを一覧にし、そこから引き出した設計指針をベストプラクティスとして整理します。
+
+ つまずきポイント
+これまで解説した3大失敗に加えて、コードを実際に動かすと必ず一度はぶつかるポイントをまとめます。箇条書きで並べていますが、どれも「実際にやらかした」ものか「設計上の落とし穴として後から気づいた」ものです。
+① TARGET の数値が daily.sh と audit-heal.sh でズレている
+daily.sh 10行目は TARGET=5 のハードコード。一方 audit-heal.sh 11行目は TARGET="${AFFILIATE_FACTORY_TARGET:-3}" で、環境変数未設定時のデフォルトが3です。この状態で両スクリプトを動かすと、daily.sh は毎日5本を目指して生成・投稿しますが、audit-heal.sh は3本公開を「OK」と判定します。5本公開されても「⚠ 公開が目標未達」が出ず、3本しか公開できていない日でも監査OKが出るという逆転現象が起きます。daily.sh 側も TARGET="${AFFILIATE_FACTORY_TARGET:-5}" と環境変数経由にすべきでした。.env に AFFILIATE_FACTORY_TARGET=5 と1行書けば全スクリプトが統一されます。
+② posted-products.log の肥大化でプロンプトが膨れる
+generate.sh 18行目の EXCL=$(paste -sd '、' "$LOG") はログ全件を「、」つなぎにしてプロンプトへ埋め込みます。毎日5本、1年続けると1,825エントリです。商品名1件を平均20文字とすると全体で約3.7万文字。Claude Sonnet のコンテキストには収まりますが、プロンプト全体が5〜6万トークンに達し、1回の生成コストが半年目から段階的に上がり始めます。四半期に一度は古いエントリをアーカイブし、tail -n 200 "$LOG" > "${LOG}.tmp" && mv "${LOG}.tmp" "$LOG" で直近200件だけ残す月次 cron を入れてください。
+③ resp_is_valid が記事本文の "Error:" に引っかかる
+generate.sh 255行目の判定は grep -qiE 'request timed out|error:|rate limit|usage limit' です。正常に生成された記事本文に「このエラー（Error: E10）コードが表示されたら充電を確認してください」のような文が含まれると、resp_is_valid が失敗と判定して3回リトライ後に exit 1 します。高級家電のレビューではエラーコードの説明が入ることが多く、ロボット掃除機やドラム式洗濯機のレビューで実際に引っかかりました。grep -qiE '^(request timed out|error:|rate limit)' <(printf '%s\n' "$r" | head -5) のように先頭数行だけを判定対象にするか、語頭アンカーで本文内の自然な "Error:" を除外する改修を推奨します。
+④ launchd の多重起動で生成コストが二重になる
+StartCalendarInterval に朝5時・昼12時・夜20時の3時刻を設定している場合、朝の実行が20分かかっている最中に昼のインターバルが発火すると2つの daily.sh が並列で走ります。片方が NEED=3 と計算して3本生成を始め、もう片方も同時に NEED=3 と計算して3本走らせます。最終的に PUB_TODAY が6になっても冪等設計が「超過は0本」と吸収するため公開数は問題ありません。しかし Claude API の呼び出しコストは二重に発生します。daily.sh の冒頭に flock -n /tmp/affiliate-factory.lock -c "bash ${0}" のようなロックを入れると多重起動を防げます。
+⑤ --model sonnet がハードコードされていてモデルを切り替えられない
+generate.sh 272行目は --model sonnet 固定です。コストを抑えたいときに Haiku に切り替えたくても、コードを直接編集してコミットし直す必要があります。GEN_MODEL="${AFFILIATE_FACTORY_MODEL:-sonnet}" として --model "$GEN_MODEL" に変えておけば、.env に1行書くだけで次の実行から切り替わります。ジャンルによって深い調査が必要な日は Opus 4.8 へ一時的に上げ、量産期は sonnet に戻す、といった運用が可能になります。
+⑥ RAKUTEN_AFFILIATE_ID だけが空のとき危険な中途半端状態になる
+generate.sh 83〜86行目は「3つの環境変数のいずれかが空なら素の検索URLを返す」条件分岐です。3変数すべて設定 or すべて未設定であれば挙動が一貫しますが、RAKUTEN_APPLICATION_ID と RAKUTEN_ACCESS_KEY は設定済みで RAKUTEN_AFFILIATE_ID だけが空だと、Python コードに入ってAPIを叩き、187行目の hgc フォールバックリンクに空の affiliate_id が展開されます（/hgc// という二重スラッシュ）。このリンクは楽天のアフィリ計測にのらず報酬ゼロになります。起動時に「3変数のうち1つでも空なら即 exit 1 して停止」するガードを最初から入れておくべきでした。
+⑦ ブランド一致チェックが「カタカナブランド」に弱い
+generate.sh 172行目の brand in (result["name"] + " " + result["url"]).lower() は、商品名の先頭語の小文字がAPIレスポンスのどこかに含まれるかで一致を判定します。"Dyson" → URL スラッグが dyson のストア名で一致するので概ね機能します。しかし "Balmuda" のような製品で楽天のストア登録名が「バルミューダ」のカタカナ表記だと、URL スラッグに balmuda が入らず不一致と誤判定します。この場合は個別商品リンクが取れずに hgc フォールバックへ落ちます。報酬は乗りますが、個別商品への直リンクより CVR が低下します。カタカナブランド名をローマ字に変換するテーブルか、ブランドごとの例外リストを持つ対応が必要です。
+⑧ 楽天 API エンドポイントのバージョン変更を見逃す
+generate.sh 103行目の API = "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260401?" は2026年4月更新版のエンドポイントです。旧エンドポイント（app.rakuten.co.jp）を使っているコードは2026年4月以降、403を返します。楽天アフィリエイトのAPIバージョンアップ告知を見落とすと、全件が0件応答になり全記事が hgc フォールバックで出力され続けます。「記事は公開されているが個別商品リンクが1件もない」という状態が数日続いてから気づくパターンです。半年に一度、楽天の開発者ポータルで現行エンドポイントを確認する点検を cron か手作業でスケジュールしてください。
+⑨ blogsync のパスが launchd 環境で通らない
+post-to-hatena.sh 13行目の BLOGSYNC="${BLOGSYNC:-$HOME/.local/bin/blogsync}" は環境変数未設定なら ~/.local/bin/blogsync を探します。Homebrew でインストールした場合は /opt/homebrew/bin/blogsync に入ります。launchd の PATH は /usr/bin:/bin 程度しか通っていないため、どちらのパスも解決できません。blogsync: command not found が出て投稿が全件失敗しますが、--all ループが続いてスクリプト自体は exit 0 で終わります。ログには「投稿: 0本」と出るだけで、エラーと気づきにくいです。launchd plist の EnvironmentVariables に BLOGSYNC=/opt/homebrew/bin/blogsync をフルパスで書くか、BLOGSYNC 環境変数を .env に明記してください。
+⑩ shopt -s nullglob を忘れると「ファイルゼロ」で1件ループが回る
+audit-heal.sh 34行目は shopt -s nullglob でグロブが空のときに空配列を返すよう設定してから35行目の for ループに入り、44行目で shopt -u nullglob に戻します。この nullglob を忘れると、published/ に当日ファイルが1件もない状態でもシェルはリテラル文字列 "$ARCHIVE/2026-06-23_*.md" でループを1回走らせ、[ -e "$f" ] が失敗してスキップされます。結果として published=0 のまま「⚠ 公開が目標未達」に正しく到達するのですが、ループが走った痕跡がログに残り混乱を招きます。glob を使う for ループには必ずペアで shopt を設定する習慣を持ってください。
+⑪ macOS の「集中モード」で osascript 通知が届かない
+audit-heal.sh 16行目の notify() は osascript -e "display notification ..." でmacOS通知を飛ばします。macOS 15以降の集中モード（Focus）が「睡眠」に設定されていると、この通知がバナー表示されず通知センターにのみ蓄積されます。朝7時に起きて確認したつもりが、通知センターを開かないと気づかない状態になっていました。launchd の StandardOutPath / StandardErrorPath を plist に設定してログをファイルに書き出すか、Slack Webhook や LINE Notify への副経路を持つことを推奨します。
+⑫ macOS のスリープ中に StartCalendarInterval がスキップされる
+launchd の StartCalendarInterval は macOS がスリープ中のとき、スケジュール時刻を通過してもジョブが発火しません。起床後のログイン時に missed な実行が発火するケースもありますが、タイミング次第です。「朝5時に起動するはずが10時まで実行されなかった」日が月に数回あります。冪等設計で昼の実行が補完するため記事は1日3〜5本に収束しますが、タイミングがずれます。MacBook をクラムシェルモード（蓋を閉めてディスプレイ接続）で常時起動するか、Mac mini・VPS など常時起動環境に移行するのが根本解決です。
+
+
+ ベストプラクティス
+1年間の運用と複数回の事故から引き出した設計指針です。新たにシステムを組む方は最初からこの指針を意識して設計してください。
+1. 秘密値ファイルは「自動化の射程外」として最初から聖域化する
+.env や ~/.config/blogsync/config.yaml は自動化スクリプトが書き換えてはいけません。自己修復・ウォッチドッグ・バックアップスクリプトが書き換えてよいファイルをホワイトリストで明示し、それ以外には触れない設計を最初に入れてください。「動いていたのに突然報酬がゼロになる」の原因は、ほぼ必ず秘密値の消失です。gitignore で管理外にしている秘密値は、スクリプトの事故で消えると git checkout でも戻せません。
+2. TARGET は環境変数 1つで全スクリプトが共有する
+.env に AFFILIATE_FACTORY_TARGET=5 と書き、全スクリプトが TARGET="${AFFILIATE_FACTORY_TARGET:-5}" で読む設計に統一してください。daily.sh のハードコード TARGET=5 と audit-heal.sh のデフォルト 3 のようなズレは、監査の誤判定を生み続けます。数値の変更が .env 1行の修正で全体に反映されるのが正しい状態です。
+3. アフィリリンクの存在を毎朝 grep で確認し、サイレント報酬ゼロを根絶する
+audit-heal.sh の grep -q 'hb.afl.rakuten.co.jp' "$f" に加えて、grep -q 'search.rakuten.co.jp' "$f" で素URLを「非アフィリ」として明示検出するロジックも入れてください。hb.afl の不在だけを検出すると、.env 消滅時に search.rakuten.co.jp（報酬ゼロ）が混入してもOKと判定されます。素URLが混入した瞬間に macOS 通知が届く設計にすれば、1日以内に気づけます。
+4. GEN_TIMEOUT は実測値の1.5倍以上に設定する。ここはケチらない
+8,000〜10,000字＋競合3製品WebSearchの平均生成時間は12〜15分です。GEN_TIMEOUT=1200（20分）はこの1.5倍の余裕込みの設定です。タイムアウトを短くすると「生成途中でkill→空応答→3回失敗→0本」という連鎖が確定します。生成コストより公開0本の損失のほうが確実に大きいです。新しいプロンプト設計に変えたときは手動で数回実行して所要時間を実測し直してください。
+5. 出力フォーマット強制（PRODUCT: 行）を外さない
+resp_is_valid() と商品名抽出の両方が ^PRODUCT: 行に依存しています。プロンプトを改変するときにこの1行の出力強制を外すと、パース処理が全部崩れます。出力フォーマットの変更はスクリプト全体への影響確認が必須です。変更する場合は次に挙げる AFFILIATE_FACTORY_TEST_RESPONSE でドライランしてから本番に入れてください。
+6. AFFILIATE_FACTORY_TEST_RESPONSE でドライランを必ず入れる
+generate.sh 265〜266行目のモックレスポンス機構です。プロンプト変更・postprocess_body 改修・リンク差替ロジック追加のたびに、APIゼロコストでフルパスを通せます。```bash
+export AFFILIATE_FACTORY_TEST_RESPONSE='PRODUCT: テスト掃除機 X100
+
+ 【2026年】テスト掃除機 X100 全スペック解説｜競合3機種比較
+
+※本記事はアフィリエイトプログラム（楽天アフィリエイト等）を利用しています。
+
+[:contents]
+
+ この記事でわかること'
+bash generate.sh 1
+上記コマンドで楽天リンクの差替・ファイル出力・`posted-products.log` への追記まで全パスが通ります。本番 launchd で初めて動かして「翌朝0本」が確定するミスを防げます。
+
+**7. 自己修復スクリプトのスコープはホワイトリスト制で厳格に限定し、書き込みは原子置換のみ**
+
+自己修復が書き換えてよいファイルを明示的に列挙してください。書き込み処理はすべて「一時ファイル → `mv` で原子置換」パターン一択です。`some_command > "$TARGET_FILE"` は絶対に使いません。`some_command > "$TARGET_FILE.tmp" && mv "$TARGET_FILE.tmp" "$TARGET_FILE"` にします。シェル変数の展開とリダイレクトの順序がかみ合わないと、意図しないパスのファイルが上書きされます。これが実際に `.env` と `post-to-hatena.sh` を一斉に破壊した原因でした。
+
+**8. launchd ジョブの死活確認を監査に組み込む**
+
+```bash
+# audit-heal.sh 末尾に追加
+if ! launchctl list 2>/dev/null | grep -q 'affiliate-factory'; then
+  log "  ⚠ launchdジョブが未登録。plistを確認してください"
+  problems=$((problems+1))
+fi
+このチェックを audit-heal.sh に追加すると、plist が破損してジョブが未登録になった翌朝に必ず検出できます。2週間気づかなかった失敗の再発を防ぐ最低限のガードです。
+9. launchd plist は plutil で構文チェックし、コミット管理する
+plutil ~/Library/LaunchAgents/com.affiliate-factory.daily.plist
+# → com.affiliate-factory.daily.plist: OK
+plist は XML です。閉じタグの抜け・<key> 前後の余分な文字で壊れます。plutil は構文エラーを行番号付きで出力します。コード変更のたびに plutil を通してから launchctl unload && launchctl load でリロードする手順を固定してください。plist は .gitignore 対象から外してバージョン管理します。破損時に git から復元できるのとできないのとでは、発覚からの復旧時間が1時間変わります。
+10. blogsync のパスは BLOGSYNC 環境変数でフルパス指定し、launchd plist にも記載する
+launchd の EnvironmentVariables に BLOGSYNC=/opt/homebrew/bin/blogsync（または ~/.local/bin/blogsync）を明記してください。which blogsync の出力をそのまま plist に書きます。PATH の通り方に依存すると、macOS のバージョンアップや Homebrew のプレフィックス変更（Intel→Apple Silicon移行）で突然 command not found になります。
+11. --model を環境変数化して再デプロイ不要でモデル切り替えを可能にする
+generate.sh 272行目の --model sonnet を --model "${AFFILIATE_FACTORY_MODEL:-sonnet}" に変えてください。コストを削りたいときは .env に AFFILIATE_FACTORY_MODEL=claude-haiku-4-5-20251001 と書くだけで次の実行から切り替わります。特定ジャンル（高単価・技術系）の記事だけ一時的に Opus 4.8 へ上げる運用も、コードを触らずに実現できます。
+12. posted-products.log は月次でローテーションしてプロンプトコストを管理する
+# 月次 cron に追加
+tail -n 200 "$LOG" > "${LOG}.tmp" && mv "${LOG}.tmp" "$LOG"
+直近200件だけを残せば除外効果は十分で、トークンコストを 1/9 以下に削減できます。月商で稼ぐためにトークンコストを上げていくのは本末転倒です。ログのローテーションは収益化システムのコスト管理の一部です。
+13. 通知だけに頼らず logs/audit-YYYY-MM-DD.log を週1回確認する
+audit-heal.sh の AUDIT_LOG="$DIR/logs/audit-${TODAY}.log" に毎朝の監査結果が全件残ります。macOS 通知が集中モードでスキップされた日でも、ログを見れば何本公開できたかがわかります。週に一度 grep '✅\|❌' logs/audit-*.log | tail -14 を実行して直近2週間の OK/NG 率を確認してください。連続してNGが出ている日があれば、その日のログで原因を追跡できます。
+
+
+ まとめ
+前回の第1回でシステムの骨格（launchd→daily.sh→generate.sh→post-to-hatena.sh→audit-heal.sh）を解説し、今回は「収益を確実に刻む後半の仕組み」を一通り公開しました。
+このシステムを設計面と失敗面の2軸で評価するとこうなります。
+設計面の核心は「冪等性」と「自己修復」の二本柱です。 何度実行しても1日 TARGET 本に収束する冪等設計があるから、朝の失敗は昼が自動で補います。audit-heal.sh が毎朝走って異常を検出し、macOS 通知で人間に伝えるから、問題に気づくまでのタイムラグが1日以内に収まります。私が確認に使う時間は毎朝3分以下です。
+失敗面の教訓は「自動化が自分自身を壊す」リスクを最初から設計に組み込むことです。 .env 消失・自己修復の暴走・launchd plist 破損——これらはすべて「動いているはずの自動化」が水面下で静かに壊れていた例でした。ログを見なければ気づかない状態が続き、気づいたときには報酬がゼロになっていたり、2週間分の投稿機会が失われていたりします。壊れることを前提に設計し、壊れたことを翌朝には必ず検出する仕組みを持つこと——それが長期運用の命です。
+月商120万の大部分は私が寝ている間に積み上がっています。この仕組みはその中核のひとつであり、「環境を建てる」という半年間の投資の結果です。記事を書く時間をゼロにするのではなく、自分が価値を生めない時間帯に機械が自動で動き続ける状態を建てることが、時間を売る副業との決定的な違いです。
+次回は、このアフィリ工場を含む Claude Code 自律環境全体の設計——複数の工場を並列で走らせるときのリソース管理・モデルルーティング・月単位のコスト管理——について書きます。
+
+仕組みの全体像・月120万の内訳・30日手順は有料noteにまとめています。
+📕 Claude Code自律環境で、実際どう稼ぐか ― 仕組み・実例・始め方・サポート
+
+
+Lily（@bokuwalily）― 個人開発者。Claude Code で自動化基盤を組みながら、iOSアプリやWebサービスを量産しています
+
+制作物・記事は bokuwalily.com にまとめています🖥️
+AIで「寝てても回る仕組み」を作って月120万にした話は noteの有料記事 に💰
+OSS: github.com/bokuwalily 🐙
+最新情報・お問い合わせは X @bokuwalily へ🌍
+
+皆さんの ❤️ やシェアが励みになります！
+
+---
+
+## 21. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -8637,7 +9123,7 @@ AIに渡すルールは、自然言語ドキュメント1枚から三つの仕�
 
 ---
 
-## 21. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
+## 22. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -9145,7 +9631,7 @@ Skillは「自分専用のClaude Code」を育てることに近いと感じて�
 
 ---
 
-## 22. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
+## 23. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -9650,7 +10136,7 @@ Building agents with the Claude Agent SDK - Anthropic Engineering
 
 ---
 
-## 23. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
+## 24. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -9795,7 +10281,7 @@ banned_visual_motifs:
 
 ---
 
-## 24. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
+## 25. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/7
@@ -10031,7 +10517,7 @@ Slack, Google Calendar, Confluence等のMCPツールを活用して情報取得�
 
 ---
 
-## 25. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
+## 26. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -10225,7 +10711,7 @@ CLAUDE.mdにルールを書いて、WIP.mdに作業状態を残すようにし�
 
 ---
 
-## 26. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
+## 27. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -10534,7 +11020,7 @@ your-project/
 
 ---
 
-## 27. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
+## 28. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -10669,7 +11155,7 @@ Qiitaニュースを購読する
 
 ---
 
-## 28. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
+## 29. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -11471,7 +11957,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 29. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
+## 30. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -11522,7 +12008,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 30. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
+## 31. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -11781,7 +12267,7 @@ Claude Code や AI 自動化についてさらに深く学びたい方は、筆�
 
 ---
 
-## 31. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
+## 32. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -12324,7 +12810,7 @@ Prime 200銘柄
 
 ---
 
-## 32. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
+## 33. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -12504,7 +12990,7 @@ mainで作業 → worktreeを使う
 
 ---
 
-## 33. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
+## 34. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/12
@@ -13213,7 +13699,7 @@ Claude Code の 6種類のメモリと優先順位を理解して効率的に活
 
 ---
 
-## 34. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
+## 35. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/22
@@ -14453,7 +14939,7 @@ AIの「揮発性の高い記憶」を補うための「外部メモリ」とし
 
 ---
 
-## 35. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
+## 36. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/8
@@ -16045,7 +16531,7 @@ AI に相談して書いてもらいました。 ↩︎
 
 ---
 
-## 36. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
+## 37. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -16296,7 +16782,7 @@ hooks は決定論的な強制です。必ず同じ処理を再現したいも�
 
 ---
 
-## 37. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
+## 38. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -16795,7 +17281,7 @@ READMEが人間への手紙なら、AGENTS.md は、明日の自分・明日の�
 
 ---
 
-## 38. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
+## 39. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -17220,7 +17706,7 @@ GitHubで編集を提案
 
 ---
 
-## 39. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
+## 40. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -17449,7 +17935,7 @@ AI や人間が読んだときにどのような理解・認識するかをま�
 
 ---
 
-## 40. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
+## 41. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -17674,7 +18160,7 @@ API キーを使う「プロキシ方式」は、Google の ToS 違反で BAN �
 
 ---
 
-## 41. [Dynamic Workflowsを大名システムへ組み込んでみた - Qiita](https://qiita.com/tanaka_taro_JP_KYUSYU/items/b2efbc628053b643a8d8)
+## 42. [Dynamic Workflowsを大名システムへ組み込んでみた - Qiita](https://qiita.com/tanaka_taro_JP_KYUSYU/items/b2efbc628053b643a8d8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -17998,7 +18484,7 @@ Workflow が上乗せする価値は 「コスト削減（安価モデル＋低 
 
 ---
 
-## 42. [【AI駆動開発 / Claude Code】AGENT.mdや、product.md, DESIGN.md などのAIエージェント向けのMDファイル・ドキュメントについて📝](https://zenn.dev/manase/scraps/6bd12beaafd308)
+## 43. [【AI駆動開発 / Claude Code】AGENT.mdや、product.md, DESIGN.md などのAIエージェント向けのMDファイル・ドキュメントについて📝](https://zenn.dev/manase/scraps/6bd12beaafd308)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -18111,7 +18597,7 @@ AGENTS.md はこれらを一本化する狙いで登場した、という背景�
 
 ---
 
-## 43. [Loop Engineeringの組み方：Claude Code /goal で「自走するループ」を設計する](https://zenn.dev/ino_h/articles/2026-06-16-loop-engineering-goal)
+## 44. [Loop Engineeringの組み方：Claude Code /goal で「自走するループ」を設計する](https://zenn.dev/ino_h/articles/2026-06-16-loop-engineering-goal)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -18307,7 +18793,7 @@ WorkOS — Key takeaways from Boris Cherny on building Claude Code
 
 ---
 
-## 44. [もうプロンプトは書かない、ループを書く — Claude Code作者とOpenClaw作者が辿り着いた /goal と /loop](https://zenn.dev/kenimo49/articles/write-loops-not-prompts-goal-loop)
+## 45. [もうプロンプトは書かない、ループを書く — Claude Code作者とOpenClaw作者が辿り着いた /goal と /loop](https://zenn.dev/kenimo49/articles/write-loops-not-prompts-goal-loop)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/22
@@ -18463,7 +18949,7 @@ OpenAI hires OpenClaw founder Peter Steinberger -- SiliconANGLE
 
 ---
 
-## 45. [AI駆動開発のセキュリティツール、結局なにを入れればいい？ - Qiita](https://qiita.com/udowanllc/items/42635251d8e2641cb50c)
+## 46. [AI駆動開発のセキュリティツール、結局なにを入れればいい？ - Qiita](https://qiita.com/udowanllc/items/42635251d8e2641cb50c)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/24
@@ -19243,7 +19729,7 @@ Anthropic「Claude Code permissions documentation」
 
 ---
 
-## 46. [Claude Code コンテキスト管理パターン集：need-to-know だけ読ませる設計 - Qiita](https://qiita.com/nogataka/items/99b1ea9ba20877d54dba)
+## 47. [Claude Code コンテキスト管理パターン集：need-to-know だけ読ませる設計 - Qiita](https://qiita.com/nogataka/items/99b1ea9ba20877d54dba)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/27
@@ -19563,7 +20049,7 @@ Claude Code 公式ドキュメント
 
 ---
 
-## 47. [Claude Codeに同じバグを3回出すと、自動でルール化される話](https://zenn.dev/nexta_/articles/858e92ee22b4a4)
+## 48. [Claude Codeに同じバグを3回出すと、自動でルール化される話](https://zenn.dev/nexta_/articles/858e92ee22b4a4)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/7/7
@@ -19921,7 +20407,7 @@ AIを便利な道具として使うだけでなく、一緒に仕事をしなが
 
 ---
 
-## 48. [Fable 5が使えなくなる前に、その「働き方」をOpus/Sonnetに引き継がせた](https://zenn.dev/yui/articles/e4f8268ab5c6c1)
+## 49. [Fable 5が使えなくなる前に、その「働き方」をOpus/Sonnetに引き継がせた](https://zenn.dev/yui/articles/e4f8268ab5c6c1)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/7/10
@@ -20105,429 +20591,6 @@ Fableの場合は、サブエージェントが書いたミスをレポート段
 その差分を、上述の学習ループが失敗1件ずつ削っていくようになっています。
 Opus/SonnetをFable 5化してみるアイデア自体は良く見るのですが、詳細まで書いている記事は少なかったので実際に行って書いてみました。
 少しでも参考になれば嬉しいです。
-
----
-
-## 49. [ASMR環境音動画を無料ローカルで量産する （全2回の第1回）：前編 ― 静止画に「本物の雨」を降らせる物理シミュとシームレスループ](https://zenn.dev/bokuwalily/articles/asmr-factory-local-1)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/7/17
-- **AI要約**:
-  ComfyUIとPython、ffmpegを統合したASMR動画自動生成パイプラインのアーキテクチャを提示。
-  物理シミュレーションによる変位マップをキャッシュ化し、GPUコストゼロでループ動画を生成する手法を解説。
-  launchdを用いた無人運用におけるリトライ処理や冪等性設計が施されたシェルスクリプトを明記。
-- **今読む理由**: 自動化パイプラインの構築に不可欠なリトライ処理、冪等性設計、ComfyUIの自動起動など、具体的なシェルスクリプトとPythonの実装パターンが明記されており、現在のプロジェクトに直接応用可能なため。
-- **タグ**: #自動化パイプライン, #ComfyUI, #シェルスクリプト, #ffmpeg, #冪等性設計
-
-### 本文
-大学2年のとき月10万だった収入が、掛け持ちで60万になり、会社都合で一瞬ゼロに落ちた。そこから半年でClaude Codeを中心とした自律環境を組み上げ、今は月商120万。そのスケールを支えている柱のひとつが、何もしなくても毎日YouTubeにASMR動画が投稿されていく仕組みです。
-
- なぜこの仕組みが効くのか
-ASMRチャンネルには他のジャンルと決定的に違う特性があります。1視聴あたりの再生時間が異常に長いのです。眠れない夜にかけっぱなしにする、勉強中にずっと流す。30分動画を最後まで見てもらえれば、広告収益の計算式が根本から変わります。同じ登録者数でも、短尺エンタメ系チャンネルの2〜4倍の収益になることは珍しくありません。
-問題は供給コストでした。ASMRで成果を出しているチャンネルのほとんどは毎日投稿しています。30分動画を毎日手作業で編集するのは現実的ではない。AI動画生成（Sora、Runway Gen-3など）でリアルな雨を描こうとすると1本あたり数百円〜数千円かかります。月商の柱にするには毎日30本以上ストックしておきたいので、その金額は論外でした。
-転換点になった気づきは単純です。**ASMR動画に求められているのは「ダイナミックなカット割り」ではなく「窓の雨粒がゆっくり流れる静けさ」**です。カメラは動かない。シーンも切り替わらない。必要なのは、静止した室内風景の中で雨粒だけがじわじわ動いている、その質感です。
-これは静止画で作れます。
-RealVisXL（ローカルのComfyUIに乗せた画像生成モデル）が出した1枚の静止画に、Pythonで書いた雨粒の物理シミュレーションから変位マップを生成し、ffmpegのdisplaceフィルターで合成する。動画生成モデルは使わない。GPU代ゼロ。生成にかかるのはCPU時間だけです。
-もうひとつの核心がシームレスループです。~/dev/asmr-factory/daily.shの実装ではLOOPSEC=16、すなわち16秒のループ動画をmake_full.shで30分にタイルしています。16秒で1周するということは、30分動画の中に継ぎ目が約112回発生するということです。この継ぎ目が目立てばコメント欄はクレームで埋まる。だから変位マップは先頭フレームと末尾フレームの変位量が完全に一致するよう周期設計されています。これが単純な「ランダム雨粒アニメ」と根本的に違うところで、全連載を通じて最も重要な技術的肝です。
-
- 「暖色光源＋窓」構図に絞った理由
-READMEに「テーマ: 7種・全て暖色光源+窓室内構図で統一」と書いてあります。なぜ統一するのか。
-自動マスク（lib/auto_masks.py）が窓領域と炎領域を自動検出して、雨エフェクトと炎ゆらぎの適用範囲を決めます。この自動検出は構図が安定していないと精度が落ちます。「カフェの窓際」「暖炉のある書斎」「雨の見える和室」など、テーマは7種ありますが、窓は必ず画面に映っていて暖色光源があるという制約に絞ることで、マスク精度が実用レベルに安定しました。テーマを絞ることが美的な判断ではなく、自動化を成立させる設計判断だったわけです。
-
- 無人運用の実績
-~/dev/asmr-factory/のlaunchd設定（com.lily.asmr-daily）は毎朝7:00と14:00にdaily.shを起動します。朝7時分の生成が完走すれば14時はスキップされます（冪等性設計）。私がやることは翌朝にYouTube Studioを開いて公開ボタンを押すだけ。それ以外は完全に自動です。
-
- 全体の流れ
-パイプライン全体の構成です。
-ComfyUI (RealVisXL @ 127.0.0.1:8188)
-    │  still.png ─ 1024×576px
-    ▼
-lib/auto_masks.py
-    │  win_mask.png  (窓領域マスク)
-    │  fire_mask.png (炎領域マスク・テーマによりスキップ)
-    ▼
-lib/gen_rain_glass_map.py      ← ★ 今回の主役
-    │  maps/daily_16s/map_0001.png
-    │  maps/daily_16s/map_0002.png
-    │  … (24fps × 16s = 384枚)
-    │  ※ 初回生成後はキャッシュ使い回し
-    ▼
-lib/render_loop.sh             ← ★ 今回の主役
-    │  loop.mp4 (16秒シームレスループ)
-    ▼
-lib/freesound_fetch.py  +  lib/mix_audio.sh
-    │  bed.wav (CC0音源 / loudnorm -20LUFS / 2分尺)
-    ▼
-lib/make_full.sh
-    │  video.mp4 (30分・ループをタイル)
-    ▼
-lib/make_thumb.py  +  lib/make_meta.py
-    │  thumbnail.png (1280×720) / youtube.md
-    ▼
-lib/youtube_upload.py
-       YouTube「非公開」アップ (公開は人間が確認して押す)
-各ステップをdaily.shのコードと合わせて読んでいきます。
-
- ステップ1: ComfyUI画像生成
-SEEDBASE=$(( $(date -j -f "%Y-%m-%d" "$DATE" +%s 2>/dev/null \
-               || date -d "$DATE" +%s) % 100000 ))
-ok=0
-for att in 0 1 2; do
-  SEED=$(( SEEDBASE + att*777 ))
-  log "comfy_gen attempt $att seed=$SEED"
-  if python3 "$LIB/comfy_gen.py" \
-       --prompt "$PROMPT" --seed "$SEED" --out "$STILL" \
-       --timeout 300 >>"$LOG" 2>&1; then
-    ok=1; break
-  fi
-  sleep $(( (att+1)*10 ))
-done
-[ "$ok" -eq 1 ] || die "image generation failed after retries"
-（daily.sh L101–111より）
-シード値は日付のUNIXタイムスタンプを100000で割った余りをベースにしています。リトライのたびに+777ずつずらすことで、同一日付でも再試行ごとに別シードになります。ComfyUI自体が落ちていた場合はdaily.shのL50–60にあるensure_comfyui()関数が自動起動を試みます。150回（＝約10分）試行して立ち上がらなければdieで安全に中断します。
-
- ステップ2〜3: マスク検出と変位マップ生成
-# ---- 3. 雨マップ(サイズ固定なのでキャッシュ流用) ----
-LOOPSEC=16
-MAPDIR="$ROOT/maps/daily_${LOOPSEC}s"
-if [ ! -f "$MAPDIR/map_0001.png" ]; then
-  log "generating rain map (cache)"
-  mkdir -p "$MAPDIR"
-  python3 "$LIB/gen_rain_glass_map.py" \
-    --w 1024 --h 576 --fps 24 --seconds "$LOOPSEC" \
-    --drops 46 --out "$MAPDIR" --seed 7 >>"$LOG" 2>&1 \
-    || die "rain map gen failed"
-fi
-（daily.sh L121–127より）
-ここが今回の連載で最も重要な箇所です。if [ ! -f "$MAPDIR/map_0001.png" ] という条件分岐を見てください。変位マップの生成は生涯で1回だけ走り、2回目以降はmaps/daily_16s/ディレクトリ全体を使い回します。
-パラメータの意味：
-
-
---fps 24 --seconds 16 → 合計384枚の変位マップを生成（24×16＝384）
-
---drops 46 → 画面内に同時存在する雨粒の数。46は密度と処理速度のバランスを取った値
-
---seed 7 → 毎回同じマップを再現する（決定論的・再現性保証）
-
---w 1024 --h 576 → ComfyUIの出力解像度と揃える（揃えないとdisplaceがずれる）
-
-gen_rain_glass_map.pyが何をしているかの詳細は後編で掘り下げますが、一言で言うと「窓ガラス表面の物理モデルを使って、384枚のGrayscale PNG（先頭と末尾の変位量が一致するよう周期的に設計された変位マップ）を生成する」スクリプトです。
-
- ステップ4: render_loop.sh でffmpeg合成
-# ---- 4. ループ動画(モーション) ----
-LOOP="$WORK/loop.mp4"
-WIN_MASK_ENV=""; FIRE_MASK_ENV=""
-[ "$HAS_RAIN" = "True" ] && WIN_MASK_ENV="$WORK/win_mask.png"
-[ "$HAS_FIRE" = "True" ] && FIRE_MASK_ENV="$WORK/fire_mask.png"
-WIN_MASK="$WIN_MASK_ENV" FIRE_MASK="$FIRE_MASK_ENV" RAIN_OP=0.8 \
-  bash "$LIB/render_loop.sh" "$STILL" "$MAPDIR" "$LOOPSEC" "$LOOP" \
-    >>"$LOG" 2>&1 || die "render_loop failed"
-（daily.sh L129–135より）
-RAIN_OP=0.8は雨エフェクトの不透明度です。1.0にすると変位量が強くなりすぎてガラスが歪んで見え、0.6だと雨が薄すぎる。実験の結果0.8が最も自然に見えました。render_loop.shはこれを環境変数として受け取り、ffmpegのdisplaceフィルターのパラメータに展開します。
-HAS_RAINとHAS_FIREはthemes.jsonのテーマ定義から来ています。「暖炉の書斎」テーマならHAS_FIRE=TrueかつHAS_RAIN=False、「雨のカフェ」ならHAS_RAIN=TrueかつHAS_FIRE=False、「雨の暖炉」なら両方Trueです。マスクファイルが存在するかどうかで処理が分岐し、余計なフィルターは噛まない設計になっています。
-
- ステップ5〜6: CC0音源と30分化
-for lic in cc0 any; do
-  if timeout 90 python3 "$LIB/freesound_fetch.py" \
-       --query "$Q" --minlen 25 --license "$lic" \
-       --out "$SRC" >"$WORK/fs_${i}.json" 2>>"$LOG"; then
-    fetched=1; break
-  fi
-done
-（daily.sh L146–152より）
-音源はFreesound APIからCC0ライセンスを優先して取得します（cc0 → anyの順でフォールバック）。timeout 90はFreesoundのプレビューDLにタイムアウトがないため手動でかけています。取得した複数の音源はmix_audio.shでloudnorm -20LUFSに統一ミックスされます。LUFSを統一しないと動画をまたいで音量が暴れるので、これは省けない工程です。
-make_full.shはループ動画と音源を受け取って30分（デフォルトMIN=30）にタイルします。ループ動画16秒×約112.5回＝30分。ffmpegの-stream_loopオプションで動画を繰り返し、音源は-shortestではなく明示的にMIN分で切り出します。
-
- ステップ7〜9: サムネ・メタ・検証
-# ---- 9. 検証 ----
-DUR=$(ffprobe -v error -show_entries format=duration \
-       -of csv=p=0 "$VIDEO" 2>/dev/null | cut -d. -f1)
-WANT=$((MIN*60))
-[ -n "$DUR" ] && [ "$DUR" -ge $((WANT-3)) ] && \
-  [ "$DUR" -le $((WANT+3)) ] || die "duration check failed ($DUR != $WANT)"
-STREAMS=$(ffprobe -v error -show_entries stream=codec_type \
-           -of csv=p=0 "$VIDEO" 2>/dev/null | sort | tr '\n' ',')
-echo "$STREAMS" | grep -q "audio" && echo "$STREAMS" | grep -q "video" \
-  || die "missing stream ($STREAMS)"
-TW=$(python3 -c \
-  "from PIL import Image;print('x'.join(map(str,Image.open('$THUMB').size)))")
-[ "$TW" = "1280x720" ] || die "thumb size $TW != 1280x720"
-[ -s "$META" ] || die "meta empty"
-（daily.sh L179–186より）
-出力前に4点の検証をかけます。①動画尺が30分±3秒以内、②映像ストリームと音声ストリームが両方存在する、③サムネが1280x720、④メタファイルが空でない。どれか1つでも失敗すればdieでプロセスが落ち、後述のatomic moveが実行されないためDesktopには何も届きません。「壊れた動画がYouTubeに上がる」という最悪ケースをここで防いでいます。
-
- ステップ10: atomic stockと冪等性
-# ---- 10. atomic stock ----
-STAGE="$WORK/_deliver"; mkdir -p "$STAGE"
-cp "$VIDEO" "$STAGE/video.mp4"
-cp "$THUMB" "$STAGE/thumbnail.png"
-cp "$META"  "$STAGE/youtube.md"
-cp "$STILL" "$STAGE/scene.png"
-mkdir -p "$DEST"
-rm -rf "$FINAL"
-mv "$STAGE" "$FINAL"
-（daily.sh L189–197より）
-作業ディレクトリ内の_deliver/に成果物を集めてからmv（atomic）でFinal destに移動します。コピー途中でプロセスが死んでも半端なディレクトリがDesktopに残りません。
-冪等性はL86–88の判定で担保されています。
-EXIST=$(find "$DEST" -maxdepth 1 -type d \
-         -name "${DATE}_*" 2>/dev/null | head -1)
-if [ -n "$EXIST" ]; then
-  log "already stocked for $DATE ($EXIST); skip (idempotent)"
-  exit 0
-fi
-当日分が1本でも存在すればテーマが違っても即exitします。launchdが7:00と14:00の2回起動しても二重生成は起きません。
-
- ステップ12: YouTubeへの非公開アップロード
-media = MediaFileUpload(
-    spec["video"],
-    chunksize=8 * 1024 * 1024,   # 8MBチャンク
-    resumable=True,
-    mimetype="video/mp4"
-)
-req = yt.videos().insert(
-    part="snippet,status", body=body, media_body=media
-)
-resp = None
-while resp is None:
-    status, resp = req.next_chunk()
-    if status:
-        print(f"  upload {int(status.progress()*100)}%",
-              file=sys.stderr)
-（lib/youtube_upload.py L73–80より）
-resumable uploadを使っているので、途中で回線が切れても再開できます。chunksize=8 * 1024 * 1024（8MB単位）は30分動画（約800MB〜1GB）を安定して送るための設定です。アップロード成功後にYouTube Studio URLをログに吐き（L91: https://studio.youtube.com/video/{vid}/edit）、coverage.csvのレコードをOK+uploadedに更新します。
-重要なのは、アップロードが失敗してもstock（~/Desktop/ASMR/の成果物）は一切消えないことです（daily.sh L206–226）。トークンが切れていた、ネットが落ちていた、どんな理由でもローカルのvideo.mp4は残ります。後からpython3 lib/youtube_upload.py --upload upload.jsonを手動実行すれば済みます。
-
-次回はlib/gen_rain_glass_map.pyの物理シミュレーション本体（粒の生成・重力・窓ガラス表面張力モデル・384枚を周期的に結ぶ数学的設計）と、lib/render_loop.shのffmpeg displaceフィルター構文を詳しく掘り下げます。
-
- 実装の詳細
-
- 変位マップの「RGB3層構造」がなぜ必要か
-lib/gen_rain_glass_map.py の冒頭コメントを読むと、出力PNGの構造が明文化されています。
-R = x-displacement  (128 = neutral, refraction toward droplet center)
-G = y-displacement  (128 = neutral)
-B = specular highlight (0 = none, bright = glint on the droplet)
-一般的な変位マップはGrayscale1枚で「明るいほど押し出す」表現をしますが、それでは横方向と縦方向を同時に制御できません。このパイプラインではRチャンネルとGチャンネルを独立した変位軸に割り当て、Bチャンネルに光の反射（スペキュラーグリント）を同梱することで、1枚のPNGに3つの物理量を詰め込んでいます。
-render_loop.sh でこれを展開する処理がここです。
-[1:v]setsar=1,split=3[m1][m2][m3];
-[m1]extractplanes=r[xm];
-[m2]extractplanes=g[ym];
-[m3]extractplanes=b,format=gbrp[spec];
-[todisp][xm][ym]displace=edge=smear,format=gbrp[disp];
-[disp][spec]blend=all_mode=screen:all_opacity=0.85,format=gbrp[raineff];
-（lib/render_loop.sh L36–41より）
-split=3 で同じフレームを3系統に分岐し、extractplanes=r/g/b でそれぞれのチャンネルをグレースケールとして取り出します。R（xm）とG（ym）がffmpegの displace フィルターのX・Y変位源になり、B（spec）は blend=all_mode=screen で上から加算合成して光の白いハイライトになります。
-format=gbrp の指定が随所に出てくることに気づいたでしょうか。ffmpegの displace フィルターはYUV系の色空間を嫌います。GBRPという「Gチャンネル・Bチャンネル・Rチャンネルをプレーナー配置した非圧縮フォーマット」を要求するためで、ここを省略すると実行時に [Parsed_displace] incompatible pixel format が出て止まります（後述）。
-
- シームレスループを成立させる数学
-見た目のなめらかさより重要なのが「16秒で厳密に一周して継ぎ目がゼロになること」です。これを成立させている核心が gen_rain_glass_map.py L38–44の速度設計です。
-for _ in range(args.drops):
-    n = int(rng.integers(1, 3))        # full wraps over T -> loop
-    r = float(rng.uniform(3, 9))
-    drops.append(dict(
-        ...
-        speed=n * span / T,
-        ...
-    ))
-（lib/gen_rain_glass_map.py L37–44より）
-span = H + 2 * args.margin（576 + 80 = 656ピクセル）が画面縦幅に上下マージンを加えた「1周分の移動距離」です。n は1または2の整数。speed = n * span / T なので、16秒後に各雨粒が移動した距離は speed * T = n * span になります。
-フレームごとの位置計算を見てください。
-cy = (d["y0"] + d["speed"] * t) % span - args.margin
-（lib/gen_rain_glass_map.py L71より）
-t = T のとき d["speed"] * T = n * span なので、モジュロ演算の結果は d["y0"] % span と等しくなります。つまり t=0 と t=T の位置が完全に一致する。これがシームレスループの数学的根拠です。
-「速度をランダムにすれば雨粒がバラバラに動いてリアルになるのでは？」と最初に思うかもしれません。私もそう思って試しました。結果は惨憺たるものでした。継ぎ目で雨粒がテレポートする。詳しくは後の「詰まった話」で書きます。
-
- 横揺れ（wobble）も周期制約を満たす
-窓ガラスを伝う雨粒は直線では落ちません。表面張力の偏りで左右に蛇行します。これを再現するのが wobamp と wobn パラメータです。
-cx = d["x0"] + d["wobamp"] * math.sin(
-    2 * math.pi * d["wobn"] * t / T + d["wobph"]
-)
-（lib/gen_rain_glass_map.py L72より）
-t = 0 のとき位相は d["wobph"]、t = T のとき位相は 2 * pi * d["wobn"] * 1 + d["wobph"] です。wobn は1または2の整数なので、2 * pi * wobn は 2π または 4π。sin関数の周期は 2π なので、t=0 と t=T のX座標が必ず一致します。初期位相 wobph は [0, 2π) でランダムにばらつかせて粒ごとに異なる蛇行に見せているわけです。
-
- ヒーロードロップとトレイルで「ASMR感」を作る
-雨粒を46個すべて同じ小さなサイズにすると、画面がにぎやかすぎて視覚的に落ち着かなくなります。眠りに引き込む映像には「大きくゆっくり落ちる主役の雨粒」と「背景に張り付いた細かい水滴」のメリハリが必要です。
-n_hero = args.hero if args.hero >= 0 else max(3, args.drops // 8)
-for _ in range(n_hero):
-    r = float(rng.uniform(14, 26))      # fat hero droplet
-    drops.append(dict(
-        ...
-        r=r, speed=1 * span / T,        # n=1: one slow descent per loop
-        strength=float(rng.uniform(1.3, 1.8)),
-        trail=float(rng.uniform(0.8, 1.0)), glint=1.0,
-    ))
-（lib/gen_rain_glass_map.py L51–61より）
-通常粒の半径が 3〜9px に対してヒーロー粒は 14〜26px。strength も 0.7〜1.1 に対して 1.3〜1.8 で、レンズ効果が強くかかります。--drops 46 で通常粒が46個、max(3, 46 // 8) = 5 でヒーロー粒が5個、合計51粒が画面に共存します。
-ヒーロー粒特有の機能が trail（尾跡）です。
-if d["trail"] > 0:
-    tpad_x = max(0, int(cx - 2)); tpad_x1 = min(W, int(cx + 2))
-    ty0 = max(0, int(cy - r * 6)); ty1 = max(0, int(cy))
-    if tpad_x1 > tpad_x and ty1 > ty0:
-        tsx = xx[ty0:ty1, tpad_x:tpad_x1] - cx
-        tdist = np.abs(tsx)
-        tfall = np.clip(1.0 - tdist / 2.0, 0, 1)
-        vfade = np.clip((yy[ty0:ty1, tpad_x:tpad_x1] - (cy - r * 6)) / (r * 6), 0, 1)
-        dx[ty0:ty1, tpad_x:tpad_x1] += -(np.sign(tsx)) * tfall * vfade * (args.disp * 0.25) * d["trail"]
-（lib/gen_rain_glass_map.py L95–103より）
-雨粒の真上に幅4px（cx±2）・高さ r*6 の細い柱を設定し、そこに微弱な横変位（disp * 0.25）をかけます。水が通った跡でガラス表面が薄く濡れ、光の屈折が微妙に残る状態を模倣しています。vfade は雨粒に近いほど変位量が大きく、遠ざかるにつれゼロに近づくグラデーションです。
-
- ffmpegフィルターグラフの動的組み立て
-render_loop.sh で特徴的なのが、環境変数 WIN_MASK と FIRE_MASK の有無でフィルターグラフ文字列を動的に組み立てる設計です。
-FC="[0:v]format=gbrp,setsar=1[still];"
-CUR="still"
-
-if [ -n "$WIN_IN" ]; then
-  FC+="[1:v]setsar=1,split=3[m1][m2][m3]; ..."
-  CUR="rained"
-fi
-
-if [ -n "$FIRE_IN" ]; then
-  FC+="[${CUR}]split=2[fb][ff]; ..."
-  CUR="lit"
-fi
-
-FC+="[${CUR}]geq=r='r(X,Y)*${GFLK}':... ,format=yuv420p[vout]"
-（lib/render_loop.sh L30–54より）
-CUR 変数がパイプラインの「現在の出力ラベル」を追跡します。雨エフェクトを挟めば CUR が still → rained に更新され、次の炎ゆらぎは rained を入力として受け取る。どちらもスキップすれば still にグローバルフリッカーだけ乗せて終わります。
-グローバルフリッカーの式を見てください。
-C1=$(awk "BEGIN{printf \"%d\", 3*${LOOPSEC}}")   # = 48
-C2=$(awk "BEGIN{printf \"%d\", 7*${LOOPSEC}}")   # = 112
-GFLK="(0.975+0.018*sin(2*PI*${C1}*T/${LOOPSEC})+0.010*sin(2*PI*${C2}*T/${LOOPSEC}))"
-（lib/render_loop.sh L18–20より）
-T はffmpegのフレーム時刻を表す組み込み変数です。C1 = 3 * 16 = 48、C2 = 7 * 16 = 112 という係数を使うことで、周波数3Hzと7Hzの正弦波の和で輝度を変調します。t = 0 と t = LOOPSEC = 16 でどちらの正弦波も完全に一周するため、フリッカーも継ぎ目なしで繋がります。振幅 0.018 と 0.010 は室内電球のごくわずかな明滅を表す値で、意識的に目が追わないギリギリの強度を実験で決めました。
-炎ゆらぎは同じ周波数を使いながら振幅を大きくし、位相 1.7 をずらして変調に有機的なずれを作っています。
-FFLK="(0.78+0.15*sin(2*PI*${C1}*T/${LOOPSEC})+0.07*sin(2*PI*${C2}*T/${LOOPSEC}+1.7))"
-（lib/render_loop.sh L21より）
-基準値 0.78 は炎の影響下にある領域を通常輝度の78%まで落とすための係数です。暖炉テーマでは画面の一部が揺れる炎の光で明暗が交互に切り替わる「息をするような」動きが生まれます。
-
-
- 私が詰まった話
-
- 詰まり1: format=gbrp を省いたら何も映らなかった
-最初に書いた filter_complex はシンプルな構成でした。
-[0:v][1:v][2:v]displace=edge=smear[out]
-実行すると映像は出力されましたが、画面が暗緑色の単色に塗りつぶされていました。ログには何も出ません。-loglevel info に上げて調べると incompatible pixel formats in filter chain が流れていました。
-原因は displace フィルターがYUV420Pのまま受け取れないことです。静止画はJPEG由来のYUV、変位マップはRGBのPNG、この2系統を混ぜてdisplaceに渡すとffmpegが内部でフォーマット交渉を試みて失敗します。
-直し方は変位マップを読み込んだ直後に format=gbrp をかけ、静止画側も同様に変換してから displace に渡すことです。render_loop.sh L30の [0:v]format=gbrp,setsar=1[still] と、L36の [1:v]setsar=1 に続いてR/G/B展開する構造がその答えです。format=gbrp をかけないと静止画の色が緑に偏る現象が起き、かつ無音で失敗するので原因が非常に見つけにくい。
-
- 詰まり2: ループの継ぎ目で雨粒がテレポートした
-最初の実装では speed をランダムな浮動小数点数にしていました。rng.uniform(20, 80) ピクセル/秒のように設定し、「バラバラに動けばリアルだろう」という判断です。
-生成した動画を30分版で確認すると、16秒ごとに全雨粒が瞬間移動しているのが明確にわかりました。視覚的には高速コマ落ちのような「ガクッ」という断絶が、静かな音楽の上に112回繰り返される最悪の結果でした。
-原因は既に説明した通りで、t=0 と t=T で雨粒の位置が一致しないことです。speed = n * span / T という「整数倍全span移動」の制約を入れた瞬間に解決しました。
-副作用として雨粒の速度バリエーションが n=1 か n=2 の2種類に限定されますが、半径のバラつき（3〜26px）と横揺れの振幅差でリアリティは十分補えています。
-
- 詰まり3: maskedmerge でマスクの白黒が逆だった
-auto_masks.py が出力するウィンドウマスクは「窓の部分が白、それ以外が黒」の想定で書いていました。しかし ffmpegの maskedmerge フィルターの仕様を確認すると、第3入力が白いほど第2入力（エフェクト側）を採用するという動作が正しい挙動です。
-最初のテストでは窓ガラスの外（壁・天井）に雨粒変位が乗り、窓の中だけがエフェクトなしになっていました。見た目は「壁が歪んで窓が静止」という真逆の結果です。
-auto_masks.py のマスク生成ロジックを確認して、窓領域を255（白）で塗り、非窓を0（黒）で塗っていることを確かめました。問題はffmpegへの渡し方ではなく、maskedmerge の引数順でした。
-[base][raineff][winmask]maskedmerge
-maskedmerge の入力は [ベース映像][エフェクト映像][マスク] の順です。私は最初 [raineff][base][winmask] の順で渡していたため、ベースとエフェクトが入れ替わった状態でマスク合成されていました。引数順を正しく直すだけで解決しました。ffmpegのドキュメントは引数順の説明が薄く、公式サンプルを読んでやっと気づきました。
-
- 詰まり4: Freesoundのダウンロードが無限に止まった
-音源取得の初期実装に timeout がなく、launchdから7:00に起動したジョブが昼過ぎまで止まっていたことがあります。原因はFreesoundのプレビューダウンロードURLがコンテンツを返し始めたあとサーバー側でセッションを維持したまま終端を送ってこないケースでした。requests.get はデフォルトでタイムアウトを設定しないので、ダウンロードが永遠に続きます。
-daily.sh L148の timeout 90 はこれを防ぐためです。
-if timeout 90 python3 "$LIB/freesound_fetch.py" \
-     --query "$Q" --minlen 25 --license "$lic" \
-     --out "$SRC" >"$WORK/fs_${i}.json" 2>>"$LOG"; then
-（daily.sh L148より）
-90秒でプロセスごと殺します。失敗した音源スロットは log "WARN: sound fetch failed: $Q" で記録し、他のスロットが1つでも成功していれば処理を継続します（L161の [ "$idx" -ge 1 ] チェック）。「音源ゼロの無音動画がYouTubeに上がる」だけは避けるための最低保証で、音源が1種類しか取れなくても出荷するという判断です。
-
- 詰まり5: 変位マップを毎日再生成してCPUが詰まった
-初期設計では雨マップをその日の静止画専用に再生成していました。「解像度は固定なのに毎回生成する必要があるのか？」と気づくまでに2週間かかりました。
-384枚のPNGを生成するのに私のM1 MacBook（CPUモード）で約3分かかります。これが毎日の生成コストに加算され、全体が7〜8分かかっていました。さらに雨マップには静止画の内容は一切関係ありません。サイズ（1024×576）と尺（16秒）とシード（7）が同じであれば、どのテーマで生成しても出てくるマップは同じです。
-daily.sh L123の if [ ! -f "$MAPDIR/map_0001.png" ] は初回生成後は条件が偽になりスキップされます。2日目以降のCPU負荷から3分が消えました。この変更後、daily.sh の実行時間は平均4分台になっています。
-
-次回は lib/auto_masks.py のセグメンテーション実装と、lib/make_full.sh で16秒ループを30分にタイルする際の音ズレ対策、そして実際のチャンネル収益数字を明かします。
-
- つまずきポイント（追加編）
-前段で詳述した5点（format=gbrp・ループ継ぎ目テレポート・maskedmerge引数順・Freesound無限ハング・変位マップ毎日再生成）に加えて、実運用で踏んだ地雷をまとめます。コードを読まずに動かすと高確率で詰まる箇所ばかりです。
-
-
-launchdのPATHは /usr/bin:/bin:/usr/sbin:/sbin しかない。 daily.sh L8で export LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 を最初にやっているのは、launchdの最小環境では日本語ログが文字化けするためです。PATHも同様で、HomebrewやnvmのPythonが入った /opt/homebrew/bin や /usr/local/bin はlaunchdから見えません。plistの EnvironmentVariables に <key>PATH</key><string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string> を明示しないと ffmpeg: command not found が出てすべて落ちます。
-
-
-クラッシュ後にロックディレクトリが残ると翌日以降が全滅する。 daily.sh L32–43のロック機構は「ロック保持PIDが kill -0 で死んでいれば奪取」する設計ですが、macOSの再起動を挟むとPIDが別プロセスに再利用されることがあります。その場合、死んだはずのロックが「生きているプロセスが持っている」と誤判定されて exit 0 し続けます。週次cronか手動で rm -rf ~/dev/asmr-factory/.daily.lock.d を仕込んでおくと保険になります。
-
-
-macOSの date -j とLinuxの date -d は互換がない。 daily.sh L101と L66で date -j -f "%Y-%m-%d" "$DATE" +%s 2>/dev/null || date -d "$DATE" +%s というOR構文で両対応しています。このパターンを知らずに片方のOSで書いたスクリプトをもう片方に移植すると、日付変換で date: illegal option -- d または date: invalid option -- 'j' が出てシード計算が壊れます。
-
-
-YouTube Data API v3は1日10,000クォータ。videos.insertは1回1,600消費なので1日6本が上限。 --force で再生成＋再アップを繰り返したり、別プロジェクトと同一APIプロジェクトを共用していると翌朝にクォータ超過（HTTP 403）が返ります。youtube_upload.py にリトライ処理はないため、このケースでは daily.sh L217の timeout 1200 python3 lib/youtube_upload.py ... が失敗し、L221の else ブランチが「WARN: YouTube upload failed (stockは保持)」を吐いてアップをスキップします。stock（~/Desktop/ASMR/）は失われないので後日手動アップは可能ですが、クォータは翌日まで回復しません。
-
-
-初回 --auth を忘れると毎日のアップロードが全スキップされ気づきにくい。 daily.sh L207–208で [ -f "$HOME/.youtube/token.json" ] を確認しており、ファイルが存在しなければ「YouTube未認証→アップ省略」のWARNログを出して正常終了します。stock自体は作られるので生成は成功しているように見えますが、動画はずっとYouTubeに上がりません。初回だけインタラクティブセッションで python3 lib/youtube_upload.py --auth を実行してブラウザ同意を完了させてください。
-
-
-YouTubeタイトルは100文字でPythonのスライスによりサイレントに切り捨てられる。 youtube_upload.py L63の spec["title"][:100] は例外を投げません。日本語の長いタイトルを make_meta.py で組んでも、API越しに送られるのは先頭100文字だけです。YouTube Studioで確認してはじめて末尾が消えていたことに気づく。タイトルは75文字以内を目安にするか、make_meta.py 側で assert len(title) <= 80 を入れると安心できます。
-
-
---minutes を増やすと mix_audio.sh の2分BED音源が不足する。 daily.sh L164の bash "$LIB/mix_audio.sh" "$BED" 120 ... は120秒（2分）のBEDを生成します。30分への拡張は make_full.sh がループ処理します。--minutes 60 に変えたとき make_full.sh の内部ループ実装によっては2分の音源が60分にうまく延びない場合があります。分数を変える際は mix_audio.sh の 120 も $MIN*60 に揃えて確認してください。
-
-
-sed -i '' はmacOS専用で、Linuxでは sed: 1: "..." のエラーになる。 daily.sh L220の sed -i '' "s|,OK$|,OK+uploaded|" "$ROOT/coverage.csv" 2>/dev/null || true はmacOS版 sed 向けです。|| true でエラーをsilenceしているため、Linux環境に移植してもcoverage.csvが更新されないまま正常に見えます。Linux移植時は sed -i "s|..." に書き換えてください。
-
-
-検証ステップが from PIL import Image を呼ぶため Pillow が必須。 daily.sh L184の python3 -c "from PIL import Image;print(...)" でサムネサイズを検証しています。Pillowが入っていない環境では ModuleNotFoundError で die します。launchdが呼び出すPython（通常Homebrew系）に pip3 install Pillow が済んでいるか確認してください。開発中は自分のvenvに入れていても、launchdが別のPythonを呼んでいて詰まるケースが実際にありました。
-
-
-ComfyUIのCPUモードで --timeout 300（5分）は短すぎる。 daily.sh L53で nohup .venv/bin/python main.py --port 8188 --cpu として起動するため、M1 CPUで1024×576の画像生成に3〜8分かかります。comfy_gen.py --timeout 300 の上限に達してリトライが走り、att=0,1,2 の3回すべてで失敗すると die "image generation failed after retries" で止まります。CPU専用マシンでは --timeout 600 に延ばすか、launchd起動前にComfyUIを立ち上げておくことで安定します。
-
-
---still で既存画像を再利用するとき --force なしだと冪等チェックに弾かれる。 daily.sh L86–89の冪等チェックは FORCE=0 のとき当日分の成果物があれば即 exit 0 します。--still scene.png --theme-id X でリミックスしようとしても当日分が存在すれば何もせずに終わります。再生成・再ミックスを明示したいときは --force を必ず付けてください。
-
-
-
-
- ベストプラクティス
-半年の無人運用で「これを守ると壊れない」と確認できた原則です。
-1. 変位マップは初回1回だけ生成してキャッシュする
-daily.sh L123の if [ ! -f "$MAPDIR/map_0001.png" ] がこれを実現しています。384枚のPNG生成（CPUで約3分）を初回限定にした結果、日次実行時間が7〜8分から4分台に落ちました。解像度（1024×576）とループ秒数（16秒）が変わらない限り、マップを再生成する理由はゼロです。
-2. 雨粒の速度は n × span / T（nは整数）に固定してループを数学的に保証する
-gen_rain_glass_map.py L38–44の speed = n * span / T（nは1または2）がシームレスループの根拠です。t=T で各粒が移動した距離は n * span の整数倍になり、モジュロ演算の結果が t=0 と完全に一致します。横揺れも wobn（1または2の整数）を使った正弦波なので t=T で一周します。速度バリエーションを2種に絞る代わりに半径（3〜26px）と振幅差で多様性を補う、このトレードオフが最重要設計です。
-3. フィルターグラフには必ず format=gbrp を先頭に置く
-render_loop.sh L30の [0:v]format=gbrp,setsar=1[still] は必須です。displace フィルターはYUV系を受け付けず、変換なしで渡すと画面が暗緑色になるか無言で落ちます。JPEG由来のYUV静止画とPNG変位マップを混合するすべての filter_complex にこのルールを適用してください。
-4. エフェクト強度は環境変数で制御してハードコードを避ける
-RAIN_OP=0.8（daily.sh L134）、GFLK、FFLK（render_loop.sh L18–21）はすべて環境変数または動的計算値です。強度の調整が数値1つを書き換えるだけで済むため、テーマごとに別スクリプトを持つ必要がありません。
-5. 音源取得は timeout 90 ＋ cc0 → any フォールバックの2段構えにする
-Freesoundのプレビュー配信は終端を送ってこないことがあるため requests.get だけでは永遠にハングします（daily.sh L148）。90秒タイムアウト・CC0優先・ライセンスフォールバックの3層で「音源ゼロの無音動画」を確実に防いでいます。
-6. 出力前に4点検証を die で走らせてゲートを設ける
-動画尺30分 ±3秒・映像と音声ストリームの両存在・サムネ 1280x720・メタファイル非空（daily.sh L179–186）。この検証ゲートを通った成果物だけが ~/Desktop/ASMR/ に届く設計です。「壊れた動画がYouTubeに上がる」最悪ケースを機械的に防ぎます。
-7. 成果物の移動は _deliver/ へのコピー → mv （atomic）で行う
-daily.sh L189–197のように _deliver/ に完成品を集めてから rm -rf "$FINAL"; mv "$STAGE" "$FINAL" で移動します。cp の途中でプロセスが死んでも中途半端なディレクトリがDesktopに残らず、古い成果物と新しい成果物が瞬間でも同時に存在しない設計です。
-8. 冪等性は「日付で1本でも存在すればskip」で実装する
-daily.sh L87–88の find "$DEST" -maxdepth 1 -type d -name "${DATE}_*" による判定です。テーマが変わっても同日2本目は生成しません。launchdが7:00と14:00に2回起動しても二重生成は起きない。--force で明示的に上書きできる設計にしておくことで、idempotencyと手動再生成の両方を1つのフラグで制御できます。
-9. アップロード失敗でもstockを消さない。生成とアップロードを切り離す
-daily.sh L221の else ブランチはWARNログを吐くだけで die しません。~/Desktop/ASMR/ の video.mp4 が残り、後から python3 lib/youtube_upload.py --upload upload.json で手動アップできます。ネット障害・トークン切れ・クォータ超過の影響範囲をアップロード工程だけに封じ込めた設計で、生成物の損失は起きません。
-10. グローバルフリッカーは3Hzと7Hz（互いに素）の重ね合わせにする
-render_loop.sh L18–20の GFLK が 3*LOOPSEC=48 と 7*LOOPSEC=112 という係数を使うのは、どちらもループ秒数の整数倍周期なので継ぎ目に影響しないためです（t=0 と t=T=16 でどちらの正弦波も一周する）。振幅は室内電球の微弱な明滅（0.018と0.010）に設定しており、意識的に目が追わないギリギリの強度です。単一周波数では人工的なちらつきに見え、ランダムノイズではループが割れます。
-11. テーマを「暖色光源＋窓」に統一して自動マスク精度を安定させる
-auto_masks.py の窓・炎領域検出は構図が安定していないと精度が落ちます。READMEに「テーマ: 7種・全て暖色光源+窓室内構図で統一」と明記してあるのは美的な統一感ではなく、自動化を成立させる設計上の制約です。テーマを追加するときも「窓が必ず映っている・暖色光源がある」を守ることでマスク精度と手動修正コストが両立します。
-12. ヒーロードロップの半径は14〜26pxを上限にする
-gen_rain_glass_map.py L58の r = float(rng.uniform(14, 26))。ここを30px超に広げると単体の雨粒が目立ちすぎて、30分ループで見ているとむしろ不自然に感じます。「ASMR映像として機能するのは雨粒が背景にいる質感」で、主役になってはいけない。26pxが実験で出した上限で、これを超えると視聴者コメントで指摘されるようになりました。
-13. YouTube タイトルは75文字以内で組む。100文字はPythonスライスがサイレントに切り捨てる
-youtube_upload.py L63の spec["title"][:100] は例外を投げません。make_meta.py でタイトルを組む際に75文字以内を目安にするか、assert len(title) <= 80 を入れておくと気づけます。
-14. comfy_gen.py のタイムアウトはCPUモードに合わせて 600秒に延ばす
-GPU前提の設計では300秒（daily.sh L106の --timeout 300）で足りますが、--cpu 起動（L53）の実機では1024×576の生成に3〜8分かかることがあります。CPU専用で運用するなら --timeout 600 に変更し、3回リトライ（att=0,1,2）を含めた最大待機時間が30分以内に収まるよう設計してください。
-
-
- まとめ
-このパイプラインが成立している理由を突き詰めると、3つの設計判断に収束します。
-「動く必要がないものは動かさない」。RealVisXLが出した静止画1枚を使い回し、変位マップも初回384枚のキャッシュだけで全テーマに対応します。GPUはComfyUIの画像生成にしか使わない。残りはCPUの数値計算とffmpegのフィルタ処理だけです。生成コストが実質ゼロになったのはここからです。
-「数学的に正しいループ」でなければ量産できない。speed = n * span / T（nは整数）と wobn（1または2の整数）という2つの周期制約が、16秒ループの先頭と末尾を厳密に一致させます。この制約がなければ30分動画で112回繰り返される継ぎ目が視覚的な断絶になり、ASMRとして機能しません。「きれいに見せる」ためではなく「量産しても壊れない」ために数学があります。
-「検証・冪等・atomic」の三原則で無人運用を守る。出力前4点検証（L179–186）、冪等チェック（L87–88）、atomic move（L189–197）は、人間が毎日確認しなくても壊れた動画が出荷されないための安全装置です。launchdが7:00に起動して4分後には ~/Desktop/ASMR/ に完成品が届いている。私がやることは翌朝YouTube Studioを開いて公開ボタンを押すだけです。
-半年間この仕組みを回し続けて、ASMRチャンネルはいまも月次収益の安定した柱です。GPU代ゼロ、CC0音源のみ、ローカル完結。初期実装の週末2日を除けば、継続コストは電気代だけです。静止画1枚から本物の雨を降らせる技術は、思っていたよりずっとシンプルでした。
-
-仕組みの全体像・月120万の内訳・30日手順は有料noteにまとめています。
-📕 Claude Code自律環境で、実際どう稼ぐか ― 仕組み・実例・始め方・サポート
-
-
-Lily（@bokuwalily）― 個人開発者。Claude Code で自動化基盤を組みながら、iOSアプリやWebサービスを量産しています
-
-制作物・記事は bokuwalily.com にまとめています🖥️
-AIで「寝てても回る仕組み」を作って月120万にした話は noteの有料記事 に💰
-OSS: github.com/bokuwalily 🐙
-最新情報・お問い合わせは X @bokuwalily へ🌍
-
-皆さんの ❤️ やシェアが励みになります！
 
 ---
 

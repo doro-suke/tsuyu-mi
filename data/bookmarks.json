@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-19T01:28:10.817Z",
+  "updated_at": "2026-07-22T01:27:56.390Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5653,6 +5653,43 @@
       "status": "unread",
       "analyzed_at": "2026-07-19T01:28:10.817Z",
       "markdown_path": "data/notebooklm_sources/【完全版】Claude Code・Codexのトークン消費を抑える技術30選〜CLAUDE.md、_compact、Skills、MCPを見直す〜.md"
+    },
+    {
+      "id": "1796627971",
+      "url": "https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2",
+      "title": "毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復",
+      "summary": "CLI経由のClaude呼び出しで、launchd環境特有のstdinハングを防ぐ実装法を解説。\n実行毎に未達分のみを計算し、1日の目標投稿数へ確実に収束させる冪等計算ロジックを提示。\nAPIエラー時のフォールバック処理や監査スクリプトによる自己修復パイプラインを構築。",
+      "score": 90,
+      "read_now_reason": "CLI版Claudeの非対話実行時のハング回避（</dev/null指定）や、バッチ処理における冪等計算・自己修復ロジックなど、AI自動化パイプライン構築にそのまま転用できる具体的なシェルスクリプトコードが豊富に含まれているため。",
+      "defer_reason": "楽天アフィリエイトAPIの検索仕様やはてなブログ特有の投稿ロジックなど、ドメイン固有の実装部分に関しては即座に参照する必要がないため。",
+      "tags": [
+        "AI駆動開発",
+        "自動化パイプライン",
+        "ClaudeCode",
+        "Bash",
+        "冪等性"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-22T01:26:49.047Z",
+      "markdown_path": "data/notebooklm_sources/毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復.md"
+    },
+    {
+      "id": "1796627962",
+      "url": "https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-1",
+      "title": "毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第1回）：前編 ― 仕組みの全体像と、最初の3日間1本も公開できなかった話",
+      "summary": "launchdとシェルスクリプトで記事を自動生成・投稿する冪等なシステムを構築した事例。\nCLI版Claudeの非対話実行時に発生するハングをstdin遮断や自動許可オプションで回避。\n楽天APIの検索失敗に対応するため、商品名を段階的に短縮して再試行する後処理を実装。",
+      "score": 88,
+      "read_now_reason": "CLI版Claudeを用いた自動化パイプライン構築において、非インタラクティブ環境（Cron/launchd）特有のハング問題を回避する設定フラグ（</dev/nullや--permission-mode auto）や、冪等性を担保するスクリプト設計が具体例とともに解説されているため。",
+      "defer_reason": "アフィリエイト記事生成という特定ユースケースに閉じたAPI処理（楽天APIのフォールバック等）が多く含まれており、AIエージェントのバッチ運用ノウハウ自体に興味がない場合は優先度を下げられるため。",
+      "tags": [
+        "AI自動化",
+        "Claude",
+        "パイプライン構築",
+        "シェルスクリプト"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-22T01:27:56.390Z",
+      "markdown_path": "data/notebooklm_sources/毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第1回）：前編 ― 仕組みの全体像と、最初の3日間1本も公開できなかった話.md"
     }
   ]
 }
