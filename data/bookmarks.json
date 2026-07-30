@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-27T01:51:52.786Z",
+  "updated_at": "2026-07-30T01:23:20.936Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5743,6 +5743,75 @@
       "status": "unread",
       "analyzed_at": "2026-07-27T01:51:52.786Z",
       "markdown_path": "data/notebooklm_sources/AIでおしゃれな画面を作るためのデザインシステムを学ぼう！ - Qiita.md"
+    },
+    {
+      "id": "1804607449",
+      "url": "https://note.com/npaka/n/n060bf656cf01",
+      "title": "Claude Desktop で Blender MCP を試す｜npaka",
+      "summary": "Claude DesktopとBlenderをMCP連携し自然言語で3D操作を行う手順を解説。\nBlender公式MCPサーバーをドラッグ＆ドロップで導入するセットアップ方法を網羅。\nプロンプト指示によりキャラクターの3Dモデル作成や調整を行う実践例を提示。",
+      "score": 35,
+      "read_now_reason": "MCP（Model Context Protocol）を活用した外部GUIツール制御の具体的な手順と設定フローを把握できるため。",
+      "defer_reason": "内容はBlenderという特定DCCツールに依存した操作手順が中心であり、現在のWeb・AI開発パイプラインに直接適用できるプログラマブルなコードが含まれていないため。",
+      "tags": [
+        "MCP",
+        "Blender",
+        "Claude Desktop",
+        "AIツール連携"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-30T01:20:00.798Z",
+      "markdown_path": "data/notebooklm_sources/Claude Desktop で Blender MCP を試す｜npaka.md"
+    },
+    {
+      "id": "1804607413",
+      "url": "https://zenn.dev/mediba/articles/669709b9cb9420",
+      "title": "【短納期×大規模】AIにロジック実装もテストコードも丸投げするための「8ステップAI駆動開発ワークフロー」",
+      "summary": "AIにロジックとテストを委ねるため人間が「Why」を明確化し仕様整理する重要性を整理。\nExcelの仕様からAIが用語集定義・API照合・仕様書作成を行う8ステップフローを提示。\n全工程に人間の確認ゲートを設けAIの推測補完を遮断し手戻りを防止する設計モデルを解説。",
+      "score": 85,
+      "read_now_reason": "AI駆動開発において手戻りを最小化するパイプライン設計や人間とAIの役割分担・検証ゲート構築の実践的知見が得られるため。",
+      "defer_reason": "実践的なワークフローの設計論が中心であり、即座にコピー＆ペーストして使える特定のコードや設定ファイルそのものは含まれないため。",
+      "tags": [
+        "AI駆動開発",
+        "開発ワークフロー",
+        "要件定義"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-30T01:21:07.633Z",
+      "markdown_path": "data/notebooklm_sources/【短納期×大規模】AIにロジック実装もテストコードも丸投げするための「8ステップAI駆動開発ワークフロー」.md"
+    },
+    {
+      "id": "1804607393",
+      "url": "https://note.com/creative_edge/n/n91ebded137e5",
+      "title": "超複雑なダンスも破綻なく動かせるようになった（プロンプトを掲載）。／Seedance 2.0で高度な身体運動の表現｜CreativeEdge CL+",
+      "summary": "Seedance 2.0の身体運動制御では運動連鎖や物理的妥当性の文章化が重要とされる。\nLLMを用い美術解剖学の専門知識を平易な時系列の視覚言語へ自動変換する手法を解説。\n生成制御用プロンプトと動作参照動画を組み合わせるハイブリッドな制御方法を提案。",
+      "score": 55,
+      "read_now_reason": "LLMを用いて専門知識を具体的な生成指示へ変換するプロンプト設計手法は、AIプロンプトパイプライン構築の参考になる。",
+      "defer_reason": "動画生成AI向けの表現制御に特化した内容であり、システム開発パイプラインに直結するコードや設定ではないため。",
+      "tags": [
+        "動画生成AI",
+        "プロンプトエンジニアリング",
+        "LLM活用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-30T01:22:15.005Z",
+      "markdown_path": "data/notebooklm_sources/超複雑なダンスも破綻なく動かせるようになった（プロンプトを掲載）。／Seedance 2.0で高度な身体運動の表現｜CreativeEdge CL+.md"
+    },
+    {
+      "id": "1804607374",
+      "url": "https://qiita.com/uni928/items/f10afac6e34c2efd2c94",
+      "title": "Markdown形式で内容を書くだけで、視覚的に見やすい「簡易報告リスト.html」を作成できるサイト - Qiita",
+      "summary": "Markdownテキストから再編集可能な報告用HTMLを作成できるWebツールの紹介。\n作成したHTMLは追加アプリ不要で閲覧・編集でき、共有フォルダでの運用に適する。\nGitHub上でソースコードが公開されており、MITライセンスに基づき改変可能。",
+      "score": 20,
+      "read_now_reason": "現在のプロジェクト（AI駆動開発・自動化）に直接活用できる技術要素はありません。",
+      "defer_reason": "個人のツール紹介記事であり、自動化パイプラインの構築や具体的な実装コード・設定が含まれていないため。",
+      "tags": [
+        "Markdown",
+        "ドキュメント作成",
+        "Webツール"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-07-30T01:23:20.936Z",
+      "markdown_path": "data/notebooklm_sources/Markdown形式で内容を書くだけで、視覚的に見やすい「簡易報告リスト.html」を作成できるサイト - Qiita.md"
     }
   ]
 }
