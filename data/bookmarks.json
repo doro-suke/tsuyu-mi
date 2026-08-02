@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-30T01:23:20.936Z",
+  "updated_at": "2026-08-02T01:45:04.264Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5812,6 +5812,42 @@
       "status": "unread",
       "analyzed_at": "2026-07-30T01:23:20.936Z",
       "markdown_path": "data/notebooklm_sources/Markdown形式で内容を書くだけで、視覚的に見やすい「簡易報告リスト.html」を作成できるサイト - Qiita.md"
+    },
+    {
+      "id": "1806831520",
+      "url": "https://zenn.dev/akirakido/articles/686b45c3f7fe23",
+      "title": "AI駆動開発の1年 — 個人のアウトプットが9倍になるまでにやったこと",
+      "summary": "AI利用を単なる補助からスキル化・自動化・常駐システム化へ段階移行しPR数を約9倍に格上げ。\n実装・AIレビューCI・Rust製ビルダー・自動マージを組み合わせた開発パイプラインを構築。\nAIの誤動作を防ぐ検証ハーネスやプロンプトインジェクション対策など品質ゲートの設置が不可欠。",
+      "score": 80,
+      "read_now_reason": "AI駆動開発と自動化パイプラインの段階的移行フェーズや、検証ハーネス・レビューCI等の品質管理アーキテクチャの設計原則が具体化されており、現在のプロジェクト設計に即時適用できるため。",
+      "defer_reason": "具体的なCI設定ファイルやソースコード自体は掲載されておらず、運用思想や知見の整理が中心であるため、個別の実装作業を直ちに止める必要はないため。",
+      "tags": [
+        "AI駆動開発",
+        "CI/CD自動化",
+        "開発プロセス",
+        "LLM"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-02T01:43:58.811Z",
+      "markdown_path": "data/notebooklm_sources/AI駆動開発の1年 — 個人のアウトプットが9倍になるまでにやったこと.md"
+    },
+    {
+      "id": "1806831509",
+      "url": "https://zenn.dev/teeyo/articles/claude-design-with-claude-code",
+      "title": "Claude DesignとClaude Codeを連携させてアプリを実装する",
+      "summary": "Claude Designで作成したデザインをMCP経由でClaude Codeへ直接引き継ぐ手順を解説。\nMCPサーバー追加コマンドと自動プロンプト連携による具体的コード実装フローを提示。\nClaude Code単体生成とClaude Design連携時の生成デザインやUI品質の相違を検証。",
+      "score": 75,
+      "read_now_reason": "AI駆動開発においてClaude CodeとMCP（Claude Design MCP）を連携させたUI開発パイプラインの構築手順および具体的な設定コマンドが明記されているため。",
+      "defer_reason": "検証内容がVanilla JS/HTMLを中心とした簡単なサンプルアプリ実装にとどまり、プロダクション級の複雑なアーキテクチャ構築や自動テストパイプラインまでは網羅していないため。",
+      "tags": [
+        "Claude Code",
+        "Claude Design",
+        "MCP",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-02T01:45:04.264Z",
+      "markdown_path": "data/notebooklm_sources/Claude DesignとClaude Codeを連携させてアプリを実装する.md"
     }
   ]
 }
