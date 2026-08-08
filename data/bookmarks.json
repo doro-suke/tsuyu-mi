@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-02T01:45:04.264Z",
+  "updated_at": "2026-08-08T00:47:07.017Z",
   "articles": [
     {
       "id": "1702129693",
@@ -5848,6 +5848,24 @@
       "status": "unread",
       "analyzed_at": "2026-08-02T01:45:04.264Z",
       "markdown_path": "data/notebooklm_sources/Claude DesignとClaude Codeを連携させてアプリを実装する.md"
+    },
+    {
+      "id": "1812877379",
+      "url": "https://zenn.dev/tmasuyama1114/articles/claude_code_code_review_guide",
+      "title": "自前のレビュースキルをやめて、Claude Code の /code-review に乗り換えた",
+      "summary": "Claude Code公式の/code-reviewコマンドの機能と重大度別表示の視認性を解説。\neffort引数（low/high）による検出精度・実行時間・エージェント並列動作の差を検証。\n--commentによるPR投稿や--fixによるテスト実行を伴う自動修正の挙動を実測。",
+      "score": 82,
+      "read_now_reason": "AI駆動開発においてClaude Codeの/code-reviewコマンドとそのオプション（effort, --fix, --comment）の挙動・速度・精度を把握でき、セルフレビューや自動修正フローを開発現場に即時適用できるため。",
+      "defer_reason": "個人リポジトリでの実測データ（n=1主体）が中心であり、チーム全体のCI/CDパイプラインへの完全組込み手順までは言及されていないため。",
+      "tags": [
+        "Claude Code",
+        "AI駆動開発",
+        "コードレビュー",
+        "開発効率化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-08T00:47:07.017Z",
+      "markdown_path": "data/notebooklm_sources/自前のレビュースキルをやめて、Claude Code の _code-review に乗り換えた.md"
     }
   ]
 }
