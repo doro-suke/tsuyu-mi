@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-09T01:01:38.176Z",
+  "updated_at": "2026-08-10T00:53:06.628Z",
   "articles": [
     {
       "id": "1702129693",
@@ -6031,6 +6031,24 @@
       "status": "unread",
       "analyzed_at": "2026-08-09T01:01:38.176Z",
       "markdown_path": "data/notebooklm_sources/【最新版】AI動画で稼ぐ方法について。本当にマネタイズできるの？｜AI FREAK - 最新のAIツールをご紹介.md"
+    },
+    {
+      "id": "1815495158",
+      "url": "https://note.com/genel/n/nebaa890fe023",
+      "title": "AI動画制作をゼロから自動化する具体的な方法｜Claude Code × Seedance 2.0（PolloAI）｜GENEL ｜ AIを用いた動画制作解説",
+      "summary": "Claude CodeとPolloAI APIを連携し動画制作フローを自動化した具体的手順の解説。\nGitHubからAgent Skillを取得・設定しClaude Codeから動画生成APIを呼び出す環境の構築。\n企画提案から動画構成、キャラ生成、プロンプト対話による微調整までの実践フロー。",
+      "score": 72,
+      "read_now_reason": "Claude CodeのAgent Skill機能を活用し、外部APIを連携させた自動化パイプラインを構築する具体的設定コマンドやプロンプト設計が明記されているため。",
+      "defer_reason": "内容はSNSマーケティング向け動画制作の自動化に特化しており、純粋なWeb/システム開発のコード実装課題ではないため。",
+      "tags": [
+        "Claude Code",
+        "Agent Skills",
+        "PolloAI",
+        "パイプライン自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-10T00:53:06.628Z",
+      "markdown_path": "data/notebooklm_sources/AI動画制作をゼロから自動化する具体的な方法｜Claude Code × Seedance 2.0（PolloAI）｜GENEL ｜ AIを用いた動画制作解説.md"
     }
   ]
 }
