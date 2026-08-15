@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-10T00:53:06.628Z",
+  "updated_at": "2026-08-15T00:51:02.095Z",
   "articles": [
     {
       "id": "1702129693",
@@ -6049,6 +6049,188 @@
       "status": "unread",
       "analyzed_at": "2026-08-10T00:53:06.628Z",
       "markdown_path": "data/notebooklm_sources/AI動画制作をゼロから自動化する具体的な方法｜Claude Code × Seedance 2.0（PolloAI）｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1819893804",
+      "url": "https://note.com/ai_biz_labo/n/n1d6613969131",
+      "title": "顔出しなし×AIでYouTube Shortsを回したら、4ヶ月で月3万円の広告収入になった全記録｜【公式】AIビジネスラボ",
+      "summary": "AIを活用した顔出しなしショート動画で4ヶ月で月3万円の広告収益を達成した運用記録。\n編集技術よりもターゲット選定や冒頭1秒のフックなど離脱を防ぐ設計が重要と分析。\nAIを動画の量産だけでなく台本やタイトルの仮説検証サイクル高速化に活用。",
+      "score": 22,
+      "read_now_reason": "AIを活用したショート動画コンテンツの企画・検証プロセスや収益化のリアルな推移を把握できる点。",
+      "defer_reason": "開発コードや自動化パイプラインの技術的解説はなく、SNS副業・マーケティング運用論に留まるため。",
+      "tags": [
+        "YouTube運用",
+        "ショート動画",
+        "AI副業",
+        "コンテンツマーケティング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-15T00:39:55.567Z",
+      "markdown_path": "data/notebooklm_sources/顔出しなし×AIでYouTube Shortsを回したら、4ヶ月で月3万円の広告収入になった全記録｜【公式】AIビジネスラボ.md"
+    },
+    {
+      "id": "1819893796",
+      "url": "https://note.com/pyanko/n/n576f52fef78f",
+      "title": "今すぐ試せる！生成AIで簡単・低コスト動画収益化の裏技大全｜ pyanko（河村智洋）@まる寺子",
+      "summary": "生成AIを用いた画像・動画コンテンツでの収益化と差別化の戦略を整理\n特化型サービス展開や独自モデル開発など高付加価値化の手法を列挙\n著作権リスクや品質管理への配慮と人間による監修プロセスの重要性を提示",
+      "score": 15,
+      "read_now_reason": "AIを活用したコンテンツビジネスやマネタイズの全体観・アイデア出しの参考情報として概括できる。",
+      "defer_reason": "LLMの出力テキストを並べた概念論が中心であり、具体的な開発コードや自動化パイプライン構築の実装手順が含まれていないため。",
+      "tags": [
+        "AIマネタイズ",
+        "動画生成",
+        "コンテンツビジネス",
+        "アイデア"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-15T00:41:03.947Z",
+      "markdown_path": "data/notebooklm_sources/今すぐ試せる！生成AIで簡単・低コスト動画収益化の裏技大全｜ pyanko（河村智洋）@まる寺子.md"
+    },
+    {
+      "id": "1819893744",
+      "url": "https://note.com/adsextremer/n/n47a250da399e",
+      "title": "動画生成AIで月収10万円を狙え！TikTok・インスタリール完全攻略マニュアル｜AI副業ゼロから始める\"顔出し不要\"収益化の全手順｜デジタル広告x AIスペシャリスト｜Digital Ads JP",
+      "summary": "Runway、Veo 3.1、Klingなど最新動画生成AIの機能差と料金体系を比較\nTikTokやリールの視聴完了率や保存率を重視したアルゴリズム特性を解説\nCapCutと連携した縦型動画制作ワークフローとSNS収益化手順を提示",
+      "score": 18,
+      "read_now_reason": "動画生成AIの主要ツール（Runway, Veo, Kling）の最新スペックや機能差を把握したい場合に役立つ。",
+      "defer_reason": "SNS副業やコンテンツマーケティングに特化した内容であり、AI駆動開発や自動化パイプラインのコード・設計に直接適用できる情報が含まれていないため。",
+      "tags": [
+        "動画生成AI",
+        "SNSマーケティング",
+        "副業"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-15T00:42:07.183Z",
+      "markdown_path": "data/notebooklm_sources/動画生成AIで月収10万円を狙え！TikTok・インスタリール完全攻略マニュアル｜AI副業ゼロから始める_顔出し不要_収益化の全手順｜デジタル広告x AIスペシャリスト｜Digital Ads JP.md"
+    },
+    {
+      "id": "1819893736",
+      "url": "https://note.com/amiiii_714/n/n0a38d0cd2520",
+      "title": "無限に再生される「AI×雑学」ショート動画で収益化する完全解説note｜まな",
+      "summary": "ChatGPT・ElevenLabs・CapCutを用いたショート動画制作手順の解説\n3秒フックから要点回収までの動画構成と20分の制作ワークフローを提示\n無料配布物を経由してLINE登録や有料note等へ誘導する収益化設計を紹介",
+      "score": 25,
+      "read_now_reason": "AIを活用したショート動画の構成テンプレートや制作ワークフローの基本手順を俯瞰して把握できる。",
+      "defer_reason": "開発パイプラインの自動化コードや技術的知見は含まれず、一般的なツール手動運用のノウハウに留まるため。",
+      "tags": [
+        "ショート動画",
+        "マネタイズ",
+        "ChatGPT",
+        "ElevenLabs",
+        "CapCut"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-15T00:43:11.760Z",
+      "markdown_path": "data/notebooklm_sources/無限に再生される「AI×雑学」ショート動画で収益化する完全解説note｜まな.md"
+    },
+    {
+      "id": "1819891893",
+      "url": "https://note.com/genel/n/nb2c4b89fa1d8?magazine_key=m6978390622df",
+      "title": "人物が画面の外へ飛び出す「VFXショート動画」をAIで作る方法｜GENEL ｜ AIを用いた動画制作解説",
+      "summary": "画像と動画生成AIを用いた錯視的なVFXショート動画の制作手順を解説\nテキストのみでの生成破綻を防ぐため、ChatGPTで基準画像を先行生成\nSeedance2.0での誤生成を防ぐプロンプトの構造化と対象の厳密指定法",
+      "score": 28,
+      "read_now_reason": "動画生成AIで意図した構図や物理挙動を制御するための実践的なプロンプト設計手法を把握できる。",
+      "defer_reason": "動画コンテンツ制作の個別Tipsであり、AI駆動開発やパイプライン自動化といったシステム実装に直結しないため。",
+      "tags": [
+        "動画生成AI",
+        "ChatGPT",
+        "プロンプトエンジニアリング",
+        "Seedance"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-15T00:44:15.334Z",
+      "markdown_path": "data/notebooklm_sources/人物が画面の外へ飛び出す「VFXショート動画」をAIで作る方法｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1819891860",
+      "url": "https://note.com/genel/n/ned30907e68f0?magazine_key=m6978390622df",
+      "title": "実写 × 落書きイラストVFXの作り方｜ChatGPT × Seedance 2.0｜GENEL ｜ AIを用いた動画制作解説",
+      "summary": "ChatGPTとSeedance 2.0による実写動画の一部手描き化VFX手法を解説\n対象のみ置き換え背景や動きを維持する明確なプロンプト設計で破綻を防止\n時間軸ルールやカラグレを定義し再現性を高めた量産用指示文を提示",
+      "score": 38,
+      "read_now_reason": "動画生成AIにおいて破綻を防ぐ「変更対象と維持対象の明確な分離」や「ネガティブ指示の構成」といった実践的なプロンプト設計パターンを習得できるため。",
+      "defer_reason": "クリエイティブ系のAI動画生成ノウハウであり、システム開発や自動化パイプライン構築に直結するコード・アーキテクチャ情報を含まないため。",
+      "tags": [
+        "動画生成AI",
+        "プロンプトエンジニアリング",
+        "Seedance",
+        "ChatGPT",
+        "AIクリエイティブ"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-15T00:45:21.131Z",
+      "markdown_path": "data/notebooklm_sources/実写 × 落書きイラストVFXの作り方｜ChatGPT × Seedance 2.0｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1819891743",
+      "url": "https://note.com/genel/n/n3676f3df140e?magazine_key=m6978390622df",
+      "title": "SNSで話題のトピアリーが庭で育つタイムラプスAI動画の作り方 | ChatGPT×Seedance2.0｜GENEL ｜ AIを用いた動画制作解説",
+      "summary": "ChatGPTでトピアリー制作の開始と完成の2枚の画像を生成するプロンプトを解説。\nSeedance2.0を用いて生成した前後画像からタイムラプス動画を生成する手法を紹介。\nカメラ固定や時間の流れの指示など、リアルな動画に見せるプロンプトの工夫を提示。",
+      "score": 22,
+      "read_now_reason": "ChatGPTと動画生成AIを組み合わせたプロンプティング手法やタイムラプス動画の制御テクニックを確認できる。",
+      "defer_reason": "AI駆動開発やパイプライン自動化に関する実装コードや設計原則は含まれず、個別のクリエイティブ生成ノウハウに留まるため。",
+      "tags": [
+        "動画生成AI",
+        "ChatGPT",
+        "プロンプトエンジニアリング",
+        "Seedance"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-15T00:46:26.516Z",
+      "markdown_path": "data/notebooklm_sources/SNSで話題のトピアリーが庭で育つタイムラプスAI動画の作り方 _ ChatGPT×Seedance2.0｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1819891704",
+      "url": "https://note.com/genel/n/n3d9628ff3781?magazine_key=m6978390622df",
+      "title": "SNSでよく見るペーパーアート動画の作り方｜ChatGPT × Seedance 2.0のプロンプトを解説｜GENEL ｜ AIを用いた動画制作解説",
+      "summary": "ChatGPTで紙アートと実写手を組み合わせた連続10枚の画像を生成するプロンプトを提示。\n構図や要素のズレを防ぎ、各工程の開始直前フレームを一貫して生成する設計手法を解説。\n生成画像をSeedance 2.0で数枚ずつ参照させ、尺を調整して動画化する手順を紹介。",
+      "score": 38,
+      "read_now_reason": "画像生成AIで構図や要素の一貫性を保つ具体的なプロンプト設計テクニックを把握できる点。",
+      "defer_reason": "AI駆動開発や自動化パイプラインの実装コードは含まれず、コンテンツ制作ノウハウのため後回し可能。",
+      "tags": [
+        "画像生成AI",
+        "動画生成AI",
+        "プロンプトエンジニアリング",
+        "ChatGPT",
+        "Seedance"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-15T00:47:47.809Z",
+      "markdown_path": "data/notebooklm_sources/SNSでよく見るペーパーアート動画の作り方｜ChatGPT × Seedance 2.0のプロンプトを解説｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1819891470",
+      "url": "https://note.com/genel/n/naf66c8a5661e?magazine_key=m6978390622df",
+      "title": "SNSでよく見る「擬人化AIアニメ」の作り方【ChatGPT / Gemini / NanoBananaPro / Kling】｜GENEL ｜ AIを用いた動画制作解説",
+      "summary": "LLMを活用して15秒程度の擬人化キャラクター用台本を生成する手順\n画像生成AIと専用プロンプトを用いて3D質感の擬人化キャラ画像を作成\n画像・音声・リップシンクを組み合わせ短時間でショート動画を量産するフロー",
+      "score": 25,
+      "read_now_reason": "AIを活用したSNS向けショート動画の制作フローや具体的なプロンプト構成を手早く把握できる。",
+      "defer_reason": "開発パイプラインやコード実装を伴わないGUIツール中心の手動制作手順であり、開発プロジェクトに直接影響しないため。",
+      "tags": [
+        "AI動画生成",
+        "コンテンツ制作",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-15T00:49:58.287Z",
+      "markdown_path": "data/notebooklm_sources/SNSでよく見る「擬人化AIアニメ」の作り方【ChatGPT _ Gemini _ NanoBananaPro _ Kling】｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1819891464",
+      "url": "https://note.com/genel/n/nafd5ca4933e7?magazine_key=m6978390622df",
+      "title": "ChatGPT Images 2.0でショートドラマが作れる｜失敗から学んだ4つのこと｜GENEL ｜ AIを用いた動画制作解説",
+      "summary": "ChatGPT Images 2.0でのショートドラマ制作時の課題と回避策を解説。\n人物の一貫性維持にはキャラシートの参照や新規チャット作成が有効。\n全体の統一感には事前絵コンテ作成が重要で、動画化にはKlingAIを併用。",
+      "score": 40,
+      "read_now_reason": "ChatGPTやKlingAIを用いた画像・動画生成におけるキャラクターの一貫性担保や品質ブレ対策の実践ノウハウを把握できる。",
+      "defer_reason": "AI開発やパイプライン自動化のプログラムコードではなく、コンテンツ制作ツールのプロンプト運用Tipsであるため。",
+      "tags": [
+        "ChatGPT",
+        "画像生成AI",
+        "動画生成AI",
+        "KlingAI",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-15T00:51:02.095Z",
+      "markdown_path": "data/notebooklm_sources/ChatGPT Images 2.0でショートドラマが作れる｜失敗から学んだ4つのこと｜GENEL ｜ AIを用いた動画制作解説.md"
     }
   ]
 }
