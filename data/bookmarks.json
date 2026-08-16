@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-16T01:11:55.168Z",
+  "updated_at": "2026-08-16T01:27:13.387Z",
   "articles": [
     {
       "id": "1702129693",
@@ -6411,6 +6411,221 @@
       "status": "unread",
       "analyzed_at": "2026-08-16T01:11:55.168Z",
       "markdown_path": "data/notebooklm_sources/視聴者の感情を揺さぶり、心を掴むショート動画台本作成プロンプト _ 生成AIプロンプト研究所「チャプロAI」.md"
+    },
+    {
+      "id": "1821826885",
+      "url": "https://www.youtube.com/watch?v=P9jqYg1C0G4",
+      "title": "伸びない動画は絶対放置しないでください【YouTubeの仕組み】",
+      "excerpt": "■___________YouTube集客チャンネル公式LINE_________■【23大】特典をプレゼント中↓↓🏆1：2026年YouTubeが伸びない時に必ず見るべきチェックリスト🏆2：YouTubeで広告収益以上に成果が出る収益化方法🏆3：視聴維持率を最大化する台本構成🏆4：設定するだけで一気に質...",
+      "summary": "",
+      "score": 10,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "YouTube運用",
+        "マーケティング",
+        "動画集客"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:21:56.559Z",
+      "markdown_path": "data/notebooklm_sources/伸びない動画は絶対放置しないでください【YouTubeの仕組み】.md"
+    },
+    {
+      "id": "1821826880",
+      "url": "https://note.com/kaisetsu_otaku/n/n975d5eb2a559",
+      "title": "今、AI生成でショート動画はどこまで楽に作れるのか｜Leo / keito itsui",
+      "excerpt": "こんにちは。 「AI生成を可能な限り取り入れて」動画を制作している人です。 \n 非エンジニアがAI生成サービスを利用して、 ・一定以上の品質で ・どこまで工数を削減できるか 挑戦しています。  目的は 「溢れているAIサービスの中から即戦力を発見し、日々アップデートし続ける」ことです。   ということで、今回制作するショート動画について見ていきましょう。  1. 動画の種類  雑学系・豆知識系の動画を作っていきます。よくありますよね。 そしてコスられ倒しているジャンル。  2. 必要な要素リスト  素材準備    テーマ    台本    画像（or 映像）素材    ナレーション素材",
+      "summary": "",
+      "score": 28,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "GPTs",
+        "コンテンツ作成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:22:15.172Z",
+      "markdown_path": "data/notebooklm_sources/今、AI生成でショート動画はどこまで楽に作れるのか｜Leo _ keito itsui.md"
+    },
+    {
+      "id": "1821826882",
+      "url": "https://zenn.dev/vincent_gay/articles/ba4e51230a7f25",
+      "title": "撮影なしでUGC広告動画を量産するために考えたこと",
+      "excerpt": "",
+      "summary": "",
+      "score": 40,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "マーケティング",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:22:32.646Z",
+      "markdown_path": "data/notebooklm_sources/撮影なしでUGC広告動画を量産するために考えたこと.md"
+    },
+    {
+      "id": "1821826876",
+      "url": "https://note.com/molly_webookend/n/n0932434d3e7b",
+      "title": "Ndeb",
+      "excerpt": "あなたがアクセスしたページは削除されたか\nURLが変更されているため表示することができません。",
+      "summary": "",
+      "score": 0,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "リンク切れ",
+        "404"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:22:51.495Z",
+      "markdown_path": "data/notebooklm_sources/Ndeb.md"
+    },
+    {
+      "id": "1821826877",
+      "url": "https://modelinghappy.com/archives/69804",
+      "title": "画像１枚から3Dモデルを生成できるHi3DがV3.0にバージョンアップでモデル精度が格段にあがりました！レビュー • 3DCG最新情報サイト MODELING HAPPY",
+      "excerpt": "Hi3D 画像1枚からAIを利用して3Dモデルを生成出来るHi3Dですが、以前利用した時はV2.1でしたが、さ",
+      "summary": "",
+      "score": 35,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "3D生成AI",
+        "Hi3D",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:23:09.925Z",
+      "markdown_path": "data/notebooklm_sources/画像１枚から3Dモデルを生成できるHi3DがV3.0にバージョンアップでモデル精度が格段にあがりました！レビュー • 3DCG最新情報サイト MODELING HAPPY.md"
+    },
+    {
+      "id": "1821826878",
+      "url": "https://oshiete.ai/items/161352716155446272",
+      "title": "簡単にバズる！ 「雑学系ショート動画」の台本生成 | GMO天秤AI",
+      "excerpt": "動画系SNSの視聴者がつい気になってしまい、確実にバズる雑学系ショート動画用の台本を簡単に作ります。入力したテーマの雑学を、実際にWEBで徹底リサーチしたうえで、動画台本にまとめます。\n＜手順＞\n最初はまず、「Perplexity WEB検索」を選択してください。テーマを送ると雑学をまとめますので、その次に「Claude 3.5 Sonet」に切り替えて「それらを動画ストーリーにまとめて。」と送信すれば、最適な台本が出来上がるという、2段階式となっています。\n\n短時間で視聴者に刺さるインパクトのある台本を作って、たくさんのおもしろ雑学動画をバズらせましょう！　\nあなたの欲しいが見つかる生成AIのプロンプトポータルサイト",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "プロンプト",
+        "ショート動画",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:23:27.561Z",
+      "markdown_path": "data/notebooklm_sources/簡単にバズる！ 「雑学系ショート動画」の台本生成 _ GMO天秤AI.md"
+    },
+    {
+      "id": "1821826872",
+      "url": "https://zenn.dev/610birth/articles/51c6ce27e94ff0",
+      "title": "テキストから動画まで全部ローカルで繋いだAI動画生成エージェントを作った",
+      "excerpt": "",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "ComfyUI",
+        "ローカルLLM"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:23:45.853Z",
+      "markdown_path": "data/notebooklm_sources/テキストから動画まで全部ローカルで繋いだAI動画生成エージェントを作った.md"
+    },
+    {
+      "id": "1821826874",
+      "url": "https://note.com/diy_smile/n/n48867ba612f0",
+      "title": "ホロライブの切り抜き動画を10万件分析したらバズらせる方法が見えてきた【3分ショート攻略5週目】｜スマイル@DIYプログラミング",
+      "excerpt": "皆様ハロー、春になって調子が上がって来たスマイルです('ω')ノ  切り抜き動画の制作をなんとか定型化しようと試行錯誤しておりまして、おおよそ必要なプロセスは固まりましたが、具体的に作業手順に落とし込む所で四苦八苦しております。  中長期でじっくり取り組むつもりなので、焦ってはおりませんが早く突破口を見つけたい所です。  動画制作に関する活動は下記のマガジンで一気読みできます↓↓  \n\n\nYouTubeチャンネル運営レポートまとめ｜スマイル@DIYプログラミング｜note\n\n\n2024年1月28日にVTuberの切り抜きチャンネルを開設しました。 運営レポートを毎週投稿する予定なので、",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "データ分析",
+        "形態素解析",
+        "ChatGPT"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:24:08.497Z",
+      "markdown_path": "data/notebooklm_sources/ホロライブの切り抜き動画を10万件分析したらバズらせる方法が見えてきた【3分ショート攻略5週目】｜スマイル@DIYプログラミング.md"
+    },
+    {
+      "id": "1821826875",
+      "url": "https://note.com/kiku5234/n/n2c7e7b06b151",
+      "title": "わずか半年で生成AI動画で月10万円稼いだ話【プロンプトジャンル別50例付き】｜Watata",
+      "excerpt": "第1章：はじめに――社会人がSNS×AI副業で月10万円を稼ぐリアル   こんにちは。都内のIT系事業会社でエンジニアとして働きながら、いくつもの副業を手掛けている“Watata”と申します。ここ数年、僕はPythonの独学からフリーランスを経験し、AI×ライティングやYouTube運営、営業代行、さらには無在庫のOEMブランドを立ち上げて売却するといったプロジェクトを同時並行で回してきました。結果として、副業だけでだいたい月140万ほどの収益を得られるようになりましたが、その中でも比較的「ラク」で「再現性が高い」と感じているのが、SNSとAIを組み合わせた短尺動画運用です。  会社勤",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "生成AI",
+        "動画生成",
+        "副業"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:24:28.160Z",
+      "markdown_path": "data/notebooklm_sources/わずか半年で生成AI動画で月10万円稼いだ話【プロンプトジャンル別50例付き】｜Watata.md"
+    },
+    {
+      "id": "1821826870",
+      "url": "https://toyokeizai.net/articles/-/664999",
+      "title": "ついに出た｢動画生成AI｣バカにできない出来映え 短い単語を入れるだけでショート動画を生成",
+      "excerpt": "「森の中の静かな川」「リビングルームにいるライオン」――短いテキストを打ち込むだけで、想像した通りの動画が瞬時に生成される時代が訪れようとしています。ランウェイAIが先導するこの新技術は、創造性を解放する一方、偽情報の拡散リスクも孕んでいます。その最前線とは？（このリード文はAIが作成しました）",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "生成AI",
+        "トレンド"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:24:45.525Z",
+      "markdown_path": "data/notebooklm_sources/ついに出た｢動画生成AI｣バカにできない出来映え 短い単語を入れるだけでショート動画を生成.md"
+    },
+    {
+      "id": "1821826871",
+      "url": "https://zenn.dev/sns_tool/articles/28f993528bf3a7",
+      "title": "テーマを入力するだけでYouTube動画が完成する全自動システムを作った",
+      "excerpt": "個人開発で「テーマを入力 → 台本生成 → 音声合成 → 動画編集 → YouTube投稿」を全自動で行うシステムを作りました。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "自動化パイプライン",
+        "Remotion",
+        "LLM"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:25:03.093Z",
+      "markdown_path": "data/notebooklm_sources/テーマを入力するだけでYouTube動画が完成する全自動システムを作った.md"
+    },
+    {
+      "id": "1821826866",
+      "url": "https://chapro.jp/prompt/12904",
+      "title": "ショート動画台本作成プロンプト | 生成AIプロンプト研究所「チャプロAI」",
+      "excerpt": "YouTube動画の魅力的な台本作成戦略 ターゲットオーディエンスを引き込むYouTube動画の台本作成方法を提供する このプロンプトは、YouTubeクリエイターが魅力的なコンテンツを制作するための台本作成のガイドラインを提示します。ターゲットオーディエンスを明確にし、動画の目的とストーリー構成を計画し、キャラクターやナレーションを設定することから、視聴者の関心を引くオープニングとクロージング、視覚効果や音声効果の指示まで、具体的な台本作成のステップをカバーします。この指示に従って、視聴者にとって魅力的でわかりやすい、効果的なYouTube動画の台本を作成することが期待されます。",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "プロンプトエンジニアリング",
+        "動画制作",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:27:13.387Z",
+      "markdown_path": "data/notebooklm_sources/ショート動画台本作成プロンプト _ 生成AIプロンプト研究所「チャプロAI」.md"
     }
   ]
 }
