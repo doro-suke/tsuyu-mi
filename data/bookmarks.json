@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-15T00:51:02.095Z",
+  "updated_at": "2026-08-16T01:07:17.443Z",
   "articles": [
     {
       "id": "1702129693",
@@ -6231,6 +6231,24 @@
       "status": "unread",
       "analyzed_at": "2026-08-15T00:51:02.095Z",
       "markdown_path": "data/notebooklm_sources/ChatGPT Images 2.0でショートドラマが作れる｜失敗から学んだ4つのこと｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826896",
+      "url": "https://note.com/amiiii_714/n/n0a38d0cd2520",
+      "title": "無限に再生される「AI×雑学」ショート動画で収益化する完全解説note｜まな",
+      "excerpt": "はじめに  本noteは、1日20分の作業で“見られ続ける”雑学ショート動画を量産し、 広告・アフィリエイト・デジタル商品（note等）・スポンサーで収益化するための実践書です。 専門知識や高価な機材は不要。3つのAIツールを使います。 \t•\tChatGPT（台本生成） \t•\tElevenLabs（高品質ナレーション） \t•\tCapCut（編集・字幕・書き出し）   全体像 1.動画で“お役立ち＋意外性”を60秒に凝縮（保存・ループされやすい構成） 2.概要欄・固定コメントから無料配布物へ誘導（例：無料版PDF／無料note） 3.無料配布物内でLINE登録 or メール登録を案内 4",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ショート動画",
+        "生成AI活用",
+        "コンテンツ制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T00:39:55.129Z",
+      "markdown_path": "data/notebooklm_sources/無限に再生される「AI×雑学」ショート動画で収益化する完全解説note｜まな.md"
     }
   ]
 }

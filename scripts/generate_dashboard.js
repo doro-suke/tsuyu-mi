@@ -67,15 +67,41 @@ function generateDashboard(data) {
     const mdRelPath = article.markdown_path ? `./${article.markdown_path}` : '#';
     const isRead = article.status === 'read';
     const score = deriveScore(article);
+    const summaryText = article.summary || article.excerpt || '';
+
+    // 要約部分のHTML（存在する場合のみレンダリング）
+    let summaryHtml = '';
+    if (article.summary && article.summary.trim() !== '') {
+      summaryHtml = `
+        <div class="text-[#a1a1aa] text-sm mb-3 space-y-1">
+            ${article.summary.split('\n').map(line => `<p class="leading-relaxed">・ ${line}</p>`).join('')}
+        </div>`;
+    } else if (article.excerpt && article.excerpt.trim() !== '') {
+      summaryHtml = `
+        <p class="text-[#a1a1aa] text-xs mb-3 line-clamp-2 leading-relaxed">
+            ${article.excerpt}
+        </p>`;
+    }
+
+    // 「今読む理由」部分のHTML（存在する場合のみレンダリング）
+    let reasonHtml = '';
+    if (article.read_now_reason && article.read_now_reason.trim() !== '') {
+      reasonHtml = `
+        <div class="bg-[#131316] p-3 rounded-md mb-3 border border-[#222228]/80">
+            <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+            <p class="text-xs text-[#e4e4e7] italic leading-relaxed">${article.read_now_reason}</p>
+        </div>`;
+    }
+
     return `
       <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 ${classes.border} border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 ${isRead ? 'status-read' : ''}"
            data-article-id="${article.id}"
-           data-title="${article.title.replace(/"/g, '&quot;')}"
-           data-summary="${article.summary.replace(/"/g, '&quot;')}"
+           data-title="${(article.title || '').replace(/"/g, '&quot;')}"
+           data-summary="${summaryText.replace(/"/g, '&quot;')}"
            data-priority="${article._tier}"
            data-score="${score}"
            data-tags="${tags.join(',')}">
-          <div class="px-6 py-5 flex-grow">
+          <div class="px-6 py-5 flex-grow flex flex-col">
               <div class="flex justify-between items-start mb-3">
                   <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase ${classes.badge}">${classes.label} <span class="opacity-70">· ${score}</span></span>
                   <div class="flex items-center gap-2">
@@ -91,14 +117,9 @@ function generateDashboard(data) {
               <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
                   <a href="${article.url}" target="_blank">${article.title}</a>
               </h2>
-              <div class="text-[#a1a1aa] text-sm mb-4 space-y-1">
-                  ${article.summary.split('\n').map(line => `<p class="leading-relaxed">・ ${line}</p>`).join('')}
-              </div>
-              <div class="bg-[#131316] p-3 rounded-md mb-4 border border-[#222228]/80">
-                  <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
-                  <p class="text-xs text-[#e4e4e7] italic leading-relaxed">${article.read_now_reason}</p>
-              </div>
-              <div class="mt-auto">${tagsHtml}</div>
+              ${summaryHtml}
+              ${reasonHtml}
+              <div class="mt-auto pt-2">${tagsHtml}</div>
           </div>
           <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
               <a href="${article.url}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
@@ -143,8 +164,12 @@ function generateNotebookMaster(bookmarks) {
     content += `- **優先度**: High\n`;
     content += `- **スコア**: ${deriveScore(article)}\n`;
     content += `- **解析日時**: ${new Date(article.analyzed_at).toLocaleDateString('ja-JP')}\n`;
-    content += `- **AI要約**:\n${article.summary.split('\n').map(s => `  ${s}`).join('\n')}\n`;
-    content += `- **今読む理由**: ${article.read_now_reason}\n`;
+    if (article.summary && article.summary.trim() !== '') {
+      content += `- **AI要約**:\n${article.summary.split('\n').map(s => `  ${s}`).join('\n')}\n`;
+    }
+    if (article.read_now_reason && article.read_now_reason.trim() !== '') {
+      content += `- **今読む理由**: ${article.read_now_reason}\n`;
+    }
     content += `- **タグ**: ${article.tags.map(t => `#${t}`).join(', ')}\n\n`;
 
     const localMdPath = article.markdown_path ? path.resolve(path.join(__dirname, '..', article.markdown_path)) : null;

@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { JSDOM } = require('jsdom');
 const { Readability } = require('@mozilla/readability');
+const { execSync } = require('child_process');
 
 // ローカル実行時のみ .env を読み込み、クラウドでは process.env を優先する
 require('dotenv').config();
@@ -26,8 +27,10 @@ const CONFIG = {
   TEMPLATE_FILE: path.join(__dirname, '..', 'templates', 'dashboard_template.html'),
   INDEX_HTML: path.join(__dirname, '..', 'index.html'),
   RAINDROP_PER_PAGE: 50,
-  MAX_PROCESS_DEFAULT: 100, // 取得件数: 100件
-  SLEEP_MS: 60000,          // 絶対遅延: 60秒（RPM制限対策で延長）
+  MAX_PROCESS_DEFAULT: 10,        // 1回のデフォルト処理件数: 10件
+  MAX_SCAN_PAGES: 10,             // 最大10ページ（500件）まで未処理記事を走査
+  CONSECUTIVE_EXISTING_LIMIT: 25, // 連続25件すでに処理済みであれば安全にスキャン終了
+  SLEEP_MS: 15000,                // 待機時間: 15秒（軽量プロンプト化により60秒から短縮）
   MAX_RETRIES: 3
 };
 
@@ -37,10 +40,8 @@ const CONFIG = {
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 function sanitizeFileName(title) {
-  return title.replace(/[\\/:*?"<>|]/g, '_').substring(0, 100);
+  return (title || 'untitled').replace(/[\\/:*?"<>|]/g, '_').substring(0, 100);
 }
-
-const { execSync } = require('child_process');
 
 /**
  * ユーティリティ: curlを実行
@@ -49,18 +50,17 @@ function curl(url, options = {}) {
   let command = `curl -s -L "${url}"`;
   if (options.headers) {
     for (const [key, value] of Object.entries(options.headers)) {
-      // 値にダブルクォートが含まれる場合の簡易的なエスケープ
       const safeValue = String(value).replace(/"/g, '\\"');
       command += ` -H "${key}: ${safeValue}"`;
     }
   }
   if (options.method === 'POST') {
-    const tempFile = path.join(CONFIG.DATA_DIR, `temp_post_${Date.now()}.json`);
+    const tempFile = path.join(CONFIG.DATA_DIR, `temp_post_${Date.now()}_${Math.random().toString(36).substring(7)}.json`);
     fs.writeFileSync(tempFile, options.body, 'utf8');
     command += ` -X POST -H "Content-Type: application/json" -d "@${tempFile}"`;
     try {
       const stdout = execSync(command, { encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
-      fs.unlinkSync(tempFile);
+      if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
       return {
         ok: true,
         text: async () => stdout,
@@ -103,7 +103,7 @@ function curl(url, options = {}) {
 }
 
 /**
- * 1. Raindrop.io から記事を取得
+ * 1. Raindrop.io から指定ページのブックマークを取得
  */
 async function fetchRaindrops(apiKey, page = 0) {
   const url = `https://api.raindrop.io/rest/v1/raindrops/0?perpage=${CONFIG.RAINDROP_PER_PAGE}&page=${page}&sort=-created`;
@@ -119,7 +119,6 @@ async function fetchRaindrops(apiKey, page = 0) {
 
   const data = await response.json();
   
-  // Raindrop API のエラーレスポンスをチェック
   if (data.result === false || data.error) {
     throw new Error(`Raindrop API エラー: ${data.error || '不明なエラー'}`);
   }
@@ -128,7 +127,54 @@ async function fetchRaindrops(apiKey, page = 0) {
 }
 
 /**
- * 2. 本文抽出
+ * 2. Raindrop から未処理記事（未登録または .md ファイル欠落）を安全にスキャン・キュー化
+ */
+async function scanUnprocessedRaindrops(apiKey, bookmarks) {
+  const existingUrls = new Set(bookmarks.articles.map(a => a.url));
+  const existingIds = new Set(bookmarks.articles.map(a => a.id));
+  
+  let unprocessedItems = [];
+  let consecutiveExistingCount = 0;
+  let totalScanned = 0;
+
+  console.log(`[Raindrop] 未処理記事のスキャンを開始します (最大 ${CONFIG.MAX_SCAN_PAGES * CONFIG.RAINDROP_PER_PAGE} 件走査)...`);
+
+  for (let page = 0; page < CONFIG.MAX_SCAN_PAGES; page++) {
+    const items = await fetchRaindrops(apiKey, page);
+    if (items.length === 0) break;
+    
+    totalScanned += items.length;
+
+    for (const item of items) {
+      const sanitizedTitle = sanitizeFileName(item.title);
+      const mdPath = path.join(CONFIG.NOTEBOOK_DIR, `${sanitizedTitle}.md`);
+      
+      const isAlreadyProcessed = (existingUrls.has(item.link) || existingIds.has(item._id.toString())) && fs.existsSync(mdPath);
+
+      if (isAlreadyProcessed) {
+        consecutiveExistingCount++;
+        if (consecutiveExistingCount >= CONFIG.CONSECUTIVE_EXISTING_LIMIT) {
+          console.log(`[Scan] 連続 ${consecutiveExistingCount} 件の処理済み記事を検出。スキャンを完了します。`);
+          break;
+        }
+      } else {
+        // 未処理記事を発見
+        consecutiveExistingCount = 0;
+        unprocessedItems.push(item);
+      }
+    }
+
+    if (consecutiveExistingCount >= CONFIG.CONSECUTIVE_EXISTING_LIMIT || items.length < CONFIG.RAINDROP_PER_PAGE) {
+      break;
+    }
+  }
+
+  console.log(`[Scan完了] 走査件数: ${totalScanned} 件 / 未処理記事: ${unprocessedItems.length} 件`);
+  return unprocessedItems;
+}
+
+/**
+ * 3. 本文抽出
  */
 async function extractContent(url) {
   try {
@@ -154,7 +200,7 @@ async function extractContent(url) {
 }
 
 /**
- * 3. Gemini API で解析 (リトライロジック付き)
+ * 4. Gemini API で解析 (スコアリング＆タグ分類のみの軽量呼び出し)
  */
 async function getSummary(apiKey, prompt, retryCount = 0) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
@@ -173,7 +219,6 @@ async function getSummary(apiKey, prompt, retryCount = 0) {
 
   const responseJson = await response.json();
 
-  // レート制限 (429) またはエラーの判定
   if (responseJson.error) {
     const errorCode = responseJson.error.code;
     const errorMessage = responseJson.error.message;
@@ -197,14 +242,7 @@ async function getSummary(apiKey, prompt, retryCount = 0) {
 }
 
 /**
- * スコアフィールドの後方互換取得
- * 旧フォーマット（priority文字列）の記事にもスコアを割り当てる
- */
-// (deriveScore と assignTiers は generate_dashboard.js に移行しました)
-
-/**
  * notebooklm_sources/ 内の孤立 .md ファイルを削除する
- * bookmarks.json に markdown_path が存在しないファイルが対象
  */
 function cleanupOrphanedMarkdowns(bookmarks) {
   if (!fs.existsSync(CONFIG.NOTEBOOK_DIR)) return;
@@ -228,16 +266,6 @@ function cleanupOrphanedMarkdowns(bookmarks) {
 }
 
 /**
- * 4. ダッシュボード生成
- */
-// (generateDashboard と TAG_MAP は generate_dashboard.js に移行しました)
-
-/**
- * NotebookLM 用の「未読・High限定」一括パッキングMarkdownの生成
- */
-// (generateNotebookMaster は generate_dashboard.js に移行しました)
-
-/**
  * メイン処理
  */
 async function main() {
@@ -245,6 +273,7 @@ async function main() {
   
   const maxProcess = process.argv[2] ? parseInt(process.argv[2], 10) : CONFIG.MAX_PROCESS_DEFAULT;
   console.log(`最大処理件数: ${maxProcess}`);
+  
   let bookmarks = { updated_at: new Date().toISOString(), articles: [] };
   if (fs.existsSync(CONFIG.BOOKMARKS_JSON)) {
     bookmarks = JSON.parse(fs.readFileSync(CONFIG.BOOKMARKS_JSON, 'utf8'));
@@ -253,85 +282,96 @@ async function main() {
   cleanupOrphanedMarkdowns(bookmarks);
 
   try {
-    let allItems = [];
-    let stopFetching = false;
-    for (let p = 0; p < 4; p++) {
-      const items = await fetchRaindrops(RAINDROP_API_KEY, p);
-      if (items.length === 0) break;
-      
-      for (const item of items) {
-        const existing = bookmarks.articles.find(a => a.url === item.link);
-        const sanitizedTitle = sanitizeFileName(item.title);
-        const mdPath = path.join(CONFIG.NOTEBOOK_DIR, `${sanitizedTitle}.md`);
-        
-        // 差分同期: すでに処理済みの記事を見つけたらフェッチを中断
-        if (existing && fs.existsSync(mdPath)) {
-          console.log(`[Incremental Sync] 既存の記事 (${item.title}) を検出。フェッチを中断します。`);
-          stopFetching = true;
-          break;
-        }
-        allItems.push(item);
-      }
-
-      if (stopFetching || items.length < CONFIG.RAINDROP_PER_PAGE) break;
+    // 1. 未処理記事のスキャン＆キュー化
+    const unprocessedItems = await scanUnprocessedRaindrops(RAINDROP_API_KEY, bookmarks);
+    
+    if (unprocessedItems.length === 0) {
+      console.log('[Info] 新規・未処理の記事はありません。すべて同期済みです。');
+    } else {
+      console.log(`[Queue] ${unprocessedItems.length} 件の未処理記事のうち、今回は最大 ${maxProcess} 件を処理します。`);
     }
-    console.log(`[Raindrop] 合計 ${allItems.length} 件の新規記事を取得しました。`);
+
     const promptTemplate = fs.readFileSync(CONFIG.PROMPT_FILE, 'utf8');
     let processedCount = 0;
-    let skipCount = 0;
     let errorCount = 0;
-    for (const item of allItems) {
-      if (processedCount >= maxProcess) break;
-      const existing = bookmarks.articles.find(a => a.url === item.link);
+
+    const itemsToProcess = unprocessedItems.slice(0, maxProcess);
+
+    for (const item of itemsToProcess) {
+      console.log(`\n[Processing ${processedCount + 1}/${itemsToProcess.length}] ${item.title}`);
       const sanitizedTitle = sanitizeFileName(item.title);
       const mdPath = path.join(CONFIG.NOTEBOOK_DIR, `${sanitizedTitle}.md`);
-      if (existing && fs.existsSync(mdPath)) {
-        skipCount++;
-        continue;
-      }
-      console.log(`\n[Processing] ${item.title}`);
+
       try {
         const extracted = await extractContent(item.link);
         const contentText = extracted ? extracted.textContent.trim() : (item.excerpt || '内容なし');
-        const prompt = promptTemplate.replace('{{title}}', item.title).replace('{{url}}', item.link).replace('{{excerpt}}', contentText.substring(0, 5000));
+        const prompt = promptTemplate
+          .replace('{{title}}', item.title)
+          .replace('{{url}}', item.link)
+          .replace('{{excerpt}}', contentText.substring(0, 5000));
+        
         const analysis = await getSummary(GEMINI_API_KEY, prompt);
-        const mdContent = `# ${item.title}\n- **Source URL**: ${item.link}\n- **Score**: ${analysis.score}\n- **AI Summary**:\n${analysis.summary.map(s => `  - ${s}`).join('\n')}\n- **Read Now Reason**: ${analysis.read_now_reason}\n- **Suggested Tags**: ${analysis.tags_suggested.map(t => `#${t}`).join(', ')}\n- **Processed Date**: ${new Date().toLocaleDateString('ja-JP')}\n\n---\n\n## 本文\n${contentText}\n`;
+        const score = typeof analysis.score === 'number' ? analysis.score : 50;
+        const tagsSuggested = Array.isArray(analysis.tags_suggested) ? analysis.tags_suggested : [];
+
+        // AI用ソース（本文 Markdown）の生成
+        const mdContent = `# ${item.title}\n` +
+          `- **Source URL**: ${item.link}\n` +
+          `- **Score**: ${score}\n` +
+          `- **Suggested Tags**: ${tagsSuggested.map(t => `#${t}`).join(', ')}\n` +
+          `- **Processed Date**: ${new Date().toLocaleDateString('ja-JP')}\n\n` +
+          `---\n\n` +
+          `## 本文\n${contentText}\n`;
+        
         fs.writeFileSync(mdPath, mdContent, 'utf8');
+
+        const existing = bookmarks.articles.find(a => a.url === item.link || a.id === item._id.toString());
         const newArticle = {
           id: item._id.toString(),
           url: item.link,
           title: item.title,
-          summary: analysis.summary.join('\n'),
-          score: analysis.score,
-          read_now_reason: analysis.read_now_reason,
-          defer_reason: analysis.defer_reason,
-          tags: [...new Set([...(item.tags || []), ...(analysis.tags_suggested || [])])],
+          excerpt: item.excerpt || (extracted ? extracted.excerpt : '') || '',
+          summary: existing?.summary || '', // 旧データの要約があれば保持、新規は空文字
+          score: score,
+          read_now_reason: existing?.read_now_reason || '',
+          defer_reason: existing?.defer_reason || '',
+          tags: [...new Set([...(item.tags || []), ...tagsSuggested])],
           status: existing ? existing.status : 'unread',
           analyzed_at: new Date().toISOString(),
           markdown_path: `data/notebooklm_sources/${sanitizedTitle}.md`
         };
-        if (existing) { Object.assign(existing, newArticle); } else { bookmarks.articles.push(newArticle); }
+
+        if (existing) {
+          Object.assign(existing, newArticle);
+        } else {
+          bookmarks.articles.push(newArticle);
+        }
+
         bookmarks.updated_at = new Date().toISOString();
         fs.writeFileSync(CONFIG.BOOKMARKS_JSON, JSON.stringify(bookmarks, null, 2), 'utf8');
         processedCount++;
-        console.log('  成功');
+        console.log(`  成功: Score ${score} / Tags: [${tagsSuggested.join(', ')}]`);
       } catch (err) {
         errorCount++;
         console.error(`  失敗: ${err.message}`);
-        // 429リトライ上限に達した場合は少し長めに休む
         if (err.message.includes('429') || err.message.includes('limit')) {
-            console.log('  [警告] API制限が厳しいようです。90秒待機して次へ進みます...');
-            await sleep(90000);
+          console.log('  [警告] API制限を検知。60秒待機して次へ進みます...');
+          await sleep(60000);
         }
-        console.log('  (次の記事へ進みます)');
+        console.log('  (未処理のまま残るため、次回以降の実行で再試行されます)');
         continue;
       } finally {
         await sleep(CONFIG.SLEEP_MS);
       }
     }
-    console.log(`\n=== 処理統計 ===\n新規/更新: ${processedCount} 件\nスキップ: ${skipCount} 件\nエラー: ${errorCount} 件`);
+
+    const remainingCount = unprocessedItems.length - processedCount;
+    console.log(`\n=== 処理統計 ===\n処理成功: ${processedCount} 件\nエラー: ${errorCount} 件\n残り未処理: ${remainingCount > 0 ? remainingCount : 0} 件`);
+    if (remainingCount > 0) {
+      console.log(`※ 残り ${remainingCount} 件の未処理記事は、次回の定期同期または手動実行で自動処理されます。`);
+    }
     
-    // 同期処理が正常終了したら、常にダッシュボードとNotebookLMまとめファイルを更新する
+    // ダッシュボードとNotebookLMまとめファイルの更新
     console.log('\n[Dashboard] ダッシュボードとNotebookLMまとめを更新中...');
     try {
       const execScript = path.join(__dirname, 'generate_dashboard.js');

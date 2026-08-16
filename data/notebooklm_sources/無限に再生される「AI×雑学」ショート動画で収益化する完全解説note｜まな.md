@@ -1,13 +1,8 @@
 # 無限に再生される「AI×雑学」ショート動画で収益化する完全解説note｜まな
 - **Source URL**: https://note.com/amiiii_714/n/n0a38d0cd2520
-- **Score**: 25
-- **AI Summary**:
-  - ChatGPT・ElevenLabs・CapCutを用いたショート動画制作手順の解説
-  - 3秒フックから要点回収までの動画構成と20分の制作ワークフローを提示
-  - 無料配布物を経由してLINE登録や有料note等へ誘導する収益化設計を紹介
-- **Read Now Reason**: AIを活用したショート動画の構成テンプレートや制作ワークフローの基本手順を俯瞰して把握できる。
-- **Suggested Tags**: #ショート動画, #マネタイズ, #ChatGPT, #ElevenLabs, #CapCut
-- **Processed Date**: 2026/8/15
+- **Score**: 20
+- **Suggested Tags**: #ショート動画, #生成AI活用, #コンテンツ制作
+- **Processed Date**: 2026/8/16
 
 ---
 
