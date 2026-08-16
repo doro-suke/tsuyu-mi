@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-16T01:07:17.443Z",
+  "updated_at": "2026-08-16T01:11:55.168Z",
   "articles": [
     {
       "id": "1702129693",
@@ -6249,6 +6249,168 @@
       "status": "unread",
       "analyzed_at": "2026-08-16T00:39:55.129Z",
       "markdown_path": "data/notebooklm_sources/無限に再生される「AI×雑学」ショート動画で収益化する完全解説note｜まな.md"
+    },
+    {
+      "id": "1821826893",
+      "url": "https://article.auone.jp/1b0b5e88-caf0-41e8-9036-a1201bbe27d5",
+      "title": "動画生成AI「MiniMax-H3」のComfyUI向け軽量版が登場、少ないVRAMでも動作、スマホ完結でサクサク動く軽量AIエージェント「LFM2.5-2.6B」など生成AI技術5つを解説（生成AIウィークリー） | au Webポータル",
+      "excerpt": "動画生成AI「MiniMax-H3」のComfyUI向け軽量版が登場、少ないVRAMでも動作、スマホ完結でサクサク動く軽量AIエージェント「LFM2.5-2.6B」など生成AI技術5つを解説（生成AI",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "生成AI",
+        "動画生成AI",
+        "AIエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:09:26.169Z",
+      "markdown_path": "data/notebooklm_sources/動画生成AI「MiniMax-H3」のComfyUI向け軽量版が登場、少ないVRAMでも動作、スマホ完結でサクサク動く軽量AIエージェント「LFM2.5-2.6B」など生成AI技術5つを解説（生成AI.md"
+    },
+    {
+      "id": "1821826895",
+      "url": "https://chapro.jp/prompt/30294",
+      "title": "冒頭3秒で視聴者を惹き込み、最後まで視聴完了させるショート動画台本を作るプロンプト | 生成AIプロンプト研究所「チャプロAI」",
+      "excerpt": "ショート動画台本の作成：視聴者を引き付けるストーリーテリング 心理学的アプローチと強烈な視覚効果を用いて、視聴者の注意を引き、ショート動画を最後まで視聴させるための台本作成 プロンプトは、有効なフックを用いて短い動画の冒頭で視聴者を惹きつけ、ストーリーテリングによって関心を持続させ、明確なCTAを通じて視聴者のエンゲージメントと行動を促す台本を作成することを求めている。これを達成するために、発信者の情報、ターゲット視聴者の特性、視聴者の興味、フックの内容、行動喚起の内容を詳細に分析し、ストーリーテリング形式で短く、魅力ある内容を作成する。",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "プロンプトエンジニアリング",
+        "動画制作",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:09:48.167Z",
+      "markdown_path": "data/notebooklm_sources/冒頭3秒で視聴者を惹き込み、最後まで視聴完了させるショート動画台本を作るプロンプト _ 生成AIプロンプト研究所「チャプロAI」.md"
+    },
+    {
+      "id": "1821826889",
+      "url": "https://qiita.com/Magiqych/items/6ddc88b06ea845e8acb7",
+      "title": "生成AIで動画編集を自動化する：VLMとLLMを組み合わせたマルチフェーズ解析システム構築記 - Qiita",
+      "excerpt": "生成AIで動画編集を自動化する：VLMとLLMを組み合わせたマルチフェーズ解析システム構築記",
+      "summary": "",
+      "score": 78,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "自動化パイプライン",
+        "マルチモーダルAI",
+        "LLM"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:10:05.512Z",
+      "markdown_path": "data/notebooklm_sources/生成AIで動画編集を自動化する：VLMとLLMを組み合わせたマルチフェーズ解析システム構築記 - Qiita.md"
+    },
+    {
+      "id": "1821826890",
+      "url": "https://zenn.dev/firstfukugyo/articles/8609c1f8d7d2de",
+      "title": "長尺動画を1クリックでショート10本に変換——Opus Clipを使えばTikTok・Reels・Shortsが全部自動で揃う",
+      "excerpt": "「動画は作れるけど、ショートにカットする時間がない」",
+      "summary": "",
+      "score": 38,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "AIツール",
+        "コンテンツ自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:10:23.999Z",
+      "markdown_path": "data/notebooklm_sources/長尺動画を1クリックでショート10本に変換——Opus Clipを使えばTikTok・Reels・Shortsが全部自動で揃う.md"
+    },
+    {
+      "id": "1821826891",
+      "url": "https://hiroshima-video.com/post-2868/",
+      "title": "広島映像制作｜動画制作｜ドローン空撮",
+      "excerpt": "動画の冒頭3秒で離脱を防ぐための具体例20選を、SNS動画・動画広告・採用動画・商品紹介動画別に解説。視聴維持率改善に効くフック設計、NG例、制作指示に使える実践的な型まで紹介します。…",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画制作",
+        "マーケティング",
+        "コンテンツ設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:10:44.122Z",
+      "markdown_path": "data/notebooklm_sources/広島映像制作｜動画制作｜ドローン空撮.md"
+    },
+    {
+      "id": "1821826892",
+      "url": "https://zenn.dev/favarodesir/articles/da31943678eb38",
+      "title": "動画制作が爆速に！AI Video Generatorを使ってみた正直な感想",
+      "excerpt": "",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "ツールレビュー",
+        "クリエイター"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:11:01.388Z",
+      "markdown_path": "data/notebooklm_sources/動画制作が爆速に！AI Video Generatorを使ってみた正直な感想.md"
+    },
+    {
+      "id": "1821826886",
+      "url": "https://zenn.dev/taku_sid/articles/20250429_ai_content_creators",
+      "title": "人間なしでも配信できる！AIコンテンツクリエーターの世界",
+      "excerpt": "こんにちは、うさぎです🐰 最近のSNSで見かける素敵なインフルエンサーや面白い動画クリエイター、実は人間じゃないかもしれないんですよ。ビックリですよね！今日はそんな「人間なし」でも動いている最新のAIコンテンツクリエーターについてご紹介します。",
+      "summary": "",
+      "score": 42,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIVTuber",
+        "生成AI",
+        "バーチャルヒューマン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:11:18.263Z",
+      "markdown_path": "data/notebooklm_sources/人間なしでも配信できる！AIコンテンツクリエーターの世界.md"
+    },
+    {
+      "id": "1821826888",
+      "url": "https://note.com/genel/n/n7545e0856a1e?magazine_key=m6978390622df",
+      "title": "生成AIで「TVでよく見る再現VTR」を作る方法 | プロンプト全公開｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "今日ご紹介するのは「TVでよく見る再現VTR」の作り方です💡   TVでよくみる再現VTR📷 https://t.co/Y9fk8WD40b pic.twitter.com/jMzln9NcRh — GENEL | AI動画×クライアントワーク (@genel_ai) December 16, 2025 \n\n\n この記事では、 ✅ 使用した全ツールとその選定理由 ✅ シーンごとの詳細なプロンプト ✅ 実写っぽさを出すコツ ✅ ナレーションとアバター生成のポイント を、ご紹介しています。  慣れてない方でも迷わず作れるように、作り方を一つ一つ丁寧に、そして全プロンプトを公開します😊",
+      "summary": "",
+      "score": 40,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "画像生成AI",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:11:36.273Z",
+      "markdown_path": "data/notebooklm_sources/生成AIで「TVでよく見る再現VTR」を作る方法 _ プロンプト全公開｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826883",
+      "url": "https://chapro.jp/prompt/72243",
+      "title": "視聴者の感情を揺さぶり、心を掴むショート動画台本作成プロンプト | 生成AIプロンプト研究所「チャプロAI」",
+      "excerpt": "サービス紹介ショート動画スクリプト作成 ターゲットオーディエンスに向けて、サービスの魅力を革新的かつ魅力的に伝えるショート動画スクリプトを作成する。 マーケティング担当者やコンテンツクリエイターのために、ターゲットオーディエンス向けに効果的なサービス紹介動画のスクリプトを作成する手助けをします。視聴者が行動を起こすための明確なコールトゥアクションも含めます。動画の構成には、オープニング、問題提起、キーメッセージ、ビジュアル、コールトゥアクション、クロージングメッセージが含まれます。",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "プロンプトエンジニアリング",
+        "動画制作",
+        "マーケティング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-16T01:11:55.168Z",
+      "markdown_path": "data/notebooklm_sources/視聴者の感情を揺さぶり、心を掴むショート動画台本作成プロンプト _ 生成AIプロンプト研究所「チャプロAI」.md"
     }
   ]
 }
