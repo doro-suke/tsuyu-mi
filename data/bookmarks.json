@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-21T02:38:11.285Z",
+  "updated_at": "2026-08-21T02:41:51.380Z",
   "articles": [
     {
       "id": "1702129693",
@@ -124,24 +124,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-03T11:47:55.285Z",
       "markdown_path": "data/notebooklm_sources/CLAUDE.md の肥大化を 3 層構造で 83% 軽くした — 実測と試行錯誤の記録.md"
-    },
-    {
-      "id": "1702129686",
-      "url": "https://www.toukei-kentei.jp/",
-      "title": "統計検定：Japan Statistical Society Certificate",
-      "summary": "日本統計学会が認定する全国統一試験で、統計に関する知識や活用力を客観的に評価する。\n準1級から4級、データサイエンス系はCBT方式で全国にて随時受験が可能となっている。\n1級はPBT方式で実施され、2025年11月16日に試験が予定されている。",
-      "priority": "medium",
-      "read_now_reason": "データ分析の基礎力を証明する資格体系を把握し、自身のスキルセットの現在地を確認するため。",
-      "defer_reason": "特定の試験日に向けた学習をまだ開始していない場合や、資格取得の優先順位が確定していない間は参照のみで良い。",
-      "tags": [
-        "統計学",
-        "資格試験",
-        "データサイエンス",
-        "キャリアアップ"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-03T11:48:04.742Z",
-      "markdown_path": "data/notebooklm_sources/統計検定：Japan Statistical Society Certificate.md"
     },
     {
       "id": "1702129684",
@@ -336,25 +318,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-03T11:50:10.544Z",
       "markdown_path": "data/notebooklm_sources/AGENTS.md の5つの原則、実践中 #AGENTS.md - Qiita.md"
-    },
-    {
-      "id": "1702135748",
-      "url": "https://forest.watch.impress.co.jp/docs/news/2100669.html",
-      "title": "「Gemini」アプリが動的コンテンツ回答に対応、触って理解できるシミュレーターも生成 - 窓の杜",
-      "summary": "GeminiがWebGLとThree.jsを用いたインタラクティブな動的コンテンツの生成に対応した。\nスライダー操作や数値入力で物理現象などを視覚的にシミュレーションし、深い理解を促進する。\n無料版を含む一般ユーザーに順次展開され、Claudeの類似機能に対抗する開発競争が鮮明になった。",
-      "priority": "high",
-      "read_now_reason": "生成AIの出力がテキストから動的なアプリケーションへと進化する重要な節目であり、最新トレンドを即座に体験できるため。",
-      "defer_reason": "教育や科学的シミュレーションといった特定の用途に特化した機能であり、汎用的なテキスト作成業務を優先する場合は後回しでよい。",
-      "tags": [
-        "Gemini",
-        "生成AI",
-        "WebGL",
-        "教育技術",
-        "Google"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-03T11:50:19.211Z",
-      "markdown_path": "data/notebooklm_sources/「Gemini」アプリが動的コンテンツ回答に対応、触って理解できるシミュレーターも生成 - 窓の杜.md"
     },
     {
       "id": "1702135747",
