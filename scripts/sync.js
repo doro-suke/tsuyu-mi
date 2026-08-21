@@ -134,7 +134,6 @@ async function scanUnprocessedRaindrops(apiKey, bookmarks) {
   const existingIds = new Set(bookmarks.articles.map(a => a.id));
   
   let unprocessedItems = [];
-  let consecutiveExistingCount = 0;
   let totalScanned = 0;
 
   console.log(`[Raindrop] 未処理記事のスキャンを開始します (最大 ${CONFIG.MAX_SCAN_PAGES * CONFIG.RAINDROP_PER_PAGE} 件走査)...`);
@@ -151,20 +150,12 @@ async function scanUnprocessedRaindrops(apiKey, bookmarks) {
       
       const isAlreadyProcessed = (existingUrls.has(item.link) || existingIds.has(item._id.toString())) && fs.existsSync(mdPath);
 
-      if (isAlreadyProcessed) {
-        consecutiveExistingCount++;
-        if (consecutiveExistingCount >= CONFIG.CONSECUTIVE_EXISTING_LIMIT) {
-          console.log(`[Scan] 連続 ${consecutiveExistingCount} 件の処理済み記事を検出。スキャンを完了します。`);
-          break;
-        }
-      } else {
-        // 未処理記事を発見
-        consecutiveExistingCount = 0;
+      if (!isAlreadyProcessed) {
         unprocessedItems.push(item);
       }
     }
 
-    if (consecutiveExistingCount >= CONFIG.CONSECUTIVE_EXISTING_LIMIT || items.length < CONFIG.RAINDROP_PER_PAGE) {
+    if (items.length < CONFIG.RAINDROP_PER_PAGE) {
       break;
     }
   }

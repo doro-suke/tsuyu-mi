@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-16T01:27:13.387Z",
+  "updated_at": "2026-08-21T02:38:11.285Z",
   "articles": [
     {
       "id": "1702129693",
@@ -6626,6 +6626,202 @@
       "status": "unread",
       "analyzed_at": "2026-08-16T01:27:13.387Z",
       "markdown_path": "data/notebooklm_sources/ショート動画台本作成プロンプト _ 生成AIプロンプト研究所「チャプロAI」.md"
+    },
+    {
+      "id": "1821826867",
+      "url": "https://exp-p.com/prompt/20084",
+      "title": "20084",
+      "excerpt": "お探しのページが見つかりません。",
+      "summary": "",
+      "score": 0,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "無効リンク"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-21T02:31:04.692Z",
+      "markdown_path": "data/notebooklm_sources/20084.md"
+    },
+    {
+      "id": "1821826868",
+      "url": "https://media.brain-market.com/ai-shortvideo-brain/",
+      "title": "スマホ完結！AIを活用したショート動画の作り方と副業収益化ステップ",
+      "excerpt": "Brainメディア運営部です！ 今回は、AIとショート動画で個人が月30万円を目指せる方法について、 AI・S…",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI副業",
+        "ショート動画",
+        "ChatGPT"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-21T02:31:30.510Z",
+      "markdown_path": "data/notebooklm_sources/スマホ完結！AIを活用したショート動画の作り方と副業収益化ステップ.md"
+    },
+    {
+      "id": "1821826869",
+      "url": "https://www.youtube.com/watch?v=jqwO63inGHE",
+      "title": "Watch",
+      "excerpt": "SNSで２億再生されている動画実はImage FXで無料で簡単に作れるし少し課金するとスマホでも作れる超簡単な動画！想像を活かして皆さんのオリジナル建物を作ってみてください！00:00　挨拶01:13   Image Fxで無料で作る方法03:49  現実になり建物の作り方05:45  クリックするだけで動画に変...",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "画像生成AI",
+        "ImageFX",
+        "動画制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-21T02:31:49.720Z",
+      "markdown_path": "data/notebooklm_sources/Watch.md"
+    },
+    {
+      "id": "1821826863",
+      "url": "https://yard-style.info/short-video-ai/",
+      "title": "ショート動画作成をAIで作る方法7ステップ!誰でも簡単に始められて月20万円も!",
+      "excerpt": "2024年7月16日",
+      "summary": "",
+      "score": 10,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "SNSマーケティング",
+        "Vrew"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-21T02:32:29.840Z",
+      "markdown_path": "data/notebooklm_sources/ショート動画作成をAIで作る方法7ステップ!誰でも簡単に始められて月20万円も!.md"
+    },
+    {
+      "id": "1821826864",
+      "url": "https://anakin.ai/ja-jp/apps/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E5%8B%95%E7%94%BB%E5%8F%B0%E6%9C%AC-2036",
+      "title": "ショート動画台本 | 無料のAIツール | Anakin.ai",
+      "excerpt": "Youtubeにショート動画を投稿するために、高品質の台本を生成するアプリです。",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIツール",
+        "動画制作",
+        "コンテンツ生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-21T02:32:53.389Z",
+      "markdown_path": "data/notebooklm_sources/ショート動画台本 _ 無料のAIツール _ Anakin.ai.md"
+    },
+    {
+      "id": "1821826859",
+      "url": "https://note.com/genel/n/nd9d36b7316c5?magazine_key=m6978390622df",
+      "title": "YouTubeで80万回再生！話題の「アトラクションAI動画」の作り方｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは！GENELです。  今回はYouTubeやTikTokなどでよく見る アトラクションのPOV動画をAIで作る方法を解説していきます！  これは実際に作ってみた『北欧神話アトラクション』のAI動画です。    「初めて観た！」って方もいるかもしれないですが、これ系のAI動画は少し前から特にYouTubeで人気が出てきています。  再生回数は、   だいたい1万～80万回再生   といった、AI動画ではかなりの再生数を獲得しています。 （サムネが悪かったり、縦長動画では再生数は多くない印象でした。）  実際に作ってみた感想としては、 『難しくはないけど時間ががる、でも楽しい』",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "プロンプトエンジニアリング",
+        "コンテンツ制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-21T02:34:21.631Z",
+      "markdown_path": "data/notebooklm_sources/YouTubeで80万回再生！話題の「アトラクションAI動画」の作り方｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826860",
+      "url": "https://note.com/lofty_sage18/n/n2c7dfdd6bd2d",
+      "title": "ショート動画で収益化って本当にできる？AIと始めた私のリアルな道のり｜まるっとAI生活",
+      "excerpt": "ショート動画で稼げるって聞いたけど、 「顔出しも編集も無理だし、そんなの無理…」と思っていませんか？  私もそうでした。でも、ChatGPTやAIの力を借りたことで“収益化の一歩”を踏み出すことができたんです。 今回は、その道のりをできるだけリアルに、順を追ってお話しします。   Step1：ネタ選びはChatGPTに相談  最初は「どんな動画を作ればいいか」すら分かりませんでした。 そこでChatGPTに聞いてみたんです。   「初心者がショート動画で収益化を目指すとき、どんなジャンルがいい？」 「1分以内でできる動画ネタを10個ください」   すると、「副業Tips」「AI活用法」",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ショート動画",
+        "ChatGPT",
+        "副業"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-21T02:34:39.655Z",
+      "markdown_path": "data/notebooklm_sources/ショート動画で収益化って本当にできる？AIと始めた私のリアルな道のり｜まるっとAI生活.md"
+    },
+    {
+      "id": "1821826856",
+      "url": "https://masabulog.hatenablog.com/entry/2026/05/14/133051",
+      "title": "Youtubeショートはアルゴリズム変更で何が重要になったか独自考察 - さくウェブ",
+      "excerpt": "私は小さいユーチューブチャンネルを運営しているのですが、チャンネルを始めたころは、収益化条件達成のため、チャンネル登録者を増やす必要があったので、ショート動画をよくやっていました。 収益化達成後はショート動画はまったくやっていなかったのですが、昔公開したショート動画が、2026年3月中旬ごろから急激に伸びているということに気が付きました。 調べたところ、その原因は、どうやらユーチューブのアルゴリズムの変更のようでした。 そこで良い機会なので、この私の動画の急激な伸びから、「新しいアルゴリズムで特に何が重要なのか」「どんなコンテンツが伸びるのか」について考察していきたいとます。 ショート動画が突…",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "YouTube",
+        "アルゴリズム",
+        "マーケティング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-21T02:35:49.093Z",
+      "markdown_path": "data/notebooklm_sources/Youtubeショートはアルゴリズム変更で何が重要になったか独自考察 - さくウェブ.md"
+    },
+    {
+      "id": "1821826857",
+      "url": "https://ai-yomiage.com/blog/youtube2026-svVuGh",
+      "title": "YouTubeショート動画でバズる編集のコツ | 2026年アルゴリズム攻略",
+      "excerpt": "2026年最新版！YouTubeショート動画でバズるための編集のコツとアルゴリズム攻略法を徹底解説。視聴維持率を高めるテクニック、CapCutなどの推奨ツール、データ分析に基づく改善サイクルでチャンネルを成長させよう。",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "YouTubeショート",
+        "動画編集",
+        "SNSマーケティング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-21T02:36:06.446Z",
+      "markdown_path": "data/notebooklm_sources/YouTubeショート動画でバズる編集のコツ _ 2026年アルゴリズム攻略.md"
+    },
+    {
+      "id": "1821826853",
+      "url": "https://ai-kirinuki.jp/blog/youtube-shorts-8fgymZ",
+      "title": "YouTube Shorts おすすめに載る条件と再生数UP戦略 | 2026年版",
+      "excerpt": "YouTube Shortsで再生数を爆発的に伸ばすための条件を徹底解説。おすすめに載るアルゴリズムの評価指標、視聴維持率を高める動画制作、エンゲージメント戦略、分析活用法まで、2026年最新の攻略法を網羅。",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "YouTubeShorts",
+        "動画マーケティング",
+        "コンテンツ戦略"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-21T02:37:07.191Z",
+      "markdown_path": "data/notebooklm_sources/YouTube Shorts おすすめに載る条件と再生数UP戦略 _ 2026年版.md"
+    },
+    {
+      "id": "1821826848",
+      "url": "https://zenn.dev/myonie/articles/84952069d8d1ef",
+      "title": "Stable Diffusion WebUIのAPIだけを使う",
+      "excerpt": "オープンソースの画像生成AIとして大成功を収めているStable Diffusion。利用するには、Stability AI社が提供する公式ウェブアプリDreamStudioもありますが、AUTOMATIC1111氏が開発したWebUIが大きな広がりを見せています。",
+      "summary": "",
+      "score": 68,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "StableDiffusion",
+        "画像生成AI",
+        "Python"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-21T02:38:11.285Z",
+      "markdown_path": "data/notebooklm_sources/Stable Diffusion WebUIのAPIだけを使う.md"
     }
   ]
 }
