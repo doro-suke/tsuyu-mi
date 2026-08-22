@@ -1,8 +1,8 @@
 # ショート動画台本作成プロンプト | 生成AIプロンプト研究所「チャプロAI」
-- **Source URL**: https://chapro.jp/prompt/12904
+- **Source URL**: https://exp-p.com/prompt/12904
 - **Score**: 25
-- **Suggested Tags**: #プロンプトエンジニアリング, #動画制作, #生成AI
-- **Processed Date**: 2026/8/16
+- **Suggested Tags**: #プロンプトエンジニアリング, #YouTube, #コンテンツ生成
+- **Processed Date**: 2026/8/22
 
 ---
 

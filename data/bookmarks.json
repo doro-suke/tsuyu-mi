@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-21T02:41:51.380Z",
+  "updated_at": "2026-08-22T00:37:34.414Z",
   "articles": [
     {
       "id": "1702129693",
@@ -6785,6 +6785,167 @@
       "status": "unread",
       "analyzed_at": "2026-08-21T02:38:11.285Z",
       "markdown_path": "data/notebooklm_sources/Stable Diffusion WebUIのAPIだけを使う.md"
+    },
+    {
+      "id": "1821826862",
+      "url": "https://note.com/makino0012/n/n57bc9e09998b",
+      "title": "Nbceb",
+      "excerpt": "あなたがアクセスしたページは削除されたか\nURLが変更されているため表示することができません。",
+      "summary": "",
+      "score": 0,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "無効リンク",
+        "404"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-22T00:35:02.523Z",
+      "markdown_path": "data/notebooklm_sources/Nbceb.md"
+    },
+    {
+      "id": "1821826865",
+      "url": "https://exp-p.com/prompt/12904",
+      "title": "ショート動画台本作成プロンプト | 生成AIプロンプト研究所「チャプロAI」",
+      "excerpt": "YouTube動画の魅力的な台本作成戦略 ターゲットオーディエンスを引き込むYouTube動画の台本作成方法を提供する このプロンプトは、YouTubeクリエイターが魅力的なコンテンツを制作するための台本作成のガイドラインを提示します。ターゲットオーディエンスを明確にし、動画の目的とストーリー構成を計画し、キャラクターやナレーションを設定することから、視聴者の関心を引くオープニングとクロージング、視覚効果や音声効果の指示まで、具体的な台本作成のステップをカバーします。この指示に従って、視聴者にとって魅力的でわかりやすい、効果的なYouTube動画の台本を作成することが期待されます。",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "プロンプトエンジニアリング",
+        "YouTube",
+        "コンテンツ生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-22T00:35:23.858Z",
+      "markdown_path": "data/notebooklm_sources/ショート動画台本作成プロンプト _ 生成AIプロンプト研究所「チャプロAI」.md"
+    },
+    {
+      "id": "1821826858",
+      "url": "https://www.newinfo.press/entry/youtube/short/genre",
+      "title": "YouTubeショート動画再生数アップの秘訣: エンタメ、ライフハック、雑学、美容・ファッション#トレンド - 大人のための『夢を叶える学校』",
+      "excerpt": "YouTubeショート動画 人気ジャンルの最新トレンドや再生数を伸ばすコツを解説。今バズるジャンルや具体的な企画アイデア、SEO対策までまるごと分かります。",
+      "summary": "",
+      "score": 10,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "YouTubeShorts",
+        "動画マーケティング",
+        "SNSトレンド"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-22T00:35:43.030Z",
+      "markdown_path": "data/notebooklm_sources/YouTubeショート動画再生数アップの秘訣_ エンタメ、ライフハック、雑学、美容・ファッション#トレンド - 大人のための『夢を叶える学校』.md"
+    },
+    {
+      "id": "1821826861",
+      "url": "https://oshiete.ai/items/90424605644601344",
+      "title": "ショート動画の冒頭３秒台本作成ツール | GMO天秤AI",
+      "excerpt": "▼最新作はこちら▼\nhttps://oshiete.ai/item_lists/73557973863457792\n\nショート動画で最も重要な冒頭３秒の台本作成に特化したプロンプトです。リールやYouTubeショート、TikTokで情報発信している人は、ぜひお気に入りにして活用してみて下さい。\n#インスタグラム　#instagram #tiktok #ショート動画　#マーケティングあなたの欲しいが見つかる生成AIのプロンプトポータルサイト",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "生成AI",
+        "プロンプト",
+        "動画制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-22T00:36:02.620Z",
+      "markdown_path": "data/notebooklm_sources/ショート動画の冒頭３秒台本作成ツール _ GMO天秤AI.md"
+    },
+    {
+      "id": "1821826855",
+      "url": "https://www.ours-magazine.jp/articles/youtube-shorts-subscribers-growth",
+      "title": "YouTubeショートで登録者を増やす設計のコツ｜初心者向け7ステップ実践ガイド | SNS OURS MAGAZINE",
+      "excerpt": "YouTubeショートで登録者を増やす設計を初心者向けに7ステップ整理。視聴維持率70%超えの作り方、長尺動画への「続きは本編」導線、概要欄CTA、月8本以上の投稿リズム、知恵袋の悩みと一次出典つき改善策まで、今日から動かせる手順をまとめました。一次データで具体策。",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "YouTube",
+        "SNSマーケティング",
+        "動画運用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-22T00:36:21.179Z",
+      "markdown_path": "data/notebooklm_sources/YouTubeショートで登録者を増やす設計のコツ｜初心者向け7ステップ実践ガイド _ SNS OURS MAGAZINE.md"
+    },
+    {
+      "id": "1821826851",
+      "url": "https://zenn.dev/wanaidev/articles/382f79054a9a0e",
+      "title": "Wan AI：無料オンラインAI動画生成ツール - テキストから動画へ、画像から動画へ",
+      "excerpt": "はじめに：AI動画制作が誰でも手軽に今日、短い動画がマーケティングや個人表現の鍵となっています。従来の動画制作は時間とコストがかかりましたが、Wan AI（wanai.dev） の登場により、誰でも簡単に高品質なAI動画を作成できるようになりました。Wan AIは、テキストから動画（Text to Video）、画像から動画（Image to Video）、およびボイスオーバー対応のマルチモーダルAI動画生成プラットフォームです。操作がシンプルで無料トライアルも充実しており、マーケター、コンテンツクリエイター、EC担当者、YouTuberなどに最適です。\nwanai.dev\nWan AIの主な機能テキストから動画（Text to Video）\n詳細なプロンプトを入力するだけで、動きのあるシーン、カメラワーク、雰囲気豊かな動画を生成します。映画風の撮影、タイムラプス、ファンタジーなど多様なスタイルに対応。",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "生成AI",
+        "ツール紹介"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-22T00:36:38.742Z",
+      "markdown_path": "data/notebooklm_sources/Wan AI：無料オンラインAI動画生成ツール - テキストから動画へ、画像から動画へ.md"
+    },
+    {
+      "id": "1821826852",
+      "url": "https://aiseo-llmo.com/articles/youtube-shorts-algorithm-2026-japan",
+      "title": "YouTube Shorts アルゴリズム 2026 完全解説：投稿時間・RPM・初速の攻略法",
+      "excerpt": "2026年最新のYouTube Shortsアルゴリズムを徹底解説。日本での最適投稿時間・RPM相場・初速を上げる方法・完視率の高め方まで、実践的な施策をすべて網羅します。",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "YouTube",
+        "動画マーケティング",
+        "SNS運用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-22T00:36:57.783Z",
+      "markdown_path": "data/notebooklm_sources/YouTube Shorts アルゴリズム 2026 完全解説：投稿時間・RPM・初速の攻略法.md"
+    },
+    {
+      "id": "1821826854",
+      "url": "https://www.youtube.com/watch?v=4yzxBZopWgc",
+      "title": "YouTubeアルゴリズムの正体と、小規模チャンネルが勝てる新時代【2026年先取り】",
+      "excerpt": "▼まずは相談してみる\nhttps://tatap.jp/consultation/?utm_so...\n▼著書「99％の経営者は知らない 中小企業のための正しいSNSマーケティング」はこちら\nhttps://amzn.asia/d/jgczWfe\nーーーーーーーーーーーーーーーーーーー\n▼より詳細な情報はX(Twitter)\n https://x.com/tomita_tatap\n▼ラジオで知りたい方はPodcast\nhttps://podcasters.spotify.com/pod/sh...\nーーーーーーーーーーーーーーーーーーー\n▼SNS全体のトレンドが知りたい方はNote\nhttps://note.com/tomita_tatap\n▼SNSのノウハウや最新情報などを深く知りたい方はこちら\nhttps://note.com/tomita_tatap/membership\nーーーーーーーーーーーーーーーーーーー\nこの動画は1.5倍速での視聴をお勧めします。\n短い時間で役に立つ情報を学べます。\nチャンネル登録・高評価・コメント◎お待ちしております！\n👇👇チャンネル登録はこちら👇👇\n   / @socialtalk_jp  \n  ーーーーーーーーーーーーーーーーーーー\n【出演者情報】\n株式会社TaTap 代表取締役CEO\n 富田 竜介(Ryusuke Tomita)\nーーーーーーーーーーーーーーーーーーー\n#YouTubeアルゴリズム #2026最新 #YouTubeトレンド",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "YouTube運用",
+        "SNSマーケティング",
+        "アルゴリズム"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-22T00:37:15.248Z",
+      "markdown_path": "data/notebooklm_sources/YouTubeアルゴリズムの正体と、小規模チャンネルが勝てる新時代【2026年先取り】.md"
+    },
+    {
+      "id": "1821826849",
+      "url": "https://note.com/freelife_creator/n/n2b5894941f64",
+      "title": "TikTok・YouTube・Instagram｜AI動画を3つのSNSで同時運用して月収を3倍にした戦略｜かける | AI活用 ライフクリエイター",
+      "excerpt": "月5万円の副収入があれば、十分だと思いますか？  いや。もし、その月5万円を、月15万円に増やせたら？  それが可能なんです。方法は、シンプルです。  同じ動画を、複数のSNSプラットフォームで公開するんです。  ただし、それは言うほど簡単ではありません。  各プラットフォームには、異なるアルゴリズムがあり、異なるユーザー層がいます。  TikTokで受ける構成が、YouTubeでも受けるとは限りません。  この記事では、私が実際に TikTok、YouTube、Instagramで同時運用を開始して、月収を3倍（月5万円から月15万円）に増やした戦略を、全て公開します。  失敗や後悔",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "SNS運用",
+        "AI動画生成",
+        "コンテンツマーケティング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-22T00:37:34.414Z",
+      "markdown_path": "data/notebooklm_sources/TikTok・YouTube・Instagram｜AI動画を3つのSNSで同時運用して月収を3倍にした戦略｜かける _ AI活用 ライフクリエイター.md"
     }
   ]
 }
