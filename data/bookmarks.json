@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-22T00:37:34.414Z",
+  "updated_at": "2026-08-23T00:41:50.932Z",
   "articles": [
     {
       "id": "1702129693",
@@ -6946,6 +6946,78 @@
       "status": "unread",
       "analyzed_at": "2026-08-22T00:37:34.414Z",
       "markdown_path": "data/notebooklm_sources/TikTok・YouTube・Instagram｜AI動画を3つのSNSで同時運用して月収を3倍にした戦略｜かける _ AI活用 ライフクリエイター.md"
+    },
+    {
+      "id": "1821826850",
+      "url": "https://zenn.dev/udm/articles/tiktok-apify-shorts-plan",
+      "title": "TikTokの過去動画をApify×AIで分析し、YouTube Shortsの最強スケジュールを自動生成してみた【仮説検証編】",
+      "excerpt": "これまで趣味で運用していたTikTokやInstagramには、ペット（愛猫の短足マンチカン「二郎」）のショート動画が200本近く溜まっていました。",
+      "summary": "",
+      "score": 38,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI活用",
+        "Apify",
+        "自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-23T00:38:05.554Z",
+      "markdown_path": "data/notebooklm_sources/TikTokの過去動画をApify×AIで分析し、YouTube Shortsの最強スケジュールを自動生成してみた【仮説検証編】.md"
+    },
+    {
+      "id": "1821826840",
+      "url": "https://note.com/genel/n/nbe53e9a1a822?magazine_key=m6978390622df",
+      "title": "SNSで2000万回以上再生されているタイムラプス動画をAIで作る方法 | ChatGPT｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは！GENELです。  SNSで以前から人気の、こういった動画を見たことはありますか？👀   水中レイクビューの隠れ家 pic.twitter.com/HlNeeg3NqQ — GENEL | AIを用いた動画制作 (@genel_ai) June 7, 2026 \n\n\n 何もないビーチや森、湖畔に、タイムラプスでどんどん穴が掘られて、コンテナが埋め込まれて、最後には大人の隠れ家的な地下ルームが完成する動画です。  今回はこの動画のつくりからをイチから詳しくご紹介しています！  ChatGPT images 2.0で画像生成  まずは、どんな場所を舞台にするかを決めるところから",
+      "summary": "",
+      "score": 28,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "ChatGPT",
+        "プロンプト"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-23T00:39:38.908Z",
+      "markdown_path": "data/notebooklm_sources/SNSで2000万回以上再生されているタイムラプス動画をAIで作る方法 _ ChatGPT｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826842",
+      "url": "https://note.com/genel/n/ne0e783e06d50?magazine_key=m6978390622df",
+      "title": "SNSで700万再生！よく見る健康雑学AIショート動画の作り方｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは！GENELです。  YouTubeやTikTokなどでよく見る、 雑学系ショートや体の中を可視化する系動画ってありますよね👀      こういった『健康・豆知識系動画』の作り方を解説していきます！   1. 台本を生成する[Gemini / Claude / ChatGPT]  「食べ物をきっかけに、体の中で何かが起こる」 みたいな構成にするとこの系統の動画はかなり作りやすいです。  下記のプロンプトをGeminiやChatGPT、Claudeなどに投げてみてください！  あなたはSNSで人気の「体内雑学のシネマティック解説動画」のシナリオライターです。\n以下の【テーマ】に",
+      "summary": "",
+      "score": 35,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "プロンプトエンジニアリング",
+        "コンテンツ制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-23T00:40:52.516Z",
+      "markdown_path": "data/notebooklm_sources/SNSで700万再生！よく見る健康雑学AIショート動画の作り方｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826838",
+      "url": "https://zenn.dev/akira_z_kano/articles/400b78c9a6e845",
+      "title": "Pythonで構築する「スライド×音声」完全同期の動画自動生成パイプライン",
+      "excerpt": "技術解説動画の制作において、多くのエンジニアやクリエイターが直面するのが「品質と工数のトレードオフ」という壁です。初期の試みではNotebookLM等を利用した自動生成も検討しましたが、生成される動画には特有の「解説調の硬さ」や視覚的な単調さが残り、視聴者のエンゲージメントを高めるには限界がありました。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "自動化パイプライン",
+        "Python",
+        "動画生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-23T00:41:50.932Z",
+      "markdown_path": "data/notebooklm_sources/Pythonで構築する「スライド×音声」完全同期の動画自動生成パイプライン.md"
     }
   ]
 }
