@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-23T00:41:50.932Z",
+  "updated_at": "2026-08-24T00:40:02.721Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7018,6 +7018,114 @@
       "status": "unread",
       "analyzed_at": "2026-08-23T00:41:50.932Z",
       "markdown_path": "data/notebooklm_sources/Pythonで構築する「スライド×音声」完全同期の動画自動生成パイプライン.md"
+    },
+    {
+      "id": "1832116085",
+      "url": "https://pickscribe.com/th/v/q3OBX3Jwxeg",
+      "title": "Create Viral Cat Shorts Using AI: Complete Guide | Chenming Yong การถอดความ",
+      "excerpt": "let's look at these cat shots that utilize this bgm they are created by creators all around the world and most of the...... • Chenming Yong • คัดลอกและดาวน์โหลดฟรี",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成",
+        "生成AI",
+        "コンテンツ制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-24T00:37:27.150Z",
+      "markdown_path": "data/notebooklm_sources/Create Viral Cat Shorts Using AI_ Complete Guide _ Chenming Yong การถอดความ.md"
+    },
+    {
+      "id": "1832116038",
+      "url": "https://www.aicut.pro/blog/viral-ai-video-examples-2026",
+      "title": "AICUT - AI Video Generator for Faceless Channels",
+      "excerpt": "15 real viral AI video examples from 2026, the exact prompts behind each, the format patterns, and how to remix them in under 5 minutes. Copy-paste ready.",
+      "summary": "",
+      "score": 35,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "プロンプトエンジニアリング",
+        "コンテンツ制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-24T00:38:02.723Z",
+      "markdown_path": "data/notebooklm_sources/AICUT - AI Video Generator for Faceless Channels.md"
+    },
+    {
+      "id": "1821826846",
+      "url": "https://note.com/genel/n/n0180c273db0f?magazine_key=m6978390622df",
+      "title": "SNSで流行りの「手拍子ダンス動画」をAIでつくる方法｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは！GENELです。  今回は、こちらの動画の作り方をご紹介します👇🏻   AIでカンタンにできる SNSで流行りの手拍子ダンス pic.twitter.com/rlIcQUQA5R — GENEL | AI動画制作 (@genel_ai) January 18, 2026 \n\n\n 手拍子のPOV + 奥でキャラクターが踊っているという、リズミカルで可愛い動画です😆  画像生成プロンプト・動画生成プロンプトもすべてご紹介しますので、「作ってみたい！」って方はぜひ！  1. メインとなるイラストの女の子の画像生成  まずは、中央でダンスしている女の子の画像を生成していきます！ ↓",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "画像生成AI",
+        "動画生成AI",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-24T00:38:42.081Z",
+      "markdown_path": "data/notebooklm_sources/SNSで流行りの「手拍子ダンス動画」をAIでつくる方法｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826841",
+      "url": "https://note.com/genel/n/n4b9c81e1a39b?magazine_key=m6978390622df",
+      "title": "SNSで500万回再生！AIだけで「ニュース風映像」を作る方法を解説｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは、GENELです。  最近SNSでよく見る、ニュース番組で流れていそうな『事件の実際の映像』っぽい動画を作ってみました。     この記事では、どうやってこの動画を作ったのかをプロンプト含めご紹介していきます。     今回使ったAIツールの紹介  今回の制作では、主に以下を使いました。    ChatGPT（シナリオ、画像、プロンプト作成）    Seedance2.0（動画作成）    KlingAI（動画作成）    ElevenLabs（音声生成）    SUNO（音楽生成）    制作の流れとしてはこんな感じです👇🏻    15秒の映像を2個作る    警察の拡声器",
+      "summary": "",
+      "score": 38,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "プロンプトエンジニアリング",
+        "AIツール"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-24T00:39:03.714Z",
+      "markdown_path": "data/notebooklm_sources/SNSで500万回再生！AIだけで「ニュース風映像」を作る方法を解説｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826836",
+      "url": "https://ai-kasegu-lab.com/midjourney-style-reference-character-consistency/",
+      "title": "Midjourneyスタイルリファレンスで一貫性あるキャラクター生成【2026年完全版】",
+      "excerpt": "Midjourneyのスタイルリファレンス機能を使えば、同じキャラクターを一貫したスタイルで生成できます。--srefパラメータの使い方から実践テクニックまで、副業クリエイター向けに徹底解説します。",
+      "summary": "",
+      "score": 30,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Midjourney",
+        "画像生成AI",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-24T00:39:22.788Z",
+      "markdown_path": "data/notebooklm_sources/Midjourneyスタイルリファレンスで一貫性あるキャラクター生成【2026年完全版】.md"
+    },
+    {
+      "id": "1821826839",
+      "url": "https://note.com/douga_hanbai/n/n8e43312dacb3",
+      "title": "Remotion×ショート動画量産——個人で月300本のYouTube動画を回す完全ワークフロー｜HIROKI",
+      "excerpt": "はじめに     「ショート動画で稼ぎたい。でも編集が間に合わない」——この悩み、ここ二年でぼくの周りでも本当に増えました。YouTubeショート、TikTok、Instagram Reels、どのプラットフォームも「投稿頻度」が最重要KPIになっていて、週1本では絶対に伸びない。最低でも1日1本、できれば1日3本。月にすれば90本から100本がスタートラインで、本気で収益化を狙うなら月300本という数字すら現実的なラインに入ってきます。  ところが、Premiere Proでカット編集して、字幕を打って、BGMを入れて、画像を差し替えて……というのを愚直にやっていると、1本に2時間は",
+      "summary": "",
+      "score": 85,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Remotion",
+        "動画自動生成",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-24T00:40:02.721Z",
+      "markdown_path": "data/notebooklm_sources/Remotion×ショート動画量産——個人で月300本のYouTube動画を回す完全ワークフロー｜HIROKI.md"
     }
   ]
 }
