@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-24T00:40:02.721Z",
+  "updated_at": "2026-08-25T00:39:17.437Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7126,6 +7126,150 @@
       "status": "unread",
       "analyzed_at": "2026-08-24T00:40:02.721Z",
       "markdown_path": "data/notebooklm_sources/Remotion×ショート動画量産——個人で月300本のYouTube動画を回す完全ワークフロー｜HIROKI.md"
+    },
+    {
+      "id": "1832116099",
+      "url": "https://vidiq.com/youtube-stats/channel/@redcatyt/",
+      "title": "Red Cat's YouTube Channel Statistics",
+      "excerpt": "Comprehensive YouTube channel statistics for Red Cat, featuring 2,850,000 subscribers and 866,830,728 total views. This dataset includes detailed performance metrics such as subscriber growth, video views, engagement rates, and estimated revenue. The channel operates in the Gaming category and is based in UA. Track 4,856 videos with daily and monthly performance data, including view counts, subscriber changes, and earnings estimates. Analyze growth trends, engagement patterns, and performance within the channel's category.",
+      "summary": "",
+      "score": 5,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "YouTube",
+        "統計",
+        "ソーシャルメディア"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-25T00:36:35.208Z",
+      "markdown_path": "data/notebooklm_sources/Red Cat's YouTube Channel Statistics.md"
+    },
+    {
+      "id": "1832116043",
+      "url": "https://www.opus.pro/blog/viral-ai-video-styles-2026",
+      "title": "17 Viral AI Video Styles of 2026 (And the Prompts to Make... - OpusClip Blog",
+      "excerpt": "The AI video aesthetic is no longer one thing. It's seventeen. We catalogued the styles racking up the most views on TikTok, Reels, and Shorts in 2026 — and…",
+      "summary": "",
+      "score": 40,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "プロンプトエンジニアリング",
+        "ショート動画"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-25T00:36:52.123Z",
+      "markdown_path": "data/notebooklm_sources/17 Viral AI Video Styles of 2026 (And the Prompts to Make... - OpusClip Blog.md"
+    },
+    {
+      "id": "1821826844",
+      "url": "https://note.com/genel/n/n3dd97a52a295?magazine_key=m6978390622df",
+      "title": "SNSでよく見る「毛糸の料理ASMR動画」をAIだけで作る方法｜ChatGPT images 2.0｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは、GENELです。  今回は、SNSでよく見かける 「ASMR × 料理アニメ」 という、毛糸アート風の料理ASMRショート動画の作り方を紹介します！         ChatGPT Imagesで10シーンの画像を作る  まずは、動画のスタートフレームになる画像をChatGPTで作りました。  最初は、   全部が毛糸でできた世界で、手だけ実写の料理動画を作りたい。 ナポリタンを作るシーンを10枚生成して。   くらいのシンプルな指示から始めました。  すると、それっぽい画像は出てきたのですが、実際に動画で使おうとすると、いろいろ気になる部分がありました。  たとえば、",
+      "summary": "",
+      "score": 40,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "画像生成AI",
+        "動画生成AI",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-25T00:37:11.954Z",
+      "markdown_path": "data/notebooklm_sources/SNSでよく見る「毛糸の料理ASMR動画」をAIだけで作る方法｜ChatGPT images 2.0｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826837",
+      "url": "https://zenn.dev/neuvecom/articles/f823265da90b7f",
+      "title": "Pythonだけで YouTube 動画を全自動生成するパイプラインを作った話",
+      "excerpt": "「テーマを入力するだけで、YouTube の動画が1本できあがる」",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "自動化パイプライン",
+        "Gemini",
+        "動画生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-25T00:37:29.161Z",
+      "markdown_path": "data/notebooklm_sources/Pythonだけで YouTube 動画を全自動生成するパイプラインを作った話.md"
+    },
+    {
+      "id": "1821826833",
+      "url": "https://qiita.com/yongyong/items/9c034177f4330ca1899f",
+      "title": "Gemini ファミリーを組み合わせて、雑学ショート動画を全自動生成するパイプラインを作った - Qiita",
+      "excerpt": "Gemini ファミリーを組み合わせて、雑学ショート動画を全自動生成するパイプラインを作った",
+      "summary": "",
+      "score": 85,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "自動化パイプライン",
+        "Gemini",
+        "マルチモーダルAI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-25T00:38:04.984Z",
+      "markdown_path": "data/notebooklm_sources/Gemini ファミリーを組み合わせて、雑学ショート動画を全自動生成するパイプラインを作った - Qiita.md"
+    },
+    {
+      "id": "1821826835",
+      "url": "https://zenn.dev/my_agent_works/articles/hyperframes-sns-conversation-reels",
+      "title": "HTMLを書くと動画になる ― HyperFramesでLINE風/X風の会話リールを量産する",
+      "excerpt": "SNSの縦型ショート動画(リール)を継続運用しようとすると、編集ソフトでの手作業がボトルネックになります。特に「LINE風のトーク画面」「X(Twitter)風のスレッド」のようなUI再現系の演出は、動画編集ソフトで作ると素材づくりが大変で、テキスト差し替えのたびに作業が発生します。",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "自動化パイプライン",
+        "HyperFrames",
+        "動画生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-25T00:38:41.378Z",
+      "markdown_path": "data/notebooklm_sources/HTMLを書くと動画になる ― HyperFramesでLINE風_X風の会話リールを量産する.md"
+    },
+    {
+      "id": "1821826828",
+      "url": "https://zenn.dev/n8n/articles/claude-code-video-editing-2026-state",
+      "title": "Claude Codeで動画編集はどこまで実用か（2026年3月版）",
+      "excerpt": "「Claude Codeで動画編集できるらしい」という投稿が急増しています。",
+      "summary": "",
+      "score": 78,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "Remotion",
+        "動画自動生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-25T00:38:59.089Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeで動画編集はどこまで実用か（2026年3月版）.md"
+    },
+    {
+      "id": "1821826829",
+      "url": "https://note.com/mayu_hiraizumi/n/nd66cfebfe5d0",
+      "title": "ComfyUIでMiniMax H3の動画生成（T2V）をテスト｜まゆひらa",
+      "excerpt": "Last update 8-4-2026 ※ 初期リリースのため、随時、記事の修正を行う場合があります。お気づきの点があれば、遠慮無くコメントでお知らせください。 ※ 関連記事は、ComfyUI の記事一覧にまとめてあります。 ※ noteの質問箱 へ気軽に声をお寄せください。質問以外のメッセージの方が嬉しいかもしれません。回答は気まぐれなのでご了承ください。       ■ 0. 概要  ▼ 0-0. はじめに  　本記事では Claude Code で調査・作成した内容を含んでいますが、手作業で記事全体を確認・編集・加筆しています。また、動画を生成するプロンプトは Gem",
+      "summary": "",
+      "score": 52,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ComfyUI",
+        "MiniMax",
+        "動画生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-25T00:39:17.437Z",
+      "markdown_path": "data/notebooklm_sources/ComfyUIでMiniMax H3の動画生成（T2V）をテスト｜まゆひらa.md"
     }
   ]
 }
