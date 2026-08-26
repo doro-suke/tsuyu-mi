@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-25T00:39:17.437Z",
+  "updated_at": "2026-08-26T00:40:13.426Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7270,6 +7270,60 @@
       "status": "unread",
       "analyzed_at": "2026-08-25T00:39:17.437Z",
       "markdown_path": "data/notebooklm_sources/ComfyUIでMiniMax H3の動画生成（T2V）をテスト｜まゆひらa.md"
+    },
+    {
+      "id": "1821826834",
+      "url": "https://qiita.com/rinfo4080/items/6989ec51bde7443946e9",
+      "title": "GPT・Gemini・AI動画生成ツールで個人向けYouTube Shorts制作パイプラインを構築してみた - Qiita",
+      "excerpt": "GPT・Gemini・AI動画生成ツールで個人向けYouTube Shorts制作パイプラインを構築してみた",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "プロンプトエンジニアリング",
+        "パイプライン構築"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-26T00:37:44.295Z",
+      "markdown_path": "data/notebooklm_sources/GPT・Gemini・AI動画生成ツールで個人向けYouTube Shorts制作パイプラインを構築してみた - Qiita.md"
+    },
+    {
+      "id": "1821826831",
+      "url": "https://note.com/auto_science/n/n1f971a30c744",
+      "title": "ComfyUIを使って1枚のグリッド画像から『なめらかなAI動画』を作る！ Python × ComfyUI（RIFE）で実現｜AutoScience",
+      "excerpt": "Stable DiffusionやNovelAIなどの画像生成AIで「動きのつながった連続画像」を出力するとき、4×4のグリッド画像（スプライトシート）にまとめて出力する手法がよく使われます。  しかしこのグリッド画像から動画を作ろうとすると、すぐに2つの技術的な壁にぶつかります。  1. 白枠ノイズ（チカチカ）が発生する  グリッドの境界線を単純なピクセル等分割で切り出すと、割り切れなかった端数や境界の白い線が少しだけ映り込んでしまいます。動画にしたとき、キャラの端がチカチカと光るノイズになります。  2. コマ数が少なくてカクカクする  4×4グリッドから切り出せるのはわずか16枚",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ComfyUI",
+        "Python",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-26T00:38:22.030Z",
+      "markdown_path": "data/notebooklm_sources/ComfyUIを使って1枚のグリッド画像から『なめらかなAI動画』を作る！ Python × ComfyUI（RIFE）で実現｜AutoScience.md"
+    },
+    {
+      "id": "1821826818",
+      "url": "https://note.com/freelife_creator/n/n2636ed67ed6b",
+      "title": "AI動画生成で月3万円!TikTok・YouTube Shorts収益化の始め方｜かける | AI活用 ライフクリエイター",
+      "excerpt": "こんにちは、かけるです!  最近、AIツールがめちゃくちゃ進化してるの知ってます?特に動画生成AIがヤバいんですよ。今まで「動画編集なんて難しそう...」って思ってた人でも、マジで簡単に収益化できる時代になりました。  今日は、AI動画生成を使ってTikTokやYouTube Shortsで月3万円を稼ぐ具体的な方法を全部教えちゃいます!  なぜ今、AI動画なのか?",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "SNS収益化",
+        "副業"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-26T00:40:13.426Z",
+      "markdown_path": "data/notebooklm_sources/AI動画生成で月3万円!TikTok・YouTube Shorts収益化の始め方｜かける _ AI活用 ライフクリエイター.md"
     }
   ]
 }
