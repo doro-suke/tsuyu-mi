@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-26T00:40:13.426Z",
+  "updated_at": "2026-08-27T05:37:22.341Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7324,6 +7324,78 @@
       "status": "unread",
       "analyzed_at": "2026-08-26T00:40:13.426Z",
       "markdown_path": "data/notebooklm_sources/AI動画生成で月3万円!TikTok・YouTube Shorts収益化の始め方｜かける _ AI活用 ライフクリエイター.md"
+    },
+    {
+      "id": "1821826832",
+      "url": "https://note.com/genel/n/nc3ed564eff8f?magazine_key=m03efbb766a9a",
+      "title": "Flux.2 ProとGrokで超リアルなAI画像を生成する方法を見つけた｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは！GENELです。  先日Xに投稿した ・昔のビデオカメラのような質感の画像 ・リアルな女の子の画像を生成できるプロンプト ですが、  「この質感がもうAIで出せる時代なのか…」 「このプロンプト、確かにありだな」  と、多くの方から好評いただきました！ 昔のビデオカメラのような質感の画像リアルな女の子の画像（Grok） 最近、自分でも「あ、これはもうAIって気づけなくなるかも…」と思う瞬間が増えてきてる気がします。  毎日いろんなツールを触っている自分でさえそうなんだから、初めて見た人はもっとびっくりするだろうなーと。  ということで今回は、最近試してよかった2つのことと、",
+      "summary": "",
+      "score": 30,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "画像生成AI",
+        "Flux",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-27T05:35:32.776Z",
+      "markdown_path": "data/notebooklm_sources/Flux.2 ProとGrokで超リアルなAI画像を生成する方法を見つけた｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826830",
+      "url": "https://note.com/kongo_jun/n/n67569572604f",
+      "title": "ComfyUIでMiniMax H3を試してみた｜混合順",
+      "excerpt": "ついにMiniMax H3がオープンソースでリリースされましたねぇ。 謎の地域によってライセンス制限があったりしますが、日本ではとりあえず問題なく使えそうです。（細かくはライセンスを確認してください。） \n     \n         \n             \n\n\nComfy-Org/MiniMax-H3 · Hugging Face\n\n\nWe’re on a journey to advance and democratize artificial inte\n\n\nhuggingface.co\n\n\n\n \n\n         \n     \n 課金ノードで試した時は、一貫性が高くていい",
+      "summary": "",
+      "score": 55,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ComfyUI",
+        "MiniMax H3",
+        "動画生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-27T05:35:51.424Z",
+      "markdown_path": "data/notebooklm_sources/ComfyUIでMiniMax H3を試してみた｜混合順.md"
+    },
+    {
+      "id": "1821826825",
+      "url": "https://www.youtube.com/watch?v=XyPoUW2jJvs&ab_channel=%E3%81%82%E3%81%84%E3%81%A6%E3%81%83%E3%81%AE%E3%81%AF%E3%81%98%E3%82%81%E3%81%A6%E3%81%AE%E3%83%87%E3%82%B8%E3%82%BF%E3%83%AB%E3%81%8A%E7%B5%B5%E3%81%8B%E3%81%8D",
+      "title": "Watch",
+      "excerpt": "With ChatGPT4o, I was able to make a realistic animated AI video by turning my face into the popular anime style. I was able to make it using just my smartphone, so I'll explain how to make it!\n\nWebsite used → Hedra\nhttps://www.hedra.com/\n\nBGM here ↓\n\n   / audiolibrary  \n\nDOVA-SYNDROME\nhttps://dova-s.jp/_mobile\n\n#videogeneratorai #chatgpt #Chat GPT #chat GPT #chatgpt4o #animation #anime #hedra #ai #AI",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "ChatGPT",
+        "Hedra"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-27T05:36:09.309Z",
+      "markdown_path": "data/notebooklm_sources/Watch.md"
+    },
+    {
+      "id": "1821826824",
+      "url": "https://www.active-note.jp/movie/chatgpt-script-prompt/",
+      "title": "ChatGPTでショート動画の視聴率が伸びる！賢い台本を作るコツ - 集まる集客®︎総研",
+      "excerpt": "最近ショート動画をやってみてるんすけど、全然再生回数伸びないんすよね〜涙 まるおくん、そんな時こそChatGPTだ！ リール、TikTok、ショート動画、今これらが集客に必須とされてきているよ。けれども、いくら頑張ってもなかなか再生回数が伸びなかったり、話すのが苦手で上手く話せないからと億劫になって撮影が続けられないこともあるよね。 ここでChatGPTの出番だ！ChatGPTに考えてもらうことで、いつもより再生回数が上がるかもしれないよ。 この記事でわかること ・ChatGPTを使った、視聴率が伸びるショート動画台本の作り方のコツ 台本を作ったあとはVrew（ブリュー）を使えば一瞬で動画がで",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ChatGPT",
+        "SNSマーケティング",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-27T05:37:22.341Z",
+      "markdown_path": "data/notebooklm_sources/ChatGPTでショート動画の視聴率が伸びる！賢い台本を作るコツ - 集まる集客®︎総研.md"
     }
   ]
 }
