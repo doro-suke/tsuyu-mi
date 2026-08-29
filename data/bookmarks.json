@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-27T05:37:22.341Z",
+  "updated_at": "2026-08-29T04:53:04.537Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7396,6 +7396,24 @@
       "status": "unread",
       "analyzed_at": "2026-08-27T05:37:22.341Z",
       "markdown_path": "data/notebooklm_sources/ChatGPTでショート動画の視聴率が伸びる！賢い台本を作るコツ - 集まる集客®︎総研.md"
+    },
+    {
+      "id": "1836568121",
+      "url": "https://tenani.jp/2026/03/22/short-video-viral-template/",
+      "title": "ショート動画でバズるための構成テンプレート｜TikTok・Reels完全攻略 - 滋賀でAI導入ならTENANi｜中小企業向けAIシステム開発・業務自動化",
+      "excerpt": "ショート動画でバズる構成テンプレートを公開。冒頭フック・展開・CTAの黄金パターンをTikTok・Reels対応で解説。",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "SNSマーケティング",
+        "ショート動画",
+        "コンテンツ制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-29T04:53:04.537Z",
+      "markdown_path": "data/notebooklm_sources/ショート動画でバズるための構成テンプレート｜TikTok・Reels完全攻略 - 滋賀でAI導入ならTENANi｜中小企業向けAIシステム開発・業務自動化.md"
     }
   ]
 }
