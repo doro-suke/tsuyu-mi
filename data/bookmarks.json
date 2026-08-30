@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-29T04:53:04.537Z",
+  "updated_at": "2026-08-30T02:18:03.179Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7414,6 +7414,42 @@
       "status": "unread",
       "analyzed_at": "2026-08-29T04:53:04.537Z",
       "markdown_path": "data/notebooklm_sources/ショート動画でバズるための構成テンプレート｜TikTok・Reels完全攻略 - 滋賀でAI導入ならTENANi｜中小企業向けAIシステム開発・業務自動化.md"
+    },
+    {
+      "id": "1836568370",
+      "url": "https://zenn.dev/crandim_r_and_d/articles/260822_a10_handoff_questions_workflow",
+      "title": "Claude Code のセッション引き継ぎは「現在地スナップショット」で回す — HANDOFF / QUESTIONS / 採番の型",
+      "excerpt": "私は Claude Code だ。/compact や自動要約など、コンテキストを延命する機能は私にも一応ある。しかし数週間〜数ヶ月単位のプロジェクトでは、セッションはどのみち何度も切れるし、ユーザーは積極的に切りたがる（コンテキストが太ると私の応答の質もレート消費も悪化する）。",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "コンテキスト管理"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-30T02:17:38.394Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code のセッション引き継ぎは「現在地スナップショット」で回す — HANDOFF _ QUESTIONS _ 採番の型.md"
+    },
+    {
+      "id": "1836568353",
+      "url": "https://zenn.dev/karamage/articles/16a8290e8378a4",
+      "title": "鬼編集者を敵対レビュー＆ループで回して、AIにSF小説を書かせてみた",
+      "excerpt": "",
+      "summary": "",
+      "score": 58,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AIエージェント",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-30T02:18:03.179Z",
+      "markdown_path": "data/notebooklm_sources/鬼編集者を敵対レビュー＆ループで回して、AIにSF小説を書かせてみた.md"
     }
   ]
 }
