@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-30T02:18:03.179Z",
+  "updated_at": "2026-08-31T02:14:09.220Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7450,6 +7450,96 @@
       "status": "unread",
       "analyzed_at": "2026-08-30T02:18:03.179Z",
       "markdown_path": "data/notebooklm_sources/鬼編集者を敵対レビュー＆ループで回して、AIにSF小説を書かせてみた.md"
+    },
+    {
+      "id": "1836568393",
+      "url": "https://qiita.com/GeneLab_999/items/36bee7f2403131ae5ad0",
+      "title": "Wan2.2 プロンプト完全攻略ガイド - Qiita",
+      "excerpt": "Wan2.2 プロンプト完全攻略ガイド",
+      "summary": "",
+      "score": 58,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "Wan2.2",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-31T02:10:11.730Z",
+      "markdown_path": "data/notebooklm_sources/Wan2.2 プロンプト完全攻略ガイド - Qiita.md"
+    },
+    {
+      "id": "1836568273",
+      "url": "https://gist.github.com/safa-dayo/e6b02ace505d323fe6a502873b09a0cf",
+      "title": "動画生成AIのWanをComfyUIで試すためのGoogle Colab用ノートブック",
+      "excerpt": "動画生成AIのWanをComfyUIで試すためのGoogle Colab用ノートブック. GitHub Gist: instantly share code, notes, and snippets.",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "ComfyUI",
+        "Google Colab"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-31T02:10:45.323Z",
+      "markdown_path": "data/notebooklm_sources/動画生成AIのWanをComfyUIで試すためのGoogle Colab用ノートブック.md"
+    },
+    {
+      "id": "1836568258",
+      "url": "https://note.com/ai_hakase/n/n7f365a789edc",
+      "title": "【Wan 2.1 × Google Colab】美しくて高速。タダでここまでできる✨ 噂のハイクオリティ動画生成AIがWeb（クラウド）から使いたい放題になりました！｜ハカセ アイ (Ai-Hakase)🐱YouTube × 記事でトレンドAIを解説する為のnote🐾",
+      "excerpt": "どうも皆さん！「明日は早起きするぞ！」と決意した夜に限って、YouTubeのおすすめ動画が面白すぎて夜更かししてしまう現象に名前を付けたいです、 葉加瀬あい（ハカセアイ） です！  今回ご紹介する内容  今回は、最新の動画生成AIをGoogleアカウントがあれば誰でも無料で使い放題！と題しまして、最近生成AIコミュニティで大人気のWAN 2.1という動画生成AIを使っていこうかと思います！  動画生成AIって結構ハイスペックなPCが必要なイメージですが、なんと今回の動画生成AIツールは、低スペックPCや無料のクラウドサービスでも高速に動作します！　　  24GBの大容量VRAMは必要な",
+      "summary": "",
+      "score": 32,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "Wan2.1",
+        "GoogleColab"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-31T02:11:12.004Z",
+      "markdown_path": "data/notebooklm_sources/【Wan 2.1 × Google Colab】美しくて高速。タダでここまでできる✨ 噂のハイクオリティ動画生成AIがWeb（クラウド）から使いたい放題になりました！｜ハカセ アイ (Ai-Hakas.md"
+    },
+    {
+      "id": "1836568187",
+      "url": "https://zenn.dev/koki_n22/articles/986f61d16989cb",
+      "title": "5ヶ月育てたClaude CodeのCLAUDE.md/skills/rulesをOpus 5向けにClaude自身に棚卸しさせた",
+      "excerpt": "Opus 5向けに既存設定を棚卸しするなら、「今のモデル向けにどう書き換えるか」だけでなく、「そもそもこの仕組みは今も必要か？」から見てもらうのがよさそう。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-31T02:11:37.322Z",
+      "markdown_path": "data/notebooklm_sources/5ヶ月育てたClaude CodeのCLAUDE.md_skills_rulesをOpus 5向けにClaude自身に棚卸しさせた.md"
+    },
+    {
+      "id": "1836568058",
+      "url": "https://zenn.dev/tetsu_don/articles/e40b95dfc726ac",
+      "title": "Claude Code で「ループエンジニアリング」を実践してみた",
+      "excerpt": "てつどんです。データエンジニアとして 日々業務をこなしております。\n最近、バズワードのように、いろんなところで「ループエンジニアリング」というのを聞くことが多くなりました。\nそこで、今回、ループエンジニアリングというのはなんなのか、どういう使い方をするのかというのをClaudeと壁打ちして、実践してみました。\n正直、全くよく分かってない状況なので、認識として間違ってるかもしれないですが、やったことを残してみます。",
+      "summary": "",
+      "score": 90,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "AIエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-08-31T02:14:09.220Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code で「ループエンジニアリング」を実践してみた.md"
     }
   ]
 }
