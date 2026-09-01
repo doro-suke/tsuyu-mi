@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-31T02:14:09.220Z",
+  "updated_at": "2026-09-01T02:42:14.018Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7540,6 +7540,42 @@
       "status": "unread",
       "analyzed_at": "2026-08-31T02:14:09.220Z",
       "markdown_path": "data/notebooklm_sources/Claude Code で「ループエンジニアリング」を実践してみた.md"
+    },
+    {
+      "id": "1836568157",
+      "url": "https://www.offbeat-inc.co.jp/column/vertical-video-hook-3sec-retention-structure-1779843725177",
+      "title": "縦型動画広告の冒頭3秒フック設計｜離脱率を71%削減する構造分解 | Off Beat株式会社",
+      "excerpt": "縦型動画広告の勝敗は3秒ではなく0.5秒で決まる時代に。71%の離脱判断が冒頭3秒で確定する2026年の最新データを基に、フック設計5パターンと15秒リズム構造、検証KPIまで実装可能な形で解説します。",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画広告",
+        "マーケティング",
+        "クリエイティブ設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-01T02:30:13.070Z",
+      "markdown_path": "data/notebooklm_sources/縦型動画広告の冒頭3秒フック設計｜離脱率を71%削減する構造分解 _ Off Beat株式会社.md"
+    },
+    {
+      "id": "1821826827",
+      "url": "https://zenn.dev/horatjp/articles/ai-video-with-claude-code",
+      "title": "Claude CodeでAI動画づくりを自動化する — Gemini APIひとつで30秒ショート動画",
+      "excerpt": "Claude Codeに頼んで、セリフ・音つきの30秒ショート動画を作ります。 プロンプト(依頼文)はすべてコピペできる形で載せているので、上から順に進めれば同じようなものが作れます。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "GeminiAPI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-01T02:42:14.018Z",
+      "markdown_path": "data/notebooklm_sources/Claude CodeでAI動画づくりを自動化する — Gemini APIひとつで30秒ショート動画.md"
     }
   ]
 }
