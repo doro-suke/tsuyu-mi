@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-01T02:42:14.018Z",
+  "updated_at": "2026-09-02T01:53:13.976Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7576,6 +7576,149 @@
       "status": "unread",
       "analyzed_at": "2026-09-01T02:42:14.018Z",
       "markdown_path": "data/notebooklm_sources/Claude CodeでAI動画づくりを自動化する — Gemini APIひとつで30秒ショート動画.md"
+    },
+    {
+      "id": "1836568091",
+      "url": "https://zenn.dev/yamitake/articles/cmux-claude-worktree-parallel-dev",
+      "title": "cmux × claude --worktree で爆速並列開発 〜疎結合とシンプルさがコツ〜",
+      "excerpt": "AIコーディングエージェントを使っていると、こんな欲が出てきます。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "並列開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-02T01:50:04.945Z",
+      "markdown_path": "data/notebooklm_sources/cmux × claude --worktree で爆速並列開発 〜疎結合とシンプルさがコツ〜.md"
+    },
+    {
+      "id": "1836567920",
+      "url": "https://qiita.com/uchiyamahesuke/items/dbc77df3632f2771ddb9",
+      "title": "現役映像クリエイターが解説｜伝わる映像を作るためのプロ編集テクニック - Qiita",
+      "excerpt": "現役映像クリエイターが解説｜伝わる映像を作るためのプロ編集テクニック",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "映像編集",
+        "情報設計",
+        "動画制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-02T01:51:01.799Z",
+      "markdown_path": "data/notebooklm_sources/現役映像クリエイターが解説｜伝わる映像を作るためのプロ編集テクニック - Qiita.md"
+    },
+    {
+      "id": "1836567910",
+      "url": "https://qiita.com/uchiyamahesuke/items/8b088fde1f3dcd307fba",
+      "title": "プロ映像クリエイターが教える！ショート動画編集で視聴者を惹きつける技術と考え方 - Qiita",
+      "excerpt": "プロ映像クリエイターが教える！ショート動画編集で視聴者を惹きつける技術と考え方",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画編集",
+        "コンテンツ制作",
+        "マーケティング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-02T01:51:44.777Z",
+      "markdown_path": "data/notebooklm_sources/プロ映像クリエイターが教える！ショート動画編集で視聴者を惹きつける技術と考え方 - Qiita.md"
+    },
+    {
+      "id": "1836567903",
+      "url": "https://qiita.com/uchiyamahesuke/items/1ee9e4b3fddef05af6e4",
+      "title": "ショート動画編集で作業効率を上げるために実践している5つの工夫 - Qiita",
+      "excerpt": "ショート動画編集で作業効率を上げるために実践している5つの工夫",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画編集",
+        "業務効率化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-02T01:52:02.952Z",
+      "markdown_path": "data/notebooklm_sources/ショート動画編集で作業効率を上げるために実践している5つの工夫 - Qiita.md"
+    },
+    {
+      "id": "1821826826",
+      "url": "https://ai-powered.hatenablog.com/entry/talk-script-writing-at-chatgpt",
+      "title": "ChatGPTにTikTokなどのショート動画の台本を書かせる方法（プロンプト指示文の例） - AI Powerd Blog",
+      "excerpt": "前回、Vrewというアプリを使って、AIにショート動画を生成させる方法をご紹介しました。 ai-powered.hatenablog.com このショート動画の台本（ナレーション原稿）もAIに作ってもらったほうが効率的ですよね？ 今回は、ChatGPTを使ってショート動画の台本を生成するやり方を解説していきます。 ChatGPTにショート動画の台本を書かせるプロンプト指示文 #テーマ #前提条件 #制約条件 #出力条件 ChatGPTがうまく台本を書かない場合 ChatGPTに台本を書くプロンプト指示文を送る ChatGPTに書かせた台本を調整する ChatGPTにショート動画の台本を書かせる…",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "プロンプトエンジニアリング",
+        "ChatGPT",
+        "コンテンツ作成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-02T01:52:20.539Z",
+      "markdown_path": "data/notebooklm_sources/ChatGPTにTikTokなどのショート動画の台本を書かせる方法（プロンプト指示文の例） - AI Powerd Blog.md"
+    },
+    {
+      "id": "1821826822",
+      "url": "https://note.com/genel/n/n41c2f26c55c6?magazine_key=m6978390622df",
+      "title": "ChatGPT Images 2.0 × ElevenLabsで作る、昭和の白黒テレビ風動画の作り方｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは、GENELです。  今回はChatGPT Images 2.0 と ElevenLabsでつくる、「昭和の白黒テレビ風の動画」の作り方を、プロンプトも含めご紹介します。   ChatGPT Images 2.0 × ElevenLabs 昭和のアナウンサー風の声をAIで再現。  音声はElevenLabsの「ボイスデザイン」を使用。 プロンプトだけでここまで作れます！ pic.twitter.com/QOO3vX0VqD — GENEL | AIを用いた動画制作 (@genel_ai) May 11, 2026 \n\n\n ChatGPT Images 2.0で昭和風の画像生成",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "プロンプトエンジニアリング",
+        "ElevenLabs"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-02T01:52:38.920Z",
+      "markdown_path": "data/notebooklm_sources/ChatGPT Images 2.0 × ElevenLabsで作る、昭和の白黒テレビ風動画の作り方｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826819",
+      "url": "https://note.com/lofty_sage18/n/neba6403f867f",
+      "title": "AI動画生成で収益化！0から始めるショート動画マネタイズの道｜まるっとAI生活",
+      "excerpt": "はじめに  最近SNSで見かける「不気味にリアルなアニメ」「顔出しなしでバズってる動画」―― あれ、全部AIで作れます。しかも個人で、無料で、いますぐ。  しかも、作るだけじゃなく実際に収益を得ている人たちもいます。  この記事では、AIを使って動画を作り、それを収益につなげるまでのステップを具体的なツール・工程・収益ルート付きで解説します。   ✅ ステップ①：AIで「短くて見たくなる動画」を作る  使うツールは以下の3つだけでOK：  ツール\t用途\t備考  ChatGPT\t台本（ナレーションやセリフ）作成\tテーマに応じて構成してくれる Pika Labs / Runway\t映像生成",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "ショート動画",
+        "マネタイズ"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-02T01:52:56.512Z",
+      "markdown_path": "data/notebooklm_sources/AI動画生成で収益化！0から始めるショート動画マネタイズの道｜まるっとAI生活.md"
+    },
+    {
+      "id": "1821826820",
+      "url": "https://zenn.dev/geektao/articles/c60de919b7b4c2",
+      "title": "AI動画生成の新時代：初心者から上級者まで使える完全ガイド",
+      "excerpt": "こんにちは！AI技術の急速な発展により、動画制作の世界が大きく変わろうとしています。今日は、誰でも簡単に高品質な動画を生成できるAI動画生成技術について、詳しく解説します。",
+      "summary": "",
+      "score": 35,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "プロンプトエンジニアリング",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-02T01:53:13.976Z",
+      "markdown_path": "data/notebooklm_sources/AI動画生成の新時代：初心者から上級者まで使える完全ガイド.md"
     }
   ]
 }
