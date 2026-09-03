@@ -1,5 +1,5 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/9/2 1:53:29
+最終更新日: 2026/9/3 2:14:46
 対象記事数: 50 件 (未読かつHigh優先度)
 
 ---
@@ -8508,7 +8508,373 @@ git 管理外のファイルにはそこにしか無い知識を置かない。�
 
 ---
 
-## 20. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
+## 20. [Claude Code に「同じ指摘を二度させない」仕組みを hook で作った](https://zenn.dev/nozomi720/articles/claude_code_hooks_feedback)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/9/3
+- **タグ**: #ClaudeCode, #AI駆動開発, #プロンプトエンジニアリング
+
+### 本文
+同じ指摘を、何度も繰り返している
+Claude Code を使っていて一番消耗するのは、実装の質そのものより 「先週も言ったことを今日も言っている」 ことでした。
+
+「テストを先に書いて」
+「テストは hook が自動実行するから Bash で手動実行しないで」
+「GitHub Actions の uses: は SHA でピン留めして」
+
+CLAUDE.md に書いても、セッションが長くなると効き目が薄れます。そもそも「何回言ったか」がどこにも残らないので、こちらも「これ前に言ったっけ？」と分からなくなる。
+そこで、指摘そのものをファイルとして永続化し、指摘回数（count）に応じて hook の強制力を段階的に上げる 仕組みを作りました。現在 ~/.claude/feedback/ には 47 個のルールが溜まっていて、そのうち 14 個は hook が機械的に検知できる形になっています。
+
+
+
+count
+ルール数
+
+
+
+
+1
+31
+
+
+2
+4
+
+
+3
+5
+
+
+4
+2
+
+
+5
+2
+
+
+6
+3
+
+
+
+
+ 1指摘 = 1ファイル
+ルールは ~/.claude/feedback/<topic>.md に1つずつ置きます。実際に運用している tdd.md はこうなっています。
+---
+name: tdd
+description: 実装前にテストを書くTDDアプローチを必ず取ること
+type: feedback
+count: 6
+enforce:
+  - event: pre_edit
+    path: '**/*.go'
+    absent_sibling: '{stem}_test.go'
+    message: 'TDD: 実装ファイルを書く前にテストファイル(Red)を先に書くこと。'
+    severity: ask
+  - event: pre_edit
+    path: '**/*.ts'
+    absent_sibling: '{stem}.test.ts'
+    message: 'TDD: 実装ファイルを書く前にテストファイル(Red)を先に書くこと。'
+    severity: ask
+---
+
+実装を始める前に必ずテストを先に書くこと。テストなしで実装を進めてはいけない。
+
+**Why:** ユーザーはTDDを要求しており、テストなしの実装は受け入れられない。
+
+**How to apply:** 新しい機能・パッケージを作成するときはもちろん、リファクタリング
+時も必ずテストファイルを先に書いてからプロダクションコードを書く。
+ポイントは frontmatter です。
+
+
+count … 同じ指摘を受けた回数。強制力の強さそのもの
+
+
+enforce … hook が機械的に検知するための条件（後述）
+本文 … Claude が読む用の説明
+
+
+ 「言い訳」を書かせる
+本文には **Why:**（なぜ指摘されたか）と **How to apply:**（いつ適用するか）に加えて、**言い訳:** というセクションを書くルールにしています。
+**言い訳:** 「大量のファイルを一括変更したから壊れていないか自分の目で確認したい」
+というのは正当な理由に思えるが、それこそがこのルールが繰り返し指摘されている理由
+そのもの。変更の規模が大きいほど「今回は特別」と例外扱いしたくなるが、hook は変更
+規模に関わらず同じように結果を返してくれる。
+これが地味に効きます。ルールを破りたくなる場面では、たいてい「今回は特別だから」という理屈が先に立つ。その理屈をあらかじめ潰した文章が同じファイルに書いてあると、逃げ道が塞がれます。
+ルール同士は [[hook_errors_are_yours]] のように Obsidian 風のリンクで繋いでいます。
+
+ count に応じて強制力を上げる
+すべてのルールをいきなり deny（ツール実行を禁止）にすると事故ります。1回目の指摘は状況依存かもしれないし、正規表現の誤検知でツールが止まると作業不能になる。
+なので count から severity を自動決定します。
+def resolve_severity(count, explicit=None, event=None):
+    """ルールに severity の明示があればそれを使い、無ければ count から決める。"""
+    if explicit:
+        return explicit
+    if count >= 5:
+        return "deny"
+    if count >= 3:
+        return "block" if event == "stop_check" else "ask"
+    return "warn"
+
+
+
+count
+pre_bash / pre_edit
+stop_check
+
+
+
+
+>= 5
+deny
+deny
+
+
+3〜4
+ask
+block
+
+
+1〜2
+warn
+warn
+
+
+
+
+
+warn … stderr に出すだけ。処理は続行
+
+ask … ユーザーに確認を求める（Claude は勝手に進めない）
+
+deny / block … ツール呼び出しを止める
+
+1〜2回目は「記録するが縛らない」暫定ルール。3回目で確定ルールになり、5回目で問答無用の禁止になります。指摘の重みは、指摘した回数という一番正直な指標で決まるわけです。
+なお、違反は .violations.jsonl に追記しますが、count は自動インクリメントしません。
+def log_violation(rule, count, severity, event, detail):
+    """~/.claude/feedback/.violations.jsonl に1行 JSON を追記する。
+    count 自体は絶対に書き換えない（ログに残すのみ）。"""
+hook が検知した違反は「Claude がルールを破ろうとした」だけであって、「人間がもう一度指摘した」わけではないからです。ルールの重みを上げる権限は人間側に残しておきます。
+
+ 3つの hook で三段構えにする
+settings.json でこう配線しています。
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      { "hooks": [
+        { "type": "command",
+          "command": "python3 \"$HOME/.claude/hooks/feedback-inject.py\"" }
+      ]}
+    ],
+    "PreToolUse": [
+      { "matcher": "Bash|Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/feedback-guard.py\"" }
+        ]}
+    ],
+    "Stop": [
+      { "hooks": [
+        { "type": "command",
+          "command": "python3 \"$HOME/.claude/hooks/feedback-stop-check.py\"" }
+      ]}
+    ]
+  }
+}
+
+
+
+hook
+イベント
+役割
+
+
+
+
+feedback-inject.py
+UserPromptSubmit
+確定ルールをコンテキストに注入する（読ませる）
+
+
+feedback-guard.py
+PreToolUse
+実行前に止める（やらせない）
+
+
+feedback-stop-check.py
+Stop
+直させる（終わらせない）
+
+
+
+
+ inject — 確定ルールを毎ターン読ませる
+count >= 3 のルールだけを count 降順に並べ、stdout に出します。UserPromptSubmit hook の stdout はそのままコンテキストに入ります。
+rules = [r for r in fr.list_rules() if r["count"] >= 3]
+出力例：
+# 確定フィードバックルール（count >= 3）
+これらは繰り返し指摘された確定ルール。違反すると hook がブロックする。
+
+■ dont_run_tests_manually (これまで 6 回指摘されています)
+テスト/lintはhookに任せ、言語問わずBashから手動実行しない
+...
+「これまで N 回指摘されています」と回数を明示するのが地味に大事で、AI に対して「これは重い」という重み付けを伝えられます。
+問題はコンテキストの圧迫です。ルールが増えれば増えるほど毎ターン食い潰す。そこで 3000 文字の予算を設け、超えたら count の低いものから本文を落として description だけにします。
+def build_output(rules):
+    ordered = sorted(rules, key=lambda r: (-r["count"], r["name"]))
+    blocks = {r["name"]: format_full(r) for r in ordered}
+
+    def assemble():
+        return HEADER + "\n\n".join(blocks[r["name"]] for r in ordered)
+
+    out = assemble()
+    if len(out) <= LIMIT:
+        return out
+
+    # count の低いものから description のみに落とす
+    for r in sorted(ordered, key=lambda r: (r["count"], r["name"])):
+        blocks[r["name"]] = format_brief(r)
+        out = assemble()
+        if len(out) <= LIMIT:
+            return out
+
+    return out[:LIMIT]
+重いルールほど詳しく残る、という優先度付き切り捨てです。
+
+ guard — 実行前に止める
+PreToolUse hook は JSON を返すことでツール実行を制御できます。
+print(json.dumps({
+    "hookSpecificOutput": {
+        "hookEventName": "PreToolUse",
+        "permissionDecision": decision,        # "deny" or "ask"
+        "permissionDecisionReason": reason,
+    }
+}, ensure_ascii=False))
+Bash を止める例（pre_bash）
+「テストを手動実行しない」ルール（count 6 = deny）はこうです。
+enforce:
+  - event: pre_bash
+    when: '(^|&&|\|\||;)\s*(go +(test|vet|build)\b|rspec\b|rubocop\b|pytest\b|pnpm( +run)? +(test|lint)\b|bundle +exec +(rspec|rubocop)\b|git +stash\b)'
+    message: 'テスト/lintはhookに任せ、Bashで手動実行しない。'
+    severity: deny
+git stash まで塞いでいるのがミソです。「自分の変更が原因かどうか調べたいので一旦 stash して既存テストを流す」というもっともらしい検証手順が、実際に3回繰り返されたので明示的に禁止しました。when は正規表現、unless で例外を、check（シェルコマンド）で「非0終了なら違反確定」という条件も足せます。
+ファイル編集を止める例（pre_edit）
+TDD は「実装ファイルの隣にテストファイルが無ければ ask」で表現できます。
+- event: pre_edit
+  path: '**/*.go'
+  absent_sibling: '{stem}_test.go'
+  severity: ask
+{stem} は拡張子を除いたファイル名に展開されます。foo.go を書こうとしたとき foo_test.go が無ければ確認が入る。つまり Red を書かせてから Green を書かせるという順序をハーネス側で強制できます。
+ただしこのままだと foo_test.go 自身を書くときに「foo_test_test.go が無い」と言われて詰みます。なので除外します。
+def _looks_like_test_file(basename):
+    if re.search(r"_test\.go$", basename):
+        return True
+    if re.search(r"\.test\.tsx?$", basename):
+        return True
+    if re.search(r"_spec\.rb$", basename):
+        return True
+    if re.match(r"^test_.*\.py$", basename):
+        return True
+    return False
+
+ stop-check — 直すまで終わらせない
+Stop hook で exit 2 を返すと、Claude は応答を終えられず作業を続行します。ここでは「そのセッションで変更したファイル」に対してシェルコマンドを走らせます。
+GitHub Actions の SHA ピン留めルール（count 3）の例：
+- event: stop_check
+  changed: '.github/workflows/**'
+  check: '! grep -qE "uses:[[:space:]]*[^[:space:]]+@(v[0-9]|main|master|latest)" "$FILE"'
+  message: 'uses: にタグ/ブランチ参照が残っています。コミット SHA でピン留めすること。'
+  severity: block
+$FILE に変更ファイルの絶対パスが入るので、任意の grep / linter を書けます。「タグ参照が残っていたら終わらせない」という強制になります。
+変更ファイルの一覧は、gate 側の hook が書く changed_files.<session>.txt を優先し、無ければ git にフォールバックします。
+for args in (
+    ["git", "diff", "--name-only", "HEAD"],
+    ["git", "ls-files", "--others", "--exclude-standard"],
+):
+当然ながら、直せない場合に無限ループするのが怖いので打ち切りを入れています。
+Stop hook の入力 JSON には stop_hook_active（前回の Stop hook がブロックして継続させた結果の Stop なら true）が入っており、公式にはこれを見てループを防ぐことが推奨されています。ただしフラグを見て即座に諦めると1回もリトライできないので、ここでは自前のカウンタで回数を数えています（このフラグの使い道については、別記事のゲート側でもう少し踏み込みました）。
+MAX_ATTEMPTS = 3
+
+attempts = bump_attempts(ap)
+if attempts >= MAX_ATTEMPTS:
+    sys.stderr.write("3 回連続でブロックしました。ループを打ち切ります。手動確認を。\n")
+    clear_attempts(ap)
+    return 0
+
+ hook 自身が事故らないための作法
+一番大事な設計方針はこれです。
+if __name__ == "__main__":
+    try:
+        sys.exit(main() or 0)
+    except Exception as e:  # hook のバグで作業を止めない
+        sys.stderr.write(f"[feedback-guard] internal error (ignored): {e}\n")
+        sys.exit(0)
+3つの hook すべてで例外を握り潰して exit 0 にしています。hook のバグでユーザーの作業が人質に取られるのが最悪のシナリオなので、検知できないことより止まらないことを優先します。
+
+def load_yaml_text(text):
+    try:
+        import yaml
+        return yaml.safe_load(text)
+    except ImportError:
+        pass
+    if which("yq"):
+        r = subprocess.run(["yq", "-o=json", "."], input=text,
+                           capture_output=True, text=True, timeout=10)
+        if r.returncode == 0:
+            return json.loads(r.stdout)
+    return mini_yaml_load(text)
+mini_yaml_load() は frontmatter のサブセット（マッピング、リスト、引用符付きスカラー）だけを扱う 70 行ほどの自前パーサです。glob マッチも * は / を跨がない・** は跨ぐ・{a,b} 展開という標準的な挙動を自前で実装しています。
+hook 群には hooks/tests/ に pytest を置いています。テスト時は環境変数でルール置き場を差し替えられるようにしました。
+def feedback_dir():
+    """~/.claude/feedback を返す。CLAUDE_FEEDBACK_DIR でテスト時に差し替え可能。"""
+    override = os.environ.get("CLAUDE_FEEDBACK_DIR")
+    if override:
+        return override
+    ...
+
+ 運用してみて
+効いたもの
+
+
+dont_run_tests_manually（count 6 / deny）… 物理的に手が出せないので確実。「hook の結果を待つ」以外の選択肢が消える
+
+tdd（ask）… 止めるのではなく一拍置かせるのが良く、正当な理由があれば通せる
+
+効きにくいもの
+enforce を書けないルールは inject 頼みになります。たとえば「実装を先に書いてから呼び出し元を書く」という順序のルールは、ファイル単体を見ても違反判定ができません。47 個中 14 個しか enforce を持てていないのはそのためです。
+最初は自分の書き方が下手なだけかと思っていたのですが、47 個を全部並べて分類してみると、書ける・書けないの境界は違反が成果物・行動・順序・判断のどこに現れるかで決まっていました。linter や CI に任せるべき領域と、agent hook でないと止められない領域の切り分けは別記事にまとめています。
+
+誤検知の逃がし方
+正規表現ベースなので当然誤爆します。逃がし方を3つ用意しています。
+
+
+unless: に例外パターンを書く
+
+severity: を明示して count による自動昇格を止める
+
+_looks_like_test_file() のようなコード側の除外
+
+次にやりたいこと
+
+
+.violations.jsonl の集計。どのルールが実際に何回発火したかを見れば、形骸化しているルールを捨てられる
+発火頻度から count の更新を提案させる（更新の実行はあくまで人間が判断する）
+
+
+ まとめ
+
+AI に「お願い」しても守られない。ハーネス側で強制する
+
+指摘は口頭ではなくファイルにする。ファイルになれば count で重み付けでき、コードから評価できる
+いきなり禁止せず warn → ask → deny と段階を踏む。誤検知で作業不能になるほうが害が大きい
+hook 自身は絶対に事故らせない（例外は握り潰して exit 0）
+
+同じ hook 基盤を使って「テストが通るまでターンを終わらせない」ゲートも作っています。こちらは .claude/gate.yaml にルールを書くだけでプロジェクトごとに設定できるようにしたもので、別記事に書きました。
+
+---
+
+## 21. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/7/13
@@ -8546,7 +8912,7 @@ git 管理外のファイルにはそこにしか無い知識を置かない。�
 
 ---
 
-## 21. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
+## 22. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/7/22
@@ -9032,7 +9398,7 @@ OSS: github.com/bokuwalily 🐙
 
 ---
 
-## 22. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
+## 23. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/8/31
@@ -9262,7 +9628,7 @@ CLAUDE.md・Skills・MCP という「ハーネス」の先にある「ループ�
 
 ---
 
-## 23. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
+## 24. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -9509,7 +9875,7 @@ AIに渡すルールは、自然言語ドキュメント1枚から三つの仕�
 
 ---
 
-## 24. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
+## 25. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -10017,7 +10383,7 @@ Skillは「自分専用のClaude Code」を育てることに近いと感じて�
 
 ---
 
-## 25. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
+## 26. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -10522,7 +10888,7 @@ Building agents with the Claude Agent SDK - Anthropic Engineering
 
 ---
 
-## 26. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
+## 27. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -10667,7 +11033,7 @@ banned_visual_motifs:
 
 ---
 
-## 27. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
+## 28. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/7
@@ -10903,7 +11269,7 @@ Slack, Google Calendar, Confluence等のMCPツールを活用して情報取得�
 
 ---
 
-## 28. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
+## 29. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -11097,7 +11463,7 @@ CLAUDE.mdにルールを書いて、WIP.mdに作業状態を残すようにし�
 
 ---
 
-## 29. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
+## 30. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -11406,7 +11772,7 @@ your-project/
 
 ---
 
-## 30. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
+## 31. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -11541,7 +11907,7 @@ Qiitaニュースを購読する
 
 ---
 
-## 31. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
+## 32. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -12343,7 +12709,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 32. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
+## 33. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -12394,7 +12760,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 33. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
+## 34. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -12653,7 +13019,7 @@ Claude Code や AI 自動化についてさらに深く学びたい方は、筆�
 
 ---
 
-## 34. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
+## 35. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -13196,7 +13562,7 @@ Prime 200銘柄
 
 ---
 
-## 35. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
+## 36. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -13376,7 +13742,7 @@ mainで作業 → worktreeを使う
 
 ---
 
-## 36. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
+## 37. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/12
@@ -14085,7 +14451,7 @@ Claude Code の 6種類のメモリと優先順位を理解して効率的に活
 
 ---
 
-## 37. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
+## 38. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/22
@@ -15325,7 +15691,7 @@ AIの「揮発性の高い記憶」を補うための「外部メモリ」とし
 
 ---
 
-## 38. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
+## 39. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/8
@@ -16917,7 +17283,7 @@ AI に相談して書いてもらいました。 ↩︎
 
 ---
 
-## 39. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
+## 40. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -17168,7 +17534,7 @@ hooks は決定論的な強制です。必ず同じ処理を再現したいも�
 
 ---
 
-## 40. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
+## 41. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -17667,7 +18033,7 @@ READMEが人間への手紙なら、AGENTS.md は、明日の自分・明日の�
 
 ---
 
-## 41. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
+## 42. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -18092,7 +18458,7 @@ GitHubで編集を提案
 
 ---
 
-## 42. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
+## 43. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -18321,7 +18687,7 @@ AI や人間が読んだときにどのような理解・認識するかをま�
 
 ---
 
-## 43. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
+## 44. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -18546,7 +18912,7 @@ API キーを使う「プロキシ方式」は、Google の ToS 違反で BAN �
 
 ---
 
-## 44. [Dynamic Workflowsを大名システムへ組み込んでみた - Qiita](https://qiita.com/tanaka_taro_JP_KYUSYU/items/b2efbc628053b643a8d8)
+## 45. [Dynamic Workflowsを大名システムへ組み込んでみた - Qiita](https://qiita.com/tanaka_taro_JP_KYUSYU/items/b2efbc628053b643a8d8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -18870,7 +19236,7 @@ Workflow が上乗せする価値は 「コスト削減（安価モデル＋低 
 
 ---
 
-## 45. [【AI駆動開発 / Claude Code】AGENT.mdや、product.md, DESIGN.md などのAIエージェント向けのMDファイル・ドキュメントについて📝](https://zenn.dev/manase/scraps/6bd12beaafd308)
+## 46. [【AI駆動開発 / Claude Code】AGENT.mdや、product.md, DESIGN.md などのAIエージェント向けのMDファイル・ドキュメントについて📝](https://zenn.dev/manase/scraps/6bd12beaafd308)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -18983,7 +19349,7 @@ AGENTS.md はこれらを一本化する狙いで登場した、という背景�
 
 ---
 
-## 46. [Loop Engineeringの組み方：Claude Code /goal で「自走するループ」を設計する](https://zenn.dev/ino_h/articles/2026-06-16-loop-engineering-goal)
+## 47. [Loop Engineeringの組み方：Claude Code /goal で「自走するループ」を設計する](https://zenn.dev/ino_h/articles/2026-06-16-loop-engineering-goal)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/20
@@ -19179,7 +19545,7 @@ WorkOS — Key takeaways from Boris Cherny on building Claude Code
 
 ---
 
-## 47. [もうプロンプトは書かない、ループを書く — Claude Code作者とOpenClaw作者が辿り着いた /goal と /loop](https://zenn.dev/kenimo49/articles/write-loops-not-prompts-goal-loop)
+## 48. [もうプロンプトは書かない、ループを書く — Claude Code作者とOpenClaw作者が辿り着いた /goal と /loop](https://zenn.dev/kenimo49/articles/write-loops-not-prompts-goal-loop)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/22
@@ -19335,7 +19701,7 @@ OpenAI hires OpenClaw founder Peter Steinberger -- SiliconANGLE
 
 ---
 
-## 48. [AI駆動開発のセキュリティツール、結局なにを入れればいい？ - Qiita](https://qiita.com/udowanllc/items/42635251d8e2641cb50c)
+## 49. [AI駆動開発のセキュリティツール、結局なにを入れればいい？ - Qiita](https://qiita.com/udowanllc/items/42635251d8e2641cb50c)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/24
@@ -20115,7 +20481,7 @@ Anthropic「Claude Code permissions documentation」
 
 ---
 
-## 49. [Claude Code コンテキスト管理パターン集：need-to-know だけ読ませる設計 - Qiita](https://qiita.com/nogataka/items/99b1ea9ba20877d54dba)
+## 50. [Claude Code コンテキスト管理パターン集：need-to-know だけ読ませる設計 - Qiita](https://qiita.com/nogataka/items/99b1ea9ba20877d54dba)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/27
@@ -20432,364 +20798,6 @@ Claude Codeに全部抱え込ませるのをやめた。tmuxのタブを会話�
 
 Claude Code に「7人の意地悪なQA」を仕込んでテストケースの観点漏れを潰した — 観点分担の実践
 Claude Code 公式ドキュメント
-
----
-
-## 50. [Claude Codeに同じバグを3回出すと、自動でルール化される話](https://zenn.dev/nexta_/articles/858e92ee22b4a4)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/7/7
-- **AI要約**:
-  Claude Codeのセッション履歴からAIの行動ルールを自動生成する学習機構の解説
-  記憶の肥大化を防ぐため、短期記憶から確定知見へと段階的に絞り込む漏斗型の設計原則
-  3回の失敗で共通ルールへ自動昇格させ、成功体験はスラッシュコマンドとして自動化する運用
-- **今読む理由**: AI駆動開発における「AIが同じ失敗を繰り返す」という致命的な時間ロスを、Claude Codeの仕組みを用いて自動で解決する具体的なツールと設計思想が公開されており、現在のプロジェクトに即時適用可能であるため。
-- **タグ**: #AI駆動開発, #Claude-Code
-
-### 本文
-こんにちは。製造業向けSaaSを開発しているエンジニアです。
-AIエージェントを使い込むと、誰もが必ずぶつかる壁があります。「同じ失敗を、何度もAIに繰り返される」ことと、その対策で記録を増やすと今度は 「記憶が肥大化して、肝心なルールがノイズに埋もれる」ことです。
-私はこの2つを、セッション履歴を 「一次資料」 として扱い、アジャイル開発のふりかえりのようにAI自身の振る舞いを少しずつルール化していく学習機構（cc-retrospective-learner）で解こうとしました。仕組み自体は大げさなものではなく、自分の .claude 環境で開発の区切りごとに /retrospective を回すだけ。それを約3ヶ月続けた記録がこの記事です。
-先に結論を出します。385回のふりかえりが、55個の「次からこうしよう」 という再利用可能なルールに育ち、同じ型のバグは3回目で自動的に潰されるようになりました。
-この記事はこんな人向けです。
-
-AIに同じミスを繰り返され、その都度同じ指示を出し直している方
-メモリ機能を使い始めたが、記録が増えすぎて収拾がつかなくなってきた方
-Claude Codeのスキル／Hookを、自分の開発フローに「学習する仕組み」として組み込みたい方
-
-読み終えると、「失敗が3回で自動的にルール化される閾値設計」「記憶を肥大させない漏斗（ファネル）の作り方」という、そのまま真似できる型が持ち帰れます。 仕組みは GitHub（MIT） で公開しているので、読んだその日に導入できます。
-
-※前提となる仕組みの設計思想は前回の記事に書きましたが、本記事は単体で読めるようにしています。
-
-
-
- 第1章：3ヶ月で、どれだけ回ったのか
-まずは数字から。2026年3月中旬から6月中旬までの約3ヶ月間で、仕組みがどれだけ回ったかを並べてみます。
-
-
-
-指標
-値
-
-
-
-
-ふりかえり済みセッション
-385
-
-
-短期記憶（short-term）ファイル
-255
-
-
-長期パターン（long-term）
-16
-
-
-確立したフィードバック（feedback）
-55
-
-
-プロジェクト知識（project）
-3
-
-
-参照情報（reference）
-3
-
-
-ユーザー傾向（user）
-1
-
-
-
-385回のセッションをふりかえり、最終的に55個の「フィードバック」——つまり 「次からこうしよう」という再利用可能なルール が手元に積み上がりました。
-
- 「記憶肥大化」への答えは、漏斗（ファネル）だった
-AIエージェントを使い込むと、必ず「記憶の肥大化」という問題に直面します。些細なエラーや一時的な思考プロセスまで覚え込むと、ノイズに埋もれて肝心のルールが引き出せなくなる。
-この問題への答えが、まさに上の数字の並びです。ただの集計ではなく、段階的にノイズを絞り込む漏斗として設計しています。
-385 セッション
-   ↓  4視点でふりかえり、記録に値するものだけ残す
-255 short-term（短期記憶）
-   ↓  繰り返し現れたものだけパターン化
- 16 long-term（長期パターン）
-   ↓  閾値を超え、ルールとして確立
- 55 feedback（確立した知見）
-
-※short-term 255 から long-term 16 へ絞られる一方、feedback が 55 まで増えているのは、long-term 集約を経ずに直接 feedback 化された早期の知見や、複数パターンから派生した知見が含まれるためです。漏斗の「絞り込み」と「派生による増加」が同時に起きています。
-
-運用前に私が一番心配していたのは、「ノイズが多すぎて使い物にならない」 ことと、「運用コストが高すぎて続かない」 ことでした。
-3ヶ月後の実感としては——どちらもギリギリ回避できました。
-255個の短期記憶のうち、本当にルールに昇格したのは一部です。大半は「その場限りの作業ログ」として埋もれていきますが、それでいいのです。漏斗の上流が広いからこそ、下流に残るものの質が担保される。ノイズを恐れて記録を絞るより、たくさん記録して後で絞るほうが機能した、というのが正直な発見でした。
-
-
- 第2章：知見が「育つ」4段の階段
-この仕組みでは、気づきは一段ずつ格上げされます。上に行くほど「AIの振る舞いを強く縛る」ものになります。
-
-
-
-レベル
-置き場所
-性質
-
-
-
-
-Lv.0
-short-term/
-その場のふりかえり記録
-
-
-Lv.1
-long-term/ + feedback_*.md
-繰り返し現れた定着パターン
-
-
-Lv.2
-CLAUDE.md
-毎セッション読み込まれるルール
-
-
-Lv.3
-スキル / Hook
-手順そのものを自動化
-
-
-
-「これはあくまで理論上の話では？」——そう思われるかもしれません。
-では3ヶ月運用して、知見は本当にこの階段を登ったのでしょうか？
-答えは Yes です。
-
-
-Lv.1（feedback化）：55個に到達。
-
-Lv.2（CLAUDE.md昇格）：「やめるべき失敗」「続けるべき成功」が閾値を超え、毎セッション読み込まれるルールに格上げされたものが複数。
-
-Lv.3（スキル/Hook化）：「毎回この手順を踏む」とまで定着した知見が、専用のスラッシュコマンド（スキル）として独立。
-
-抽象的な説明はここまでにして、次章からは実際に階段を登った3つの型を、具体的に物語ります。
-それぞれ「失敗を潰す型」「成功を資産にする型」「価値観が根付く型」の代表例です。どれもそのまま真似できるよう、閾値・データ構造・昇格の流れまで具体的に書きます。
-
-
- 第3章：【型①】同じ失敗を、3回目で潰す
-開発をしていると、「あ、またこのバグを出してしまった……」という瞬間が必ずありますよね。
-まずは、その「あるある」を一番「仕組みらしく」拾ってくれた例から。
-
- きっかけは、3回繰り返した同じ型のバグ
-ある設定値が未設定（null）のとき、その値をそのまま使おうとして例外が飛ぶ——という型のバグがありました。
-よくある話です。問題は、これが1回では終わらなかったことです。
-
-1回目：ある一覧画面で、設定が未投入の状態で例外が発生
-2回目：別の処理で、同じく未設定値を直接参照して落ちる
-3回目：また別の画面で、同型のバグ
-
-その都度ふりかえりは記録されていました。
-1回目・2回目の時点では、それぞれ独立した「short-term の作業ログ」でしかありません。仕組みはまだ「これはパターンだ」とは認識していませんでした。
-
- 3回目で、仕組みが動いた
-転機は3回目です。
-週次の昇格処理（weekly-promoter）が、短期記憶を横断して 「同じ型の痛み（pain）が3回出ている」 ことを検出しました。
-fail（同型バグ）
-  ↓  ふりかえりで short-term に記録
-pain_count++（既存 feedback と照合してカウント加算）
-  ↓
-pain_count が 3 に到達
-  ↓  weekly-promoter がパターンとして検出
-long-term に集約（pattern_*.md）
-  ↓  閾値超過（pain_count ≥ 3）
-CLAUDE.md にルールとして昇格
-昇格後、フィードバックのファイルはこんな構造で残ります（中身は抽象化しています）。
----
-name: feedback_nullable_value_safety
-pain_count: 3
-success_count: 1
-promoted_to: claude-md
----
-
-WHY: 設定値が未設定のとき、値を直接参照して例外が発生するバグが
-     別画面・別処理で計3回再発した。
-
-HOW: 値を直接参照せず、未設定チェックまたはフォールバックを徹底する。
-     特に「設定が未投入だと未設定になりうる箇所」で注意する。
-ポイントは promoted_to: claude-md です。
-これが付くと、この知見は毎セッションの冒頭で読み込まれるルールに格上げされます。
-つまり次回以降、私が同じ型のコードを書こうとすると、Claude Code は書く前に「ここは未設定チェックが要りますよ」と言ってくれるようになりました。
-
- 「3回」という閾値が、ちょうど良かった
-昇格の閾値は「3回」に設定しています。
-1回や2回で昇格させると、たまたまの出来事まで大げさにルール化してしまう。かといって5回も6回も待っていたら、その間に同じバグを作り続けてしまう。
-3ヶ月運用してみて、この 「3回で学習する」という設計は実際にちょうど良かったと感じています。
-人間のチームでも、「同じミスが3回続いたら仕組みで防ごう」という話をよくします。それをAIとの協働にそのまま持ち込めた、という手応えがありました。
-
-
-
- 第4章：【型②】成功を、専用スキルに昇格させる
-この仕組みのこだわりは、 「失敗だけでなく成功も記録する」 ことです。
-ダメ出しばかりを覚えるAIは萎縮します。「これは良かった、続けよう」も同じだけ大事だ、という考えです。
-その成功記録が、3ヶ月で最も大きく育った例を紹介します。
-
- AIの指摘を「鵜呑みにしない」という進め方
-私はコードレビューで、AIレビューツールの指摘を日常的に受け取ります。
-便利なのですが、AIの指摘はときどき間違っています。あるとき、AIが「コメントと実装が矛盾している」と指摘してきました。素直に従えば実装を変えるところでしたが、よく調べるとコメントのほうが間違っていて、実装が正しかった。指摘どおり直していたら、むしろバグを作り込むところでした。
-そこで私は、AIの指摘に対してこういう進め方を取るようになりました。
-
-指摘の内容を理解する
-
-指摘の前提そのものを疑う（本当にそれは問題なのか？）
-既存コードや関連システムで裏付けを取る
-業務フロー上の妥当性を確認する
-コメントと実装、どちらが正しいかを判断してから動く
-「対応不要」と判断したら、その理由をレビューに残す
-
-この進め方が、繰り返しうまくいきました。
-
- success_count が積み上がり、スキルへ昇格した
-成功するたびに success_count が加算されていきます。
-この知見は最終的に success_count: 20 まで到達し——ついに専用のスラッシュコマンド（スキル）に昇格しました。
----
-name: feedback_verify_ai_review
-pain_count: 1
-success_count: 20
-promoted_to: claude-md
----
-
-WHY: AIレビューの指摘を鵜呑みにして実装を変更しかけたが、
-     実際はコメント側が誤りで、従えばバグを作り込むところだった。
-
-HOW: 指摘は前提から疑い、裏付け・業務妥当性を確認してから対応する。
-     対応不要なら理由をレビューに残す。
-この進め方は最終的に /review-ai-feedback という専用コマンドになりました。上の「前提を疑う→裏付けを取る→判断する」という6手順をそのまま定型化したスキルです。
-いまでは「AIレビューの指摘、裏取りして」と頼むだけでこのフローが起動します。失敗を避けるだけでなく、うまくいった進め方が"資産"として固定されたわけです。
-
-
-
- 第5章：【型③】「進め方の価値観」まで宿す
-3つ目は、少し毛色が違います。
-個別のバグ知識でも、特定の作業手順でもなく、「仕事の進め方の価値観」そのものが蓄積された例です。
-
- 「片方を直すなら、対も最初から見る」
-私が扱うシステムには、対称構造を持つ2つの業務概念があります（仮にAとBとします）。
-AとBは鏡写しのような関係で、片方のロジックを直すと、たいていもう片方も同じ修正が必要になります。
-ところが人は——AIも——目の前の依頼に集中すると、Aだけ直してBの存在を忘れがちです。
-後からBの不整合に気づき、調査範囲が膨らむ。これを何度かやりました。
-そこで「Aの依頼を受けたら、対になるBを最初から視野に入れる」という観点が、ふりかえりのたびに success として記録されていきました。
-
- バグ知識ではなく、「設計の構え」が定着した
-この知見は success_count: 16 まで育ち、いまでは依頼を受けた瞬間に自動的に適用される構えになっています。
-たとえば「概念Aの改修をお願い」と頼むだけで、Claude Code が「承知しました。対になる概念Bへの影響も合わせて調べますね」と先回りして動く、といった具合です。
----
-name: feedback_paired_design
-success_count: 16
-promoted_to: user-claude-md
----
-
-WHY: 対称構造を持つ2業務概念は、片方だけ直すと対の側で不整合が出て、
-     後から調査範囲が膨らむ。
-
-HOW: 片方の依頼を受けたら、対になるもう片方の関連箇所
-     （サービス・画面・テスト）を最初から洗い出す。
-注目してほしいのは、これが「○○というバグを避けろ」ではないことです。
-「設計を考えるときの構え方」「調査を始めるときの視野の取り方」——つまり価値観のレベルです。
-個別の知識から始まったふりかえりが、ここまで来ると 「私がどう考えるか」をAIが学んでいる感覚になります。
-これは、3ヶ月回してみて一番うれしかった発見でした。
-
-
-
- 第6章：運用してわかった、泥臭い話
-きれいな成功談だけ並べても嘘くさいので、うまくいかなかった点・工夫が要った点を正直に書きます。
-
- short-term が増えすぎる問題
-255個の短期記憶。これは率直に言って多すぎます。
-ほとんどは二度と読み返さない作業ログです。漏斗の上流が広いのは設計上の意図ですが、放っておくと「記録のための記録」になりかねません。
-ここは「昇格に絡まなかった古い short-term は定期的に間引く」運用でバランスを取りました。
-
- インデックスの肥大
-毎回読み込む索引（MEMORY.md）の行数を抑えるのにも苦労しました。
-3ヶ月でメモリが増え、索引も膨らみます。
-これは「1メモリ＝1行のフックだけ索引に載せ、本文は索引に書かない」という規律を徹底することで抑えています。索引はあくまで"目次"であって"本文"ではない、という割り切りです。
-
- ふりかえり自体が、コンテキストを食う
-これが一番のテクニカルな発見でした。
-ふりかえりという作業そのものが、長時間セッションでAIのコンテキストを圧迫するのです。実際、入力が膨らみすぎてツール呼び出し（のJSON構造）が壊れる、という事象まで起きました。
-解決策は、シンプルですが効きました。
-ふりかえりの分析を、メインの作業コンテキストとは切り離した専用のサブエージェントに隔離し、結論だけを受け取る形にしたのです。重い分析でメインの文脈を汚さない。これにより、仕組み自身を仕組みで改善することになりました。
-皮肉なことに、この「ふりかえりの運用知見」自体も、ふりかえりによってフィードバック化されたものです。仕組みを使いながら、仕組み自体をふりかえって直す——そのループが図らずも回りました。
-
-
- 第7章：複数プロジェクトを行き来しても、記憶が混ざらない
-運用していて想定以上にうまくいったのが、複数プロジェクトを並行したときのメモリ管理でした。
-記憶が増えるほど怖いのは、「別プロジェクトで決めたこと」が、いま触っているプロジェクトに顔を出してくることです。
-これを、知見を 「普遍 / 固有」で切り分けることで防ぎました。
-
-プロジェクトをまたぐ普遍的な知見（「未設定チェックを徹底する」「成功した進め方を資産化する」など）→ グローバル側に置く
-特定プロジェクト固有の業務判断（「このプロジェクトではこの方式で決めた」など）→ プロジェクトごとの project メモリに分離する
-
-実際に複数のプロジェクトを行き来しても、この切り分けのおかげで記憶が混ざりませんでした。
-別プロジェクトの固有判断が割り込んでこず、いま開いているプロジェクトの文脈だけがきれいに引き出される。記憶が増えるほど効いてくる設計で、これも3ヶ月運用しないと確信が持てなかった部分です。
-
-
- 第8章：cc-retrospective-learner 本体も、3ヶ月で育った
-最後に。学習する対象（私の振る舞い）だけでなく、仕組みそのものも3ヶ月で進化しました。
-リポジトリのコミット履歴を時系列で振り返ります。
-
-
-
-時期
-変更内容
-変更の意図
-
-
-
-
-4/12
-初版リリース
-基本機構（4視点ふりかえり＋週次昇格）の実装
-
-
-4/12
-README充実・個人パスをプレースホルダ化
-配布・共有できる形へ
-
-
-4/14
-用語統一・Opt-in化・サブエージェントからBashツール削除
-
-サブエージェントにシェル実行権限を持たせない安全側の設計
-
-
-4/14
-オンデマンド方式の追加・CHANGELOG導入
-「毎セッション」だけでなく「明示的に呼んだとき」を選べる柔軟性
-
-
-4/15
-/retrospective スラッシュコマンド化
-自然言語トリガーを廃止し、確実なタイミングでの起動を実現
-
-
-
-特に効いたのが、最後のスラッシュコマンド化です。
-当初は「ふりかえって」と自然文で頼む方式でしたが、これだと言い回しの揺れで起動が曖昧でした。/retrospective という明示的なコマンドにしたことで、「いつふりかえるか」を自分で確実にコントロールできるようになりました。
-もうひとつ、サブエージェントの権限を絞った点にも触れておきます。
-ふりかえりや昇格の分析を担うサブエージェントには、ファイルの読み書きはさせても、シェルの実行権限は渡していません。「学習のための分析」に過剰な権限は要らない、という安全側の割り切りです。
-いずれも、使いながら気づいて直した結果です。仕組みを作って終わりではなく、仕組み自体をふりかえって改善する——その循環がここにもありました。
-
-
- おわりに：AIを「育てる」は、実在した
-3ヶ月の実データを並べてみます。
-
-385回のふりかえりが、55個の再利用可能な知見になった。
-同じ失敗は3回目で自動的に潰されるようになった。
-うまくいった進め方は、専用スキルとして資産になった。
-個別の知識を超えて、「仕事の構え」までAIが学んだ。
-
-同じ失敗を繰り返しては落ち込み、そこからルールを見出し、成功体験を仕組み化し、自分の考え方をツールに宿らせていく。
-振り返ってみると、この3ヶ月でやってきたことは、新人を頼れるメンバーへと育てていくプロセスそのものでした。
-もちろん、万能ではありません。記録は増えすぎるし、運用には規律が要ります。
-それでも——自分のセッション履歴を「一次資料」として扱い、そこから少しずつ学ばせるというアプローチは、確かに機能しました。
-AIを便利な道具として使うだけでなく、一緒に仕事をしながら育てていく。
-もしそこに少しでも惹かれるものがあれば、あなたの手元のセッション履歴も、立派な「育てる素材」です。
-仕組みは GitHubリポジトリ（cc-retrospective-learner）（MITライセンス）で公開しています。/retrospective を1回回すところから、ぜひ試してみてください。
 
 ---
 

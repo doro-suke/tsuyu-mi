@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-02T01:53:13.976Z",
+  "updated_at": "2026-09-03T02:13:32.799Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7719,6 +7719,96 @@
       "status": "unread",
       "analyzed_at": "2026-09-02T01:53:13.976Z",
       "markdown_path": "data/notebooklm_sources/AI動画生成の新時代：初心者から上級者まで使える完全ガイド.md"
+    },
+    {
+      "id": "1836568064",
+      "url": "https://zenn.dev/nozomi720/articles/claude_code_hooks_feedback",
+      "title": "Claude Code に「同じ指摘を二度させない」仕組みを hook で作った",
+      "excerpt": "Claude Code を使っていて一番消耗するのは、実装の質そのものより 「先週も言ったことを今日も言っている」 ことでした。",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-03T01:57:03.053Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code に「同じ指摘を二度させない」仕組みを hook で作った.md"
+    },
+    {
+      "id": "1836567967",
+      "url": "https://qiita.com/GL-Kageyama/items/34a0602d1a1d210e525a",
+      "title": "白黒動画をカラー動画へ ~AIモデル DeOldify~ - Qiita",
+      "excerpt": "白黒動画をカラー動画へ ~AIモデル DeOldify~",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "DeOldify",
+        "画像処理",
+        "動画生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-03T01:58:00.721Z",
+      "markdown_path": "data/notebooklm_sources/白黒動画をカラー動画へ ~AIモデル DeOldify~ - Qiita.md"
+    },
+    {
+      "id": "1821826815",
+      "url": "https://note.com/genel/n/n68b4a4c03f10?magazine_key=m03efbb766a9a",
+      "title": "AI動画は「説明」をやめるとリアルになる｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは、GENELです。  最近、AI動画って「やろうと思えば大体のシーンは作れる」ようになってきましたよね。 Vidu,Klingと大きな進化もあり、指示もかなり精度高く通ります。  …ただ、課題もあると思っていて。  映像は、作りたいシーンを“直球の言葉”でそのまま作ると、チープで無機質になることがあります。  たとえば、    人物の悲しい感情を表すときに、「悲しい…」とセリフで言わせる。    お祭りを我慢する受験生を表すときに、「勉強、しなきゃ。」と喋らせたり、勉強しているシーンを見せる。    悪くはないはずですよね。 ただ、ここまではもう「誰でもできるようになってしま",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "プロンプトエンジニアリング",
+        "動画制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-03T02:10:30.213Z",
+      "markdown_path": "data/notebooklm_sources/AI動画は「説明」をやめるとリアルになる｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826811",
+      "url": "https://zenn.dev/explaza/articles/1dc568ac62cdcc",
+      "title": "AI作成動画をそのまま公開しない——量産パイプラインの品質ゲートと安全設計",
+      "excerpt": "こんにちは！\n株式会社エクスプラザのhyodoです！",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "自動化パイプライン",
+        "品質保証"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-03T02:12:54.909Z",
+      "markdown_path": "data/notebooklm_sources/AI作成動画をそのまま公開しない——量産パイプラインの品質ゲートと安全設計.md"
+    },
+    {
+      "id": "1821826813",
+      "url": "https://note.com/genel/n/nd7dcc5a14884?magazine_key=m03efbb766a9a",
+      "title": "AI動画コンテストで優秀賞をとった私が、次に出る人に伝えたいこと｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは！GENELです。  先日、『カイコクAI動画CMコンテスト』というコンテストで優秀賞をいただきました！ 「KAIKOKU（カイコク）/BLAM」公式Ｘより たくさんのお祝いの言葉も頂き、ありがとうございました✨  が、ここだけの話、結果を見た直後は、「嬉しい」より「悔しい」という気持ちのほうが勝ってましたね…😂  ああすればよかった、こうすればよかった、といろいろと後悔した部分がありました。  ということでせっかくなので、作りながら考えていたことや、受賞してから気づいたことを書き残しておきます。  これからコンテストに応募しようとしている方の参考になれば👏🏻     「何を",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画",
+        "生成AI",
+        "動画制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-03T02:13:32.799Z",
+      "markdown_path": "data/notebooklm_sources/AI動画コンテストで優秀賞をとった私が、次に出る人に伝えたいこと｜GENEL ｜ AIを用いた動画制作解説.md"
     }
   ]
 }
