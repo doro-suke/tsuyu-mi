@@ -1,0 +1,484 @@
+# コーディングエージェントが実装するUIの品質を上げるためにやったこと
+- **Source URL**: https://zenn.dev/moshjp/articles/39972d023f0440
+- **Score**: 88
+- **Suggested Tags**: #AI駆動開発, #コーディングエージェント, #デザインシステム
+- **Processed Date**: 2026/9/5
+
+---
+
+## 本文
+デザインシステムの整備・運用をしているが、いざコーディングエージェントにUI実装をお願いしてみるとこれじゃない感がすごい。みたいな経験をしている方は少なくないはずです。
+例に漏れずMOSHでも同様の課題があり、このボトルネックが解消されれば開発効率上がるよねということで改善に取り組んでいます。
+ここ半年間ほどデザインシステムの整備を通してAI生成の精度に向き合っているのですが、割といい感じになってきたので何をやったのかを紹介します。
+補足資料：
+以前に同じテーマで登壇したことがあったので、以下のスライドも合わせて読んでみてください。
+
+ MOSHのデザインシステムの構成
+以下のようになっており、それぞれ乗っかっている場所や管理する人が異なります。
+
+
+
+領域
+置き場所
+管理している内容
+メンテナンス
+
+
+
+
+デザインデータ
+Figma
+デザイントークン、コンポーネント定義
+デザイナー
+
+
+ガイドライン
+Notion
+用途・使い分け、UXライティング、アクセシビリティ
+デザイナー
+
+
+Storybook
+コードベース
+社内向け共通UIコンポーネントのカタログ
+エンジニア
+
+
+
+
+ 実装とデザインの乖離
+Angularで構築されたフロントエンドの構成からReactへ移行する際にshadcn/uiをそのまま使うという選択をしました。
+これはAngularの実装を踏襲しない(デザイン含む)という意思決定と、そのタイミングではまだリデザインが進行していなかったため、実装が先行したという形です。
+結果としてデザインが後追いで定義されたため反映しきれていない、というのが現状です。
+デザインが追いついていないものは実際のプロダクト開発でそのまま使うことができません。
+そのため各チームは、同義のコンポーネントを自前で実装したり、強制的にスタイルを上書きするといったハック[1]をせざるを得ません。
+そうすると、後から共通コンポーネントにデザインを当てて各機能へ反映する際に修正箇所が増えてしまいます。
+コンポーネント自体が使われていなかったり、上書きされたスタイルによって意図通りに反映されなかったりといった問題が起きてしまい、リデザインの進行難易度が上がってしまいました。
+
+
+ 情報の置き場所が異なる
+情報の置き場所が一元化されていないことに対して不便さを感じるようになりました。
+Figmaを見ながらスタイルを当て、Notionを見てパターンやa11yを定義する、分散していることで突き合わせコストなどの手間が上がっています。
+これはコーディングエージェントを使っても同様です。
+例えばFigmaやNotionをMCPとして自身のツールに連携していたとしても、このコンポーネントのFigma/NotionのURLはこれ、という情報がなければ正しい情報にたどり着けません。
+
+ AIの生成精度の低さ
+エージェントに実装を依頼した際に想定とは異なる生成物が出力されがちです。ワンショットで上手くいくケースは稀で、だいたいは一度生成した上で何度もフィードバックして理想形に近づけていくのが当たり前でした。
+前述した情報が正しく拾えていないなどの問題もありますが、そもそもどういう風に画面を構築するのが正解なのかが定義されていないため毎回異なるレイアウトで画面を構築しようとします。
+Figmaにデザインデータがあれば多少それっぽくはなります。
+それでもコンポーネントの使い方を間違えていたり、使って欲しいコンポーネントが使われていなかったりするので、都度手直しが必要でした。
+
+ どう解決するか
+原因が被っているものもあれば全く別のアプローチを取る必要がある部分もあるな、というのが開発していてだんだんと分かってきました。
+今回は段階的に改善を入れていって、少しずつ生産効率や精度を上げていくような進め方をしました。
+前述した課題と、それぞれに対して打った手は以下の通りです。
+
+
+
+課題
+打ち手
+
+
+
+
+情報の置き場所が異なる
+コンポーネントにFigma/Notionを紐づける
+
+
+実装とデザインの乖離
+
+design-context / design-review
+
+
+
+同じ指摘の再発
+Linterのカスタムルール
+
+
+AIの生成精度の低さ
+よくあるレイアウトを自動生成する
+
+
+
+以降はそれぞれについて書いていきます。
+
+ コンポーネントにFigma/Notionを紐づける
+共通コンポーネントはすべてStorybookに登録済みだったため、各*.stories.tsxのJSDocにFigmaとNotionのURLを書きました。
+/**
+ * Figma: https://www.figma.com/design/...
+ * Notion: https://app.notion.com/p/...
+ */
+const meta: Meta<typeof Button> = {
+  // ...
+};
+こうすることでエージェントがStorybook MCP経由でコンポーネントの一覧を取得する際やコンポーネントの実装サンプルを見ようとしたタイミングでURLを取得できます。
+あとはMCPさえ接続できていれば、エージェントが正しい情報を参照しながら実装を進めてくれます。
+ただし、これだけだと上記の挙動を毎回再現してくれることが保証されているわけではないのでSkillなどに落とし込む必要がありました。
+
+ Agent Skillを作成
+目的が異なるため、実装用とレビュー用でそれぞれ作成しました。
+また、共通して参照させる情報などは切り出して置いています。
+
+
+
+スキル
+役割
+アウトプット
+
+
+
+
+design-context
+情報収集と実装方針の作成
+実装方針
+
+
+design-review
+実装のレビュー、評価
+修正提案
+
+
+design-principles
+判断の優先順位、コンポーネントに収まらない領域の定義
+なし(参照のみ)
+
+
+
+Gistで公開するにあたって内容を一般化していますが、基本的な方針は変わっていません。
+
+
+ /design-context {Component}
+
+実装に必要な情報を収集し、実装方針を提案します(実装そのものではない)。
+FigmaやNotionの内容を確認して実装との差分が発生している部分をこう修正しましょう、という提案に落とし込みます。
+また、CSS上のカラーパレットのトークンや変数が不足している場合にはまずは追加した上で実装するようにフローを組んでいます。
+他にはエージェントが憶測で実装してしまったり一見動くが根拠のないコードが積み上がったりするという問題を極力避けたいので無いものは無いのでまずは正の状態を定義しましょう、と宣言しています。
+
+ /design-review
+
+実装後のセルフレビューとして用意しました。
+ここでの指摘には、必ずガイドライン等の根拠を求めるようにしています。
+また、指摘事項はMUST/SHOULD/IMO/nits/Qに分類しています。
+これはこのSkill固有のものというよりはMOSHのレビュー方針に合わせた部分なので、利用者が自身の環境に合わせてカスタマイズする箇所です。
+指摘する内容に関してはLintやVRTで検知できる問題については重複してしまうため意図的に外しました。
+他にはフィードバックループの中で何度も指摘しているものはLinterのカスタムルールを作成する提案をさせるなど、AIによる指摘の揺らぎを極力減らす方向に持っていくよう設計しています。
+design-reviewの実行結果(サンプル)## Design Review 結果
+
+対象: Badge（components/badge.tsx）
+参照ガイドライン: Badge（コンポーネント別ガイドライン）、アクセシビリティ標準（横断）
+
+### Badge
+
+- [IMO] 逸脱 1: テキストなしで成立する型定義になっている
+  - 箇所: [badge.tsx:60](badge.tsx#L60)
+  - 根拠（ガイドライン）: When not to use「色だけで意味を伝えない（必ずテキストを併用する）」
+    「アイコンは視覚的支援であり、テキストなしでの意味伝達を目的にしない」
+  - 現状: props は `React.ComponentProps<"span">` を継承しており children は optional。
+    アイコンのみ・空の Badge が型上許容される
+  - 推奨: children を必須にする（`children: React.ReactNode` を明示）。
+    利用側の規律に委ねず、ガイドラインの禁止事項を型で表現する
+
+- [IMO] 逸脱 2: アイコンの配置位置が実装で保証されていない
+  - 箇所: [badge.tsx:8](badge.tsx#L8)
+  - 根拠（ガイドライン）: Badge with icon「ラベルの左側にアイコンを付与できる」
+  - 現状: `inline-flex gap-1` + `[&>svg]:size-3.5` のみで、左右どちらに置くかは children の順序次第。
+    右側に置いてもスタイル上は成立する
+  - 推奨: icon プロパティとして受け取り左固定で描画するか、Story と型で左配置を明示する
+
+### 要確認
+
+- [Q] 非インタラクティブな要素にフォーカス・入力検証スタイルが残っている
+  - 箇所: [badge.tsx:8](badge.tsx#L8)
+  - 現状: `focus-visible:*` / `aria-invalid:*` を保持しているが、レンダリング要素は `span` で
+    既定ではフォーカスを受け取らない（ベースにした UI ライブラリ由来のスタイル）
+  - 確認したいこと: `asChild` でリンク・ボタン化する利用を想定して意図的に残しているか。
+    想定がないなら削除候補。ガイドラインに Badge の状態定義はないため判断材料が足りない
+
+### コードからは判定不可
+
+- コントラスト比: 各 semantic variant の背景色とテキスト色の比率（`bg-warning` × `text-warning` 等）は、
+  実際のレンダリング結果での測定が必要。アクセシビリティ標準の WCAG 2.x AA 準拠目標に関わる
+- 長文時の表示: When not to use「一文以上の長いテキストを入れない」に対し、実装は
+  `whitespace-nowrap overflow-hidden` を持つ。超過時に省略記号なしで切れるが、
+  実害の有無は描画とコンテンツ次第
+
+### Review Summary
+
+- MUST: 0 件 / SHOULD: 0 件 / IMO: 2 件 / nits: 0 件 / Q: 1 件
+
+判定: ガイドライン準拠 OK
+　variant 5 種（neutral / info / success / warning / alert）はガイドラインの Variants 表と
+　名称・用途とも一致。Outlined Variant、アイコン付きも Story を含めて実装済み。
+　Figma とのビジュアル準拠は既定の照合範囲外のため未確認。
+
+
+ /design-principles
+
+デザインvsガイドラインになった際の判断基準や全体を横断するようなガイドラインへのインデックスなどを定義します。
+このSkillは単体で動作させるのではなくてdesign-contextやdesign-reviewが参照するものとして置いています。
+なので、判断に迷った際や情報を埋める際の補助的な役割ですが、ここが漏れると実装不備につながる可能性も高いため、毎回参照させるようになっています。
+個別のルールはJSDocにURLを記載し、それで拾えないものはここに記載するという構造です。
+
+ Linterのカスタムルール
+例えば色を指定する際にカラーコードが一緒だとしてもtext-blackではなくtext-primaryとしましょう、といったルールです。
+トークン化されているならトークンを参照させる、定義された値以外を使わせない、などは都度指摘するのではなくLintに組み込んでCIでFailさせましょうという方針にしています。
+機械的に弾くことによって実装時の揺らぎを無くし、意図通りのコードを生成させる方向に寄せることが目的です。
+
+定義しているルールは以下の通りです。
+
+
+
+ルール
+対象コンポーネント
+説明
+
+
+
+
+no-badge-utility
+<Badge>
+
+classNameのbg-*を禁止。専用Propsで指定する
+
+
+no-heading-text-utility
+<Heading>
+
+classNameのtext-* / font-* / leading-* / tracking-*を禁止。専用Propsで指定する
+
+
+no-text-text-utility
+<Text>
+
+classNameのtext-* / font-* / line-clamp-* / leading-* / break-* / truncate / whitespace-*を禁止。専用Propsで指定する
+
+
+no-native-heading-tag
+すべて
+
+<h1> 〜 <h6>の直接使用を禁止。<Heading as="h1">を使う
+
+
+no-native-paragraph-tag
+すべて
+
+<p>の直接使用を禁止。<Text>を使う
+
+
+no-tailwind-bg-color
+すべて
+Tailwind標準の色bg-*と任意値(bg-[#fff]やbg-[var(--x)]など)を禁止
+
+
+no-tailwind-border-color
+すべて
+Tailwind標準の色border-*と任意値border-[...]を禁止
+
+
+
+
+ よくあるレイアウトを自動生成する
+一覧や詳細ページ、フォーム入力など目的によってレイアウトを固定したいケースが発生したため、npm scriptsにadd-routeコマンドを用意しました。
+よくある画面のパターンを事前に実装しておきadd-route実行時にテンプレート一覧から使いたいものを選択させ複製するという挙動です。
+実際の運用等を考慮し、パターンをimportして使うのではなくshadcnのように複製することで各機能ごとに調整できる余地を残しています。
+なので複製したあとはよろしく方式なのですが、少なくとも複製した時点でデザインレビューを必要としないクオリティのものが生成されます。
+この仕組みはPlopを使って実現しています。
+構成要素は以下の通りで、サンプル実装とジェネレーターを紐づけるための中間層としてregistryを定義しています。
+
+
+
+要素
+実体
+役割
+
+
+
+
+テンプレート
+app/components/examples/<name>/<name>.tsx
+ページコンポーネントのサンプル
+
+
+レジストリ
+app/components/examples/registry.ts
+選択肢の一覧(key / label / 説明 / テンプレートパス / コンポーネント名)
+
+
+ジェネレータ
+
+plopfile.js + plop/route-from-example.js
+
+Plop用のgenerator実装。テンプレートを複製してrouteを新規追加する
+
+
+
+generatorのコード
+
+ registry.ts
+/**
+  * `add-route` の複製元テンプレート（Example）レジストリ。
+  *
+  * shadcn/ui の registry と同じ思想: 生成時にソースを route へ複製、以後は各ページが所有して自由に編集する。
+  * ここに追記すると `add-route` の選択肢に並ぶ。
+  */
+export type RouteExample = {
+  /** 選択キー（一意） */
+  key: string;
+  /** add-route の選択リストに表示するラベル */
+  label: string;
+  /** テンプレートの概要（選択リストの補足） */
+  description: string;
+  /** 複製元テンプレートのパス（パッケージルートからの相対） */
+  templatePath: string;
+  /** テンプレートが default export するコンポーネント名（複製時に route 名へ置換する対象） */
+  componentName: string;
+};
+
+export const routeExamples: RouteExample[] = [
+  {
+    key: "data-table-page-with-bulk-actions",
+    label: "データテーブル一覧",
+    description: "一覧テーブル",
+    templatePath: "app/components/examples/data-table-page/data-table-page.tsx",
+    componentName: "DataTablePageWithBulkActionsExample",
+  },
+  {
+    key: "grid-view-page",
+    label: "グリッド一覧",
+    description: "カードを格子状に並べる一覧",
+    templatePath: "app/components/examples/grid-view/grid-view.tsx",
+    componentName: "GridViewPageExample",
+  },
+  {
+    key: "form-page",
+    label: "フォーム入力",
+    description: "ステッパー付きの入力フォーム",
+    templatePath: "app/components/examples/form/form.tsx",
+    componentName: "FormPageExample",
+  },
+  // ...
+];
+
+
+ plop/route-from-example.js
+MOSHの場合はReact RouterのflatRoutesを採用しています。ここはアプリケーションの構成によって処理が変わるので適宜置き換えてください。
+合わせてテストファイルを生成していますがMOSHではbun:testからimportしています、こちらも必要に応じてJestなどに置き換える等してください。
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+
+export default function routeFromExamplePlugin(plop, { plopfileDir, routeExamples }) {
+  plop.setActionType("copy-example", (_answers, config) => {
+    const { example, componentName, routeTsxPath } = config;
+    const source = resolve(plopfileDir, example.templatePath);
+    const dest = resolve(plopfileDir, routeTsxPath);
+    if (existsSync(dest)) {
+      throw new Error(`already exists: ${routeTsxPath}`);
+    }
+    const content = readFileSync(source, "utf8").replaceAll(
+      example.componentName,
+      componentName,
+    );
+    mkdirSync(dirname(dest), { recursive: true });
+    writeFileSync(dest, content);
+    return `copied ${example.key} -> ${routeTsxPath}`;
+  });
+
+  plop.setGenerator("create-route-from-example", {
+    description: "Create route using template",
+    prompts: [
+      {
+        type: "list",
+        name: "example",
+        message: "Select a template",
+        choices: routeExamples.map((example) => ({
+          name: `${example.label}  ${example.description}`,
+          value: example.key,
+        })),
+      },
+      {
+        type: "input",
+        name: "route-path",
+        message: "Enter the URL path (e.g. creator/guests, users/:id)",
+        validate: (value) => {
+          const segments = value.split("/").map((s) => s.trim()).filter(Boolean);
+          if (segments.length === 0 || value.includes(".")) {
+            return "Error: use a path like 'creator/guests' or 'users/:id'";
+          }
+          return true;
+        },
+      },
+    ],
+    actions: (data) => {
+      const { routeFilePath, componentName } = resolveRoute(data["route-path"]);
+      const example = routeExamples.find((item) => item.key === data.example);
+      const routeTsxPath = `app/routes/${routeFilePath}/route.tsx`;
+      return [
+        { type: "copy-example", example, componentName, routeTsxPath },
+        // Routeコンポーネントのテストファイル(空)を作成
+        // bun:testを使用する
+        {
+          type: "add",
+          path: `app/routes/${routeFilePath}/route.test.tsx`,
+          template: `import { describe, it } from "bun:test";\n\ndescribe("${componentName}", () => {\n\tit.todo("");\n});\n`,
+        },
+      ];
+    },
+  });
+}
+
+/** React Router flatRoutes のファイルパスとコンポーネント名に変換する。 */
+function resolveRoute(routePath) {
+  const segments = routePath.split("/").filter(Boolean);
+  const last = segments.at(-1);
+  const fileSegments = segments.map((segment) => segment.replace(":", "$"));
+  // パラメータ末尾(`:id`)以外は `_index` を付与する
+  if (last && !last.startsWith(":")) {
+    fileSegments.push("_index");
+  }
+  const routeFilePath = fileSegments.join(".");
+  // `_index` とパラメータ(`$id`)を除いた区間を PascalCase で連結し `Route` を付ける
+  const componentName = `${fileSegments
+    .filter((s) => s !== "_index" && !s.startsWith("$"))
+    .map((s) =>
+      s.split(/[-_]/).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(""),
+    )
+    .join("")}Route`;
+  return { routeFilePath, componentName };
+}
+
+
+ plopfile.js
+import { routeExamples } from "./app/components/examples/registry.ts";
+import routeFromExample from "./plop/route-from-example.js";
+
+export default async function (plop) {
+  routeFromExample(plop, {
+    plopfileDir: import.meta.dirname,
+    routeExamples,
+  });
+}
+
+
+
+ やってみてどうだったか
+改善した結果、ワンショットで生成される画面のクオリティが上がりました。
+テンプレートから複製、実装後は専用のSkillでデザインレビューをするというフローができたことでガイドライン準拠のUIがワンショットで生成されるようになりました。
+
+実際にはこんな画面は存在しないのですがデモとして載せるために作成しました
+
+ さいごに
+MOSHの場合はFigmaとNotionという構成でしたが、組織によってどう管理しているかは変わるので適宜読み替えてください。
+情報が一元化されていればもっと楽になるのはそうなのですが、デザイナーの負荷を無視してツールを変えるのか、と言われるとそうではありません。
+既存の資産を捨てるのもやりすぎだと判断して、今回のような意思決定をしています。
+今はまだデザインに追従できていない状態なので、どうしてもデザイナーにFigma上でモックを用意してもらう、ということが発生してしまいます。
+これが解消されれば、モックやプロトタイプの作成は全部コード上でやる、コードが正の状態である、ということが出来るようになります。
+コーディングエージェントに頼めばエンジニア以外も「こういう画面が作りたいんですけど」を表現しやすくなりますし、コードが実際にそこにあるので実装に転用しやすくなります。
+
+ 宣伝
+実装前にコンポーネントを解析、専用のSkillを使うことで実装のブレやミスを減らすツールを作り始めました。使ってみての感想やフィードバックお待ちしています。
+
+
+脚注
+
+
+プロダクト開発を止めずにプラットフォーム開発を進めるためこれ自体は仕方ありませんが、これによって後から発生する修正量が大きく増えてしまうことを当時はあまり考慮できていませんでした。 ↩︎

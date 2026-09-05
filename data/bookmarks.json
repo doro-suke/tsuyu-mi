@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-04T01:56:36.473Z",
+  "updated_at": "2026-09-05T01:54:27.240Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7881,6 +7881,114 @@
       "status": "unread",
       "analyzed_at": "2026-09-04T01:56:36.473Z",
       "markdown_path": "data/notebooklm_sources/AIを活用して1か月で10万円稼ぐ!雑学ショート動画の作り方｜未来の言語技術.md"
+    },
+    {
+      "id": "1843185067",
+      "url": "https://zenn.dev/moshjp/articles/39972d023f0440",
+      "title": "コーディングエージェントが実装するUIの品質を上げるためにやったこと",
+      "excerpt": "デザインシステムの整備・運用をしているが、いざコーディングエージェントにUI実装をお願いしてみるとこれじゃない感がすごい。みたいな経験をしている方は少なくないはずです。\n例に漏れずMOSHでも同様の課題があり、このボトルネックが解消されれば開発効率上がるよねということで改善に取り組んでいます。\nここ半年間ほどデザインシステムの整備を通してAI生成の精度に向き合っているのですが、割といい感じになってきたので何をやったのかを紹介します。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "コーディングエージェント",
+        "デザインシステム"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-05T01:51:40.183Z",
+      "markdown_path": "data/notebooklm_sources/コーディングエージェントが実装するUIの品質を上げるためにやったこと.md"
+    },
+    {
+      "id": "1843185048",
+      "url": "https://qiita.com/NekoByte/items/76ddb2e42beef1b7e49e",
+      "title": "Claude Code を使いこなすためのコツ 10選 - Qiita",
+      "excerpt": "Claude Code を使いこなすためのコツ 10選",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "開発効率化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-05T01:51:58.416Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code を使いこなすためのコツ 10選 - Qiita.md"
+    },
+    {
+      "id": "1843185011",
+      "url": "https://note.com/aaconsulting/n/n53f5276ef604",
+      "title": "プログラミング未経験でもできた、AIだけで「自分専用Webツール」を作って公開する方法｜日本一相談の多いFP富山俊太郎",
+      "excerpt": "はじめに  私はプログラミングができません。  HTMLもCSSもJavaScriptも、体系的に習ったことはありません。「変数」と「関数」の違いを説明してくださいと言われたら、たぶん答えられません。それでもこの1年ほどで、次の5つを作ってインターネット上に公開しました。    保険見直しツール（今の保障と公的保障を並べて、必要保障額を考えるためのもの）    住宅ローンシミュレーター（返済額・総利息・金利上昇・繰上げ返済・借り換えの比較）    ふるさと納税シミュレーター（収入や控除を入れて上限額の目安を試算するもの）    自己紹介ページ（経歴・サービス・相談方法をまとめた1枚のペ",
+      "summary": "",
+      "score": 28,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "プロンプトエンジニアリング",
+        "Claude"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-05T01:52:37.948Z",
+      "markdown_path": "data/notebooklm_sources/プログラミング未経験でもできた、AIだけで「自分専用Webツール」を作って公開する方法｜日本一相談の多いFP富山俊太郎.md"
+    },
+    {
+      "id": "1843184954",
+      "url": "https://zenn.dev/tokium_dev/articles/claude-md-keeps-growing",
+      "title": "肥大化し続けるCLAUDE.md",
+      "excerpt": "TOKIUM でエンジニアをしているちっちです。26卒として入社し、現在は2ヶ月の研修を経て開発に取り組んでいます。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "コンテキスト管理"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-05T01:53:12.996Z",
+      "markdown_path": "data/notebooklm_sources/肥大化し続けるCLAUDE.md.md"
+    },
+    {
+      "id": "1843184914",
+      "url": "https://qiita.com/cvusk/items/7f149b4ef5e1e71dd039",
+      "title": "Claudeのキャッシュを使い倒す - Qiita",
+      "excerpt": "Claudeのキャッシュを使い倒す",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "プロンプトキャッシュ",
+        "LLM"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-05T01:53:48.445Z",
+      "markdown_path": "data/notebooklm_sources/Claudeのキャッシュを使い倒す - Qiita.md"
+    },
+    {
+      "id": "1843184862",
+      "url": "https://forest.watch.impress.co.jp/docs/news/2137843.html",
+      "title": "もうユーザーの作業を妨げない ～「Claude」のPC操作、バックグラウンドで動作可能に／「Pro」「Max」向けにベータ提供、バックグラウンド動作は今のところMacのみ",
+      "excerpt": "米Anthropicは9月2日（現地時間）、「Claude」のアップデートを発表した。［コンピューター使用］機能をバックグラウンドで動作させられるようになったという。ユーザーの作業を妨げることがないので、「Claude」にPCを操作させながら、自分は他の作業を継続できる。",
+      "summary": "",
+      "score": 58,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "ClaudeCode",
+        "ComputerUse"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-05T01:54:27.240Z",
+      "markdown_path": "data/notebooklm_sources/もうユーザーの作業を妨げない ～「Claude」のPC操作、バックグラウンドで動作可能に／「Pro」「Max」向けにベータ提供、バックグラウンド動作は今のところMacのみ.md"
     }
   ]
 }
