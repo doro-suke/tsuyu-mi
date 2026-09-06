@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-05T01:54:27.240Z",
+  "updated_at": "2026-09-06T01:48:27.549Z",
   "articles": [
     {
       "id": "1702129693",
@@ -7989,6 +7989,60 @@
       "status": "unread",
       "analyzed_at": "2026-09-05T01:54:27.240Z",
       "markdown_path": "data/notebooklm_sources/もうユーザーの作業を妨げない ～「Claude」のPC操作、バックグラウンドで動作可能に／「Pro」「Max」向けにベータ提供、バックグラウンド動作は今のところMacのみ.md"
+    },
+    {
+      "id": "1843184890",
+      "url": "https://forest.watch.impress.co.jp/docs/news/2137481.html",
+      "title": "「Gemini」が動画を理解するコストが激減、Googleが「Agentic Video」を発表／律義に1コマずつ見るのはやめ、大事なところを能動的に判断",
+      "excerpt": "米Googleは9月1日（現地時間）、「Gemini」の新機能「Agentic Video」（エージェント的な動画理解）を発表した。「3.7 Flash」、「3.6 Flash」、「3.5 Flash-Lite」の3モデルで、同日より利用できる。",
+      "summary": "",
+      "score": 62,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Gemini",
+        "マルチモーダル",
+        "動画解析"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-06T01:46:56.483Z",
+      "markdown_path": "data/notebooklm_sources/「Gemini」が動画を理解するコストが激減、Googleが「Agentic Video」を発表／律義に1コマずつ見るのはやめ、大事なところを能動的に判断.md"
+    },
+    {
+      "id": "1843184840",
+      "url": "https://news.yahoo.co.jp/articles/7b74069a7203e2ea3ba9e7781ee721f18d2d8fe0",
+      "title": "【保存版】Claude Codeの「AI部下」が新人→即戦力に…“記憶”を育てる「神ワザ」7選（ビジネス＋IT）",
+      "excerpt": "Claude Codeを使うたびに、「うちの会社はこう」「この資料はここ」「報告はこの形式で」と、毎回ゼロから説明していませんか。便利なAIでも、毎回“新人教育”から始まるのでは、本当の時短にはつ",
+      "summary": "",
+      "score": 78,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "CLAUDE.md"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-06T01:47:14.778Z",
+      "markdown_path": "data/notebooklm_sources/【保存版】Claude Codeの「AI部下」が新人→即戦力に…“記憶”を育てる「神ワザ」7選（ビジネス＋IT）.md"
+    },
+    {
+      "id": "1821826808",
+      "url": "https://lilys.ai/ja/notes/ai-shorts-20251028/exposed-youtube-shorts-channel-ai",
+      "title": "AIを使って月3000万円稼ぐYouTubeショートチャンネルを暴露します（マジでヤバい）。",
+      "excerpt": "This video reveals how to expose a $300K/month YouTube Shorts channel that leverages AI for content creation. The central theme is to demonstrate how to re...",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成",
+        "YouTube運用",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-06T01:48:27.549Z",
+      "markdown_path": "data/notebooklm_sources/AIを使って月3000万円稼ぐYouTubeショートチャンネルを暴露します（マジでヤバい）。.md"
     }
   ]
 }
