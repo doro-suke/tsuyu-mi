@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-06T01:48:27.549Z",
+  "updated_at": "2026-09-07T01:46:33.289Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8043,6 +8043,96 @@
       "status": "unread",
       "analyzed_at": "2026-09-06T01:48:27.549Z",
       "markdown_path": "data/notebooklm_sources/AIを使って月3000万円稼ぐYouTubeショートチャンネルを暴露します（マジでヤバい）。.md"
+    },
+    {
+      "id": "1843185028",
+      "url": "https://zenn.dev/tokium_dev/articles/f3275032b3f1ee",
+      "title": "Claude Codeと共に、初学者の壁を乗り越える",
+      "excerpt": "みなさんこんにちは！株式会社TOKIUMでエンジニアをしている26卒の松本です。\n早いもので、チーム本配属から1ヶ月が経ちました。実務の荒波に揉まれたこの1ヶ月間で、たくさんの壁に出会いました。そしてその度に自分なりの方法で壁を乗り越えようともがいたので、その軌跡を書いてみました！",
+      "summary": "",
+      "score": 75,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "ナレッジマネジメント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-07T01:44:03.244Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeと共に、初学者の壁を乗り越える.md"
+    },
+    {
+      "id": "1843184928",
+      "url": "https://ascii.jp/elem/000/004/430/4430553/",
+      "title": "5秒の動画を3秒で出せる 動画生成AI「MiniMax H3」が爆速に進化 (1/5)",
+      "excerpt": "動画生成AI「MiniMax H3」の高速化競争が加速している。15秒を約13秒で生成する「H3 Max」に加え、14倍高速化をうたう「FastH3」も登場。RTX 4090環境で動かし、検証した。",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "MiniMax",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-07T01:44:41.422Z",
+      "markdown_path": "data/notebooklm_sources/5秒の動画を3秒で出せる 動画生成AI「MiniMax H3」が爆速に進化 (1_5).md"
+    },
+    {
+      "id": "1843184819",
+      "url": "https://www.lifehacker.jp/article/2609checked-claude-code-usage-found-four-hidden-token-drains-never-knew-about/",
+      "title": "Claude Codeでトークンを消費する4つの設定と対処法 | ライフハッカー・ジャパン",
+      "excerpt": "Claude Codeを使っていて、セッション制限にすぐ達してしまうとお悩みではありませんか？実はプロンプト以外にも、ターミナルで最初の文字を入力する前からトークンを静かに消費する設定が存在します。CLAUDE.mdやMCPサーバーなど、意図せぬトークン消費を抑えて利用枠を最大活用するための4つの見直しポイントを解説します。",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "トークン最適化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-07T01:45:00.145Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeでトークンを消費する4つの設定と対処法 _ ライフハッカー・ジャパン.md"
+    },
+    {
+      "id": "1821826810",
+      "url": "https://note.com/bigmama41/n/n1438fc3052f9",
+      "title": "AI画像×名言×TikTokで“月30万円”を狙うプロセス公開｜作業屋の副業ログ",
+      "excerpt": "💭 はじめに：AIを“エンタメ化”したら、収益が動き出した  ChatGPTと画像AI（Stable Diffusion、Fluxなど）を触っていて、 「このAIで作った画像、もったいないな…」と思ったのが始まりでした。  最初は遊び感覚。 AIで名言を載せてTikTokに投稿したら、 1本目がいきなり 2.4万再生。 5本目には 10万再生超え。  そこから3ヶ月で、 ✅ フォロワー1.8万人 ✅ 再生収益＋企業案件＋note販売で 月30万円  ──完全に「AI×名言」という“感情発信ジャンル”が当たりました。   📈 実際の結果  項目BeforeAfter（3ヶ月）投稿本数0本",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "画像生成AI",
+        "TikTok運用",
+        "副業"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-07T01:46:10.876Z",
+      "markdown_path": "data/notebooklm_sources/AI画像×名言×TikTokで“月30万円”を狙うプロセス公開｜作業屋の副業ログ.md"
+    },
+    {
+      "id": "1821826805",
+      "url": "https://zenn.dev/yoshi_katakura/articles/321db5409ba653",
+      "title": "AIホログラフィックディベート動画の完全自動制作パイプライン",
+      "excerpt": "「アインシュタインAIと現代の理論物理学者AIが、量子重力の最前線で議論する」",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "自動化パイプライン",
+        "マルチエージェント",
+        "動画生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-07T01:46:33.289Z",
+      "markdown_path": "data/notebooklm_sources/AIホログラフィックディベート動画の完全自動制作パイプライン.md"
     }
   ]
 }
