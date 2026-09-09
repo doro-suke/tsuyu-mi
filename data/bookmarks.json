@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-07T01:46:33.289Z",
+  "updated_at": "2026-09-09T02:02:17.437Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8133,6 +8133,42 @@
       "status": "unread",
       "analyzed_at": "2026-09-07T01:46:33.289Z",
       "markdown_path": "data/notebooklm_sources/AIホログラフィックディベート動画の完全自動制作パイプライン.md"
+    },
+    {
+      "id": "1821826821",
+      "url": "https://ascii.jp/elem/000/004/426/4426043/",
+      "title": "とんでもない動画生成AIが出てきた 無料で試し放題の「MiniMax H3」を徹底検証 (1/5)",
+      "excerpt": "オープンウェイトの動画生成AI「MiniMax H3」を実機で検証。Seedance 2.0級の生成力に加え、多数の画像や動画を参照できるOmni Reference、ローカル動作、高速化の進展まで、その実力と課題を紹介します。",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "MiniMax",
+        "オープンモデル"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-09T02:01:07.439Z",
+      "markdown_path": "data/notebooklm_sources/とんでもない動画生成AIが出てきた 無料で試し放題の「MiniMax H3」を徹底検証 (1_5).md"
+    },
+    {
+      "id": "1821826803",
+      "url": "https://note.com/genel/n/n82edff391f55?magazine_key=m03efbb766a9a",
+      "title": "AIでも\"温かみ\"は出せるという話｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは、GENELです。  私がAIで動画を作るとき、AI感をなくそうと思いながら作っているのですが、 \n それでも、「どこか違和感ある」「AIは心がないって言われた」って経験はないですか？👀  実は私もそうでした。 破綻もなく技術的には特に問題ないのに、どこか冷たいような、「ああ、これAIだな」ってなって話が入ってこない、みたいな感じです。  でも、このクリニックCMを作った時、   『nijijourney v7』 触ってみた感想をまとめました📒  結論、 「画像・動画生成AIを触れている人なら、一度は触れてみて欲しい！」というくらい試す価値ありです◎  ・線の表現力がかなり向",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画制作",
+        "生成AI",
+        "演出論"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-09T02:02:17.437Z",
+      "markdown_path": "data/notebooklm_sources/AIでも_温かみ_は出せるという話｜GENEL ｜ AIを用いた動画制作解説.md"
     }
   ]
 }
