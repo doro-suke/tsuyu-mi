@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-09T02:02:17.437Z",
+  "updated_at": "2026-09-10T01:57:26.476Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8169,6 +8169,42 @@
       "status": "unread",
       "analyzed_at": "2026-09-09T02:02:17.437Z",
       "markdown_path": "data/notebooklm_sources/AIでも_温かみ_は出せるという話｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1847655509",
+      "url": "https://zenn.dev/nana/articles/9d2f3c85ef3692",
+      "title": "自分専用の仕事用デスクトップアプリを作って自分に適した情報網を作ろう",
+      "excerpt": "仕事で扱う情報の置き場所、みなさんはどうしているだろうか。",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "開発者体験",
+        "AIエージェント",
+        "ツール自作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-10T01:56:47.286Z",
+      "markdown_path": "data/notebooklm_sources/自分専用の仕事用デスクトップアプリを作って自分に適した情報網を作ろう.md"
+    },
+    {
+      "id": "1847655438",
+      "url": "https://qiita.com/nogataka/items/d6a54f3694726b9141f3",
+      "title": "CLAUDE.mdをそろそろ見直す時期かも ── Claude 5世代向けの最適化手順・スキル・プロジェクト種類別の例 - Qiita",
+      "excerpt": "CLAUDE.mdをそろそろ見直す時期かも ── Claude 5世代向けの最適化手順・スキル・プロジェクト種類別の例",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "コンテキストエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-10T01:57:26.476Z",
+      "markdown_path": "data/notebooklm_sources/CLAUDE.mdをそろそろ見直す時期かも ── Claude 5世代向けの最適化手順・スキル・プロジェクト種類別の例 - Qiita.md"
     }
   ]
 }
