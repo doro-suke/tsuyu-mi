@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-10T01:57:26.476Z",
+  "updated_at": "2026-09-11T01:58:27.016Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8205,6 +8205,60 @@
       "status": "unread",
       "analyzed_at": "2026-09-10T01:57:26.476Z",
       "markdown_path": "data/notebooklm_sources/CLAUDE.mdをそろそろ見直す時期かも ── Claude 5世代向けの最適化手順・スキル・プロジェクト種類別の例 - Qiita.md"
+    },
+    {
+      "id": "1850141600",
+      "url": "https://qiita.com/TaichiEndoh/items/b534f73310ce4508dac2",
+      "title": "【完全自動化】n8n×Obsidianで「寝ている間に最新ニュースが届く」最強の情報収集システムを作った話 - Qiita",
+      "excerpt": "【完全自動化】n8n×Obsidianで「寝ている間に最新ニュースが届く」最強の情報収集システムを作った話",
+      "summary": "",
+      "score": 75,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "n8n",
+        "自動化パイプライン",
+        "Obsidian"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-11T01:56:04.255Z",
+      "markdown_path": "data/notebooklm_sources/【完全自動化】n8n×Obsidianで「寝ている間に最新ニュースが届く」最強の情報収集システムを作った話 - Qiita.md"
+    },
+    {
+      "id": "1850141480",
+      "url": "https://qiita.com/usayamadausako/items/c8b5cca97554f6f64782",
+      "title": "Claude Code x Obsidianで、LLM Wiki構築 | セッションを切り替えても会話を続けられる方法 - Qiita",
+      "excerpt": "Claude Code x Obsidianで、LLM Wiki構築 | セッションを切り替えても会話を続けられる方法",
+      "summary": "",
+      "score": 84,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "Obsidian"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-11T01:58:08.851Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code x Obsidianで、LLM Wiki構築 _ セッションを切り替えても会話を続けられる方法 - Qiita.md"
+    },
+    {
+      "id": "1847655491",
+      "url": "https://qiita.com/uni928/items/b4a874f0bbf91d378097",
+      "title": "自分のHTML資産を増やすと、AIで見た目の良いサイトを作りやすくなる - Qiita",
+      "excerpt": "自分のHTML資産を増やすと、AIで見た目の良いサイトを作りやすくなる",
+      "summary": "",
+      "score": 48,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "フロントエンド",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-11T01:58:27.016Z",
+      "markdown_path": "data/notebooklm_sources/自分のHTML資産を増やすと、AIで見た目の良いサイトを作りやすくなる - Qiita.md"
     }
   ]
 }
