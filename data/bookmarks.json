@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11T01:58:27.016Z",
+  "updated_at": "2026-09-12T02:02:35.880Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8259,6 +8259,60 @@
       "status": "unread",
       "analyzed_at": "2026-09-11T01:58:27.016Z",
       "markdown_path": "data/notebooklm_sources/自分のHTML資産を増やすと、AIで見た目の良いサイトを作りやすくなる - Qiita.md"
+    },
+    {
+      "id": "1850141586",
+      "url": "https://note.com/electrical_cat/n/n5db5f038a391",
+      "title": "Obsidian x Gemini CLIで最強執筆環境を作ろう｜Naoki |電電猫猫",
+      "excerpt": "目標：CursorみたいにObsidianを改造  ObsidianはMarkdownのViewerとして最強だ！でもAIとのコラボレーションはまだまだ弱い．ツールチェインとかがないからAIに記事を修正させるとかはまだまだ難しい…．というのは以前の話で今回はObsidian Terminal & Gemini CLIで最強執筆環境を設定していこう． 最終的な地点 便利な点はここらへんかな    ファイル整理を自動でさせられる    タイトル設定をファイルの中身を読んで自動で変更するとかできる    執筆でAIによる編集などをさせられる    DeepSearch的に調べた内容を",
+      "summary": "",
+      "score": 42,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Obsidian",
+        "Gemini",
+        "AIツール"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-12T02:00:31.079Z",
+      "markdown_path": "data/notebooklm_sources/Obsidian x Gemini CLIで最強執筆環境を作ろう｜Naoki _電電猫猫.md"
+    },
+    {
+      "id": "1843184986",
+      "url": "https://note.com/auto_science/n/n1a40bf989ac9",
+      "title": "Antigravity 2.0の「スラッシュコマンド」と「スキル」で、AIを\"自律パートナー\"にする方法｜AutoScience",
+      "excerpt": "ある日の真夜中。デバッグが終わらない。     「あと1個エラーを直したら寝よう」と思いながら画面を見つめて、気づいたら3時間経っている・・・     そんな経験、ありませんか？     AIに指示を出しても、返ってくるのは1回分の答えだけ。 「生成されたコードを動かす ➔ エラーが出る ➔ それをAIに貼り付けてまた指示を出す」という、すべての工程をひとつずつ、順々に進めなければならない面倒くささ。  気づけば、AIと何往復もチャットを繰り返して時間を浪費してしまいます。        もしAIが「目標を達成するまで、自分で考えて、直して、また試す」を勝手に繰り返してくれたら？",
+      "summary": "",
+      "score": 75,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-12T02:02:01.227Z",
+      "markdown_path": "data/notebooklm_sources/Antigravity 2.0の「スラッシュコマンド」と「スキル」で、AIを_自律パートナー_にする方法｜AutoScience.md"
+    },
+    {
+      "id": "1821826809",
+      "url": "https://note.com/sora2jp/n/na63600458061",
+      "title": "AI映像で副収入を得る──動画生成 × SNS × 自動投稿の最短ルート｜AIえんじにゃーsora",
+      "excerpt": "第0章  　導入：AI動画で“稼げる時代”は本当に来ているのか？  今、SNSを開けば── AIで作られたショート動画が、次々と流れてきます。 風になびく髪、リアルな街並み、映画のような光と影。 もう「AIっぽさ」はほとんど残っていません。  OpenAIが開発した映像生成AI「Sora」は、その中心にいます。 テキストを入力するだけで、わずか数十秒のうちに“実写のような映像”を生成してしまう。 しかも、プロカメラマンでも再現が難しい構図やカメラワークを、AIが瞬時に作り出します。  これまで映像制作は「機材」「編集スキル」「時間」が必要でした。 しかし今は、“文章が書ける人”が映像を",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "SNS運用自動化",
+        "Sora"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-12T02:02:35.880Z",
+      "markdown_path": "data/notebooklm_sources/AI映像で副収入を得る──動画生成 × SNS × 自動投稿の最短ルート｜AIえんじにゃーsora.md"
     }
   ]
 }
