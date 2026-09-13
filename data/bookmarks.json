@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-12T02:02:35.880Z",
+  "updated_at": "2026-09-13T01:58:36.215Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8313,6 +8313,114 @@
       "status": "unread",
       "analyzed_at": "2026-09-12T02:02:35.880Z",
       "markdown_path": "data/notebooklm_sources/AI映像で副収入を得る──動画生成 × SNS × 自動投稿の最短ルート｜AIえんじにゃーsora.md"
+    },
+    {
+      "id": "1851715265",
+      "url": "https://note.com/amiiii_714/n/n8bfed856fdbf",
+      "title": "「AI×アイドル」を量産🌱“30分ワーク”の仕組み化を完全解説!!｜まな",
+      "excerpt": "🌟はじめに ・本ノートは、音源→映像→投稿までを3つのAIツールだけで完結させる手順書です。 ・作曲：Suno AI ・映像：Runway（テキスト/画像→動画） ・編集：CapCut（カット、テロップ、書き出し） ・1本あたり30分前後で作れる“ショート動画特化”の設計。 ・収益は主にプラットフォーム広告＋アフィリエイト（ツール紹介や楽曲配布など）。  ⚠️重要：各サービスの利用規約・商用利用範囲は必ず最新を確認してください（名称・肖像・商標の無断使用は避ける／既存アーティストの模倣はNG）。   🌟1. 必要AIと費用感 ・Suno AI：無料でも試せるが、商用利用や生成上限を考え",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "生成AI",
+        "動画生成",
+        "コンテンツ制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-13T01:54:13.785Z",
+      "markdown_path": "data/notebooklm_sources/「AI×アイドル」を量産🌱“30分ワーク”の仕組み化を完全解説!!｜まな.md"
+    },
+    {
+      "id": "1851223046",
+      "url": "https://hamaruki.com/wan2-1-t2i-high-quality-character-gen-guide/#toc17",
+      "title": "無料Google Colabでできる📒 Wan2.1-T2I を使った高品質キャラクター画像生成ガイド - Sun wood AI labs.2",
+      "excerpt": "🚀 はじめに このノートブックでは、Wan2.1-T2V-14BモデルとComfyUIを使用し",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "画像生成AI",
+        "ComfyUI",
+        "GoogleColab"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-13T01:57:03.212Z",
+      "markdown_path": "data/notebooklm_sources/無料Google Colabでできる📒 Wan2.1-T2I を使った高品質キャラクター画像生成ガイド - Sun wood AI labs.2.md"
+    },
+    {
+      "id": "1851223016",
+      "url": "https://weel.co.jp/media/tech/pyramidflow/#index_id7",
+      "title": "【Pyramid Flow徹底解説】高品質動画を効率的に作成する方法とGoogle Colabでの実装ガイド | WEEL",
+      "excerpt": "Pyramid Flowは、2つのピラミッド表現（空間・時間）を活用し、従来のモデルよりも高効率かつ高品質な動画生成を実現します。本記事では、Pyramid Flowの特徴や従来モデルとの比較、Google Colaboratoryでの実装方法について詳しく解説。商用利用可能なオープンソースモデルを活用し、簡単に高解像度の動画を生成する方法を学べます！",
+      "summary": "",
+      "score": 52,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "PyramidFlow",
+        "GoogleColab"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-13T01:57:22.589Z",
+      "markdown_path": "data/notebooklm_sources/【Pyramid Flow徹底解説】高品質動画を効率的に作成する方法とGoogle Colabでの実装ガイド _ WEEL.md"
+    },
+    {
+      "id": "1851222251",
+      "url": "https://nowokay.hatenablog.com/entry/2026/01/02/145417",
+      "title": "ComfyUIで動画生成AIのWan2.2をGGUFで動かす - きしだのHatena",
+      "excerpt": "動画生成のWanというのがいいというのは知ってたけど導入がめんどくさそうで試してなかったのを年末にGGUFで試してたのでまとめ。 生成結果 ということで、まずは14BのQ4_K_Mで試した動画を先に。 Wan 2.2で「the man drinking beer」を指定して3分くらいでこれ。ビールが減ってないけど。 1年半前のOpen Soraだと2時間半待ったものがこれ。ハードウェアが同じなのにすごい。 Open Soraを使っておうちのWindowsで動画生成する - きしだのHatena Google ColabのA100を使ってOpen Solaで2分で「japanese maiko …",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ComfyUI",
+        "動画生成AI",
+        "ローカルLLM"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-13T01:57:41.586Z",
+      "markdown_path": "data/notebooklm_sources/ComfyUIで動画生成AIのWan2.2をGGUFで動かす - きしだのHatena.md"
+    },
+    {
+      "id": "1851220215",
+      "url": "https://note.com/miya19/n/n68cb095fa190",
+      "title": "「Wan 2.2」をColab環境から初利用してみました。｜miya",
+      "excerpt": "「Wan 2.2」をColab環境から初利用してみました。  具体的には、Wan 2.2を動かすサンプルノートブックを使用し、最初と最後のフレームを指定してロボットの動画を生成しました。 ダウンロードした本モデルをGoogle Colab上で実行しました。… https://t.co/vyT9J1J2Uv pic.twitter.com/c2pGlpVqpI — miya (@miya00907380) September 7, 2025 \n\n\n 「Wan 2.2」をColab環境から初利用してみました。  具体的には、Wan 2.2を動かすサンプルノートブックを使用し、最初と最後のフ",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "Wan2.2",
+        "GoogleColab"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-13T01:58:16.972Z",
+      "markdown_path": "data/notebooklm_sources/「Wan 2.2」をColab環境から初利用してみました。｜miya.md"
+    },
+    {
+      "id": "1850141605",
+      "url": "https://note.com/genkaijokyo/n/n2b476e6bf485",
+      "title": "他サービスからの移行組必見！Gemini CLIによるObsidianのノート半自動整理術｜genkAIjokyo|ChatGPT/Claudeで論文作成と科研費申請",
+      "excerpt": "論文、実験ノート、会議の議事録、ふとした瞬間に浮かんだ研究のアイデア…研究者は、日々増え続ける情報の洪水の中で戦っています。しかし貴重な知識も、必要な時に引き出せなければ意味がありません。  多くの人がObsidianを使い始めているのは、それが単なるメモアプリではなく、2つの強力な側面を併せ持つからです。一つは、知識同士をリンクで繋ぎ、有機的なネットワーク、すなわち「第二の脳」を構築できること 。  もう一つは、ローカルに蓄積されたそのマークダウン形式のファイルはAIとの親和性が非常に高く、論文の草稿やプレゼンテーションのスライドといったアウトプットをAIで加速させる、ポテンシャルを",
+      "summary": "",
+      "score": 78,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Gemini CLI",
+        "Obsidian",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-13T01:58:36.215Z",
+      "markdown_path": "data/notebooklm_sources/他サービスからの移行組必見！Gemini CLIによるObsidianのノート半自動整理術｜genkAIjokyo_ChatGPT_Claudeで論文作成と科研費申請.md"
     }
   ]
 }
