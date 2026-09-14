@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-13T01:58:36.215Z",
+  "updated_at": "2026-09-14T02:12:53.884Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8421,6 +8421,24 @@
       "status": "unread",
       "analyzed_at": "2026-09-13T01:58:36.215Z",
       "markdown_path": "data/notebooklm_sources/他サービスからの移行組必見！Gemini CLIによるObsidianのノート半自動整理術｜genkAIjokyo_ChatGPT_Claudeで論文作成と科研費申請.md"
+    },
+    {
+      "id": "1850141530",
+      "url": "https://note.com/chankostin/n/nb33ca6e289fa",
+      "title": "【Obsidianの使い方が変わる】Gemini CLIは、あなたの思考に寄り添う「無料の執事」｜少し明るい高橋くん",
+      "excerpt": "非エンジニアの私でも実践できた！ ObsidianとGemini CLIで、あなたのノート術は劇的に変わる  「第二の脳」として無限の可能性を秘めたツール、Obsidian。 しかし、そのあまりの自由さゆえに、私たちはいつしか「思考する」ことよりも「整理する」ことに頭を悩ませてはいないでしょうか。    ファイル名の迷宮: 「このノート、後で探せる名前はなんだろう…」    フォルダ分けの深淵: 「このメモは『アイデア』？それとも『タスク』？」    美学という名の呪縛: 「自分で決めたルールだけど、守るのが正直しんどい…」    私自身もエンジニアではありませんが、この「小さな面倒」",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Obsidian",
+        "Gemini",
+        "ナレッジマネジメント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-14T02:12:53.884Z",
+      "markdown_path": "data/notebooklm_sources/【Obsidianの使い方が変わる】Gemini CLIは、あなたの思考に寄り添う「無料の執事」｜少し明るい高橋くん.md"
     }
   ]
 }
