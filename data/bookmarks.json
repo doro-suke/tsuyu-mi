@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-14T02:12:53.884Z",
+  "updated_at": "2026-09-15T02:23:02.892Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8439,6 +8439,60 @@
       "status": "unread",
       "analyzed_at": "2026-09-14T02:12:53.884Z",
       "markdown_path": "data/notebooklm_sources/【Obsidianの使い方が変わる】Gemini CLIは、あなたの思考に寄り添う「無料の執事」｜少し明るい高橋くん.md"
+    },
+    {
+      "id": "1850141493",
+      "url": "https://qiita.com/hoge_kawamuro/items/20a91a58680ed93326ee",
+      "title": "Claude Code × Obsidianで実現！Qiita記事執筆を完全自動化したら、記事が書くのが楽しくなった話 - Qiita",
+      "excerpt": "Claude Code × Obsidianで実現！Qiita記事執筆を完全自動化したら、記事が書くのが楽しくなった話",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "ワークフロー自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-15T02:21:52.673Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code × Obsidianで実現！Qiita記事執筆を完全自動化したら、記事が書くのが楽しくなった話 - Qiita.md"
+    },
+    {
+      "id": "1821826804",
+      "url": "https://note.com/ai_labo26/n/n6ed645ffe0eb",
+      "title": "AIで動画ショート編集を量産する副業フロー｜TikTok×YouTube Shorts実例｜あいラボ",
+      "excerpt": "「動画編集を副業にしたいけど、編集スキルがない」「毎日投稿なんて無理だよ」——そんな声をよく耳にします。  実は、AIツールを組み合わせれば、未経験者でも1本30〜40分でショート動画を完成させ、量産する仕組みが2026年現在すでに整っています。  私自身がこのフローを試したところ、慣れてからは1日2〜3本のペースで制作できるようになりました。月100本投稿が現実的になると、TikTok・YouTube Shortsの収益化条件も自然と見えてきます。  この記事では、AI×ショート動画副業の具体的なワークフロー、使うツール、実際の収益モデルまでまとめて解説します。        AIで",
+      "summary": "",
+      "score": 18,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "副業",
+        "ショート動画"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-15T02:22:44.763Z",
+      "markdown_path": "data/notebooklm_sources/AIで動画ショート編集を量産する副業フロー｜TikTok×YouTube Shorts実例｜あいラボ.md"
+    },
+    {
+      "id": "1821826799",
+      "url": "https://note.com/nick_ai/n/nca1d40022766",
+      "title": "AIだけで作った動画でYouTube収益化するまでのリアル記録｜ニック",
+      "excerpt": "昨今、画像生成や動画生成のAIの進化が凄まじく、それらを活用して作られた動画がSNSでバズっているのを良く見かけますよね。  私もクリエイティブ系の生成AIに高い関心があり、長くキャッチアップしていたので自分でもYouTubeチャンネルを作ってみることにしました。  今回のnoteでは、AI動画で作ったYouTubeチャンネルの実際のアナリティクス画面を交えて感想等をシェアしたいと思います。  二ヶ月ちょっとで収益化達成 7-9月のデータ  結果からお伝えすると2025年の7月にチャンネル開設し、約70日後に収益化条件をクリアすることが出来ました。  最初の動画を投稿してから一ヶ月半ほ",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成",
+        "YouTube",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-15T02:23:02.892Z",
+      "markdown_path": "data/notebooklm_sources/AIだけで作った動画でYouTube収益化するまでのリアル記録｜ニック.md"
     }
   ]
 }
