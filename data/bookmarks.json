@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-16T02:14:05.640Z",
+  "updated_at": "2026-09-17T02:17:26.626Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8511,6 +8511,57 @@
       "status": "unread",
       "analyzed_at": "2026-09-16T02:14:05.640Z",
       "markdown_path": "data/notebooklm_sources/AIショート動画で万バズりチャレンジ！｜AI動画万バスりたい.md"
+    },
+    {
+      "id": "1856645308",
+      "url": "https://qiita.com/tags/comfyui",
+      "title": "comfyuiとは？開発に役立つ使い方、トレンド記事やtips - Qiita",
+      "excerpt": "comfyuiに関する情報が集まっています。現在169件の記事があります。また20人のユーザーがcomfyuiタグをフォローしています。",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ComfyUI",
+        "画像生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-17T02:16:13.009Z",
+      "markdown_path": "data/notebooklm_sources/comfyuiとは？開発に役立つ使い方、トレンド記事やtips - Qiita.md"
+    },
+    {
+      "id": "1850141596",
+      "url": "https://note.com/mekann/n/ne94474f1e423",
+      "title": "Nefe",
+      "excerpt": "あなたがアクセスしたページは削除されたか\nURLが変更されているため表示することができません。",
+      "summary": "",
+      "score": 0,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "リンク切れ"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-17T02:17:07.649Z",
+      "markdown_path": "data/notebooklm_sources/Nefe.md"
+    },
+    {
+      "id": "1850141541",
+      "url": "https://note.com/iam_shin/n/n329ee1050cda",
+      "title": "Obsidian×Cursorでコンテキストエンジニアリングを実現し、LLMに推論させる技術｜Shin",
+      "excerpt": "序章：コモディティ化する「答え」と、価値を増す「問い」  人工知能、特に生成AIの進化と普及は、我々の知的生産の風景を根底から、そして不可逆的に塗り替えつつあります。多くの人々がこの新しいツールを「少し賢くなった検索エンジン」として迎え入れているようですが、それはあまりに表層的で、危険ですらある誤解です。  AIを単なる「検索データベース」として使う限り、得られるのは凡庸でテンプレ化された情報の寄せ集めに過ぎません。それは思考のショートカットであると同時に、我々の知性を浅薄化させ、陳腐化させるリスクを内包しています。  本質的な変化は、知的生産におけるボトルネックの劇的な移動にあります",
+      "summary": "",
+      "score": 72,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Cursor",
+        "コンテキストエンジニアリング",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-17T02:17:26.626Z",
+      "markdown_path": "data/notebooklm_sources/Obsidian×Cursorでコンテキストエンジニアリングを実現し、LLMに推論させる技術｜Shin.md"
     }
   ]
 }
