@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-17T02:17:26.626Z",
+  "updated_at": "2026-09-19T02:08:40.742Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8562,6 +8562,78 @@
       "status": "unread",
       "analyzed_at": "2026-09-17T02:17:26.626Z",
       "markdown_path": "data/notebooklm_sources/Obsidian×Cursorでコンテキストエンジニアリングを実現し、LLMに推論させる技術｜Shin.md"
+    },
+    {
+      "id": "1858008069",
+      "url": "https://zenn.dev/canly/articles/45da96250c7028",
+      "title": "Claude Code の Dynamic Workflows を触ってみた: マルチエージェント並列オーケストレーションの概念と体験",
+      "excerpt": "本記事は 2026/5/29(日本時間)時点の公式ブログ[1]と公式 X 告知[2]に基づく初出時の内容です。当時 Dynamic Workflows はリサーチプレビュー段階でしたが、その後の GA 化に伴う仕様・利用条件の変更は下記の追記にまとめています",
+      "summary": "",
+      "score": 85,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-19T02:05:58.318Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code の Dynamic Workflows を触ってみた_ マルチエージェント並列オーケストレーションの概念と体験.md"
+    },
+    {
+      "id": "1858007560",
+      "url": "https://zenn.dev/akasara/articles/ccfb2f7a5174e0",
+      "title": "Claude Code の Dynamic Workflows を理解する — Subagents / Skills との違いと実務での使い",
+      "excerpt": "Claude Code で Subagents や Skills を使い始めると、次にぶつかるのが 「大きなタスクをどう分割し、どう検証し、どう再利用するか」 という問題です。",
+      "summary": "",
+      "score": 85,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "AIエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-19T02:06:16.821Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code の Dynamic Workflows を理解する — Subagents _ Skills との違いと実務での使い.md"
+    },
+    {
+      "id": "1858006035",
+      "url": "https://www.gaipack.ai/blog/dynamic-workflows-blog",
+      "title": "Claude Code「Dynamic Workflows」で仕様書のない88画面を10分で調査してみた🚀｜gaipack",
+      "excerpt": "Claude Codeの新機能「Dynamic Workflows」を使い、仕様書が存在しない既存システムの画面調査を行いました。数十〜数百のサブエージェントを裏側で並列稼働させる仕組みで、88画面の調査を約10分で終えられました。本記事で...",
+      "summary": "",
+      "score": 65,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "ワークフロー自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-19T02:07:45.407Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code「Dynamic Workflows」で仕様書のない88画面を10分で調査してみた🚀｜gaipack.md"
+    },
+    {
+      "id": "1856645994",
+      "url": "https://aiaicreate.com/comfyui-fastvideo-fasth3/",
+      "title": "【ComfyUI】FastVideo FastH3の使い方｜8ステップで音つき動画を生成",
+      "excerpt": "ComfyUI公式テンプレートのFastVideo FastH3で、8ステップの生成で映像と音声が同期した動画を作る手順をまとめました。必要なモデル4つの配置先、テンプレートの読み込み、プロンプトや解像度、長さの決め方まで解説します。…",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ComfyUI",
+        "動画生成AI",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-19T02:08:40.742Z",
+      "markdown_path": "data/notebooklm_sources/【ComfyUI】FastVideo FastH3の使い方｜8ステップで音つき動画を生成.md"
     }
   ]
 }
