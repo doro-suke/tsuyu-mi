@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-19T02:08:40.742Z",
+  "updated_at": "2026-09-20T02:11:47.868Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8634,6 +8634,42 @@
       "status": "unread",
       "analyzed_at": "2026-09-19T02:08:40.742Z",
       "markdown_path": "data/notebooklm_sources/【ComfyUI】FastVideo FastH3の使い方｜8ステップで音つき動画を生成.md"
+    },
+    {
+      "id": "1859153622",
+      "url": "https://zenn.dev/chot/articles/268804cd6694ab",
+      "title": "WebMCPを試してみた感想。フロントエンドの必須技術になりそうな予感。",
+      "excerpt": "弊社には「Orizm」という自社プロダクトのCMSがあり、現在私はOrizmを用いたWebサイトの開発業務を担当しています。",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "WebMCP",
+        "AIエージェント",
+        "フロントエンド"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-20T02:11:29.355Z",
+      "markdown_path": "data/notebooklm_sources/WebMCPを試してみた感想。フロントエンドの必須技術になりそうな予感。.md"
+    },
+    {
+      "id": "1859153605",
+      "url": "https://pc.watch.impress.co.jp/docs/news/2142119.html",
+      "title": "Claude Codeのプロジェクトが刷新、「あとはよろしく」で並行作業し結果を生む",
+      "excerpt": "人間がタスクを分割してClaudeに手渡し、その結果をまたつなぎ合わせる手間から解放される。Anthropicは9月17日(米国時間)、Claude Codeの「プロジェクト」機能を刷新してベータ版として提供を開始した。Claude Codeでクラウドセッションを利用しており、かつWeb版/デスクトップ版で既存のプロジェクトを持たない一部のPro/Maxプランの契約者から展開する。",
+      "summary": "",
+      "score": 65,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-20T02:11:47.868Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeのプロジェクトが刷新、「あとはよろしく」で並行作業し結果を生む.md"
     }
   ]
 }
