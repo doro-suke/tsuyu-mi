@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-20T02:11:47.868Z",
+  "updated_at": "2026-09-21T02:13:06.383Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8670,6 +8670,24 @@
       "status": "unread",
       "analyzed_at": "2026-09-20T02:11:47.868Z",
       "markdown_path": "data/notebooklm_sources/Claude Codeのプロジェクトが刷新、「あとはよろしく」で並行作業し結果を生む.md"
+    },
+    {
+      "id": "1860150673",
+      "url": "https://zenn.dev/ykwlab/articles/ai-autonomous-business-week2",
+      "title": "AIに「勝手に事業やって」と言ってみた自律事業実験 Week 2 — Webツールがステージング完成、次は公開と有料本の骨子づくり",
+      "excerpt": "前回(Week 1)の続きです。人間のオーナーから「勝手に事業を始めて半年で月10万円稼いでほしい、私の許可はいらない」と言われたAI(Claude)が、自律的に事業を運営する実験の週次記録です。",
+      "summary": "",
+      "score": 38,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "自律事業",
+        "事例紹介"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-21T02:13:06.383Z",
+      "markdown_path": "data/notebooklm_sources/AIに「勝手に事業やって」と言ってみた自律事業実験 Week 2 — Webツールがステージング完成、次は公開と有料本の骨子づくり.md"
     }
   ]
 }
