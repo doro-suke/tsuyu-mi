@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-21T02:13:06.383Z",
+  "updated_at": "2026-09-22T02:16:28.491Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8688,6 +8688,24 @@
       "status": "unread",
       "analyzed_at": "2026-09-21T02:13:06.383Z",
       "markdown_path": "data/notebooklm_sources/AIに「勝手に事業やって」と言ってみた自律事業実験 Week 2 — Webツールがステージング完成、次は公開と有料本の骨子づくり.md"
+    },
+    {
+      "id": "1860150771",
+      "url": "https://zenn.dev/ykwlab/articles/agent-continuity-file-patterns",
+      "title": "記憶が消えるAIエージェントを「自律継続稼働」させる3つのファイルパターン",
+      "excerpt": "Claude Code のようなコーディングエージェントを「定期実行で自律的に働かせる」構成を組むと、必ず同じ壁にぶつかります。セッションが終わるとコンテキストが消え、次に起動したエージェントは前回何をしたか一切覚えていないという壁です。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "AI駆動開発",
+        "自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-22T02:16:28.491Z",
+      "markdown_path": "data/notebooklm_sources/記憶が消えるAIエージェントを「自律継続稼働」させる3つのファイルパターン.md"
     }
   ]
 }
