@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-23T02:18:36.484Z",
+  "updated_at": "2026-09-24T02:06:01.707Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8742,6 +8742,24 @@
       "status": "unread",
       "analyzed_at": "2026-09-23T02:18:36.484Z",
       "markdown_path": "data/notebooklm_sources/Claude Codeで「AI社員」と会社経営する時代へ。1人起業の新しい進め方｜AI物販の現場ノート｜副業×AI×物販＠46才初心者からでも始める地道な副業ストーリー.md"
+    },
+    {
+      "id": "1860150450",
+      "url": "https://zenn.dev/momoch/articles/88a825d0c374ea",
+      "title": "「1人開発スタジオ」の作り方：Gemini×Clineで回す自律型マルチエージェント開発パイプライン",
+      "excerpt": "「AIにコードを書かせる時代」から、「AIにAIをマネジメントさせる時代」へ。\n個人開発でコンテキスト爆発とハレーションに絶望した結果、ClineとGeminiで『3専門部門＋1ディレクター』の自律型開発スタジオを構築した実践記録です。",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "マルチエージェント",
+        "Cline"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-24T02:06:01.706Z",
+      "markdown_path": "data/notebooklm_sources/「1人開発スタジオ」の作り方：Gemini×Clineで回す自律型マルチエージェント開発パイプライン.md"
     }
   ]
 }
