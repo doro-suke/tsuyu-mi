@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-24T02:06:01.707Z",
+  "updated_at": "2026-09-25T02:22:52.891Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8760,6 +8760,78 @@
       "status": "unread",
       "analyzed_at": "2026-09-24T02:06:01.706Z",
       "markdown_path": "data/notebooklm_sources/「1人開発スタジオ」の作り方：Gemini×Clineで回す自律型マルチエージェント開発パイプライン.md"
+    },
+    {
+      "id": "1860150721",
+      "url": "https://zenn.dev/ykwlab/articles/ai-agent-publish-quality-gate",
+      "title": "AIエージェントに「公開してよい」を自己判定させる: 量産と品質を両立させないための判断基準",
+      "excerpt": "AIエージェントに記事・コード・成果物の継続的な生産を任せると、遅かれ早かれ「今週は何本出すか」という本数の目標が生まれます。ここで見落とされがちなのが、本数の目標と品質の下限は、別の軸として独立に管理しないと簡単に崩れるという点です。目標本数を達成することだけが評価軸になると、エージェントは(悪気なく)水準を下げてでも本数を揃えにいきます。",
+      "summary": "",
+      "score": 72,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "AI駆動開発",
+        "自律運用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-25T02:20:31.279Z",
+      "markdown_path": "data/notebooklm_sources/AIエージェントに「公開してよい」を自己判定させる_ 量産と品質を両立させないための判断基準.md"
+    },
+    {
+      "id": "1860150501",
+      "url": "https://note.com/tsukurulab/n/n1aff0e339f2b",
+      "title": "note初心者が、AIだけの疑似会社「TSUKURU LAB.」を作ってみることにした話｜TSUKURU LAB.",
+      "excerpt": "こんにちは、TSUKURU LAB.です。 軽く自己紹介すると、普段は会社員としてIT部門で働いています。仕事柄、PCでの効率化やちょっとしたツール作りには慣れているほうで、実はPCを使った副業自体もこれまで細々と続けてきました。ただ、noteというフィールドだけは今回が正真正銘の初挑戦です。「収益化とか興味あるけど、何を書けばいいんだろう」と思ったまま放置していたんですが、せっかくならただ記事を書くだけじゃなくて、ちょっと面白い切り口で始めてみようと思い立ちました。 そこで始めることにしたのが、Claudeの中に作った疑似会社です。屋号と同じ「TSUKURU LAB.」という名前を、",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "生成AI",
+        "AI活用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-25T02:21:57.647Z",
+      "markdown_path": "data/notebooklm_sources/note初心者が、AIだけの疑似会社「TSUKURU LAB.」を作ってみることにした話｜TSUKURU LAB..md"
+    },
+    {
+      "id": "1860150477",
+      "url": "https://note.com/yk_ventures/n/nfa824b40a62c",
+      "title": "AI会社を作ったDay 1。ゼロから8時間で初記事公開するまでの全記録｜YK_Ventures",
+      "excerpt": "「AIで会社を作る」と決めてから、最初の記事を公開するまでにやったことを全部書く。  前回の記事（月15,000円で\"AI社員5人\"の会社を作ったら、ちゃんと経営が回り始めた）で「AI社員チーム」のコンセプトを紹介した。  今回は、もっと具体的な話。実際にDay 1で何をやったのか、時系列で全部公開する。  これからAIで何か始めたい人の「最初の一歩」の参考になれば嬉しい。  ■ 前提：スタート時点で持っていたもの  ・Claude Max ×5（月額$100） ・Claude Code（CLI） ・やる気  以上。SNSアカウントなし、フォロワーなし、コンテンツなし。完全なゼロスター",
+      "summary": "",
+      "score": 65,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AIエージェント",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-25T02:22:34.259Z",
+      "markdown_path": "data/notebooklm_sources/AI会社を作ったDay 1。ゼロから8時間で初記事公開するまでの全記録｜YK_Ventures.md"
+    },
+    {
+      "id": "1860135635",
+      "url": "https://zenn.dev/yoshiaki0217/articles/9dd7a3666d475f",
+      "title": "Claude Codeを\"優秀な新卒部下\"として使い倒す：個人開発爆速化の全ワークフロー",
+      "excerpt": "AIで開発は本当に速くなったのか？\n「AIを使えば開発が速くなる」\nこのフレーズ自体は、もう聞き飽きるほど目にしてきました。",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "ワークフロー"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-25T02:22:52.891Z",
+      "markdown_path": "data/notebooklm_sources/Claude Codeを_優秀な新卒部下_として使い倒す：個人開発爆速化の全ワークフロー.md"
     }
   ]
 }
