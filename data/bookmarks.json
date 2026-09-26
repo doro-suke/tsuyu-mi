@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-25T02:22:52.891Z",
+  "updated_at": "2026-09-26T02:27:35.948Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8832,6 +8832,60 @@
       "status": "unread",
       "analyzed_at": "2026-09-25T02:22:52.891Z",
       "markdown_path": "data/notebooklm_sources/Claude Codeを_優秀な新卒部下_として使い倒す：個人開発爆速化の全ワークフロー.md"
+    },
+    {
+      "id": "1865199163",
+      "url": "https://qiita.com/joinclass/items/25329eaaf407d9668e37",
+      "title": "1人経営者のための朝30分ルーティン — AIダッシュボードで全部門を一瞬で把握する方法 - Qiita",
+      "excerpt": "1人経営者のための朝30分ルーティン — AIダッシュボードで全部門を一瞬で把握する方法",
+      "summary": "",
+      "score": 68,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "自動化パイプライン",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-26T02:25:30.652Z",
+      "markdown_path": "data/notebooklm_sources/1人経営者のための朝30分ルーティン — AIダッシュボードで全部門を一瞬で把握する方法 - Qiita.md"
+    },
+    {
+      "id": "1865199152",
+      "url": "https://qiita.com/caymezon/items/d82d0e2d30d2647293dc",
+      "title": "CLAUDE.mdが肥大化してきたら、手順はSKILL.mdに切り出す - Qiita",
+      "excerpt": "CLAUDE.mdが肥大化してきたら、手順はSKILL.mdに切り出す",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-26T02:25:47.760Z",
+      "markdown_path": "data/notebooklm_sources/CLAUDE.mdが肥大化してきたら、手順はSKILL.mdに切り出す - Qiita.md"
+    },
+    {
+      "id": "1865112365",
+      "url": "https://note.com/tothinks/n/n576105655a0c",
+      "title": "【2026年9月最新】ChatGPT最新モデルを抜いた？新AI「Claude Opus 5.5」をわかりやすく図解付きで徹底解説｜料金は約5分の1という衝撃！｜ひで｜AI時短ツール",
+      "excerpt": "Anthropicが2026年9月22日、新しいAIモデル「Claude Opus 5.5」を発表し、その日のうちに全プラットフォームで即日利用可能にしました。この発表がここまで大きく注目を集めているのは、単に性能や価格だけが理由ではありません。AnthropicのCEOであるDario Amodei氏が「AI業界は開発速度を落とすべきだ」と訴えるエッセイを公開してから、わずか10日後の出来事だったからです。本記事では、Claude Opus 5.5で何ができるようになったのか、価格はどう変わったのか、そしてこの「減速の呼びかけ」と「新モデル発表」という一見矛盾した動きの裏側に、いった",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "LLM",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-26T02:27:35.948Z",
+      "markdown_path": "data/notebooklm_sources/【2026年9月最新】ChatGPT最新モデルを抜いた？新AI「Claude Opus 5.5」をわかりやすく図解付きで徹底解説｜料金は約5分の1という衝撃！｜ひで｜AI時短ツール.md"
     }
   ]
 }
