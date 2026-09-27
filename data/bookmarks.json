@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-26T02:27:35.948Z",
+  "updated_at": "2026-09-27T02:24:10.086Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8886,6 +8886,114 @@
       "status": "unread",
       "analyzed_at": "2026-09-26T02:27:35.948Z",
       "markdown_path": "data/notebooklm_sources/【2026年9月最新】ChatGPT最新モデルを抜いた？新AI「Claude Opus 5.5」をわかりやすく図解付きで徹底解説｜料金は約5分の1という衝撃！｜ひで｜AI時短ツール.md"
+    },
+    {
+      "id": "1866496984",
+      "url": "https://zenn.dev/tmasuyama1114/articles/claude_code_permissions_recommended",
+      "title": "【コピペOK】Claude Code の permissions おすすめ設定と、allow / ask / deny の分け方",
+      "excerpt": "settings.json の permissions は、Claude Code に確認なしで実行させる操作と、止めたい操作を書く場所です。\nただ、どこまで許してよいかの基準がないと、空のままにするか、誰かの設定を貼ったままになりがちです。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "セキュリティ"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-27T02:21:32.078Z",
+      "markdown_path": "data/notebooklm_sources/【コピペOK】Claude Code の permissions おすすめ設定と、allow _ ask _ deny の分け方.md"
+    },
+    {
+      "id": "1865112685",
+      "url": "https://zenn.dev/hotcocoa/articles/5c5ab06c40862b",
+      "title": "PythonでBlenderを操作してみる",
+      "excerpt": "法政大学 Advent Calendar 2021 12日目担当のほっとここあです。\n学年問わず皆クオリティが高い記事ばかりで僕書いていいんかって気持ちしかないですが去年同様せっかくなので参加します。",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Blender",
+        "Python",
+        "3DCG"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-27T02:22:09.593Z",
+      "markdown_path": "data/notebooklm_sources/PythonでBlenderを操作してみる.md"
+    },
+    {
+      "id": "1865112675",
+      "url": "https://zenn.dev/mattyamonaca/articles/7e268f4134fcee",
+      "title": "Blender＋ControlNetを用いたアニメーションの作り方",
+      "excerpt": "まず初めに、Controlnetへの入力データとなる動画データを生成します。\n作業を始める前に、以下のリンクからBlenderで読み込めるopenposeライクのモデルをダウンロードします。",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "StableDiffusion",
+        "ControlNet",
+        "Blender"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-27T02:22:27.487Z",
+      "markdown_path": "data/notebooklm_sources/Blender＋ControlNetを用いたアニメーションの作り方.md"
+    },
+    {
+      "id": "1865112646",
+      "url": "https://zenn.dev/personal/articles/ad6d29913e1d79",
+      "title": "初めてで、BlenderをClaude Codeで操り、3Dモデルを作った ─ bpyスクリプトからMCPまで",
+      "excerpt": "今日、AIでBlender使う勉強会参加しました。\n始まるちょっと前から、Blender をたぶん触ったことがない状態から、AI(Claude Code)に Python コードを書いてもらって 3D モデルを作るところまで試してみました。",
+      "summary": "",
+      "score": 78,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "MCP",
+        "Blender"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-27T02:23:04.591Z",
+      "markdown_path": "data/notebooklm_sources/初めてで、BlenderをClaude Codeで操り、3Dモデルを作った ─ bpyスクリプトからMCPまで.md"
+    },
+    {
+      "id": "1865112636",
+      "url": "https://zenn.dev/pnd/articles/claude-castles",
+      "title": "Opus 5.5 の並外れた 3D モデリング能力で理想の城を作る",
+      "excerpt": "下の画像は、Opus 5.5 (effort: medium) がワンショットで作成した城の 3D モデルです。",
+      "summary": "",
+      "score": 30,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "3Dモデリング",
+        "LLMベンチマーク",
+        "Blender"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-27T02:23:25.764Z",
+      "markdown_path": "data/notebooklm_sources/Opus 5.5 の並外れた 3D モデリング能力で理想の城を作る.md"
+    },
+    {
+      "id": "1865112343",
+      "url": "https://note.com/humble_bobcat51/n/ncd3bae05a55b",
+      "title": "【Claude Opus 5.5】1日待ったベストプラクティス：Fable5.1級の性能で実質40％コスト減！第三者ベンチマーク、新effort設計、プロンプトの「削るべき指示」まで徹底調査。わたしの失｜ゆいまる‐IT界隈以外でAIを使いまくる2005年生まれ",
+      "excerpt": "Claude年間Pro課金だったわたし、歓喜。 Fable5.1を使えないClaudeほど、悲しいものは無かったです。Opus5のみは辛かったぁ。    Anthropicから最新フラッグシップモデル「Claude Opus 5.5」が発表されました。Claude 5.5ファミリーの第1弾となるモデル。  CEO Dario Amodei氏が提唱した「フロンティアの段階的・計画的な進化」以降で初となる本モデル。一言で言えば、「最上位クラスの性能を、より速く、圧倒的に安く、実用的に使えるようにした大本命。  公式発表から1日、各所から第三者ベンチマーク（CodeRabbit、Browse",
+      "summary": "",
+      "score": 58,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "プロンプトエンジニアリング",
+        "AIエージェント",
+        "LLM"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-27T02:24:10.086Z",
+      "markdown_path": "data/notebooklm_sources/【Claude Opus 5.5】1日待ったベストプラクティス：Fable5.1級の性能で実質40％コスト減！第三者ベンチマーク、新effort設計、プロンプトの「削るべき指示」まで徹底調査。わたしの.md"
     }
   ]
 }
