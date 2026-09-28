@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-27T02:24:10.086Z",
+  "updated_at": "2026-09-28T02:25:31.572Z",
   "articles": [
     {
       "id": "1702129693",
@@ -8994,6 +8994,24 @@
       "status": "unread",
       "analyzed_at": "2026-09-27T02:24:10.086Z",
       "markdown_path": "data/notebooklm_sources/【Claude Opus 5.5】1日待ったベストプラクティス：Fable5.1級の性能で実質40％コスト減！第三者ベンチマーク、新effort設計、プロンプトの「削るべき指示」まで徹底調査。わたしの.md"
+    },
+    {
+      "id": "1865199177",
+      "url": "https://qiita.com/mhongo5963/items/6f8b4cf5ea957b6783cb",
+      "title": "PHPしか知らない自分が、Cursor + Claude Codeの「相互レビュー体制」でAWSアプリを作り切った話 - Qiita",
+      "excerpt": "PHPしか知らない自分が、Cursor + Claude Codeの「相互レビュー体制」でAWSアプリを作り切った話",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "Cursor",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-28T02:25:31.572Z",
+      "markdown_path": "data/notebooklm_sources/PHPしか知らない自分が、Cursor + Claude Codeの「相互レビュー体制」でAWSアプリを作り切った話 - Qiita.md"
     }
   ]
 }
