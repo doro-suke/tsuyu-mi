@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-28T02:25:31.572Z",
+  "updated_at": "2026-09-29T03:10:27.417Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9012,6 +9012,60 @@
       "status": "unread",
       "analyzed_at": "2026-09-28T02:25:31.572Z",
       "markdown_path": "data/notebooklm_sources/PHPしか知らない自分が、Cursor + Claude Codeの「相互レビュー体制」でAWSアプリを作り切った話 - Qiita.md"
+    },
+    {
+      "id": "1865112663",
+      "url": "https://zenn.dev/con_ns_pgm/articles/f9eed41e33f933",
+      "title": "夜な夜なBlender生活の始め方",
+      "excerpt": "Blender。めっちゃ楽しいです。\n仕事が終わって帰ってきてから、ほぼ朝の時間までBlenderにひたすら打ち込んで\n休日の大半もBlenderに捧げるような生活をここ3週間くらい続けてきました。",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Blender",
+        "Three.js",
+        "フロントエンド"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-29T03:08:49.040Z",
+      "markdown_path": "data/notebooklm_sources/夜な夜なBlender生活の始め方.md"
+    },
+    {
+      "id": "1865112353",
+      "url": "https://note.com/kawakijourney_ai/n/nca27c8dbb7e5",
+      "title": "【Claude Opus 5.5】ついに本命登場！ClaudeCode最新モデルが海外Xで話題！ゲーム・3D・動画生成事例10選。AI副業/副業/ClaudeCode/CodeX/ChatGPT/Gem｜AI かわき｜世界一優しいAI画像生成の解説",
+      "excerpt": "はじめに  こんにちは、AIかわきです。  2026年9月22日、AnthropicからClaude Opus 5.5が発表されました。  公式発表では、Opus 5より1タスク当たりの実行コストが40％低く、出力速度は30％以上高速化。通常APIは100万トークン当たり入力4ドル、出力20ドル、キャッシュ読み取り0.20ドルです。  \n\n\nIntroducing Claude Opus 5.5\n\n\nClaude Opus 5.5 leads in agentic coding and knowledge work, a\n\n\nwww.anthropic.com\n\n\n\n \n    今回お",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "生成AI",
+        "事例紹介"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-29T03:09:09.948Z",
+      "markdown_path": "data/notebooklm_sources/【Claude Opus 5.5】ついに本命登場！ClaudeCode最新モデルが海外Xで話題！ゲーム・3D・動画生成事例10選。AI副業_副業_ClaudeCode_CodeX_ChatGPT_Ge.md"
+    },
+    {
+      "id": "1865112320",
+      "url": "https://note.com/akikito/n/n005fd83f3ae8",
+      "title": "「Opus 5.5が動画を作った」は本当か。聞いてみたら、1本作ってくれた｜Zun-Beho",
+      "excerpt": "本日Xのタイムラインに、本日午前1次半頃リリースされた「Claude Opus 5.5で作った」という動画がやたら流れてくる。手描き風のキャラが動いて、歌詞の字幕まで付いている。完成度が高い。  ただ、ずっと引っかかっていた。Claudeは文章とコードのAIのはずで、動画生成モデルじゃない。お願いするだけで動画ができるのか。それとも裏で何かの動画アプリと連動させているのか。  分からないことは本人に聞くのが早い。そう思ってClaudeに投げてみたら、答えが返ってくるだけじゃなく、1本作ってくれた。そこから最終的にMVを1本完成させるまでの流れを書いておく。   Claude Opus",
+      "summary": "",
+      "score": 48,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "動画生成",
+        "LLM活用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-29T03:10:27.417Z",
+      "markdown_path": "data/notebooklm_sources/「Opus 5.5が動画を作った」は本当か。聞いてみたら、1本作ってくれた｜Zun-Beho.md"
     }
   ]
 }
