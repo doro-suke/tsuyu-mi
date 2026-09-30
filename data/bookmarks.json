@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-29T03:10:27.417Z",
+  "updated_at": "2026-09-30T02:54:09.234Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9066,6 +9066,60 @@
       "status": "unread",
       "analyzed_at": "2026-09-29T03:10:27.417Z",
       "markdown_path": "data/notebooklm_sources/「Opus 5.5が動画を作った」は本当か。聞いてみたら、1本作ってくれた｜Zun-Beho.md"
+    },
+    {
+      "id": "1869762266",
+      "url": "https://gigazine.net/news/20260928-openrouter-jev-router/?utm_source=x&utm_medium=sns&utm_campaign=x_post&utm_content=20260928-openrouter-jev-router",
+      "title": "どのAIを使うかをJevで自動選択する「Jev Router」が登場、タスク難易度から適切なAIモデルを瞬時に判断可能でOpenRouterの既存ルーターより高精度",
+      "excerpt": "「Jev」は既存の大規模言語モデル(LLM)とは大きく異なるAIモデルで、適切なタスクでは非常に高速かつ安価に動作することから大きな注目を集めています。そんなJevで「タスクごとに最適なAIモデルを選択する」という操作を高速かつ高精度に実行できる「Jev Router」がOpenRouter上で利用可能となりました。",
+      "summary": "",
+      "score": 58,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "OpenRouter",
+        "LLMルーティング",
+        "AIエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-30T02:51:27.286Z",
+      "markdown_path": "data/notebooklm_sources/どのAIを使うかをJevで自動選択する「Jev Router」が登場、タスク難易度から適切なAIモデルを瞬時に判断可能でOpenRouterの既存ルーターより高精度.md"
+    },
+    {
+      "id": "1865112257",
+      "url": "https://qiita.com/suisuina/items/64f8c1fc184a75370cef",
+      "title": "Opus 5.5 を効率的に使うための要点まとめ - Qiita",
+      "excerpt": "Opus 5.5 を効率的に使うための要点まとめ",
+      "summary": "",
+      "score": 85,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-30T02:53:41.802Z",
+      "markdown_path": "data/notebooklm_sources/Opus 5.5 を効率的に使うための要点まとめ - Qiita.md"
+    },
+    {
+      "id": "1865112243",
+      "url": "https://qiita.com/hisashi-ito/items/514dfe14dd516dbd3380",
+      "title": "Opus 5.5 の登場で使い方によってはSonnet5よりもお得！ - Qiita",
+      "excerpt": "Opus 5.5 の登場で使い方によってはSonnet5よりもお得！",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "LLM",
+        "コスト最適化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-09-30T02:54:09.234Z",
+      "markdown_path": "data/notebooklm_sources/Opus 5.5 の登場で使い方によってはSonnet5よりもお得！ - Qiita.md"
     }
   ]
 }
