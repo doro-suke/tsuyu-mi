@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-30T02:54:09.234Z",
+  "updated_at": "2026-10-01T02:59:30.537Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9120,6 +9120,24 @@
       "status": "unread",
       "analyzed_at": "2026-09-30T02:54:09.234Z",
       "markdown_path": "data/notebooklm_sources/Opus 5.5 の登場で使い方によってはSonnet5よりもお得！ - Qiita.md"
+    },
+    {
+      "id": "1865112276",
+      "url": "https://qiita.com/Synthorai/items/ffb007c86981fcb9e39d",
+      "title": "Claude Opus 5.5 vs Opus 5：回答は同じ、出力 token は半分 - Qiita",
+      "excerpt": "Claude Opus 5.5 vs Opus 5：回答は同じ、出力 token は半分",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "LLM",
+        "コスト最適化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-01T02:59:30.537Z",
+      "markdown_path": "data/notebooklm_sources/Claude Opus 5.5 vs Opus 5：回答は同じ、出力 token は半分 - Qiita.md"
     }
   ]
 }
