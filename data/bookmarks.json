@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-01T02:59:30.537Z",
+  "updated_at": "2026-10-02T03:02:02.758Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9138,6 +9138,60 @@
       "status": "unread",
       "analyzed_at": "2026-10-01T02:59:30.537Z",
       "markdown_path": "data/notebooklm_sources/Claude Opus 5.5 vs Opus 5：回答は同じ、出力 token は半分 - Qiita.md"
+    },
+    {
+      "id": "1865112330",
+      "url": "https://note.com/aiju911/n/na753a6ee850b",
+      "title": "⚠️知らんままは、もったいない！！Claude Opus 5.5の使い方｜コピペで使える実践プロンプト7選｜YURI（結梨嘉望）｜世界を繋ぐニューリーダー",
+      "excerpt": "こんにちは、YURIです。  2026年9月22日、 Claudeの新しい頭脳 「Claude Opus 5.5」が公開されました。  ……で、こういうニュースが流れるたびに、 「また新しいの出たん？ もう追いつけへん」 ってなる人がほとんどやと思う。  その気持ち、ほんまによくわかる。  私も毎回、心のどこかで 「またか」って思ってるもん。  でも今回のこれだけは、 スルーしたらもったいないんよ。  理由はひとつ。  今回の目玉は「賢くなった」やなくて、 「安くなって、速くなった」やから。  賢さは、正直もう去年の時点で 私らの仕事には十分すぎたんよね。  足りひんかったのは 「毎日",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "プロンプトエンジニアリング",
+        "業務効率化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-02T03:00:47.332Z",
+      "markdown_path": "data/notebooklm_sources/⚠️知らんままは、もったいない！！Claude Opus 5.5の使い方｜コピペで使える実践プロンプト7選｜YURI（結梨嘉望）｜世界を繋ぐニューリーダー.md"
+    },
+    {
+      "id": "1865112289",
+      "url": "https://qiita.com/kinamocchi_tech/items/7898e9aac22353353cf0",
+      "title": "Claude Opus 5.5は本当に40%安い？名前だけ変えると損する落とし穴 - Qiita",
+      "excerpt": "Claude Opus 5.5は本当に40%安い？名前だけ変えると損する落とし穴",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "LLM",
+        "API"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-02T03:01:43.219Z",
+      "markdown_path": "data/notebooklm_sources/Claude Opus 5.5は本当に40%安い？名前だけ変えると損する落とし穴 - Qiita.md"
+    },
+    {
+      "id": "1860150704",
+      "url": "https://zenn.dev/ykwlab/articles/ai-agent-delegation-checklist",
+      "title": "AIエージェントに継続タスクを任せる前に確認する7つのチェック項目",
+      "excerpt": "AIエージェントに「毎週これをやっておいて」「定期的に確認して」という継続タスクを任せる場面が増えています。1回きりの作業と違って、継続タスクは人間が毎回見ていなくても事故らない設計になっているかが重要です。",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "AI駆動開発",
+        "運用設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-02T03:02:02.758Z",
+      "markdown_path": "data/notebooklm_sources/AIエージェントに継続タスクを任せる前に確認する7つのチェック項目.md"
     }
   ]
 }
