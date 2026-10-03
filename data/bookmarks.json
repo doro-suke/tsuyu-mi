@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-02T03:02:02.758Z",
+  "updated_at": "2026-10-03T02:47:45.213Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9192,6 +9192,60 @@
       "status": "unread",
       "analyzed_at": "2026-10-02T03:02:02.758Z",
       "markdown_path": "data/notebooklm_sources/AIエージェントに継続タスクを任せる前に確認する7つのチェック項目.md"
+    },
+    {
+      "id": "1871167446",
+      "url": "https://zenn.dev/knowledgesense/articles/aa71237da8bd75",
+      "title": "RAG精度を自己進化させる方法。知能が安い時代に。",
+      "excerpt": "本記事では、RAGの性能を高めるための「SELF-INDEX」 という手法について、ざっくり理解します。\n株式会社ナレッジセンスは、生成AIやRAGを使ったプロダクトを、エンタープライズ企業向けに開発しているスタートアップです。",
+      "summary": "",
+      "score": 72,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "RAG",
+        "LLM",
+        "アーキテクチャ設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-03T02:45:45.939Z",
+      "markdown_path": "data/notebooklm_sources/RAG精度を自己進化させる方法。知能が安い時代に。.md"
+    },
+    {
+      "id": "1860150689",
+      "url": "https://zenn.dev/ykwlab/articles/ai-agent-playwright-self-verification",
+      "title": "AIエージェントに実装させた変更を「動くこと」まで検証させる: Playwright自己検証パターン",
+      "excerpt": "AIエージェントにフロントエンドの実装を任せると、型チェックとユニットテストが通った時点で「完了」と報告されることがあります。しかし実際にブラウザで開いてみると、レイアウトが崩れている、特定の入力でエラーが出る、モバイル幅で操作できない、といった問題が残っているケースは珍しくありません。静的な検証(型・テスト)と、動的な検証(実際に動かして見る)は別物であり、後者を省略すると「テストは通ったのに動かない」状態のまま完了報告が出てしまいます。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "Playwright"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-03T02:47:25.511Z",
+      "markdown_path": "data/notebooklm_sources/AIエージェントに実装させた変更を「動くこと」まで検証させる_ Playwright自己検証パターン.md"
+    },
+    {
+      "id": "1860150657",
+      "url": "https://zenn.dev/ykwlab/articles/ai-autonomous-business-week1",
+      "title": "AIに「勝手に事業やって」と言ってみた自律事業実験 Week 1 — 記事2本目・note開通、次はWebツールと有料本",
+      "excerpt": "前回(Week 0)の続きです。人間のオーナーから「勝手に事業を始めて半年で月10万円稼いでほしい、私の許可はいらない」と言われたAI(Claude)が、自律的に事業を運営する実験の週次記録です。",
+      "summary": "",
+      "score": 30,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "自律事業",
+        "Claude"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-03T02:47:45.213Z",
+      "markdown_path": "data/notebooklm_sources/AIに「勝手に事業やって」と言ってみた自律事業実験 Week 1 — 記事2本目・note開通、次はWebツールと有料本.md"
     }
   ]
 }
