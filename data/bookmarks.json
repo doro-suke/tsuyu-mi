@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-03T02:47:45.213Z",
+  "updated_at": "2026-10-04T03:18:48.815Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9246,6 +9246,114 @@
       "status": "unread",
       "analyzed_at": "2026-10-03T02:47:45.213Z",
       "markdown_path": "data/notebooklm_sources/AIに「勝手に事業やって」と言ってみた自律事業実験 Week 1 — 記事2本目・note開通、次はWebツールと有料本.md"
+    },
+    {
+      "id": "1869763060",
+      "url": "https://zenn.dev/tenkei/articles/bad7b682aed22c",
+      "title": "ようやく CLAUDE.md が不要になった",
+      "excerpt": "Claude Code が AGENTS.md を読めるようになった。\nv2.1.277（2026/09/18リリース）から対応。",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "AGENTS.md"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-04T03:16:58.950Z",
+      "markdown_path": "data/notebooklm_sources/ようやく CLAUDE.md が不要になった.md"
+    },
+    {
+      "id": "1869762198",
+      "url": "https://zenn.dev/sun_asterisk/articles/e9b50f09839def",
+      "title": "Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化",
+      "excerpt": "Playwright 1.56 で追加された Playwright Test Agents は、E2E テストの計画・生成・修復を AI エージェントに任せる仕組みです。私たちは稼働中のプロジェクトで、このエージェントを GitHub Actions から無人で動かす仕組みを設計・実装し、検証しました。",
+      "summary": "",
+      "score": 90,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Playwright",
+        "GitHub Actions",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-04T03:17:18.510Z",
+      "markdown_path": "data/notebooklm_sources/Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化.md"
+    },
+    {
+      "id": "1865112314",
+      "url": "https://zenn.dev/ryuuri/articles/9aada2690dde3e",
+      "title": "Opus5.5にBlenderを使って、動画作成までやってもらった",
+      "excerpt": "たった２プロンプトで動画作成までやってくれるの凄すぎませんか？",
+      "summary": "",
+      "score": 40,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "プロンプトエンジニアリング",
+        "Blender"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-04T03:17:37.170Z",
+      "markdown_path": "data/notebooklm_sources/Opus5.5にBlenderを使って、動画作成までやってもらった.md"
+    },
+    {
+      "id": "1860150517",
+      "url": "https://zenn.dev/ykwlab/articles/ai-autonomous-business-week0",
+      "title": "AIに「勝手に事業やって月10万稼いで」と言ってみた — 自律事業実験 Week 0",
+      "excerpt": "2026年7月30日、私(Claude Code上で動くAI)は人間のオーナーからこう言われました。",
+      "summary": "",
+      "score": 75,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "自律型AI",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-04T03:18:12.239Z",
+      "markdown_path": "data/notebooklm_sources/AIに「勝手に事業やって月10万稼いで」と言ってみた — 自律事業実験 Week 0.md"
+    },
+    {
+      "id": "1860150490",
+      "url": "https://zenn.dev/joinclass/articles/ai-11-20260612220006-25894",
+      "title": "AIエージェント11部門を作って気づいた「いらない部門」と「必須の部門」",
+      "excerpt": "僕は一人会社で、AIエージェントを「部門」として運用しています。CEO（=僕）の下に、開発・マーケ・営業・経理・法務・CS・人事・出版・コンサル・グロース・事業開発の11部門を作り、Claude Codeのサブエージェントとして実装しました。",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "ClaudeCode",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-04T03:18:30.248Z",
+      "markdown_path": "data/notebooklm_sources/AIエージェント11部門を作って気づいた「いらない部門」と「必須の部門」.md"
+    },
+    {
+      "id": "1859153582",
+      "url": "https://ledge.ai/articles/spotify_claude_code_shunt_token_savings",
+      "title": "Spotify、Claude Codeの大量ファイル読み込みでトークン消費を平均90％削減 単純作業を別AIへ振り分ける「shunt」公開 | Ledge.ai",
+      "excerpt": "AI・人工知能関連のニュースやトレンドを高頻度で配信！最新ニュースやインタビュー、イベントレポートなどAIに関するさまざまな情報を独自の切り口で掲載",
+      "summary": "",
+      "score": 75,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "トークン最適化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-04T03:18:48.815Z",
+      "markdown_path": "data/notebooklm_sources/Spotify、Claude Codeの大量ファイル読み込みでトークン消費を平均90％削減 単純作業を別AIへ振り分ける「shunt」公開 _ Ledge.ai.md"
     }
   ]
 }
