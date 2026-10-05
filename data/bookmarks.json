@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04T03:18:48.815Z",
+  "updated_at": "2026-10-05T02:52:39.998Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9354,6 +9354,24 @@
       "status": "unread",
       "analyzed_at": "2026-10-04T03:18:48.815Z",
       "markdown_path": "data/notebooklm_sources/Spotify、Claude Codeの大量ファイル読み込みでトークン消費を平均90％削減 単純作業を別AIへ振り分ける「shunt」公開 _ Ledge.ai.md"
+    },
+    {
+      "id": "1865112300",
+      "url": "https://qiita.com/1nori_/items/bd8052e938a343c82555",
+      "title": "AI時代真っ只中に、ほぼ未経験で自社開発エンジニアとして新卒入社した僕が思うこと - Qiita",
+      "excerpt": "AI時代真っ只中に、ほぼ未経験で自社開発エンジニアとして新卒入社した僕が思うこと",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "キャリア"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-05T02:52:39.998Z",
+      "markdown_path": "data/notebooklm_sources/AI時代真っ只中に、ほぼ未経験で自社開発エンジニアとして新卒入社した僕が思うこと - Qiita.md"
     }
   ]
 }
