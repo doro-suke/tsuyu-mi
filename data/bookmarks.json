@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T02:52:39.998Z",
+  "updated_at": "2026-10-06T03:44:30.672Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9372,6 +9372,60 @@
       "status": "unread",
       "analyzed_at": "2026-10-05T02:52:39.998Z",
       "markdown_path": "data/notebooklm_sources/AI時代真っ只中に、ほぼ未経験で自社開発エンジニアとして新卒入社した僕が思うこと - Qiita.md"
+    },
+    {
+      "id": "1871334954",
+      "url": "https://qiita.com/hisashi-ito/items/e814569771d00675e19d",
+      "title": "Sonnet 5.5 の登場と Opus 5.5 の使い分け - Qiita",
+      "excerpt": "Sonnet 5.5 の登場と Opus 5.5 の使い分け",
+      "summary": "",
+      "score": 52,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "LLM",
+        "コスト最適化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-06T03:42:41.732Z",
+      "markdown_path": "data/notebooklm_sources/Sonnet 5.5 の登場と Opus 5.5 の使い分け - Qiita.md"
+    },
+    {
+      "id": "1858007545",
+      "url": "https://claudecode.digirise.ai/blog/claude-code-dynamic-workflows",
+      "title": "Claude Code Dynamic Workflows 完全解説 2026｜数百エージェントを協調させる新機能の使い方｜Claude Code 法人導入支援ブログ",
+      "excerpt": "2026年5月発表の Claude Code「Dynamic Workflows」を徹底解説。ultracode・/effort・/deep-research の使い方から、最大1,000エージェントの並列協調、Bun・Klarna・サイバーエージェントの活用例、企業導入時のコスト・ガバナンス設計まで網羅します。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-06T03:43:07.505Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code Dynamic Workflows 完全解説 2026｜数百エージェントを協調させる新機能の使い方｜Claude Code 法人導入支援ブログ.md"
+    },
+    {
+      "id": "1856646030",
+      "url": "https://zenn.dev/xtm_blog/articles/689d035440c0ae",
+      "title": "なぜエージェントハーネスで開発パイプラインを作っているのか",
+      "excerpt": "クロステック・マネジメントでは docker-agent を使い、エージェントハーネスで開発パイプラインを構築しています。現時点の設計では、プロダクトオーナーやプロダクトマネージャーが要求仕様書を Markdown で記述すると、それを受け取って、要求を満たす Web アプリケーションの Pull Request を生成する、という流れです。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "エージェントハーネス",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-06T03:44:30.672Z",
+      "markdown_path": "data/notebooklm_sources/なぜエージェントハーネスで開発パイプラインを作っているのか.md"
     }
   ]
 }
