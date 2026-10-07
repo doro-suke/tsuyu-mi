@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-07T03:13:59.490Z",
+  "updated_at": "2026-10-07T09:50:26.766Z",
   "articles": [
     {
       "id": "1702129693",
@@ -6573,40 +6573,6 @@
       "markdown_path": "data/notebooklm_sources/テーマを入力するだけでYouTube動画が完成する全自動システムを作った.md"
     },
     {
-      "id": "1821826866",
-      "url": "https://chapro.jp/prompt/12904",
-      "title": "ショート動画台本作成プロンプト | 生成AIプロンプト研究所「チャプロAI」",
-      "excerpt": "YouTube動画の魅力的な台本作成戦略 ターゲットオーディエンスを引き込むYouTube動画の台本作成方法を提供する このプロンプトは、YouTubeクリエイターが魅力的なコンテンツを制作するための台本作成のガイドラインを提示します。ターゲットオーディエンスを明確にし、動画の目的とストーリー構成を計画し、キャラクターやナレーションを設定することから、視聴者の関心を引くオープニングとクロージング、視覚効果や音声効果の指示まで、具体的な台本作成のステップをカバーします。この指示に従って、視聴者にとって魅力的でわかりやすい、効果的なYouTube動画の台本を作成することが期待されます。",
-      "summary": "",
-      "score": 25,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "プロンプトエンジニアリング",
-        "動画制作",
-        "生成AI"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-08-16T01:27:13.387Z",
-      "markdown_path": "data/notebooklm_sources/ショート動画台本作成プロンプト _ 生成AIプロンプト研究所「チャプロAI」.md"
-    },
-    {
-      "id": "1821826867",
-      "url": "https://exp-p.com/prompt/20084",
-      "title": "20084",
-      "excerpt": "お探しのページが見つかりません。",
-      "summary": "",
-      "score": 0,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "無効リンク"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-08-21T02:31:04.692Z",
-      "markdown_path": "data/notebooklm_sources/20084.md"
-    },
-    {
       "id": "1821826868",
       "url": "https://media.brain-market.com/ai-shortvideo-brain/",
       "title": "スマホ完結！AIを活用したショート動画の作り方と副業収益化ステップ",
@@ -6659,24 +6625,6 @@
       "status": "unread",
       "analyzed_at": "2026-08-21T02:32:29.840Z",
       "markdown_path": "data/notebooklm_sources/ショート動画作成をAIで作る方法7ステップ!誰でも簡単に始められて月20万円も!.md"
-    },
-    {
-      "id": "1821826864",
-      "url": "https://anakin.ai/ja-jp/apps/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E5%8B%95%E7%94%BB%E5%8F%B0%E6%9C%AC-2036",
-      "title": "ショート動画台本 | 無料のAIツール | Anakin.ai",
-      "excerpt": "Youtubeにショート動画を投稿するために、高品質の台本を生成するアプリです。",
-      "summary": "",
-      "score": 15,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "AIツール",
-        "動画制作",
-        "コンテンツ生成"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-08-21T02:32:53.389Z",
-      "markdown_path": "data/notebooklm_sources/ショート動画台本 _ 無料のAIツール _ Anakin.ai.md"
     },
     {
       "id": "1821826859",
@@ -6787,41 +6735,6 @@
       "markdown_path": "data/notebooklm_sources/Stable Diffusion WebUIのAPIだけを使う.md"
     },
     {
-      "id": "1821826862",
-      "url": "https://note.com/makino0012/n/n57bc9e09998b",
-      "title": "Nbceb",
-      "excerpt": "あなたがアクセスしたページは削除されたか\nURLが変更されているため表示することができません。",
-      "summary": "",
-      "score": 0,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "無効リンク",
-        "404"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-08-22T00:35:02.523Z",
-      "markdown_path": "data/notebooklm_sources/Nbceb.md"
-    },
-    {
-      "id": "1821826865",
-      "url": "https://exp-p.com/prompt/12904",
-      "title": "ショート動画台本作成プロンプト | 生成AIプロンプト研究所「チャプロAI」",
-      "excerpt": "YouTube動画の魅力的な台本作成戦略 ターゲットオーディエンスを引き込むYouTube動画の台本作成方法を提供する このプロンプトは、YouTubeクリエイターが魅力的なコンテンツを制作するための台本作成のガイドラインを提示します。ターゲットオーディエンスを明確にし、動画の目的とストーリー構成を計画し、キャラクターやナレーションを設定することから、視聴者の関心を引くオープニングとクロージング、視覚効果や音声効果の指示まで、具体的な台本作成のステップをカバーします。この指示に従って、視聴者にとって魅力的でわかりやすい、効果的なYouTube動画の台本を作成することが期待されます。",
-      "summary": "",
-      "score": 25,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "プロンプトエンジニアリング",
-        "YouTube",
-        "コンテンツ生成"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-08-22T00:35:23.858Z",
-      "markdown_path": "data/notebooklm_sources/ショート動画台本作成プロンプト _ 生成AIプロンプト研究所「チャプロAI」.md"
-    },
-    {
       "id": "1821826858",
       "url": "https://www.newinfo.press/entry/youtube/short/genre",
       "title": "YouTubeショート動画再生数アップの秘訣: エンタメ、ライフハック、雑学、美容・ファッション#トレンド - 大人のための『夢を叶える学校』",
@@ -6838,24 +6751,6 @@
       "status": "unread",
       "analyzed_at": "2026-08-22T00:35:43.030Z",
       "markdown_path": "data/notebooklm_sources/YouTubeショート動画再生数アップの秘訣_ エンタメ、ライフハック、雑学、美容・ファッション#トレンド - 大人のための『夢を叶える学校』.md"
-    },
-    {
-      "id": "1821826861",
-      "url": "https://oshiete.ai/items/90424605644601344",
-      "title": "ショート動画の冒頭３秒台本作成ツール | GMO天秤AI",
-      "excerpt": "▼最新作はこちら▼\nhttps://oshiete.ai/item_lists/73557973863457792\n\nショート動画で最も重要な冒頭３秒の台本作成に特化したプロンプトです。リールやYouTubeショート、TikTokで情報発信している人は、ぜひお気に入りにして活用してみて下さい。\n#インスタグラム　#instagram #tiktok #ショート動画　#マーケティングあなたの欲しいが見つかる生成AIのプロンプトポータルサイト",
-      "summary": "",
-      "score": 20,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "生成AI",
-        "プロンプト",
-        "動画制作"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-08-22T00:36:02.620Z",
-      "markdown_path": "data/notebooklm_sources/ショート動画の冒頭３秒台本作成ツール _ GMO天秤AI.md"
     },
     {
       "id": "1821826855",
@@ -6910,24 +6805,6 @@
       "status": "unread",
       "analyzed_at": "2026-08-22T00:36:57.783Z",
       "markdown_path": "data/notebooklm_sources/YouTube Shorts アルゴリズム 2026 完全解説：投稿時間・RPM・初速の攻略法.md"
-    },
-    {
-      "id": "1821826854",
-      "url": "https://www.youtube.com/watch?v=4yzxBZopWgc",
-      "title": "YouTubeアルゴリズムの正体と、小規模チャンネルが勝てる新時代【2026年先取り】",
-      "excerpt": "▼まずは相談してみる\nhttps://tatap.jp/consultation/?utm_so...\n▼著書「99％の経営者は知らない 中小企業のための正しいSNSマーケティング」はこちら\nhttps://amzn.asia/d/jgczWfe\nーーーーーーーーーーーーーーーーーーー\n▼より詳細な情報はX(Twitter)\n https://x.com/tomita_tatap\n▼ラジオで知りたい方はPodcast\nhttps://podcasters.spotify.com/pod/sh...\nーーーーーーーーーーーーーーーーーーー\n▼SNS全体のトレンドが知りたい方はNote\nhttps://note.com/tomita_tatap\n▼SNSのノウハウや最新情報などを深く知りたい方はこちら\nhttps://note.com/tomita_tatap/membership\nーーーーーーーーーーーーーーーーーーー\nこの動画は1.5倍速での視聴をお勧めします。\n短い時間で役に立つ情報を学べます。\nチャンネル登録・高評価・コメント◎お待ちしております！\n👇👇チャンネル登録はこちら👇👇\n   / @socialtalk_jp  \n  ーーーーーーーーーーーーーーーーーーー\n【出演者情報】\n株式会社TaTap 代表取締役CEO\n 富田 竜介(Ryusuke Tomita)\nーーーーーーーーーーーーーーーーーーー\n#YouTubeアルゴリズム #2026最新 #YouTubeトレンド",
-      "summary": "",
-      "score": 15,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "YouTube運用",
-        "SNSマーケティング",
-        "アルゴリズム"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-08-22T00:37:15.248Z",
-      "markdown_path": "data/notebooklm_sources/YouTubeアルゴリズムの正体と、小規模チャンネルが勝てる新時代【2026年先取り】.md"
     },
     {
       "id": "1821826849",
@@ -7308,24 +7185,6 @@
       "markdown_path": "data/notebooklm_sources/ComfyUIを使って1枚のグリッド画像から『なめらかなAI動画』を作る！ Python × ComfyUI（RIFE）で実現｜AutoScience.md"
     },
     {
-      "id": "1821826818",
-      "url": "https://note.com/freelife_creator/n/n2636ed67ed6b",
-      "title": "AI動画生成で月3万円!TikTok・YouTube Shorts収益化の始め方｜かける | AI活用 ライフクリエイター",
-      "excerpt": "こんにちは、かけるです!  最近、AIツールがめちゃくちゃ進化してるの知ってます?特に動画生成AIがヤバいんですよ。今まで「動画編集なんて難しそう...」って思ってた人でも、マジで簡単に収益化できる時代になりました。  今日は、AI動画生成を使ってTikTokやYouTube Shortsで月3万円を稼ぐ具体的な方法を全部教えちゃいます!  なぜ今、AI動画なのか?",
-      "summary": "",
-      "score": 15,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "AI動画生成",
-        "SNS収益化",
-        "副業"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-08-26T00:40:13.426Z",
-      "markdown_path": "data/notebooklm_sources/AI動画生成で月3万円!TikTok・YouTube Shorts収益化の始め方｜かける _ AI活用 ライフクリエイター.md"
-    },
-    {
       "id": "1821826832",
       "url": "https://note.com/genel/n/nc3ed564eff8f?magazine_key=m03efbb766a9a",
       "title": "Flux.2 ProとGrokで超リアルなAI画像を生成する方法を見つけた｜GENEL ｜ AIを用いた動画制作解説",
@@ -7360,24 +7219,6 @@
       "status": "unread",
       "analyzed_at": "2026-08-27T05:35:51.424Z",
       "markdown_path": "data/notebooklm_sources/ComfyUIでMiniMax H3を試してみた｜混合順.md"
-    },
-    {
-      "id": "1821826825",
-      "url": "https://www.youtube.com/watch?v=XyPoUW2jJvs&ab_channel=%E3%81%82%E3%81%84%E3%81%A6%E3%81%83%E3%81%AE%E3%81%AF%E3%81%98%E3%82%81%E3%81%A6%E3%81%AE%E3%83%87%E3%82%B8%E3%82%BF%E3%83%AB%E3%81%8A%E7%B5%B5%E3%81%8B%E3%81%8D",
-      "title": "Watch",
-      "excerpt": "With ChatGPT4o, I was able to make a realistic animated AI video by turning my face into the popular anime style. I was able to make it using just my smartphone, so I'll explain how to make it!\n\nWebsite used → Hedra\nhttps://www.hedra.com/\n\nBGM here ↓\n\n   / audiolibrary  \n\nDOVA-SYNDROME\nhttps://dova-s.jp/_mobile\n\n#videogeneratorai #chatgpt #Chat GPT #chat GPT #chatgpt4o #animation #anime #hedra #ai #AI",
-      "summary": "",
-      "score": 15,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "動画生成AI",
-        "ChatGPT",
-        "Hedra"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-08-27T05:36:09.309Z",
-      "markdown_path": "data/notebooklm_sources/Watch.md"
     },
     {
       "id": "1821826824",
@@ -8027,24 +7868,6 @@
       "markdown_path": "data/notebooklm_sources/【保存版】Claude Codeの「AI部下」が新人→即戦力に…“記憶”を育てる「神ワザ」7選（ビジネス＋IT）.md"
     },
     {
-      "id": "1821826808",
-      "url": "https://lilys.ai/ja/notes/ai-shorts-20251028/exposed-youtube-shorts-channel-ai",
-      "title": "AIを使って月3000万円稼ぐYouTubeショートチャンネルを暴露します（マジでヤバい）。",
-      "excerpt": "This video reveals how to expose a $300K/month YouTube Shorts channel that leverages AI for content creation. The central theme is to demonstrate how to re...",
-      "summary": "",
-      "score": 20,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "動画生成",
-        "YouTube運用",
-        "生成AI"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-09-06T01:48:27.549Z",
-      "markdown_path": "data/notebooklm_sources/AIを使って月3000万円稼ぐYouTubeショートチャンネルを暴露します（マジでヤバい）。.md"
-    },
-    {
       "id": "1843185028",
       "url": "https://zenn.dev/tokium_dev/articles/f3275032b3f1ee",
       "title": "Claude Codeと共に、初学者の壁を乗り越える",
@@ -8530,22 +8353,6 @@
       "markdown_path": "data/notebooklm_sources/comfyuiとは？開発に役立つ使い方、トレンド記事やtips - Qiita.md"
     },
     {
-      "id": "1850141596",
-      "url": "https://note.com/mekann/n/ne94474f1e423",
-      "title": "Nefe",
-      "excerpt": "あなたがアクセスしたページは削除されたか\nURLが変更されているため表示することができません。",
-      "summary": "",
-      "score": 0,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "リンク切れ"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-09-17T02:17:07.649Z",
-      "markdown_path": "data/notebooklm_sources/Nefe.md"
-    },
-    {
       "id": "1850141541",
       "url": "https://note.com/iam_shin/n/n329ee1050cda",
       "title": "Obsidian×Cursorでコンテキストエンジニアリングを実現し、LLMに推論させる技術｜Shin",
@@ -8652,24 +8459,6 @@
       "status": "unread",
       "analyzed_at": "2026-09-20T02:11:29.355Z",
       "markdown_path": "data/notebooklm_sources/WebMCPを試してみた感想。フロントエンドの必須技術になりそうな予感。.md"
-    },
-    {
-      "id": "1859153605",
-      "url": "https://pc.watch.impress.co.jp/docs/news/2142119.html",
-      "title": "Claude Codeのプロジェクトが刷新、「あとはよろしく」で並行作業し結果を生む",
-      "excerpt": "人間がタスクを分割してClaudeに手渡し、その結果をまたつなぎ合わせる手間から解放される。Anthropicは9月17日(米国時間)、Claude Codeの「プロジェクト」機能を刷新してベータ版として提供を開始した。Claude Codeでクラウドセッションを利用しており、かつWeb版/デスクトップ版で既存のプロジェクトを持たない一部のPro/Maxプランの契約者から展開する。",
-      "summary": "",
-      "score": 65,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "ClaudeCode",
-        "AI駆動開発",
-        "マルチエージェント"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-09-20T02:11:47.868Z",
-      "markdown_path": "data/notebooklm_sources/Claude Codeのプロジェクトが刷新、「あとはよろしく」で並行作業し結果を生む.md"
     },
     {
       "id": "1860150673",
@@ -9102,24 +8891,6 @@
       "status": "unread",
       "analyzed_at": "2026-09-30T02:53:41.802Z",
       "markdown_path": "data/notebooklm_sources/Opus 5.5 を効率的に使うための要点まとめ - Qiita.md"
-    },
-    {
-      "id": "1865112243",
-      "url": "https://qiita.com/hisashi-ito/items/514dfe14dd516dbd3380",
-      "title": "Opus 5.5 の登場で使い方によってはSonnet5よりもお得！ - Qiita",
-      "excerpt": "Opus 5.5 の登場で使い方によってはSonnet5よりもお得！",
-      "summary": "",
-      "score": 20,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "Claude",
-        "LLM",
-        "コスト最適化"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-09-30T02:54:09.234Z",
-      "markdown_path": "data/notebooklm_sources/Opus 5.5 の登場で使い方によってはSonnet5よりもお得！ - Qiita.md"
     },
     {
       "id": "1865112276",
