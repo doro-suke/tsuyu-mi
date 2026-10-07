@@ -20,12 +20,40 @@ const CONFIG = {
   GENERATE_SCRIPT: path.join(__dirname, 'generate_dashboard.js')
 };
 
+/**
+ * 古いチェックアウトでの実行を防止する（origin/main より遅れていたら中断）
+ */
+function assertUpToDate(allowStale) {
+  try {
+    execSync('git fetch', { stdio: 'pipe' });
+    const behind = parseInt(execSync('git rev-list --count HEAD..origin/main', { encoding: 'utf8' }).trim(), 10);
+    if (Number.isNaN(behind)) throw new Error('rev-list の結果を解釈できません');
+    if (behind > 0) {
+      if (allowStale) {
+        console.warn(`【警告】ローカルは origin/main より ${behind} コミット遅れています（--allow-stale により続行）`);
+        return;
+      }
+      console.error(`【エラー】ローカルは origin/main より ${behind} コミット遅れています。先に git pull してください。`);
+      console.error('（意図的に続行する場合のみ --allow-stale を指定）');
+      process.exit(1);
+    }
+  } catch (e) {
+    if (allowStale) {
+      console.warn(`【警告】git の状態確認に失敗しましたが --allow-stale により続行: ${e.message}`);
+      return;
+    }
+    console.error(`【エラー】git fetch / 比較に失敗しました: ${e.message}`);
+    process.exit(1);
+  }
+}
+
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function main() {
   const args = process.argv.slice(2);
   const isDryRun = args.includes('--dry-run');
   const idArgs = args.filter(a => !a.startsWith('--'));
+  assertUpToDate(args.includes('--allow-stale'));
 
   if (idArgs.length === 0) {
     console.error('使用法: node scripts/safe_prune.js [--dry-run] <ID1,ID2,...>');
@@ -166,7 +194,12 @@ async function main() {
       // Markdown ファイルの削除（パストラバーサル防御）
       if (article.markdown_path) {
         const resolvedMdPath = path.resolve(path.join(__dirname, '..', article.markdown_path));
-        if (resolvedMdPath.startsWith(resolvedNotebookDir) && fs.existsSync(resolvedMdPath)) {
+        const sharedByOther = bookmarksData.articles.some(o =>
+          !targetIdSet.has(String(o.id)) && o.markdown_path &&
+          path.resolve(path.join(__dirname, '..', o.markdown_path)) === resolvedMdPath);
+        if (sharedByOther) {
+          console.warn(`[SKIP] 他の記事が同じ markdown を参照しているため削除しません: ${article.markdown_path}`);
+        } else if (resolvedMdPath.startsWith(resolvedNotebookDir + path.sep) && resolvedMdPath.startsWith(resolvedNotebookDir) && fs.existsSync(resolvedMdPath)) {
           try {
             fs.unlinkSync(resolvedMdPath);
             console.log(`[Deleted MD] ${path.basename(resolvedMdPath)}`);
@@ -202,6 +235,8 @@ async function main() {
   console.log(`- ローカル削除: ${deletedArticles.length} 件`);
   console.log(`- バックアップ保存先: ${CONFIG.BACKUP_DIR}`);
   console.log('========================================');
+  console.log('\n⚠️ 重要: この変更は未コミットです。git commit して push しないとリモートのダッシュボードには反映されません。');
+  console.log('   （push しないと次回の GitHub Actions 同期で削除分が復活する恐れがあります）');
 }
 
 main().catch(err => {

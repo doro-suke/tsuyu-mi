@@ -40,7 +40,7 @@ const CONFIG = {
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 function sanitizeFileName(title) {
-  return (title || 'untitled').replace(/[\\/:*?"<>|]/g, '_').substring(0, 100);
+  return (title || 'untitled').replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/[\\/:*?"<>|]/g, '_').trim().substring(0, 100);
 }
 
 /**
@@ -146,7 +146,7 @@ async function scanUnprocessedRaindrops(apiKey, bookmarks) {
 
     for (const item of items) {
       const sanitizedTitle = sanitizeFileName(item.title);
-      const mdPath = path.join(CONFIG.NOTEBOOK_DIR, `${sanitizedTitle}.md`);
+      const mdPath = path.join(CONFIG.NOTEBOOK_DIR, `${item._id}_${sanitizedTitle}.md`);
       
       const isAlreadyProcessed = (existingUrls.has(item.link) || existingIds.has(item._id.toString())) && fs.existsSync(mdPath);
 
@@ -291,7 +291,7 @@ async function main() {
     for (const item of itemsToProcess) {
       console.log(`\n[Processing ${processedCount + 1}/${itemsToProcess.length}] ${item.title}`);
       const sanitizedTitle = sanitizeFileName(item.title);
-      const mdPath = path.join(CONFIG.NOTEBOOK_DIR, `${sanitizedTitle}.md`);
+      const mdPath = path.join(CONFIG.NOTEBOOK_DIR, `${item._id}_${sanitizedTitle}.md`);
 
       try {
         const extracted = await extractContent(item.link);
@@ -329,7 +329,7 @@ async function main() {
           tags: [...new Set([...(item.tags || []), ...tagsSuggested])],
           status: existing ? existing.status : 'unread',
           analyzed_at: new Date().toISOString(),
-          markdown_path: `data/notebooklm_sources/${sanitizedTitle}.md`
+          markdown_path: `data/notebooklm_sources/${item._id}_${sanitizedTitle}.md`
         };
 
         if (existing) {

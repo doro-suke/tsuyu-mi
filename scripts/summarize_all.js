@@ -12,7 +12,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
  * ファイル名をサニタイズする
  */
 function sanitizeFileName(title) {
-  return title.replace(/[\\/:*?"<>|]/g, '_').substring(0, 100);
+  return (title || 'untitled').replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/[\\/:*?"<>|]/g, '_').trim().substring(0, 100);
 }
 
 /**
@@ -120,7 +120,7 @@ async function main() {
     
     // 既存チェック
     const existing = bookmarks.articles.find(a => a.url === item.link);
-    if (existing && fs.existsSync(path.join(notebookDir, `${sanitizeFileName(item.title)}.md`))) {
+    if (existing && fs.existsSync(path.join(notebookDir, `${item._id}_${sanitizeFileName(item.title)}.md`))) {
       console.log('-> スキップ: 既に処理済みです。');
       continue;
     }
@@ -157,8 +157,8 @@ ${analysis.summary.map(s => `  - ${s}`).join('\n')}
 ## 本文
 ${contentText}
 `;
-      fs.writeFileSync(path.join(notebookDir, `${sanitizedTitle}.md`), mdContent, 'utf8');
-      console.log(`-> Markdown保存完了: ${sanitizedTitle}.md`);
+      fs.writeFileSync(path.join(notebookDir, `${item._id}_${sanitizedTitle}.md`), mdContent, 'utf8');
+      console.log(`-> Markdown保存完了: ${item._id}_${sanitizedTitle}.md`);
 
       // 4. データ保存
       const newArticle = {
@@ -172,7 +172,7 @@ ${contentText}
         tags: [...new Set([...(item.tags || []), ...(analysis.tags_suggested || [])])],
         status: 'unread',
         analyzed_at: new Date().toISOString(),
-        markdown_path: `data/notebooklm_sources/${sanitizedTitle}.md`
+        markdown_path: `data/notebooklm_sources/${item._id}_${sanitizedTitle}.md`
       };
 
       if (existing) {
