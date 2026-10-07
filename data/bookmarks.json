@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-06T03:44:30.672Z",
+  "updated_at": "2026-10-07T03:13:59.490Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9426,6 +9426,78 @@
       "status": "unread",
       "analyzed_at": "2026-10-06T03:44:30.672Z",
       "markdown_path": "data/notebooklm_sources/なぜエージェントハーネスで開発パイプラインを作っているのか.md"
+    },
+    {
+      "id": "1879447110",
+      "url": "https://zenn.dev/mizchi/articles/ai-coding-loop-formal",
+      "title": "俺のAIプログラミング手法(2026/10/05)",
+      "excerpt": "棚卸し的な記事です。",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "自律エージェント",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-07T03:10:04.531Z",
+      "markdown_path": "data/notebooklm_sources/俺のAIプログラミング手法(2026_10_05).md"
+    },
+    {
+      "id": "1858006578",
+      "url": "https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9",
+      "title": "Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita",
+      "excerpt": "Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する",
+      "summary": "",
+      "score": 90,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-07T03:11:38.629Z",
+      "markdown_path": "data/notebooklm_sources/Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita.md"
+    },
+    {
+      "id": "1856646597",
+      "url": "https://article.auone.jp/090465f4-bbd4-4e07-8236-ac82cebd9552",
+      "title": "SpotifyのエンジニアがClaude Codeのトークン消費を約90％削減した方法とは? | au Webポータル",
+      "excerpt": "音楽ストリーミングサービスのSpotifyが、Claude Codeで大量のトークンを消費する単純作業を別のAIモデルに任せることでトークン消費を大幅に削減する手法を公開しました。Spotifyのディ",
+      "summary": "",
+      "score": 85,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "コスト削減"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-07T03:12:19.581Z",
+      "markdown_path": "data/notebooklm_sources/SpotifyのエンジニアがClaude Codeのトークン消費を約90％削減した方法とは_ _ au Webポータル.md"
+    },
+    {
+      "id": "1821826801",
+      "url": "https://note.com/genel/n/nf65573471f3e?magazine_key=m6978390622df",
+      "title": "AIでつくる「食べ歩きVlog」の作り方解説 ｜ 全工程の画像プロンプトを公開！｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "先日Xにポストした、 「クリスマスマーケットで食べ歩きするインフルエンサーVlog」   ショート動画でよくみるVlog AIでここまで作れます✨  ・画像生成：Google Nano Banana Pro  ・動画生成：Seedance 1.0 Pro  #SousakuAI #Byteplus #PR pic.twitter.com/mDPcIaYosL — GENEL | 動画生成AI (@genel_ai) December 15, 2025 \n\n\n ありがたいことに、反応が良かったです✨   「あの動画の作り方どこかで解説予定はありますか？」 「こういうインフルエンサーっぽい",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "画像生成AI",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-07T03:13:59.490Z",
+      "markdown_path": "data/notebooklm_sources/AIでつくる「食べ歩きVlog」の作り方解説 ｜ 全工程の画像プロンプトを公開！｜GENEL ｜ AIを用いた動画制作解説.md"
     }
   ]
 }

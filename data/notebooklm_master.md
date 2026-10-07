@@ -1,5 +1,5 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/10/6 3:45:52
+最終更新日: 2026/10/7 3:14:14
 対象記事数: 50 件 (未読かつHigh優先度)
 
 ---
@@ -10411,7 +10411,234 @@ CLAUDE.mdを1時間だけでも整備してみる。それだけで、その後�
 
 ---
 
-## 24. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
+## 24. [俺のAIプログラミング手法(2026/10/05)](https://zenn.dev/mizchi/articles/ai-coding-loop-formal)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/10/7
+- **タグ**: #AI駆動開発, #自律エージェント, #ClaudeCode
+
+### 本文
+棚卸し的な記事です。
+
+ 人間の役割を定義する
+
+モデルの性能を評価する
+
+無茶振りしてどこまで出来るか観察
+何ができて、何ができなかったことがドメイン知識になる
+
+
+ループを構築する
+
+自動化して得られた時間で、評価指標を改善する
+
+
+評価指標を作る
+
+どの数値を改善すべきか、トレードオフは何を優先すべきか
+
+
+ループのイテレーションを評価する
+
+AI の行動ログを観察して、評価指標を正しく終えているか、
+
+
+テストとCIをチューニングする(その優先度を与える)
+
+評価指標が増えると、そのためのCIが長くなる
+何を優先して、何をやらないかを明確にする
+
+
+
+
+ 考える順番
+
+
+ これはAIに任せられる仕事か
+
+与えられない場合、そのブロッカーは何か
+
+
+
+ この仕事の完了の定義・評価指標は何か
+
+数値化できるものならAIで自動化できる
+
+
+
+ AIに指示して、一度やらせてみる
+
+まずやらせて、どういう振る舞いをするかを観察する
+
+
+
+ できたとき、このワークフローは自動化できるか？
+
+人間がつきっきりではなく、判断基準自体を作れるか
+
+
+
+ できなかったとき、その理由は何か？
+
+コンテキストの不足なら、その指示や守るべきテストを追加
+権限の不足なら、それを与えられるか検討
+性能の不足(半年寝て待つ)
+
+
+
+
+ 常にアンラーニングする
+プロンプトは高速に陳腐化する
+
+「あなたは優秀なプログラマです」
+「問題に取り組む前に、ゆっくり深呼吸してください」=> で数学の性能が 7ポイント改善していた
+
+これらはもう古い。
+グローバルプロンプトは、選択肢が複数あるときの判断基準を書く
+
+node は 24+ を使う
+既存のプロジェクトの設計は尊重しつつ、新規には npm ではなく、pnpm を使う
+nix を使う/使わない
+Rust は stable の 1.99 を使う
+gh stack を使う
+
+基本的には Agents.md のグローバルプロンプトは 書かない
+最新モデル知識に組み込まれてる知識は、半年ほど古い。
+skill は(おそらく)重点的に学習されているので、いらなくなる速度が速い。
+
+ 世界知識と /compact
+世界知識はモデルに埋め込まれてる情報で、コンテキストウィンドウに与えた情報は、それより優先される。
+モデルにとって既知の情報が多くなるようにプロンプトを与えると(=よく知られたOSSで構築すると)、結果的に高効率で動く。
+/compact 現在のコンテキストから、重要な情報だけ残して圧縮する。正しく判断基準が与えられていないと、間違ってる側に倒れるので注意。
+
+ 最初に: 既存のリポジトリへの適用
+「現状の構成を読み取って解説して」
+速習しつつ、自分の理解とズレてないか確認
+
+一般的ではないこだわりや制約は Agents.md に書く。
+
+ ループの基礎概念
+
+ 原始的な Ralph Loop
+# the bare idea
+while :; do
+  claude -p "Git 履歴を見て次にやることを探して"
+done
+ただの無限ループ。Git 履歴見て次にやることを決める。
+
+ /goal
+/goal Issues を全部潰して
+claude session hook で、セッションが終了するたびに 「Issues を全部潰して」 が再送される。
+goal を満たすまでエージェントは自律的にループする。
+
+ 実験的な手法: dspy/RLM
+ある程度ワークフローが決まってるものに対して、巨大コンテキストをインタプリターで実行されるコード断片に分解する。
+
+
+ 実験的な手法: マルチエージェント
+現在、決定的な解がない。難しいなら無理して使わなくていい
+
+「今あるタスクから、干渉が少ないものをレーンに分割して、レーンごとにサブエージェントを分割して」
+
+ 探索的改善
+エージェントを信用してある程度丸投げする。現状でもかなり賢いので、これでもだいぶ網羅できる。
+
+「現在の実装と最新の研究を比較して、参考になるものを列挙して」
+「SRE視点でテレメトリを計装して」
+「テストを壊さない範囲でリファクタリングをして」
+「データベースに対するN+1を見つけて潰して」
+「セキュリティ視点で攻撃側としてチェックリストを作り、localhostに閉じてペネトレーションして」
+
+視点が大事。誰にとって、何の数値が大事が大事だから、どう改善するか、という理由になる。自身がないときは、Docker や適切なサンドボックスで実行する。
+「一旦見つかったものは Umbrella Issue でまとめて」
+これは github で一つの Issue にまとめてくれる。あとは /goal でこれを渡すと、上から順にやってくれるだろう。
+自分が専門の範囲は精査して、自分が専門でない範囲はレビューを投げる。これはそのために作った、メンテナーの人格や好き嫌いを調べて、それに追従するスキル。
+
+
+ /goal と一緒に使う評価指標
+
+パフォーマンスベンチマーク
+
+CI では安定しないので、RSS やFuel など決定的な指標優先したい
+
+
+メモリ使用率の RSS
+
+hyperfine
+perf
+valglind
+
+
+厳しいルールの lint warning 数
+
+循環複雑度など
+https://github.com/moznion/cccc
+コード重複率
+https://github.com/mizchi/similarity
+
+
+Mutation Test の Kill 率
+VRT の一致率
+
+具体的な数値に落とせるものが望ましい。主観的な判断が必要だと、ユーザーが都度呼び出される。
+
+ 理解する (何を？)
+せめて振る舞いを把握したい。
+
+E2Eのケース名
+テストコード
+関数シグネチャ
+
+具体のコードを読むととてもじゃないが間に合わない。
+スキルを使って、AIに概念的に解説させる。
+
+これらでAIから自分にコードを説明させる。
+「mizchi/explainer で作った説明画像を gh --attach で添付してPRを作って」
+
+
+ 実験的: マージを自動化したい
+OpenAI はAIがトリアージして、ある程度マージを自動化しているらしい。
+
+安全なコードはAIがそのままマージ
+危険なコード(たとえばDBスキーマ変更や、terraformの変更)は人間にエスカレート
+
+TODO: 今自分でもこれをやるレビューツール作ってる。
+
+ 形式手法
+
+そもそも実装しようとしてる仕様がそもそも合ってるか？を強い型(依存型、時相論理)で検査する
+
+実現できない、存在がしようがないものを作ろうとしていないか
+最適化に使うアルゴリズムが正しいか
+自然言語がそのまま形式仕様に落とせるわけではない。その性質を記述するイメージになる。
+
+
+経験的に、マイクロサービス、マルチスレッドのキャッシュ制御はほぼ確実に漏れがある
+
+TLA+ か Quint を使うように指示する
+
+
+述語論理で書ける制約は Z3 を使う
+困ったら Z3 か TLA+ を使っておくとよい
+Lean はアルゴリズム自体の開発に使う
+ユーザー権限は周りは Alloy を使う
+
+
+ 形式仕様の実例
+
+「今あるコードを形式化できる部分を形式化して、それをテストオラクルに、実装がそれに従ってるか確認して」
+「モデル検査で反例が出たら、それを実際のテストケースに落として」
+「何を検査したか、ドメインの言葉を使わずに例え話で説明して」
+
+自分の使ってる仕様化スキル
+
+
+ 終わり
+またすぐ変わると思います
+
+---
+
+## 25. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/7/13
@@ -10449,7 +10676,7 @@ CLAUDE.mdを1時間だけでも整備してみる。それだけで、その後�
 
 ---
 
-## 25. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
+## 26. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/7/22
@@ -10935,7 +11162,7 @@ OSS: github.com/bokuwalily 🐙
 
 ---
 
-## 26. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
+## 27. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/8/31
@@ -11165,7 +11392,7 @@ CLAUDE.md・Skills・MCP という「ハーネス」の先にある「ループ�
 
 ---
 
-## 27. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
+## 28. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/10/4
@@ -13351,7 +13578,347 @@ Sun*は「誰もが価値創造に夢中になれる世界」をビジョンに�
 
 ---
 
-## 28. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
+## 29. [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
+- **優先度**: High
+- **スコア**: 90
+- **解析日時**: 2026/10/7
+- **タグ**: #ClaudeCode, #AI駆動開発, #マルチエージェント
+
+### 本文
+はじめに
+2026年5月28日、AnthropicはClaude Opus 4.8のリリースと同時に、Claude Codeの新機能 Dynamic Workflows をリサーチプレビューとして公開しました。
+従来のClaude Codeは1つのチャットターンを起点に順番に処理を進めていましたが、Dynamic Workflowsは JavaScriptのオーケストレーションスクリプトを自動生成し、最大1,000のサブエージェントを並列実行 する仕組みです。コードベース全体の移行、セキュリティ監査、マルチソース調査といった大規模タスクを、コンテキストウィンドウを消費せずに実行できます。
+本記事では、公式ドキュメントと公開情報をもとに、Dynamic Workflowsの仕組みと実際の使い方を解説します。
+
+この記事で学べること
+
+Dynamic Workflowsが通常のClaude Codeと何が違うのか
+3つのトリガー方法（/deep-research、workflow キーワード、/effort ultracode）
+実行フローとスクリプトの確認方法（Ctrl+G）
+ワークフローの保存・再利用とコスト管理
+
+
+対象読者
+
+Claude Codeを日常的に使っているエンジニア
+大規模コードベースの移行・監査・リサーチに活用したい開発者
+Claude Codeの有料プランを契約している、または検討している方
+
+
+前提環境
+
+Claude Code v2.1.154以上（claude --version で確認）
+
+すべての有料プラン（Pro / Max / Team / Enterprise）で利用可能。Proプランでは /config の Dynamic workflows 行から手動で有効化が必要
+Dynamic Workflowsが /config で有効化されていること
+
+
+
+TL;DR
+
+
+Dynamic Workflows: Claude Codeがタスクを分析し、JavaScriptのオーケストレーションスクリプトを生成→最大1,000サブエージェントが並列実行
+
+3つのトリガー: /deep-research（ビルトイン）、"workflow"キーワード、/effort ultracode
+
+
+Ctrl+G: 実行前にスクリプトを確認・承認可能
+
+/workflows: 実行中のフェーズ・エージェント数・トークン消費をリアルタイム監視
+
+保存: 成功したワークフローをスラッシュコマンドとして再利用可能
+
+注意点: トークン消費が通常の数倍〜数十倍になるため、スコープを絞って利用する
+
+
+
+Dynamic Workflowsとは何か
+
+通常のClaude Codeとの違い
+通常のClaude Codeでは、ユーザーのメッセージを受け取ったClaudeが 1つの会話ターンの中で順番に処理 を進めます。ファイルを読む→コードを書く→テストを実行する、という流れはすべて直列です。大規模なコードベースを扱うと、ファイル読み込みだけでコンテキストウィンドウが圧迫されるという課題がありました。
+Dynamic Workflowsは、この制約を次の仕組みで解消します。
+
+
+
+
+項目
+通常のClaude Code
+Dynamic Workflows
+
+
+
+
+実行モデル
+シングルエージェント（直列）
+マルチエージェント（並列）
+
+
+中間結果の保存場所
+コンテキストウィンドウ
+スクリプト変数
+
+
+最大エージェント数
+1
+1,000（同時16並列）
+
+
+タスク規模
+ファイル〜モジュール単位
+コードベース全体
+
+
+中断・再開
+セッション依存
+セッション内で再開可能
+
+
+
+
+仕組みの概要
+公式ドキュメント によると、Dynamic Workflowsの流れは以下のとおりです。
+
+
+プロンプト受信: ユーザーがワークフローをトリガーするプロンプトを送信
+
+スクリプト生成: ClaudeがタスクをJavaScriptのオーケストレーションスクリプトに変換
+
+承認ステップ: 承認プロンプトが表示され、Ctrl+G でスクリプトをエディタで確認できる
+
+並列実行: ワークフローランタイムがスクリプトを実行し、最大16サブエージェントが並列で作業
+
+結果集約: 各サブエージェントの結果がスクリプト変数に集約され、最終レポートとしてセッションに返される
+
+
+
+3つのトリガー方法
+
+方法1: /deep-research（ビルトインワークフロー）
+最も簡単に試せるのが、Claude Codeに同梱されたビルトインワークフローです。
+/deep-research Claude Code Dynamic Workflowsの最新仕様と制限事項
+
+/deep-research は複数の角度から情報を並列検索し、ソースのクロスチェックを行った後、引用付きの統合レポートを生成します。単なる検索ではなく、情報の信頼性を複数エージェントが相互検証する点が特徴です。
+
+方法2: "workflow"キーワード
+プロンプトに "workflow" という単語を含めるだけでDynamic Workflowsが起動します。
+Run a workflow to audit every API endpoint under src/routes for missing auth checks.
+
+Migrate the authentication module from Express 4 to Express 5 using a workflow. 
+Verify all tests pass at each stage.
+
+ポイントは スコープ、出力形式、検証ルール、編集ポリシーを明示すること です。「アプリを改善して」のような曖昧なプロンプトでは、サブエージェントが収束せずトークンを無駄に消費します。
+
+方法3: /effort ultracode
+
+/effort ultracode
+
+このコマンドを実行すると、Claude Codeが実質的な処理量を持つタスクに対して 自動的にWorkflowsを起動するかどうかを判断 するようになります。xhigh推論と組み合わせた自動オーケストレーションモードです。
+
+/effort ultracode を常時有効にするとトークン消費が大幅に増加します。重要なタスクに限定して使用することが推奨されています。
+
+
+
+実行フロー：ステップバイステップ
+
+
+ステップ1: バージョンと設定を確認
+claude --version
+# v2.1.154 以上であることを確認
+
+Claude Code内から設定を確認します。
+/config
+# Dynamic Workflows が有効になっていることを確認
+
+/usage
+# 現在のトークン消費量を確認（実行前のベースラインとして）
+
+
+ステップ2: プロンプトを送信
+ワークフローをトリガーするプロンプトを送信します。Claudeがタスクを分析し、実行計画を提示します。
+Run a workflow to find all TypeScript files in src/ that use deprecated React 
+lifecycle methods (componentWillMount, componentWillReceiveProps, 
+componentWillUpdate), list them with line numbers, then replace each with 
+the modern equivalent. Verify the test suite stays green after each file change.
+
+
+ステップ3: スクリプトを確認（Ctrl+G）
+承認プロンプトが表示されます。Ctrl+G を押すとスクリプトをエディタで開いて確認できます。不要なファイル変更や過剰なスコープが含まれていないかチェックした後、承認メニューから「Yes, run it」を選択してください。
+// Claudeが生成するオーケストレーションスクリプトのイメージ（例）
+const files = await findFiles("src/**/*.ts", { grep: "componentWill" });
+const phases = chunk(files, 4); // 4ファイルずつ並列処理
+
+for (const phase of phases) {
+  await Promise.all(phase.map(file => 
+    agent({ task: "migrate_lifecycle", file, verifyTests: true })
+  ));
+}
+return summarize(results);
+
+スクリプトを承認すると、ワークフローランタイムが起動します。
+
+ステップ4: 進行状況を監視
+/workflows
+
+/workflows パネルで以下をリアルタイムに確認できます。
+
+実行中のフェーズ番号
+アクティブなサブエージェント数（最大16）
+累計エージェント数（最大1,000）
+トークン消費量
+
+異常を検知した場合は /workflows パネルから実行を停止できます。
+
+ステップ5: 結果を受け取る
+すべてのサブエージェントが完了すると、集約された最終レポートがセッションに返されます。コンテキストウィンドウには中間データが蓄積されていないため、大規模なコードベースでも結果が明確に表示されます。
+
+
+ワークフローの保存・再利用
+成功したワークフローは、スラッシュコマンドとして保存して再利用できます。
+/workflows
+# 完了した実行を選択 → 's' キーで保存メニューを開く
+
+保存先は2種類あります。
+
+
+
+保存先
+パス
+適用範囲
+
+
+
+
+プロジェクト共有
+.claude/workflows/
+チーム全員で共有
+
+
+個人用
+~/.claude/workflows/
+自分のClaude Code環境のみ
+
+
+
+保存後は /audit-routes のようにスラッシュコマンドとして呼び出せます。定期的なセキュリティ監査やリグレッションチェックに同じワークフローを再利用する用途に適しています。
+
+
+コスト管理と安全な使い方
+
+トークン消費の目安
+Dynamic Workflowsは複数のサブエージェントが並列実行されるため、通常のClaude Code使用と比べてトークン消費が大幅に増加します。公式ドキュメントでは、ワークフローは通常の会話処理より大幅に多くのトークンを消費する可能性があることが明記されています。
+実行前に /usage でベースラインを確認し、実行後に消費量を把握する習慣をつけることが重要です。
+
+コスト最適化のポイント
+
+
+スコープを絞る: src/routes/** のように対象ディレクトリを明示する
+
+読み取り専用フェーズを分離: 最初のフェーズは分析のみ（変更なし）で実行し、結果を確認してから変更フェーズに進む
+
+段階的に実行: 小規模なサブセットで検証してから全体に適用する
+
+Ultracode常時ONを避ける: 必要なタスクの前後のみ有効化する
+
+
+安全な実行のために
+
+
+実行前に Ctrl+G でスクリプトを確認し、スコープが予期通りかチェックする
+破壊的変更（ファイル削除、DB更新等）を含むワークフローは2段階プロセスに分割する
+
+--dangerously-skip-permissions を使用している場合は特に慎重に
+
+
+
+
+ユースケース別ベストプラクティス
+
+コードベース移行
+フレームワークのバージョンアップやライブラリの置き換えは、Dynamic Workflowsが最も威力を発揮するユースケースの一つです。
+公開情報として、JavaScriptランタイム「Bun」の開発者Jarred Sumner氏がDynamic Workflowsを使用してBunをZigからRustへ書き直した事例があります。The Registerなどの複数メディアによると、6日間で約96万行 のコードを生成し、既存テストスイートの99.8%をパスしたと報告されています。
+推奨プロンプト構成:
+Run a workflow to migrate [対象] from [旧バージョン] to [新バージョン].
+- Scope: [ディレクトリ/ファイルパターン]
+- Verification: Run [テストコマンド] after each file change
+- Edit policy: Only modify files that fail verification
+- Output: Summary of changed files and test results
+
+
+セキュリティ監査
+Run a workflow to audit all API endpoints in src/api/ for:
+1. Missing authentication middleware
+2. Unsanitized input parameters
+3. Exposed sensitive data in responses
+
+For each finding, report: file path, line number, severity (high/medium/low), 
+and recommended fix. Do not modify any files.
+
+Do not modify any files を明示することで、読み取り専用の分析フェーズとして安全に実行できます。
+
+深度調査（/deep-research）
+技術選定や仕様調査には /deep-research が適しています。
+/deep-research What are the performance differences between Bun, Node.js, and Deno 
+for HTTP server workloads in 2026? Include benchmark sources and methodology.
+
+複数の角度から並列検索し、情報の信頼性をクロスチェックした引用付きレポートが得られます。
+
+
+注意点
+
+現在の制限
+
+
+リサーチプレビュー段階（2026年5月時点）: 仕様は今後変更される可能性があります
+
+対応プラン: すべての有料プラン（Pro / Max / Team / Enterprise）。Proは /config でDynamic workflowsを有効化が必要
+
+最小バージョン: Claude Code v2.1.154以上が必要
+
+同時実行上限: 最大16エージェント（CPUコア数に応じてスケール）
+
+累計上限: 1実行あたり最大1,000エージェント
+
+
+向いていないユースケース
+
+単一ファイルへの小規模な修正
+即座の応答が必要なインタラクティブなタスク
+明確なスコープ定義が難しい曖昧なタスク
+
+
+
+まとめ
+Claude Code Dynamic Workflowsは、コードベース全体の移行・監査・リサーチなど、これまで手動で分割していた大規模タスクを自動化するリサーチプレビュー機能です。
+
+
+JavaScriptオーケストレーション: 自動生成されたスクリプトが最大1,000サブエージェントを協調実行
+
+3つのトリガー: /deep-research（ビルトイン）、"workflow"キーワード、/effort ultracode
+
+
+透明性: Ctrl+G でスクリプトを事前確認し、/workflows でリアルタイム監視
+
+再利用性: 成功したワークフローをスラッシュコマンドとして保存
+
+トークン消費が大きい点に注意しつつ、スコープを明確に絞ったプロンプトと組み合わせることで、大規模なコーディングタスクの自動化を実現できます。
+なお、リサーチプレビュー段階のため仕様は今後変更される可能性があります。最新情報は公式ドキュメントでご確認ください。
+
+参考リンク
+
+
+Orchestrate subagents at scale with dynamic workflows — Claude Code Docs — Dynamic Workflows公式ドキュメント（制限・コスト・操作方法）
+
+Introducing Claude Opus 4.8 — Anthropic — Claude Opus 4.8とDynamic Workflowsの公式発表
+
+Anthropic's Bun Rust rewrite merged at speed of AI — The Register — Jarred Sumner氏のBun書き直し事例（96万行・6日間）
+
+What's new — Claude Code Docs — 最新リリース情報
+
+15Go to list of users who liked12Register as a new user and use Qiita more convenientlyYou get articles that match your needsYou can efficiently read back useful informationYou can use dark themeWhat you can do with signing up
+
+---
+
+## 30. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -13598,7 +14165,7 @@ AIに渡すルールは、自然言語ドキュメント1枚から三つの仕�
 
 ---
 
-## 29. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
+## 31. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -14106,7 +14673,7 @@ Skillは「自分専用のClaude Code」を育てることに近いと感じて�
 
 ---
 
-## 30. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
+## 32. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -14611,7 +15178,7 @@ Building agents with the Claude Agent SDK - Anthropic Engineering
 
 ---
 
-## 31. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
+## 33. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -14756,7 +15323,7 @@ banned_visual_motifs:
 
 ---
 
-## 32. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
+## 34. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/7
@@ -14992,7 +15559,7 @@ Slack, Google Calendar, Confluence等のMCPツールを活用して情報取得�
 
 ---
 
-## 33. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
+## 35. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -15186,7 +15753,7 @@ CLAUDE.mdにルールを書いて、WIP.mdに作業状態を残すようにし�
 
 ---
 
-## 34. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
+## 36. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -15495,7 +16062,7 @@ your-project/
 
 ---
 
-## 35. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
+## 37. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -15630,7 +16197,7 @@ Qiitaニュースを購読する
 
 ---
 
-## 36. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
+## 38. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -16432,7 +16999,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 37. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
+## 39. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -16483,7 +17050,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 38. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
+## 40. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -16742,7 +17309,7 @@ Claude Code や AI 自動化についてさらに深く学びたい方は、筆�
 
 ---
 
-## 39. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
+## 41. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -17285,7 +17852,7 @@ Prime 200銘柄
 
 ---
 
-## 40. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
+## 42. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -17465,7 +18032,7 @@ mainで作業 → worktreeを使う
 
 ---
 
-## 41. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
+## 43. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/12
@@ -18174,7 +18741,7 @@ Claude Code の 6種類のメモリと優先順位を理解して効率的に活
 
 ---
 
-## 42. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
+## 44. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/22
@@ -19414,7 +19981,7 @@ AIの「揮発性の高い記憶」を補うための「外部メモリ」とし
 
 ---
 
-## 43. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
+## 45. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/8
@@ -21006,7 +21573,7 @@ AI に相談して書いてもらいました。 ↩︎
 
 ---
 
-## 44. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
+## 46. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -21257,7 +21824,7 @@ hooks は決定論的な強制です。必ず同じ処理を再現したいも�
 
 ---
 
-## 45. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
+## 47. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -21756,7 +22323,7 @@ READMEが人間への手紙なら、AGENTS.md は、明日の自分・明日の�
 
 ---
 
-## 46. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
+## 48. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -22181,7 +22748,7 @@ GitHubで編集を提案
 
 ---
 
-## 47. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
+## 49. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -22410,7 +22977,7 @@ AI や人間が読んだときにどのような理解・認識するかをま�
 
 ---
 
-## 48. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
+## 50. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -22632,443 +23199,6 @@ Claude Code から Antigravity CLI を MCP ブリッジで呼び、Claude = 設�
 フレームワークの静的検査テストを協業ループに組み込むと、品質が機械的に担保される
 
 API キーを使う「プロキシ方式」は、Google の ToS 違反で BAN 報告があるため不採用としました。サブスク枠を正規に使う本構成が、コスト面でも規約面でも安心です。
-
----
-
-## 49. [Dynamic Workflowsを大名システムへ組み込んでみた - Qiita](https://qiita.com/tanaka_taro_JP_KYUSYU/items/b2efbc628053b643a8d8)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/6/20
-- **AI要約**:
-  大名システムにDynamic Workflowsを組み込み、エージェントの並列起動をスクリプトで制御。
-  承認が必要な対話フェーズと並行可能なWorkflowフェーズを分離し、作業の効率化と待ち時間削減を実現。
-  難易度に応じてモデルとeffortをスクリプトで固定し、口頭ルールに頼らないコスト最適化を機械的に保証。
-- **今読む理由**: Claude CodeのAgent SDKを利用した複数エージェントの並行制御、worktreeによるコンテキスト隔離、および検証フェーズにおける『敵対的検証（Sonnetで広く拾い、Opusで反証する）』の実装コードが具体的に示されており、現在のAI駆動開発パイプラインの設計に即時適用できるため。
-- **タグ**: #AI駆動開発, #Claude-Code, #Agent-SDK, #マルチエージェント, #コスト最適化
-
-### 本文
-はじめに
-Claude Code の Agent 機能で組んだ「大名システム」に、Dynamic Workflows を導入してみた話。
-役割分担・承認フロー・コスト最適化を、戦国の軍勢に例えながら整理します。
-
-私は Claude Code のサブエージェントを 四層ピラミッド（マスター / 殿 / 家老 / 足軽） で運用する「大名システム」というワークフレームを用いて開発をしている。
-そこへ Dynamic Workflows（決定論的にサブエージェントをファンアウトする仕組み）を組み込む修正を行った。
-ポイントは「全部を置き換えない」こと。承認ゲートのあるフェーズ（軍議）は対話のまま残し、ファンアウトが効くフェーズ（出陣・検分）だけ Workflow 化した。
-モデル（Opus / Sonnet / Haiku）と推論強度（effort）をスクリプトで固定できるようになり、コスト最適化が「口頭ルール」から「機械的保証」へ格上げされた。
-ただしこれはトークン削減ではなくコスト削減。この区別を最初に押さえておくと期待値を間違えない。
-
-
-1. 大名システムとは
-
-何度目かですが、所見の人もたくさんいてくれるだろうと期待し、何度でも説明します。
-
-複数の Claude エージェントを、戦国の指揮系統になぞらえた四層構造で動かす運用ルールです。
-
-
-
-役職
-実体
-責務
-
-
-
-
-マスター（天上人）
-人間（私）
-大方針の決定・最終承認
-
-
-殿（PM）
-メインの Claude セッション
-軍議の主催・采配・とりまとめ。直接コーディングはしない
-
-
-
-家老
-
-Explore / Plan サブエージェント
-偵察・設計・タスク分解・レビュー
-
-
-足軽
-Agent(isolation:"worktree")
-個別タスクの実装・テスト
-
-
-
-
-
-
-なぜこんな仕組みにしているのか
-最大の理由は git worktree による物理隔離 です。
-足軽は isolation: "worktree" で起動され、.claude/worktrees/agent-xxxxx/ という別ディレクトリで作業します。これにより、複数の Claude セッションを並行で走らせても HEAD の衝突（作業中ファイルの消失・コミット前修正の巻き戻し）が起きません。本陣（メインの作業ディレクトリ）は常に無傷です。
-開発フローは「三つの儀」で進みます。
-
-
-
-2. 何が課題だったのか
-大名システムはよく機能していましたが、/出陣 と /検分 には改善余地がありました。
-
-
-足軽の起動・回収を殿が手動で采配していた。並列度の調整や、どの足軽の完了を待ってから次を起動するか、を殿が毎回考える。
-
-モデルの振り分けが「口頭ルール」頼みだった。「機械的なタスクは Sonnet、難所は Opus」という方針はあるものの、強制力がなく、足軽が無自覚に高価なモデルを引くことがあった。
-
-待ち時間のロス。逐次に起動すると、速い足軽が遅い足軽を待ってアイドルする。
-
-これを改善するため Dynamic Workflows を組み込みました。
-
-3. Dynamic Workflows とは
-Claude Code（および Agent SDK）の仕組みで、サブエージェントの起動を JavaScript スクリプトで決定論的に記述できます。要点だけ:
-
-
-agent(prompt, opts) — サブエージェントを1体起動。opts で model / effort / isolation:'worktree' / schema を指定できる。
-
-pipeline(items, stage1, stage2, ...) — 各アイテムを複数ステージに流す。ステージ間にバリアがないので、アイテムAがstage2の最中にアイテムBがstage1、という並行が成立する。待ち時間を潰せる。
-
-parallel(thunks) — 全部を並行起動し、全完了を待つ（バリアあり）。
-
-budget — 「このターンは合計◯トークンまで」という上限に、起動する足軽数を追従させられる。
-
-つまり「足軽をどう並べ、どのモデルで、いくつまで」をコードで宣言できるわけです。大名システムの「家老の采配」を、決定論的なスクリプトに落とせる。
-
-4. 設計：どこを Workflow 化し、どこを残すか
-ここが今回いちばん頭を使ったところです。全フェーズを Workflow 化してはいけません。
-理由は Workflow が「起動したら最後まで自走し、途中で人間の承認を待てない」 から。大名システムの肝は マスターの御裁可 という人間の承認ゲートです。これを Workflow の中に閉じ込めると、承認のために止まれません。
-そこで判断基準を一つに絞りました：
-
-フェーズの途中に人間承認ゲートを挟むか？ → 挟むなら対話のまま、挟まないファンアウトなら Workflow 化。
-
-
-
-
-スキル
-方針
-理由
-
-
-
-
-/軍議
-対話のまま維持
-末尾に御裁可ゲートがある。Workflow は停止できない
-
-
-/出陣
-Workflow 化（推奨）
-独立足軽の並列実装＝pipeline + worktree の典型
-
-
-/検分
-Workflow 化（本命）
-次元別レビュー→敵対的検証の find/verify が最も効く
-
-
-
-/早馬（緊急バグ）
-対話のまま
-探索的で、決定論ファンアウトに乗りにくい
-
-
-
-承認ゲートは Workflow の「外」に置き、複数 Workflow を殿が直列につなぐ形にしました。
-
-
-各 Workflow は「足軽の大量のツール出力を殿のコンテキストに持ち込まず、構造化された結果だけ返す」ので、殿はフェーズ間の判断に集中できます。
-
-5. モデル / effort 振り分け（コスト最適化の核心）
-今回の最大の実利がこれです。agent() の model / effort をスクリプト定数に固定しました。
-
-
-
-用途
-model
-effort
-根拠
-
-
-
-
-殿（采配・最終判断）
-Opus
-—
-判断の質がボトルネック
-
-
-家老（軍議・設計）
-Opus
-high
-設計の質がボトルネック
-
-
-足軽：機械的タスク（DTO量産・i18n・リネーム）
-Haiku / Sonnet
-low
-単価が安く、浅い推論で足りる
-
-
-足軽：通常実装
-Sonnet
-medium
-デフォルト
-
-
-足軽：難所（並行制御・認可・複雑ドメイン）
-Opus
-high
-失敗コストが高い
-
-
-検分：一次レビュー（広く拾う）
-Sonnet
-low
-件数を稼ぐ
-
-
-検分：敵対的検証（詰める）
-Opus
-high
-偽陽性/偽陰性を潰す
-
-
-
-「広く安く拾い、要所だけ高価なモデルで詰める」 という配分を、スクリプトで強制できるようになりました。家老の口頭指示に頼らず、足軽が勝手に Opus を引くことがなくなります。
-軍議で作る「陣立て書」にも 推奨モデル/effort 列を新設し、そのまま出陣 Workflow の agent() に流し込めるようにしました。
-
-6. 実装：Workflow 骨格
-
-検分 Workflow（次元別レビュー → 敵対的検証）
-export const meta = {
-  name: 'kenbun',
-  description: '差分を次元別にレビューし、各findingを敵対的に検証する',
-  phases: [{ title: 'Review' }, { title: 'Verify' }],
-}
-
-const DIMENSIONS = [
-  { key: 'compile',  prompt: '...コンパイル/型エラーの観点でレビュー' },
-  { key: 'security', prompt: '...OWASP Top 10・認可漏れの観点でレビュー' },
-  { key: 'spec',     prompt: '...仕様書との整合の観点でレビュー' },
-  { key: 'reuse',    prompt: '...重複・簡素化の観点でレビュー' },
-]
-
-const results = await pipeline(
-  DIMENSIONS,
-  // 一次レビュー: 広く安く拾う
-  d => agent(d.prompt, { phase: 'Review', model: 'sonnet', effort: 'low',
-                         schema: FINDINGS_SCHEMA }),
-  // 各findingを敵対的に検証: Opusで反証を試みる
-  review => parallel(review.findings.map(f => () =>
-    agent(`次の指摘を敵対的に検証し、本物か反証せよ: ${f.title}`,
-          { phase: 'Verify', model: 'opus', effort: 'high', schema: VERDICT_SCHEMA })
-      .then(v => ({ ...f, verdict: v }))))
-)
-
-return results.flat().filter(Boolean).filter(f => f.verdict?.isReal)
-
-pipeline なので、security 次元の検証が走っている間に reuse 次元のレビューが並行します。待ち時間ゼロ。さらに「指摘が本物か」を別の Opus に反証させることで、AIにありがちな「もっともらしいが実在しないバグ」を弾けます（検証スキーマに「該当ファイル:行の実在」を必須項目として持たせるのがコツ）。
-
-出陣 Workflow（並列実装 → 自己ビルド）
-const tasks = args // 陣立て書 [{ scope, model, effort, prompt }]
-
-const built = await pipeline(
-  tasks,
-  // 実装: worktree隔離必須。難易度でモデルを振り分け
-  t => agent(t.prompt, { phase: 'Implement', isolation: 'worktree',
-                         model: t.model, effort: t.effort, schema: IMPL_SCHEMA }),
-  // 各worktreeで自己ビルド/テスト
-  (impl, t) => agent(`${t.scope} のworktreeでビルド・テストを通せ`,
-                     { phase: 'Build', isolation: 'worktree',
-                       model: 'sonnet', effort: 'low', schema: BUILD_SCHEMA })
-)
-return built.filter(Boolean)
-
-
-7. 新旧比較
-
-
-
-
-
-観点
-旧（手動 Agent 采配）
-新（Workflow）
-
-
-
-
-足軽の並列制御
-殿が手動で起動・回収
-
-pipeline / parallel で宣言
-
-
-待ち時間
-逐次起動でアイドル発生
-ステージ間バリアなしで詰められる
-
-
-モデル振り分け
-口頭ルール（強制力なし）
-スクリプトで固定（機械的保証）
-
-
-コンテキスト隔離
-あり（Agent 経由）
-あり（同等）
-
-
-予算上限への追従
-なし
-
-budget で自動スケール
-
-
-偽バグ対策
-レビュアー次第
-敵対的検証ステージで構造化
-
-
-承認ゲート
-対話で保持
-対話で保持（変えない）
-
-
-
-
-8. 正直な評価：トークン削減 ≠ コスト削減
-ここは誤解しやすいので強調しておきます。
-
-
-コンテキスト隔離による節約（足軽のツール出力を殿のコンテキストに入れない）は、旧来の Agent 経由の大名システムでもすでに得られていました。Workflow 化で上積みされる分は小さい。
-Workflow が上乗せする価値は 「コスト削減（安価モデル＋低 effort の強制）＋決定論制御＋予算上限」 です。
-
-モデル切替は「トークン削減」ではなく「コスト削減」。Haiku / Sonnet は Opus より単価が安いだけで、消費トークン量そのものが減るわけではありません。
-
-最大の費用対効果は、機械的フェーズを Haiku/Sonnet・低 effort に固定し、Opus を「難所」と「最終検証」だけに集中させる運用にあります。逆に、難所に安価モデルを当てて差し戻しが増えれば、再実行コストでむしろ高くつくので、配分は実績でチューニングする前提です。
-
-9. まとめ
-
-大名システム（四層エージェント運用）に Dynamic Workflows を部分的に組み込んだ。
-
-承認ゲートのあるフェーズは対話のまま、ファンアウトが効くフェーズだけ Workflow 化するのが肝。「全部 Workflow 化」は承認が止められず破綻する。
-モデル/effort をスクリプトで固定でき、コスト最適化が口頭ルールから機械的保証へ。
-ただしトークン削減ではなくコスト削減＋暴走防止である点を取り違えないこと。
-
-「家老の采配」を決定論スクリプトに落とし、「殿の判断」と「マスターの承認」は人間（と対話）に残す——責務の境界をそのまま Workflow の境界として残せたため、既存の大名システムのブラッシュアップにつながる設計となりました。
-3Go to list of users who liked3Register as a new user and use Qiita more convenientlyYou get articles that match your needsYou can efficiently read back useful informationYou can use dark themeWhat you can do with signing up
-
----
-
-## 50. [【AI駆動開発 / Claude Code】AGENT.mdや、product.md, DESIGN.md などのAIエージェント向けのMDファイル・ドキュメントについて📝](https://zenn.dev/manase/scraps/6bd12beaafd308)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/6/20
-- **AI要約**:
-  AIエージェント向けドキュメントの役割を挙動、前提、仕様、見た目、手順の5系統に分類
-  AGENTS.mdは業界標準規格でありClaude Code用のCLAUDE.mdとはシンボリックリンクで紐付ける
-  GoogleのDESIGN.mdとKiroのdesign.mdの混同しやすい目的や記述法の違いを明確化
-- **今読む理由**: 現在のAI駆動開発において、Claude CodeやCursor等のAIエージェントの挙動を最適化するためのファイル選定と、CLAUDE.mdとAGENTS.mdのシンボリックリンクによる共通化の手法が即座に実務に適用できるため。
-- **タグ**: #AI駆動開発, #Claude Code, #Cursor, #プロンプトエンジニアリング
-
-### 本文
-整理すると、これらの .md ファイルは「全部AIエージェント向け」という点では同じですが、役割のレイヤーが違うので混ざると分かりにくくなります。大きく4つの系統に分けると整理しやすいです。
-
- まず全体像
-
-
-
-ファイル
-系統
-答える問い
-主な提唱元
-
-
-
-
-AGENTS.md / CLAUDE.md
-エージェント挙動
-このリポジトリで「どう作業するか」
-オープン標準 / Anthropic
-
-
-product.md / tech.md / structure.md
-ステアリング（永続文脈）
-このプロジェクトは「何で・何を使い・どう構成するか」
-Kiro (AWS)
-
-
-requirements.md / design.md / tasks.md
-仕様駆動 (SDD)
-この機能は「何を・どう作り・どの順で」
-Kiro 他
-
-
-DESIGN.md
-デザインシステム仕様
-UIは「どう見えるべきか」
-Google Labs / Stitch
-
-
-SKILL.md
-スキル（再利用手順）
-特定タスクの「やり方の手順書」
-Anthropic
-
-
-
-
-
- ① エージェント挙動ファイル（リポジトリでの振る舞い）
-AGENTS.md はいま事実上の業界標準になりつつあるファイルです。リポジトリのルートに置く「エージェント向けREADME」で、READMEが人間向け（概要・コントリビューション方法）なのに対し、ビルド手順・テスト・コーディング規約といった、コーディングエージェントが必要とする詳細な文脈を入れる場所です。OpenAI Codex・Amp・Google Jules・Cursor・Factory など複数のエコシステムから生まれた共通フォーマットで、現在はLinux Foundation傘下のAgentic AI Foundationが管理しています。プレーンなMarkdownで必須項目はなく、モノレポではサブディレクトリにネストでき、編集対象に最も近いファイルが優先されます。
-CLAUDE.md はその Claude Code 版です。注意点として、Claude Code は AGENTS.md を読まず CLAUDE.md を使うので、両方のツールを揃えたい場合はシンボリックリンクで紐付けるのが定番です。
-同じ系統の他ツール版:
-
-
-.cursor/rules（旧 .cursorrules）— Cursor
-
-.github/copilot-instructions.md — GitHub Copilot
-
-GEMINI.md — Gemini CLI
-
-.windsurfrules — Windsurf
-
-AGENTS.md はこれらを一本化する狙いで登場した、という背景です。
-
-
- ② ステアリングファイル（product.md / tech.md / structure.md）
-これは Kiro（AWSのspec駆動IDE）の「Steering」 という仕組みのファイル群です。①が「作業ルール」なのに対し、こちらはプロジェクトの永続的な前提知識を与えます。product.md は製品の目的・対象ユーザー・主要機能・ビジネス目標を定義して技術判断の「なぜ」を理解させ、tech.md はフレームワーク・ライブラリ・技術的制約を、structure.md はファイル構成・命名規則・アーキテクチャ判断を文書化します。これらの基盤ファイルはデフォルトで毎回の対話に含まれ、Kiroのプロジェクト理解のベースラインになります。deployment-workflow.md などを足すこともあります。
-
-
- ③ 仕様駆動開発（SDD）ファイル
-機能ごとに「何を作るか」をコードを書く前に仕様として確定させる流れです。Kiro の SDD はrequirements.md（EARS記法のユーザーストーリーと受け入れ条件）、design.md（技術アーキテクチャ・シーケンス図・実装上の考慮点）、tasks.md（追跡可能な単位に分解した実装計画）の3点セットを生成します。
-ツールによっては単一の SPEC.md にまとめるスタイルもあります。実装前に書かれ「正」として扱われる構造化された仕様で、人間には曖昧さを減らし、AIには推測を排除させるアンカーになるのが核心です。specs.md のように Claude Code / Cursor / Copilot 横断で使えるフレームワークも出ています。
-
-
- ④ DESIGN.md（デザインシステム仕様）— ここが混同ポイント
-⚠️ ③のKiroの design.md（小文字・技術設計書）と、Googleの DESIGN.md（大文字・デザインシステム）は別物です。後者がおそらく質問の DESIGN.md だと思います。
-2026年4月10日にGoogle Labsが google-labs-code/design.md として公開した仕様で、UI生成ツール Google Stitch のリファレンス実装です。カバーするのはデザインシステム仕様で、ファイル上部にYAMLで機械可読なデザイントークン（色・タイポグラフィ・余白・コンポーネント）を、下部のMarkdown本文に人間可読なデザイン意図を書きます。トークンで表せないエッジケースや新しいコンポーネント、想定外のレイアウト制約に直面したとき、「ブランドの個性は楽観的・信頼できる・能動的」といった、トークン化できないがブランドに沿った判断を導く指示で隙間を埋めるという発想です。Claude Design / Cursor / Stitch などで使えます。
-
-
- ⑤ SKILL.md（スキル）
-特定タスクの再利用可能な手順書で、フロントマター付きMarkdownです（Claude Code / Anthropic のSkillsで使用、まさぴょんさんも記事品質レビュー用に作られていましたね）。①が「常時効くルール」なのに対し、SKILL.md は「必要なときに呼び出される手順」という位置づけです。
-
-
- まとめ：3レイヤー + SDD という見方
-ある記事が綺麗に整理していて、AIへの指示が「挙動(AGENTS.md) / 個別タスク(SKILL.md) / 見た目(DESIGN.md)」の3レイヤーに分かれ始めており、SDD がそれと並走する別の動きだとしています。
-つまり覚え方としては:
-
-
-挙動・規約 → AGENTS.md / CLAUDE.md
-
-プロジェクト前提 → product.md / tech.md / structure.md（Kiroステアリング）
-
-機能の仕様 → requirements / design(小文字) / tasks（SDD）
-
-見た目 → DESIGN.md（大文字・Google）
-
-タスク手順 → SKILL.md
-
-まさぴょんさんは Claude Code 中心なので、実務では CLAUDE.md（または AGENTS.md とのシンボリックリンク）+ SKILL.md が主軸、メンタリングや受託で仕様を固める場面で SDD系（requirements/design/tasks）、デザインを伴うフロント案件で DESIGN.md、という使い分けが現実的だと思います。
 
 ---
 
