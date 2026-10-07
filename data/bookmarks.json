@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-07T09:50:26.766Z",
+  "updated_at": "2026-10-07T10:19:52.601Z",
   "articles": [
     {
       "id": "1702129693",
@@ -1148,25 +1148,6 @@
       "status": "unread",
       "analyzed_at": "2026-05-08T00:07:49.619Z",
       "markdown_path": "data/notebooklm_sources/1702135435_Claude Codeで開発を自動化するSkills 5選 #AI - Qiita.md"
-    },
-    {
-      "id": "1702129677",
-      "url": "https://note.com/onemorevision/n/nff797077de74#69401c4d-c602-4571-8dde-7cfee9029291",
-      "title": "ComfyUI でクリエイティブな自由を手に入れろ！①『Z-Image-Turbo』LoRA + Amazing Z-Image Workflow v4.0｜One More Vision",
-      "summary": "Alibaba開発のZ-ImageはS3-DiT採用により、テキストと画像を統合処理する高効率な生成を実現\nZ-Image-Turboはわずか8ステップで高品質生成が可能で、16GB以下のVRAM環境に最適化\nComfyUIのサブグラフ機能を活用し、LoRAや各種制御をカプセル化した実戦的なワークフローを提供",
-      "score": 82,
-      "read_now_reason": "S3-DiTという最新アーキテクチャの解説に加え、ComfyUIでの具体的なサブグラフ構成やLoRA実装手順が明記されており、低リソースでの画像生成パイプライン構築に直結するため。",
-      "defer_reason": "画像生成の速度改善やVRAM節約が現在のプロジェクトの優先事項ではなく、既存のSDXLやFluxで運用が完結している場合は、技術解説としての参照に留まる。",
-      "tags": [
-        "ComfyUI",
-        "Z-Image-Turbo",
-        "画像生成AI",
-        "S3-DiT",
-        "最適化パイプライン"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-05-08T00:08:12.783Z",
-      "markdown_path": "data/notebooklm_sources/1702129677_ComfyUI でクリエイティブな自由を手に入れろ！①『Z-Image-Turbo』LoRA + Amazing Z-Image Workflow v4.0｜One More Vision.md"
     },
     {
       "id": "1709405521",
@@ -6194,24 +6175,6 @@
       "status": "unread",
       "analyzed_at": "2026-08-15T00:51:02.095Z",
       "markdown_path": "data/notebooklm_sources/1819891464_ChatGPT Images 2.0でショートドラマが作れる｜失敗から学んだ4つのこと｜GENEL ｜ AIを用いた動画制作解説.md"
-    },
-    {
-      "id": "1821826896",
-      "url": "https://note.com/amiiii_714/n/n0a38d0cd2520",
-      "title": "無限に再生される「AI×雑学」ショート動画で収益化する完全解説note｜まな",
-      "excerpt": "はじめに  本noteは、1日20分の作業で“見られ続ける”雑学ショート動画を量産し、 広告・アフィリエイト・デジタル商品（note等）・スポンサーで収益化するための実践書です。 専門知識や高価な機材は不要。3つのAIツールを使います。 \t•\tChatGPT（台本生成） \t•\tElevenLabs（高品質ナレーション） \t•\tCapCut（編集・字幕・書き出し）   全体像 1.動画で“お役立ち＋意外性”を60秒に凝縮（保存・ループされやすい構成） 2.概要欄・固定コメントから無料配布物へ誘導（例：無料版PDF／無料note） 3.無料配布物内でLINE登録 or メール登録を案内 4",
-      "summary": "",
-      "score": 20,
-      "read_now_reason": "",
-      "defer_reason": "",
-      "tags": [
-        "ショート動画",
-        "生成AI活用",
-        "コンテンツ制作"
-      ],
-      "status": "unread",
-      "analyzed_at": "2026-08-16T00:39:55.129Z",
-      "markdown_path": "data/notebooklm_sources/1821826896_無限に再生される「AI×雑学」ショート動画で収益化する完全解説note｜まな.md"
     },
     {
       "id": "1821826893",
