@@ -11,8 +11,24 @@ const BOOKMARKS_JSON = path.join(ROOT, 'data', 'bookmarks.json');
 const NOTEBOOK_DIR = path.join(ROOT, 'data', 'notebooklm_sources');
 const isDryRun = process.argv.includes('--dry-run');
 
-function sanitizeFileName(title) {
-  return (title || 'untitled').replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/[\/:*?"<>|]/g, '_').trim().substring(0, 100);
+function truncateByBytes(str, maxBytes) {
+  let bytes = 0;
+  let result = '';
+  for (const ch of str) {
+    const chBytes = Buffer.byteLength(ch, 'utf8');
+    if (bytes + chBytes > maxBytes) break;
+    bytes += chBytes;
+    result += ch;
+  }
+  return result;
+}
+
+function sanitizeFileName(title, maxBytes = 180) {
+  const cleaned = (title || 'untitled')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/[\\/:*?"<>|]/g, '_')
+    .trim();
+  return truncateByBytes(cleaned, maxBytes).trim() || 'untitled';
 }
 
 const data = JSON.parse(fs.readFileSync(BOOKMARKS_JSON, 'utf8'));

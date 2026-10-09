@@ -7,4 +7,4 @@ data/sample_raindrops.json
 .env
 .env.*
 node_modules/
-
+data/backups/

@@ -39,8 +39,21 @@ const CONFIG = {
  */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-function sanitizeFileName(title) {
-  return (title || 'untitled').replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/[\\/:*?"<>|]/g, '_').trim().substring(0, 100);
+function truncateByBytes(str, maxBytes) {
+  let bytes = 0;
+  let result = '';
+  for (const ch of str) {
+    const chBytes = Buffer.byteLength(ch, 'utf8');
+    if (bytes + chBytes > maxBytes) break;
+    bytes += chBytes;
+    result += ch;
+  }
+  return result;
+}
+
+function sanitizeFileName(title, maxBytes = 180) {
+  const cleaned = (title || 'untitled').replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/[\\/:*?"<>|]/g, '_').trim();
+  return truncateByBytes(cleaned, maxBytes).trim() || 'untitled';
 }
 
 /**
@@ -130,8 +143,8 @@ async function fetchRaindrops(apiKey, page = 0) {
  * 2. Raindrop から未処理記事（未登録または .md ファイル欠落）を安全にスキャン・キュー化
  */
 async function scanUnprocessedRaindrops(apiKey, bookmarks) {
-  const existingUrls = new Set(bookmarks.articles.map(a => a.url));
-  const existingIds = new Set(bookmarks.articles.map(a => a.id));
+  const existingById = new Map(bookmarks.articles.map(a => [a.id, a]));
+  const existingByUrl = new Map(bookmarks.articles.map(a => [a.url, a]));
   
   let unprocessedItems = [];
   let totalScanned = 0;
@@ -145,10 +158,16 @@ async function scanUnprocessedRaindrops(apiKey, bookmarks) {
     totalScanned += items.length;
 
     for (const item of items) {
-      const sanitizedTitle = sanitizeFileName(item.title);
-      const mdPath = path.join(CONFIG.NOTEBOOK_DIR, `${item._id}_${sanitizedTitle}.md`);
+      const existing = existingById.get(item._id.toString()) || existingByUrl.get(item.link);
+      let mdPath;
+      if (existing && existing.markdown_path) {
+        mdPath = path.resolve(__dirname, '..', existing.markdown_path);
+      } else {
+        const sanitizedTitle = sanitizeFileName(item.title);
+        mdPath = path.join(CONFIG.NOTEBOOK_DIR, `${item._id}_${sanitizedTitle}.md`);
+      }
       
-      const isAlreadyProcessed = (existingUrls.has(item.link) || existingIds.has(item._id.toString())) && fs.existsSync(mdPath);
+      const isAlreadyProcessed = Boolean(existing && fs.existsSync(mdPath));
 
       if (!isAlreadyProcessed) {
         unprocessedItems.push(item);
@@ -205,6 +224,11 @@ async function getSummary(apiKey, prompt, retryCount = 0) {
   });
 
   if (!response.ok) {
+    if (retryCount < CONFIG.MAX_RETRIES) {
+      console.log(`  [Network Error] curl失敗。15秒後にリトライします... (${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
+      await sleep(15000);
+      return getSummary(apiKey, prompt, retryCount + 1);
+    }
     throw new Error(`Gemini API 接続エラー (curl failed)`);
   }
 
@@ -214,17 +238,22 @@ async function getSummary(apiKey, prompt, retryCount = 0) {
     const errorCode = responseJson.error.code;
     const errorMessage = responseJson.error.message;
 
-    if (errorCode === 429 && retryCount < CONFIG.MAX_RETRIES) {
-      const waitTime = (retryCount + 1) * 30000 + 10000; // 40s, 70s, 100s...
-      console.log(`  [429 Error] レート制限に達しました。${waitTime/1000}秒後にリトライします... (${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
+    if ((errorCode === 429 || errorCode === 503 || errorCode === 500) && retryCount < CONFIG.MAX_RETRIES) {
+      const waitTime = errorCode === 503 ? (retryCount + 1) * 15000 : (retryCount + 1) * 30000 + 10000;
+      console.log(`  [${errorCode} Error] 一時的なAPI制限/高負荷です。${waitTime/1000}秒後にリトライします... (${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
       await sleep(waitTime);
       return getSummary(apiKey, prompt, retryCount + 1);
     }
     throw new Error(`Gemini API エラー: ${errorMessage} (Code: ${errorCode})`);
   }
 
-  if (!responseJson.candidates || !responseJson.candidates[0]) {
-      throw new Error("Gemini API からの応答が不正です（候補がありません）。");
+  if (!responseJson.candidates || !responseJson.candidates[0] || !responseJson.candidates[0].content) {
+    if (retryCount < CONFIG.MAX_RETRIES) {
+      console.log(`  [Candidate Empty] 応答候補が空でした。10秒後にリトライします... (${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
+      await sleep(10000);
+      return getSummary(apiKey, prompt, retryCount + 1);
+    }
+    throw new Error("Gemini API からの応答が不正です（候補がありません）。");
   }
   const text = responseJson.candidates[0].content.parts[0].text;
   const jsonMatch = text.match(/\{[\s\S]*\}/);
@@ -290,8 +319,10 @@ async function main() {
 
     for (const item of itemsToProcess) {
       console.log(`\n[Processing ${processedCount + 1}/${itemsToProcess.length}] ${item.title}`);
+      const existing = bookmarks.articles.find(a => a.url === item.link || a.id === item._id.toString());
       const sanitizedTitle = sanitizeFileName(item.title);
-      const mdPath = path.join(CONFIG.NOTEBOOK_DIR, `${item._id}_${sanitizedTitle}.md`);
+      const relativeMdPath = existing?.markdown_path || `data/notebooklm_sources/${item._id}_${sanitizedTitle}.md`;
+      const mdPath = path.resolve(__dirname, '..', relativeMdPath);
 
       try {
         const extracted = await extractContent(item.link);
@@ -316,8 +347,7 @@ async function main() {
         
         fs.writeFileSync(mdPath, mdContent, 'utf8');
 
-        const existing = bookmarks.articles.find(a => a.url === item.link || a.id === item._id.toString());
-        const newArticle = {
+                const newArticle = {
           id: item._id.toString(),
           url: item.link,
           title: item.title,
@@ -329,7 +359,7 @@ async function main() {
           tags: [...new Set([...(item.tags || []), ...tagsSuggested])],
           status: existing ? existing.status : 'unread',
           analyzed_at: new Date().toISOString(),
-          markdown_path: `data/notebooklm_sources/${item._id}_${sanitizedTitle}.md`
+          markdown_path: relativeMdPath
         };
 
         if (existing) {

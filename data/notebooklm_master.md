@@ -1,5 +1,5 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/10/7 19:19:52
+最終更新日: 2026/10/9 18:52:23
 対象記事数: 50 件 (未読かつHigh優先度)
 
 ---
@@ -10638,7 +10638,436 @@ Lean はアルゴリズム自体の開発に使う
 
 ---
 
-## 25. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
+## 25. [Opus 5.5の登場で、Anthropic公式が「やめて・変えて」と言い始めた8つのこと - Qiita](https://qiita.com/ot12/items/383bad5be9ed6667058a)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/10/9
+- **タグ**: #Claude, #プロンプトエンジニアリング, #AIエージェント
+
+### 本文
+この記事で分かること
+2026-09-22 の Claude Opus 5.5 公開と同時に、Anthropic は次の3つを出しました。
+
+「Prompting Claude Opus 5.5」（日本語版あり）
+「What's new in Claude Opus 5.5」
+移行ガイド
+
+2026-09-30 にこれらを読み、Opus 5 のころの書き方で公式が「やめて」「変えて」と書いた8つを、原文と Before/After つきで並べます。最後に、公式のとおり「中」にした Opus 5.5 と Opus 5「高」を同じバグ修正で比べた実測と、今日やる設定のチェックリストを載せています。
+
+
+claude.ai でモデルとエフォートを切り替える画面（スクショ6枚）は、こちらにまとめました。
+
+
+先に一覧
+
+結論：8つの一覧
+
+
+
+#
+やめる → 変える
+原文の強さ
+対象
+
+
+
+
+1
+Opus 5 の effort を持ち越す → medium から自分の eval で測る
+言い切り
+設定
+
+
+2
+「よく考えてから答えて」 → 外すのを検討
+consider
+プロンプト
+
+
+3
+「推論を書き出せ」「考えずに答えて」 → 消して low から
+言い切り
+プロンプト
+
+
+4
+プロンプトで思考を減らす → effort を下げる
+推奨
+設定
+
+
+5
+「AIっぽさを避けて」 → 避けるパターンを名指し
+推奨
+プロンプト
+
+
+6
+text だけの end_turn を完了扱い → 報告として読み、自動継続は2〜3回まで
+言い切り
+エージェント
+
+
+7
+
+thinking の disabled / budget_tokens → 省略か adaptive
+
+400
+API
+
+
+8
+
+tool_choice の any / tool → auto + strict
+
+400
+API
+
+
+
+
+前提となる基本情報です。
+
+モデル ID：claude-opus-5-5
+
+料金：入力 $4 / 出力 $20 per MTok（Opus 5 は $5 / $25）
+既定の effort：medium（Opus 5 は high）
+
+
+
+以下の英文は原文からの短い引用、日本語はその要約です
+Before/After のプロンプト文は筆者の作例です
+Python は公式ドキュメントの書き方に合わせたもので、筆者は API では実行していません
+
+
+
+1. effort を Opus 5 から持ち越さない：medium から自分の eval で測り直す
+
+
+プロンプトガイドの「Calibrate effort」：Opus 5 の設定を "rather than carrying over"（日本語版では「引き継ぐのではなく」）、medium から始めて自分の eval で数段試す
+What's new："re-run your sweep"
+
+
+
+出典：Claude Docs「Prompting Claude Opus 5.5」の該当箇所（黄色のマーカーは筆者）
+
+
+同じ名前でも中身が違うからです。What's new によると既定が medium に下がり、同じ effort でも Opus 5 より1ターンの思考量が多い傾向があります（特に xhigh / max）。だから値は持ち越さず、medium を明示して測り直します。 xhigh と max は品質の向上を測れたときだけ、ともガイドは書いています。
+Before（Opus 5 のころ）
+m = client.messages.create(
+    model="claude-opus-5-5",
+    max_tokens=16000,
+    output_config={"effort": "high"},    # Opus 5 で決めた値のまま
+    messages=messages,
+)
+
+After（Opus 5.5）
+m = client.messages.create(
+    model="claude-opus-5-5",
+    max_tokens=16000,
+    output_config={"effort": "medium"},  # 明示して、eval で low / high と比べる
+    messages=messages,
+)
+
+
+2. 「よく考えてから答えて」はシステムプロンプトから外すのを検討する
+
+チャット用のシステムプロンプトにある「よく考えて」類について、ガイドは "consider removing them"、外すと "replies start sooner" としています。
+
+
+出典：Claude Docs「Prompting Claude Opus 5.5」の該当箇所（黄色のマーカーは筆者）
+adaptive thinking が常時オンで、考える量は effort が決める作りになったためです。ただし8つの中でここだけは "consider" なので、外した版と残した版を同じ質問セットで比べてから決めます。
+Before（Opus 5 のころ）
+あなたは社内ヘルプデスクのアシスタントです。
+回答する前に、ステップごとによく考えてから答えてください。
+回答は日本語で、3文以内にまとめてください。
+
+After（Opus 5.5）
+あなたは社内ヘルプデスクのアシスタントです。
+回答は日本語で、3文以内にまとめてください。
+
+
+3. 「推論を書き出せ」「考えずに答えて」は消して、low から測る
+
+thinking 無効で運用していたプロンプト向けの節です。
+
+推論を本文に書き出させる指示："remove that instruction"
+effort："Start at low effort and measure"
+思考を禁じるルール："remove the no-thinking rule either way"
+
+
+
+出典：Claude Docs「Prompting Claude Opus 5.5」の該当箇所（黄色のマーカーは筆者）
+Opus 5.5 は thinking を無効にできない（7番）ので、無効が前提の指示は前提ごと消えています。速さのために thinking を切っていたなら、置き換え先は low です。
+Before（Opus 5 のころ）
+最終回答の前に、<reasoning> タグの中に推論を順に書き出してください。
+考え込まずに、すぐ答えてください。
+次の問い合わせを「請求」「技術」「その他」のどれかに分類してください。
+
+After（Opus 5.5）
+次の問い合わせを「請求」「技術」「その他」のどれかに分類してください。
+
+Before（Opus 5 のころ）
+thinking={"type": "disabled"},
+
+After（Opus 5.5）
+output_config={"effort": "low"},  # 速さを取るなら、まず low で測る
+
+
+4. 思考を減らしたいなら、プロンプトより先に effort を下げる
+
+ガイドは、思考を減らしたいときはプロンプトで指示するより先に effort を下げるよう勧めています（要約）。
+
+
+出典：Claude Docs「Prompting Claude Opus 5.5」の該当箇所（黄色のマーカーは筆者）
+3番と4番は、深さのつまみが effort に一本化されたという同じ話です。effort のページでは low はサブエージェント向けとされているので、分類や抽出を任せる子エージェントから下げます。
+
+Before（Opus 5 のころ）
+m = client.messages.create(
+    model="claude-opus-5-5",
+    max_tokens=4000,
+    system="簡単な質問が多いので、考えすぎずに即答してください。",
+    messages=messages,
+)
+
+After（Opus 5.5）
+m = client.messages.create(
+    model="claude-opus-5-5",
+    max_tokens=4000,
+    system="社内FAQに答えるアシスタントです。",
+    output_config={"effort": "low"},
+    messages=messages,
+)
+
+
+5. 「AIっぽさを避けて」ではなく、避けたいパターンを名指しする
+
+「Frontend design defaults」の節で、一般的な「AIっぽさを避けて」は "mostly swaps one default for another"、つまりある定番を別の定番に替えるだけだとしています。
+
+
+出典：Claude Docs「Prompting Claude Opus 5.5」の該当箇所（黄色のマーカーは筆者）
+出力を見て守れたか判定できる粒度で書くのがポイントです。 並べるのは、自分のプロダクトで何度も出てきた定番です。
+Before（Opus 5 のころ）
+汎用的なAIっぽいデザインは避けてください。
+
+After（Opus 5.5）
+次のものは使わないでください。
+- 紫から青へのグラデーション背景
+- 見出しの頭に付ける絵文字
+- すべてのカードを同じ角丸と影でそろえるレイアウト
+
+列挙の中身は筆者の作例です。
+
+6. text だけの end_turn を完了とみなさない。自動継続は2〜3回で止める
+
+「Unattended agentic runs」の節の要点です。
+
+text だけで終わる end_turn は完了の証拠ではなく報告として扱い、タスクリストで残りを確かめる
+自動の続行は "stop after two or three automatic continuations"
+バックグラウンドの処理が動いている間も "don't treat the task as done yet"
+
+
+
+出典：Claude Docs「Prompting Claude Opus 5.5」の該当箇所（黄色のマーカーは筆者）
+止まった＝完了ではないので、ループ側で残りを確かめ、自動の続行に上限を置きます。
+Before（Opus 5 のころ）
+while True:
+    resp = run_turn(messages)
+    if resp.stop_reason == "end_turn":
+        break  # 止まったら完了
+
+After（Opus 5.5）
+MAX_CONTINUATIONS = 3
+continuations = 0
+while True:
+    resp = run_turn(messages)
+    if resp.stop_reason == "end_turn":
+        if not remaining_tasks():
+            break  # タスクリストが空なら完了
+        if continuations >= MAX_CONTINUATIONS:
+            mark_incomplete()  # 上限。完了ではなく人に回す
+            break
+        continuations += 1
+        messages.append(nudge("タスクリストの残りを続けてください"))
+
+
+
+
+run_turn などは説明用の擬似コードです
+上限に達したときの扱いまではガイドにないので、mark_incomplete() のように完了と分けて記録すると安全です
+
+
+
+7. thinking の disabled と budget_tokens をコードから消す（400）
+
+What's new の見出しは「Thinking can't be disabled」です。{"type":"disabled"} と {"type":"enabled","budget_tokens":N} はどちらも 400 になるので、thinking は省略するか adaptive にします。
+
+
+出典：Claude Docs「What's new in Claude Opus 5.5」の該当箇所（黄色のマーカーは筆者）
+max_tokens には思考の分も含まれるので、budget_tokens で思考を抑えていたなら max_tokens も見直します。
+Before（Opus 5 のころ）
+thinking={"type": "enabled", "budget_tokens": 8000},
+
+After（Opus 5.5）
+thinking={"type": "adaptive"},       # 省略してもよい
+output_config={"effort": "medium"},  # 深さは effort で決める
+
+
+8. tool_choice の any / tool（ツールの強制）をやめる（400）
+
+What's new の見出しは「Forced tool use is not supported」です。代わりは次のどちらかです。
+
+
+auto と strict: true の組み合わせ
+structured outputs
+
+
+
+出典：Claude Docs「What's new in Claude Opus 5.5」の該当箇所（黄色のマーカーは筆者）
+強制ツールを「必ず JSON で返させる」ために使っていたなら、ツールを経由せず structured outputs に寄せるほうが目的に素直です。
+Before（Opus 5 のころ）
+tools = [{
+    "name": "record_ticket",
+    "input_schema": {...},
+}]
+tool_choice = {"type": "tool", "name": "record_ticket"}
+
+After（Opus 5.5）
+tools = [{
+    "name": "record_ticket",
+    "strict": True,
+    "input_schema": {...},
+}]
+tool_choice = {"type": "auto"}
+
+
+ほかにも変わった点
+
+応答の先頭ブロックを text と決めつけない。thinking ブロックで始まるので、content[0].text ではなく各ブロックの type で選ぶ
+
+computer_20251124 は Claude API と Google Cloud で 400。computer_toolset_20260801 へ（Bedrock は従来どおり）
+別モデル（Fable など）の thinking ブロックは持ち越せない
+ツール呼び出しの合間のテキストは thinking ブロックで返り、既定の display では空。進捗を表示していたなら display: "updates"（beta）
+
+max_tokens 128,000 は、エージェント用途で Anthropic のテストでうまくいった実績。決まりではない
+トップレベルの effort をリクエスト間で変えるとキャッシュが無効になる。途中で変えるなら per-message effort（beta）
+貼り付けテキストは <pasted_content id="..."> で囲み、扱いをシステムプロンプトに書く
+
+1つ目の直し方の例です。
+for b in m.content:
+    if b.type == "text":  # 先頭が text とは限らない
+        print(b.text)
+
+
+公式のとおり試した：Opus 5.5「中」vs Opus 5「高」
+1番の「medium から」の根拠は、ガイドの「medium で Opus 5 の high と同等以上、ステップもトークンも少ない」という主張です。これを claude.ai（Max プラン）で1課題だけ確かめました。エフォートは、各画面でおすすめと表示される「中」と「高」です。
+
+課題は、合計が1円多くなる + 1 のバグを入れた関数です。
+次の Python 関数の問題点を挙げ、直したコードと、pytest のテストを3つ書け。説明は日本語で短く。
+
+def split_budget(total_yen, weights):
+    """total_yen を weights の比で配分し、合計が total_yen に一致する整数のリストを返す"""
+    s = sum(weights)
+    parts = [total_yen * w // s for w in weights]
+    parts[0] += total_yen - sum(parts) + 1
+    return parts
+
+送信から返答完了までをブラウザで測りました（1回目は新しいチャット、2回目は「再試行」）。
+
+
+
+
+条件
+1回目
+2回目
+回答の長さ
+挙げた問題点
+
+
+
+
+Opus 5.5・中
+17.3秒
+18.3秒
+約1,800〜2,000字
+3〜4個
+
+
+Opus 5・高
+46.0秒
+39.2秒
+約2,900字
+6〜7個
+
+
+
+どちらも + 1 を1番目に挙げ、端数を最大剰余法で配る形に直しました。ただし作りは分かれました。
+
+Opus 5.5 は整数の余り（%）で配る短い版で、不正な入力は ValueError、float は「前提外」と注記するだけでした。
+
+Opus 5 は Fraction で厳密に計算し、ジェネレータ・float・負の金額まで受ける形でした。
+手元の pytest では、Opus 5.5 のコードとテストが 6 passed、Opus 5 が 10 passed（parametrize 込み）でした。元のバグ入りコードに当てるとどちらも全件 failed で、どちらのテストもバグを捕まえています。
+
+読み方
+
+平均は 17.8秒と 42.6秒で、平均の比で約2.4倍の差
+本命のバグと直し方は同じだったので、この課題では「中」で Opus 5「高」と同じ結論に届いた、とまでは言える
+入力の型まで守りたいコードなら、Opus 5「高」の答えのほうが手直しは少なく済んだ
+
+
+
+
+1課題・各2回の参考値で、回線や混雑の影響を含みます
+Opus 5.5「高」との比較はしておらず、トークン数も claude.ai では見えません
+網羅性が要る課題では、公式の言うとおり自分の eval で effort を上げて比べる余地が残ります
+
+
+
+今日やる設定チェックリスト
+
+
+output_config.effort を明示（まず medium）し、自分の eval で low / high と比べる
+
+システムプロンプトの「よく考えて」類を外した版と、残した版を比べる
+
+「推論を書き出せ」「考えずに答えて」を消す（thinking 無効で運用していたなら low から）
+
+思考を減らす指示は、プロンプトではなく effort に置き換える
+
+フロントエンドの「AIっぽさを避けて」を、避けたい具体パターンの列挙に書き換える
+
+エージェントループで、text だけの end_turn を完了にしない。自動継続は2〜3回で止める
+
+thinking の disabled / budget_tokens を消す
+
+tool_choice の any / tool を auto + strict か structured outputs に替える
+
+content[0].text を、type で選ぶ形に直す
+
+computer_20251124 を computer_toolset_20260801 に替える（Claude API / Google Cloud）
+
+途中で effort を変えているなら per-message effort（beta）にする
+
+まとめて直すなら、移行ガイド冒頭によると Claude Code で次を実行すれば自動移行のスキルが動きます（筆者は試していません）。
+/claude-api migrate this project to claude-opus-5-5
+
+
+Claude Code のモデル指定は、公式の Model configuration によると次の3通りです。別名 opus と default が Opus 5.5 を指します。
+
+/model opus
+claude --model claude-opus-5-5
+
+~/.claude/settings.json の "model": "opus"
+
+
+
+claude.ai でモデルとエフォートを選ぶ画面と、無料で試せるか（Free プランでは選べません）は、こちらに画像つきでまとめました。
+
+0Go to list of users who liked0Register as a new user and use Qiita more convenientlyYou get articles that match your needsYou can efficiently read back useful informationYou can use dark themeWhat you can do with signing up
+
+---
+
+## 26. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/7/13
@@ -10676,7 +11105,7 @@ Lean はアルゴリズム自体の開発に使う
 
 ---
 
-## 26. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
+## 27. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/7/22
@@ -11162,7 +11591,7 @@ OSS: github.com/bokuwalily 🐙
 
 ---
 
-## 27. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
+## 28. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/8/31
@@ -11392,7 +11821,7 @@ CLAUDE.md・Skills・MCP という「ハーネス」の先にある「ループ�
 
 ---
 
-## 28. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
+## 29. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/10/4
@@ -13578,7 +14007,7 @@ Sun*は「誰もが価値創造に夢中になれる世界」をビジョンに�
 
 ---
 
-## 29. [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
+## 30. [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/10/7
@@ -13918,7 +14347,7 @@ What's new — Claude Code Docs — 最新リリース情報
 
 ---
 
-## 30. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
+## 31. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/5
@@ -14165,7 +14594,7 @@ AIに渡すルールは、自然言語ドキュメント1枚から三つの仕�
 
 ---
 
-## 31. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
+## 32. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/5
@@ -14673,7 +15102,7 @@ Skillは「自分専用のClaude Code」を育てることに近いと感じて�
 
 ---
 
-## 32. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
+## 33. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/5
@@ -15178,7 +15607,7 @@ Building agents with the Claude Agent SDK - Anthropic Engineering
 
 ---
 
-## 33. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
+## 34. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/5
@@ -15323,7 +15752,7 @@ banned_visual_motifs:
 
 ---
 
-## 34. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
+## 35. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -15559,7 +15988,7 @@ Slack, Google Calendar, Confluence等のMCPツールを活用して情報取得�
 
 ---
 
-## 35. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
+## 36. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -15753,7 +16182,7 @@ CLAUDE.mdにルールを書いて、WIP.mdに作業状態を残すようにし�
 
 ---
 
-## 36. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
+## 37. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -16062,7 +16491,7 @@ your-project/
 
 ---
 
-## 37. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
+## 38. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -16197,7 +16626,7 @@ Qiitaニュースを購読する
 
 ---
 
-## 38. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
+## 39. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -16999,7 +17428,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 39. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
+## 40. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/11
@@ -17050,7 +17479,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 40. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
+## 41. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/11
@@ -17309,7 +17738,7 @@ Claude Code や AI 自動化についてさらに深く学びたい方は、筆�
 
 ---
 
-## 41. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
+## 42. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/11
@@ -17852,7 +18281,7 @@ Prime 200銘柄
 
 ---
 
-## 42. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
+## 43. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/11
@@ -18032,7 +18461,7 @@ mainで作業 → worktreeを使う
 
 ---
 
-## 43. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
+## 44. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/13
@@ -18741,7 +19170,7 @@ Claude Code の 6種類のメモリと優先順位を理解して効率的に活
 
 ---
 
-## 44. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
+## 45. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/23
@@ -19981,7 +20410,7 @@ AIの「揮発性の高い記憶」を補うための「外部メモリ」とし
 
 ---
 
-## 45. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
+## 46. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/8
@@ -21573,7 +22002,7 @@ AI に相談して書いてもらいました。 ↩︎
 
 ---
 
-## 46. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
+## 47. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -21824,7 +22253,7 @@ hooks は決定論的な強制です。必ず同じ処理を再現したいも�
 
 ---
 
-## 47. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
+## 48. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -22323,7 +22752,7 @@ READMEが人間への手紙なら、AGENTS.md は、明日の自分・明日の�
 
 ---
 
-## 48. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
+## 49. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -22748,7 +23177,7 @@ GitHubで編集を提案
 
 ---
 
-## 49. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
+## 50. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -22974,231 +23403,6 @@ AI や人間が読んだときにどのような理解・認識するかをま�
 
 「書いてあるルールが守られるか」ではなく、
 「どのように解釈されるか」を中心に評価してください。
-
----
-
-## 50. [Claude Code を司令塔に、Antigravity CLI（Gemini 3.5 Flash）を実装役として使う環境構築【従量課金ゼロ】 - Qiita](https://qiita.com/fallout/items/5097f0575b58f4c69b81)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/6/16
-- **AI要約**:
-  Claude CodeからMCP経由でAntigravity CLIを呼び出す環境構築手順を解説。
-  agyの標準出力バグを回避するため、transcriptを読むPythonブリッジを採用。
-  Windows環境でのフリーズ、モデル固定失敗、PATHの不具合に対する具体的な解決策を提示。
-- **今読む理由**: AI駆動開発において、Claude Codeと無料枠Geminiを連携させる具体的なMCP設定に加え、agy CLIの致命的なバグである「標準出力が空になる問題」や「対話フリーズ」を回避するためのPythonブリッジの構成・設定手順が網羅されており、構築時の大幅な時間ロスを即座に防げるため。
-- **タグ**: #Claude Code, #Gemini, #Antigravity CLI, #MCP, #AI駆動開発
-
-### 本文
-はじめに
-
-当初は Claude Fable 向けに記事を書いていたのですが、環境構築中にClaude Fable が使えなくなるという大事件 が発生してしまいました(笑) ※Claude Opus でも問題なく使える方法ですので、ご参考ください。
-
-
-それなりに反響があるようですので、Claude Code × Antigravity CLI 協業環境 超簡単作成.md を公開しました。内容に冗長なところもありますが、これを使えば、初心者の方でも比較的簡単に環境を構築できると思います。
-
-
-「設計とレビューは Claude、コード生成は爆速の Gemini 3.5 Flash に任せる」── この役割分担をローカルで実現する環境を構築したので、手順とハマりどころを共有します。
-ポイントは3つです。
-
-
-Claude Code を司令塔にし、Google の Antigravity CLI（agy）を MCP 経由でサブエージェントとして呼び出す
-実装役は Gemini 3.5 Flash (High)（速くて安い、エージェント型コーディング向け）
-
-従量課金ゼロ ── API キーではなく AI Ultra/Pro のサブスク枠（OAuth） で動かす
-
-
-この記事は実際に構築してハマった罠と解決策が本体です。同じ構成を試す方の時間を節約できれば幸いです（2026年6月13日時点 / agy 1.0.8 / Windows 11）。
-
-
-
-なぜこの構成なのか
-
-
-
-担当
-役割
-理由
-
-
-
-
-Claude Fable or Opus
-設計・仕様策定・生成コードの検証・確定
-規約適合やセキュリティ等を正確に検証できる
-
-
-Gemini 3.5 Flash (High)
-コード生成の主力（実装・テスト）
-生成が爆速。まとまった実装を一気に出せる
-
-
-
-
-Antigravity は MCP の "クライアント" 側
-Antigravity（agy）自身は、外部 MCP サーバーを呼び出して使う"クライアント"側の製品です。そのため Claude Code から直接 MCP で繋ぐことはできず、agy を呼び出すブリッジを挟む構成になります。
-Claude Code ──(MCP)──▶ ブリッジ server.py ──(subprocess)──▶ agy -p ──(OAuth)──▶ Gemini 3.5 Flash (High)
-                                                                  ▲ AI Ultra/Pro 枠（従量課金なし）
-
-
-なぜ「ブリッジ」が必要なのか（← ここが今回の肝）
-「agy を Claude Code から呼ぶだけなら、コマンドを叩く単純な MCP サーバーで十分では？」と思うはずです。ところが、それでは動きません。 理由は agy 側のバグです。
-agy -p "プロンプト"（非対話モード）には、モデルとの往復は完了しているのに、応答を標準出力に一切返さないというバグがあります（公式 issue #76。exit code は 0、stderr も空という厄介な挙動）。
-つまり、コマンドの標準出力をそのまま受け取る素朴な連携では、応答がまったく取れません。しかし、実際の応答は agy 自身が書き出す transcript ファイル
-~/.gemini/antigravity-cli/brain/<会話ID>/.system_generated/logs/transcript.jsonl
-
-の PLANNER_RESPONSE エントリに入っています。
-そこで、「agy -p を実行しつつ、応答は stdout ではなく transcript ファイルから読み取る」という一手間が必要になります。
-これを肩代わりしてくれるのが今回のブリッジで、単なる薄いラッパーではなく stdout バグを回避するための実装になっているわけです。今回は OSS の SinanTufekci/Claude-Code-Antigravity-CLI-MCP-Server を利用しました。
-
-つまり「MCP を使う理由」は2段構えです。①Claude Code の拡張は MCP が標準だから。②agy -p が応答を返さないので、transcript を読む特殊なサーバー（ブリッジ）が必要だから。
-
-
-
-前提条件
-
-
-
-項目
-確認コマンド
-備考
-
-
-
-
-Antigravity CLI
-agy --version
-1.0.8 で検証。AI Ultra/Pro で OAuth ログイン済みであること
-
-
-Python
-python --version
-3.10+
-
-
-git
-git --version
-ブリッジの取得に使用
-
-
-
-
-補足：Google の Gemini CLI（gemini）は、Antigravity CLI（agy）へ移行しました。個人の AI Pro/Ultra ユーザーは agy を使います。
-
-
-
-Antigravity CLI（agy）のインストール
-すでに導入済みなら読み飛ばしてください。未導入の場合は 公式（Google 所有ドメイン） からインストールします。
-Windows（PowerShell）:
-irm https://antigravity.google/cli/install.ps1 | iex
-
-
-インストール先: C:\Users\<ユーザー名>\AppData\Local\agy\bin
-
-PATH が変更されるので、ターミナル（および Claude Code）を再起動する
-初回に agy を起動して認証 ── Google OAuth を選び、AI Ultra/Pro アカウントでログイン（これがサブスク枠 ＝ 従量課金ゼロの起点）
-確認: agy --version
-
-
-
-⚠️ インストールは必ず 公式ドキュメント（antigravity.google/docs/cli-install）で最新を確認してください（CLI 導入はシステムに変更を加えるため、出所が 公式ドメインであることが重要。macOS / Linux 版も公式に記載があります）。
-
-
-構築手順
-
-0. 【重要】従量課金を避ける設定確認
-agy の認証は --api-key フラグ → 環境変数 → OAuth の順に解決されます。GEMINI_API_KEY などが設定されていると、サブスク枠の OAuth をバイパスして従量課金 API に流れます。
-まず全スコープで未設定を確認します（すべて「未設定」になればOK）。
-'GEMINI_API_KEY','ANTIGRAVITY_API_KEY' | %{ $n=$_; 'Process','User','Machine' | %{ "{0,-20}{1,-8}: {2}" -f $n,$_,$(if([Environment]::GetEnvironmentVariable($n,$_)){'★設定あり'}else{'未設定'}) } }
-
-
-1. モデルを High に固定
-%USERPROFILE%\.gemini\antigravity-cli\settings.json に "model" を追記します。
-{
-  "model": "Gemini 3.5 Flash (High)"
-}
-
-
-後述しますが、--model フラグではなくこの settings.json 方式がオススメです。
-
-
-2. ブリッジを取得
-
-"$env:USERPROFILE\tools\agy-mcp-bridge" は、環境に合わせて任意の場所に変更してください。
-
-$dest = "$env:USERPROFILE\tools\agy-mcp-bridge"
-git clone https://github.com/SinanTufekci/Claude-Code-Antigravity-CLI-MCP-Server.git $dest
-
-
-clone 後、server.py の中身は必ず目視確認を。2026年6月13日時点では、標準ライブラリ + fastmcp のみで、~/.gemini 配下を読むだけの薄い実装でした（ただし後述のセキュリティ注意あり）。
-
-
-3. 仮想環境 + fastmcp
-python -m venv "$dest\.venv"
-& "$dest\.venv\Scripts\python.exe" -m pip install fastmcp
-
-
-4. Claude Code に登録
-claude mcp add agy -s user -- "$dest\.venv\Scripts\python.exe" "$dest\server.py"
-claude mcp list   # "agy: ... ✓ Connected" を確認
-
-
-5. Claude Code を再起動
-再起動後、mcp__agy__agy_ask / agy_continue / agy_status などのツールが使えるようになります。※agy_status はクレジット消費ゼロの診断ツールです。
-
-
-ハマりどころ4選（実装・運用の罠）
-
-※ 最大の罠「agy -p が stdout に応答を返さない」は、前述（ブリッジが必要な理由）の通りです。ブリッジを使えば吸収されますが、自前で連携を組むなら transcript を読む実装が必須です。
-
-
-① 【必須】非対話実行は stdin を閉じる
-agy -p を stdin を開いたまま呼ぶと起動直後にフリーズします。
-解決：subprocess なら stdin=subprocess.DEVNULL、シェルなら $null | agy -p "..." のように stdin を閉じます（ブリッジは実装済み）。
-
-② High モデルは --model ではなく settings.json で
-直感的には agy -p --model "Gemini 3.5 Flash (High)" "..." としたくなりますが、この順序だと無視され、会話すら作られません。※--model を -p の前に置くと効きます。
-解決：手順1のとおり settings.json の "model" で固定するのが確実。これなら素の agy -p でも High が適用されます（実機で transcript の Model Selection ... to Gemini 3.5 Flash (High) を確認）。
-
-③ 再起動後に agy が PATH から消える（Windows）
-agy_status で agy CLI [!!] not found on PATH が出ました。調べると User 環境変数の PATH には agy\bin があるのに、MCP サーバーからは見えない。Claude Code が起動時の古い PATH を継承していて、既存プロセスは環境変数の変更を引き継がないためです（Windows でありがち）。
-解決：PATH の反映に依存せず、agy のフルパスを明示します。
-
-
-server.py の agy 呼び出しを環境変数対応にする（["agy", …] → [os.environ.get("AGY_BIN") or "agy", …]、2箇所）
-env 付きで再登録：
-
-claude mcp add agy -s user -e AGY_BIN="%LOCALAPPDATA%\agy\bin\agy.exe" -- "<python>" "<server.py>"
-
-
-事前検証のコツ：$env:AGY_BIN="<フルパス>" を設定してスモークを走らせ、PASS すれば再起動後の MCP でも確実に動きます。
-
-
-④ サブスク枠にもレート制限はある
-AI Ultra/Pro 枠は追加課金なしですが、デイリー上限はあります。枯渇すると一時停止するので、重い生成を agy に寄せ、軽微な編集は司令塔（Claude）が直接やるといった配分が有効です。
-
-⚠️ セキュリティ注意：agy -p は承認ゲートなしでファイル書き込み・コマンド実行・ネット送信を行う自律エージェントです。--sandbox も完全な境界にはなりません。信頼できるプロンプト・内容のみに使い、重要な変更はコミット前に git diff でレビューしましょう。
-
-
-
-協業フローと実演
-司令塔（Claude）に AI 協業ポリシーを SKILL.md として持たせ、こんな感じで回します。
-① Claude が設計   →  ② agy が High で爆速生成  →  ③ 静的検査（テスト）  →  ④ Claude が精査  →  ⑤ 確定
-
-筆者は、自作のAIコーディング特化 PHP フレームワークLattice （規約を静的検査テストで機械的に強制する自己検証型）で試しました。
-「自動検査」を②と④の間に挟むのが強力で、agy の生成物が規約違反していれば即座に分かります。3層（爆速生成・自動検査・人間級レビュー）が噛み合うと、速くて正確な開発ループになります。
-
-
-まとめ
-
-Claude Code から Antigravity CLI を MCP ブリッジで呼び、Claude = 設計/検証・Gemini Flash = 生成の分業が実現できた
-
-ブリッジが必要な理由は、agy -p の stdout バグ（公式 issue #76）── 応答は transcript から読む
-
-従量課金ゼロ（OAuth サブスク枠、GEMINI_API_KEY を設定しないのが鍵）
-運用の罠は stdin・モデル指定・PATH 継承・課金経路 の4つ
-フレームワークの静的検査テストを協業ループに組み込むと、品質が機械的に担保される
-
-API キーを使う「プロキシ方式」は、Google の ToS 違反で BAN 報告があるため不採用としました。サブスク枠を正規に使う本構成が、コスト面でも規約面でも安心です。
 
 ---
 
