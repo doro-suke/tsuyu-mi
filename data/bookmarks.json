@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-09T09:42:34.745Z",
+  "updated_at": "2026-10-09T10:31:19.618Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9322,6 +9322,24 @@
       "status": "unread",
       "analyzed_at": "2026-10-09T09:42:34.745Z",
       "markdown_path": "data/notebooklm_sources/1879701898_Opus 5.5の登場で、Anthropic公式が「やめて・変えて」と言い始めた8つのこと - Qiita.md"
+    },
+    {
+      "id": "1879702301",
+      "url": "https://zenn.dev/zelda_link/articles/4551124e62c49f",
+      "title": "Claude Opus 5 が張り切りすぎるので、hook で黙らせてみた話",
+      "excerpt": "2026年9月22日に Opus5.5 がローンチされました。\nX上では「Opus4.6の応答スタイルが返ってきた」という見解が多く見られるだけでなく、モデルが持つ本来の性能を含め、Opus5.5の評判は上々のようです。私個人も「とても良い感触」という印象を持って使ってみています。",
+      "summary": "",
+      "score": 78,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-09T10:31:19.618Z",
+      "markdown_path": "data/notebooklm_sources/1879702301_Claude Opus 5 が張り切りすぎるので、hook で黙らせてみた話.md"
     }
   ]
 }
