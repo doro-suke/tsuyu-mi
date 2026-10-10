@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-09T10:31:19.618Z",
+  "updated_at": "2026-10-10T03:13:26.213Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9340,6 +9340,24 @@
       "status": "unread",
       "analyzed_at": "2026-10-09T10:31:19.618Z",
       "markdown_path": "data/notebooklm_sources/1879702301_Claude Opus 5 が張り切りすぎるので、hook で黙らせてみた話.md"
+    },
+    {
+      "id": "1879702273",
+      "url": "https://zenn.dev/acntechjp/articles/178e40be12d347",
+      "title": "Opus 5.5にプロンプトを渡したら、解説アニメーション動画ができた",
+      "excerpt": "",
+      "summary": "",
+      "score": 52,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "プロンプトエンジニアリング",
+        "動画生成AI",
+        "Claude"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-10T03:13:26.212Z",
+      "markdown_path": "data/notebooklm_sources/1879702273_Opus 5.5にプロンプトを渡したら、解説アニメーション動画ができた.md"
     }
   ]
 }
