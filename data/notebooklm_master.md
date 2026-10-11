@@ -1,5 +1,5 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/10/10 3:56:39
+最終更新日: 2026/10/11 2:49:37
 対象記事数: 50 件 (未読かつHigh優先度)
 
 ---
@@ -11067,7 +11067,225 @@ claude.ai でモデルとエフォートを選ぶ画面と、無料で試せる�
 
 ---
 
-## 26. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
+## 26. [Opus5が思考が浅いように感じる問題への対策](https://zenn.dev/u1/articles/claude5-rules-collapse-and-fix)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/10/11
+- **タグ**: #ClaudeCode, #AI駆動開発, #プロンプトエンジニアリング
+
+### 本文
+Claude Code を Opus 5 に切り替えた直後から、応答の散文傾向が急に強まり、思考が浅くなる (構造化して考えられない) 変化が出ました。長年育ててきた rules (CLAUDE.md や常時ロードの指示ファイル群) は何も変えていないのに、です。調べていくと、モデルが悪いのでも rules が壊れたのでもなく、Claude 5 世代で Opus 5 に配られる本体 system prompt が大きく変わり、旧来の rules がその前提で書かれていなかったのが原因でした。
+この記事は、その切り分けと、rules を新しい system prompt に合う形へ直すまでの記録です。「モデルを新世代に上げたら CLAUDE.md や rules の効きが変わった」と感じている Claude Code 利用者向けです。
+
+ 起きたこと
+同一セッション・同一 rules のまま、モデルを Opus 5 へ切り替えた直後から次が起きました。
+
+状況説明が、見出しも区分もないフラットな長文になる
+原因の説明が 1 層で止まる (症状を並列に並べるだけで「なぜ」を掘らない)
+複数案を出すときに評価軸が付かない
+一度立てた区分や番号が、次のターンで別の区分に組み替わる
+こちらの発話に返答せず、いきなりツール実行 (作業) に入る
+
+厄介なのは、その場で「もっと深く考えて」と促し直しても、浅い思考のまま散発的な回答が返ってくることでした。指摘を重ねても噛み合わず、ほぼ議論にならない。単発の回答品質の問題ではなく、対話を通じた検討そのものが成立しなくなっていました。
+重要な手がかりは、同じ rules でも他のモデルでは起きないことでした (この違いの詳細は末尾のおまけで扱います)。rules 側の劣化なら、どのモデルでも同じように出るはずです。変えたのはモデルだけなので、「rules が前提にしている環境」の側が変わったと考えて調べ始めました。
+
+ 原因: Opus 5 に配られている system prompt が別物になっていた
+Claude 5 世代の Claude Code は、本体 system prompt が旧世代から約 8 割削減されています。手元で Opus 5 に実際に配られている prompt を実測すると (output style 等の注入を無効化した状態で、自身の prompt を原文引用させて確認。Claude Code 2.1 系、2026-07。バージョンにより変わる可能性があります)、構成は次のとおりでした。
+
+
+正体と役割の宣言・セキュリティ方針 — 冒頭の前文
+
+ハーネス仕様 (# Harness) — 出力は markdown として表示される、といった実行環境の説明
+
+環境情報と機能説明 (# Session-specific guidance / # Memory / # Environment / # Context management) — cwd・git 状態・モデル ID、memory や context 圧縮の仕組み
+
+スコープ規律 (# Delivering work) — 依頼された範囲を勝手に狭めない・広げない
+
+訂正の作法 (# Corrections) — 訂正は簡潔に、謝罪や前置きを足さない
+
+そして今回の症状に直結する特徴が 2 つあります。
+特徴 1: 応答の書き方を規定する文が 1 つも無い。 散文か構造か、見出しや表の使い方、簡潔さ — 旧世代の prompt に長く書かれていた応答形式の規定が、丸ごとありません。
+特徴 2: 「まず動け」という自律方針が入った。 原文から抜きます。
+"When you have enough information to act, act."
+"If you are weighing a choice, give a recommendation, not an exhaustive survey"
+この 2 つの特徴で冒頭の症状を読み直すと、全部つながります。書き方の規定が無いので、モデルの素の出力傾向 — フラットな散文 — がそのまま出る。「網羅より推奨を」が評価軸の省略を後押しする。「十分な情報が揃ったら動け」が、返答より先の作業着手を後押しする。
+ここで「規定が空白なら、こちらの rules が唯一の規定になって、むしろよく効くのでは」と思うかもしれません。実際は逆でした。この空白は利用者に委ねられた余白ではなく、モデルに訓練で焼き込まれた既定の動作へ委ねられたものです。lean prompt は「細かく書かなくても新世代モデルは内在化した行動に従う」という前提で削られており (後述の設計思想)、削られた規定の代わりを埋めるのは、こちらの rules ではなくモデルの学習済みの既定です。そして Opus 5 の既定は、簡潔な散文で、確認より先に動く方向にありました。
+こちらの旧 rules は「状況は構造で分解して書け」「複数案には評価軸を付けろ」「作業の前に返答しろ」という一般形の指示で、応答形式の規定が濃かった旧世代 prompt と並べて読まれる前提の書き方でした。prompt の文と並ぶ分にはそれで足りていましたが、訓練された既定を覆すには、書き方 (原文を名指しする具体性) も届き方 (行動の直前に届く位置) も弱すぎた。これが症状の正体で、後述の対策がちょうどこの 2 つ (書き方と届き方) に対応します。
+Anthropic 自身がこの削減を「lean system prompt」として changelog (v2.1.154) に載せており、背景には「新世代モデルは行動を訓練で内在化しているので、細かい指示はかえって摩擦や矛盾になる」という設計思想の転換があります。詳しい解説は Claude Code のシステムプロンプトが 80% 削減 — Fable 5 世代のプロンプト設計思想 が、一次情報は Claude Code changelog と Prompting Claude Fable 5 (公式ガイド) を参照してください。
+つまり症状は「rules × そのモデルに実際に配られている prompt」の組み合わせで決まります。rules だけ見ていても原因にたどり着けません。モデル更新は本体 system prompt の更新でもある、というのが最初の教訓でした。
+
+ 対策: rules を新しい system prompt に合う形へ直す
+
+ 1. 矛盾を洗い出して、原文を名指しで上書きする
+まず全 rules を新しい system prompt と突き合わせ、逆のことを言っている箇所を洗い出しました。その上で、本体方針を上書きしたい rule は、本体の原文をそのまま引用して名指しで優先を宣言する形に書き直しました。
+効かない書き方は、旧 rules 自身が証明していました。旧 rules には「複数案には評価軸を付ける」という趣旨の指示が既に入っていたのに、Opus 5 では評価軸なしの症状が出ています。本体の "give a recommendation, not an exhaustive survey" と並んだとき、モデルから見れば同じ話題に 2 つの指示が並んでいるだけで、どちらを優先するかの手がかりがない — この形では勝てません。相手の原文を引用して名指しすれば、衝突と優先が明示されます。また、書き方の規定のようにそもそも prompt に無いものについては、上書きではなく「規定の空白をこちらの定義で埋める」指示として働きます。
+
+ 2. 禁止ではなく、望ましい動きを書く
+旧 rules は「〜するな」の蓄積でした。禁止は違反の検知には使えても、代わりに何をすべきかを運びません。新方針と衝突したとき、モデルには「禁止を避けつつ本体方針に従う」という抜け道ができます。
+そこで禁止形は、望ましい動きの記述へ変換しました。
+
+変換前: 「テスト未完了の状態で commit を提案するな」
+変換後: 「commit を提案する時は、その成果物を使う人の操作手順で動かした結果を本文に書く」
+
+発火条件の書き方も同じ機会に直しました。「重要な変更のときは」「本番環境と判断したら」のような条件は、モデルが自分でその分類に当てはめられなかった瞬間に不発になります。「interrupt を受けた」「ユーザーの発話に訂正が含まれる」のような、解釈の余地がない観測へ書き換えました。
+書き直した rule は、最後に次のチェックで判定しました。
+
+その rule の文だけで意味が閉じているか (適用範囲・例・判定基準が同じ場所にあるか)
+発火条件が観測できる事実か
+本体 system prompt と矛盾していないか
+望ましい動きが書かれているか (禁止の列挙になっていないか)
+判断の基準が 1 つか (場面の数え上げになっていないか)
+強調は本当に落とせないものだけに付いているか
+到達してほしい状態で書かれているか (手順やテンプレを先に埋めさせていないか)
+守られたかどうかを後から判定できるか
+
+強調マーカー (IMPORTANT) も、セキュリティと承認ゲート系だけに絞りました。全部が強調されている文書は、何も強調されていない文書と同じです。
+
+ 3. 指示を「どの層で届けるか」を選ぶ
+直すのは文面だけではありませんでした。Claude Code には指示をモデルへ届ける経路が少なくとも 4 つあり、実測すると効き方がはっきり違いました。
+前提として、API は stateless なので、どの経路の内容も毎リクエスト (毎ターン) モデルへ送信されます。違いが出るのは「内容がいつ確定するか」と「prompt の中でどの位置に置かれるか = いま取ろうとしている行動からどれだけ近いか」です。
+
+
+
+経路
+誰が入れるか
+内容が決まる時
+prompt 内での位置
+効き方 (手元の観察)
+
+
+
+
+本体 system prompt
+Claude Code が自動 (利用者は変更不可)
+セッション開始時に固定
+system 欄
+最強
+
+
+output style
+利用者 (settings の outputStyle で指定、内容も自作)
+ファイル編集で随時
+毎ターンの attachment (置換ではなかった)
+中。矛盾する本体指示に負けることがある
+
+
+UserPromptSubmit hook
+利用者 (hooks 設定に自作 script を登録)
+毎発話ごとに hook が生成
+最新のユーザー発話の直後 (行動に最も近い)
+強い。発話への反応を変えたい場合は最も確実
+
+
+常時 rules
+利用者 (CLAUDE.md / rules ファイルを記述)
+セッション開始時に読み込み
+会話履歴の先頭 (行動から最も遠い)
+書き方に依存
+
+
+
+意外だったのは output style です。ドキュメント上は「system prompt を置き換える」機能ですが、セッション記録を確認すると毎ターンの attachment として配信されていました。
+この output style には 2 種類の指示を書いていました。書き方 (対策 1 の名指し上書き: 構造で書く、評価軸を付ける) と、進め方 (ユーザー発話にはまず返答してから作業する) です。結果は分かれました。書き方には改善の傾向が出た一方、進め方 — 「発話に返答せず作業に入る」癖 — は output style では止まりませんでした。
+この進め方の癖を最終的に止めたのは、UserPromptSubmit hook で毎発話の直後に 1 行注入する方法です。
+ツール実行より先に、この発話への返答 (回答、または受け止めと進め方) を本文で書くこと。
+コストは wrapper 込みで 1 発話あたり約 50 token。100 発話でも 5,000 token 程度で、200K context に対して誤差です。
+ここから得た一般則はシンプルで、「変えたい行動の直前に、短く、毎回届ける」指示がいちばん効くということです。効かない指示の多くは、内容が悪いのではなく、行動の瞬間に手元に届いていませんでした。
+
+ 効果
+
+状況説明・原因説明に区分が戻る傾向。ただしセッション序盤はフラットな出力が残ることがあり、継続観察中です
+「返答せず作業に入る」癖は、output style 単独では直らず、毎発話注入の導入で止まりました (導入直後のため効果は観察中)
+
+正直に書くと、効果の評価は n=1 の運用観察です。ただ「どの層に置いた指示が、どの条件で負けるか」は再現的に観測できたので、そこがこの記事でいちばん持ち帰ってほしい部分です。
+
+ まとめ
+
+
+モデル更新は、本体 system prompt の更新でもある。 応答の傾向が急に変わったら、rules を足す前に本体側の変化を読む
+
+本体方針と張り合う rule は、原文を名指しして優先を宣言する。 一般論の追記は矛盾の中で負ける
+
+発火条件は観測で書き、禁止ではなく望ましい動きを書く。 自己分類頼みの条件と禁止の列挙は、モデルが変わったときに不発になりやすい
+
+指示は層で選ぶ。 行動の直前に短く毎回届ける注入が、手元では context の先頭に置かれた大きな rules よりずっと確実だった
+
+同じ症状で困っている方の切り分けの参考になれば幸いです。
+
+ 参考: 対策 1 で実際に使っている rule
+本体原文を名指しで上書きする rule の、手元で使っている文面の抜粋です (環境に合わせて調整してください。手元では output style として置いています)。冒頭で名指ししている原文の一部 (散文方針など) は、モデルによっては prompt に存在しません (おまけ参照)。存在しないモデルでは、空白を埋める定義として働きます。
+# 報告と分解の形
+
+本指示は、Claude Code 本体の system prompt にある次の記述より優先する:
+"a simple question gets a direct answer in prose, not headers and sections" /
+"Use tables only for short enumerable facts" /
+"Don't make the reader cross-reference labels or numbering you invented earlier" /
+"If you are weighing a choice, give a recommendation, not an exhaustive survey." /
+"You are operating autonomously... proceed without asking." /
+"Text you write between tool calls may not be shown to the user."
+
+## 書き方
+
+状況の説明、原因の説明、複数案の提示では、内容の区分が読み手に伝わる形で書く。
+見出し、箇条書き、表のうち内容に合うものを使う。一言で答えられる質問には散文で答える。
+
+- 先に考えをまとめ、構造化は最後に行う。型を先に置いて埋めない。
+- 原因を説明する時は、観測した事象から「なぜ」を 2 層以上たどり、各層が何を指すかを書く。
+  並列に症状を並べただけで止めない。
+- 複数の案を出す時は、推奨とその理由を先に書き、続けて判断を左右する軸と案ごとの評価を示す。
+  軸を挙げられない時は案を出さず、何を調べれば軸が埋まるかを書く。軸の比較は表で書いてよい。
+- 一度立てた区分と番号は、同じ作業を続ける間は次の turn でも同じものを使う。
+  変える時は何を変えたかを先に書く。
+
+## 対話と進め方
+
+- 本体の「ユーザーはリアルタイムで見ていない」は事実ではなく既定値である。
+  このセッションで途中の発話・interrupt・訂正を 1 度でも受けたら、以後ユーザーは
+  見ているものとして扱う: 作業を小さく区切り、各ターンを必ず報告本文で終え、
+  質問を書いたターンはそこで止めて応答を待つ。
+- この環境で表示されるのはターン末尾の本文だけである。伝える内容はすべてターン末尾に置く。
+- 曖昧さ、承認が要る操作、目的の不明があるときの質問は正当な手段である。
+あわせて、毎発話注入している 1 行 (UserPromptSubmit hook) は本文中で紹介したとおりです。
+
+ おまけ: なぜ Fable 5 / Opus 4.7 では起きなかったのか
+本文は Opus 5 に絞りましたが、冒頭の「他のモデルでは起きない」の中身はこうでした。
+Opus 4.7 で起きない理由は単純で、lean prompt の適用対象外 (changelog の記載) のため、旧世代の長い prompt — 応答形式の規定が濃い、旧 rules が前提にしていたもの — のまま動いているからです。旧 rules と噛み合った状態が続いています。
+Fable 5 で起きない理由は意外でした。同じ Claude 5 世代なので同じ prompt だと思い込んでいたのですが、実測すると Opus 5 とは別の prompt が配られていました。条件を揃えて (headless mode・output style 無効) それぞれのモデルに自身の prompt を原文引用させた比較です。
+
+
+
+モデル
+応答形式の規定
+節構成
+
+
+
+
+Fable 5
+
+あり (# Communicating with the user 節)
+Harness / Communicating with the user / Session-specific guidance / Memory / Environment / Context management
+
+
+Opus 5
+
+無し (散文・見出し・表・簡潔さを規定する文がゼロ)
+Harness / Session-specific guidance / Memory / Environment / Context management / Delivering work / Corrections
+
+
+
+Fable 5 の # Communicating with the user には「結論を先に・読みやすさ優先・相手に合わせて書く」という規範があり、本文で引用した "give a recommendation, not an exhaustive survey" に加えて "a simple question gets a direct answer in prose, not headers and sections" のような散文方針も、この規範の一部として含まれています。書き方の規範を prompt 自身が持っているため出力の形が崩れにくく、手元の観察ではユーザー rules への追従も保たれていました。
+まとめると、Opus 5 で強烈に出たのは 3 つが同時に揃ったからです。
+
+書き方の規定がゼロの prompt が配られ、素の出力傾向がむき出しになった
+「十分な情報が揃ったら動け」「網羅より推奨を」という方針が、即作業・軸の省略を後押しした
+旧 rules は規定の濃い旧 prompt を前提にしたままで、この空白を埋める形をしていなかった
+
+なお当初は「同じ prompt に対する指示追従の容量がモデルごとに違う」という仮説で説明しようとしていましたが、実測で prompt 自体が別物と分かり撤回しました。モデル固有の追従性がどれだけ寄与しているかは、prompt を揃えた比較をしていないため分離できていません。
+
+---
+
+## 27. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/7/13
@@ -11105,7 +11323,7 @@ claude.ai でモデルとエフォートを選ぶ画面と、無料で試せる�
 
 ---
 
-## 27. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
+## 28. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/7/22
@@ -11591,7 +11809,7 @@ OSS: github.com/bokuwalily 🐙
 
 ---
 
-## 28. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
+## 29. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/8/31
@@ -11821,7 +12039,7 @@ CLAUDE.md・Skills・MCP という「ハーネス」の先にある「ループ�
 
 ---
 
-## 29. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
+## 30. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/10/4
@@ -14007,7 +14225,7 @@ Sun*は「誰もが価値創造に夢中になれる世界」をビジョンに�
 
 ---
 
-## 30. [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
+## 31. [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/10/7
@@ -14347,7 +14565,7 @@ What's new — Claude Code Docs — 最新リリース情報
 
 ---
 
-## 31. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
+## 32. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -14594,7 +14812,7 @@ AIに渡すルールは、自然言語ドキュメント1枚から三つの仕�
 
 ---
 
-## 32. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
+## 33. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -15102,7 +15320,7 @@ Skillは「自分専用のClaude Code」を育てることに近いと感じて�
 
 ---
 
-## 33. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
+## 34. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -15607,7 +15825,7 @@ Building agents with the Claude Agent SDK - Anthropic Engineering
 
 ---
 
-## 34. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
+## 35. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -15752,7 +15970,7 @@ banned_visual_motifs:
 
 ---
 
-## 35. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
+## 36. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/7
@@ -15988,7 +16206,7 @@ Slack, Google Calendar, Confluence等のMCPツールを活用して情報取得�
 
 ---
 
-## 36. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
+## 37. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -16182,7 +16400,7 @@ CLAUDE.mdにルールを書いて、WIP.mdに作業状態を残すようにし�
 
 ---
 
-## 37. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
+## 38. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -16491,7 +16709,7 @@ your-project/
 
 ---
 
-## 38. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
+## 39. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -16626,7 +16844,7 @@ Qiitaニュースを購読する
 
 ---
 
-## 39. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
+## 40. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -17428,7 +17646,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 40. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
+## 41. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -17479,7 +17697,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 41. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
+## 42. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -17738,7 +17956,7 @@ Claude Code や AI 自動化についてさらに深く学びたい方は、筆�
 
 ---
 
-## 42. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
+## 43. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -18281,7 +18499,7 @@ Prime 200銘柄
 
 ---
 
-## 43. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
+## 44. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -18461,7 +18679,7 @@ mainで作業 → worktreeを使う
 
 ---
 
-## 44. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
+## 45. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/12
@@ -19170,7 +19388,7 @@ Claude Code の 6種類のメモリと優先順位を理解して効率的に活
 
 ---
 
-## 45. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
+## 46. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/22
@@ -20410,7 +20628,7 @@ AIの「揮発性の高い記憶」を補うための「外部メモリ」とし
 
 ---
 
-## 46. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
+## 47. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/8
@@ -22002,7 +22220,7 @@ AI に相談して書いてもらいました。 ↩︎
 
 ---
 
-## 47. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
+## 48. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -22253,7 +22471,7 @@ hooks は決定論的な強制です。必ず同じ処理を再現したいも�
 
 ---
 
-## 48. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
+## 49. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -22752,7 +22970,7 @@ READMEが人間への手紙なら、AGENTS.md は、明日の自分・明日の�
 
 ---
 
-## 49. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
+## 50. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/16
@@ -23174,235 +23392,6 @@ Claude Code Knowledge Filesでチーム知識を外部化する
 Claude Code Parallel Agentsで複数タスクを同時処理する
 
 GitHubで編集を提案
-
----
-
-## 50. [「原則」を Rules / Skills にして運用してみた](https://zenn.dev/tingtt/articles/fc05c73f8265e4)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/6/16
-- **AI要約**:
-  AIエージェント用の「原則」をRulesやSkillsのファイル構造として運用する具体的手法を提案
-  Markdown作成やコード設計の原則をSKILL.mdと関連ドキュメントに分割して定義する設定例を提示
-  原則を構造化して参照させることでAIの自己判断や推測を防ぎ、コンテキストを適切に管理可能にする
-- **今読む理由**: AI駆動開発において、プロンプトの記述量を削減しながらAIの出力品質を劇的に高めるための具体的な「SKILL.md」の設定と運用ディレクトリ構造が明記されており、今すぐプロジェクトに導入可能であるため。
-- **タグ**: #AI駆動開発, #プロンプトエンジニアリング, #Cursor, #コンテキスト管理
-
-### 本文
-Rules や Skills をメンテナンスするのが大変なので「実装例」をたくさんに用意するよりも「原則」を優先して Rules や Skills に起こして運用してみました。
-同じように構成している方も多そうですが、感触が良かったので Agentic Coding の 1 例として紹介します。
-特に 0 → 1 のあまりパターン化されていないドキュメント作成やコーディング作業に効きます。
-品質やコストなど、何かしら理由があってドキュメントやコードにこだわる必要があるなら尚更おすすめします。
-
- 構成例
-
-
-「原則」の Rules/Skills：一番抽象度・視点が高い本当に共通の指針
-
-ドキュメントの扱い
-コード（プログラム）の扱い（責務分離の原則、境界の設計）
-テストの扱い
-
-
-
-「原則」を適用する Rules/Skills：ドキュメントの種類・言語・フレームワーク・アーキテクチャごと
-
-DesignDoc ではどうする
-CONTRIBUTING.md ではどうする
-README.md ではどうする
-コミットメッセージではどうする
-Go ではどうする
-React ではどうする
-
-
-
-具体的な説明や指示をする Rules/Skills + AGENTS.md (CLAUDE.md)：プロジェクト・作業・ワークフローごと
-
-パターンごとの実装方法
-レビュー方法
-テスト方法
-コミットメッセージのフォーマット
-プロジェクトの概要、目的、設計
-他ワークフロー
-
-
-
-
-
- 「原則」の Rules/Skills
-0 → 1 のドキュメント作成やコーディングにおいて、「DesignDoc を作って」や「Clean Architecture で作って」と作るものの情報を 20〜30 行程度書いた上で指示すると出来上がるのはそこそこかそれ以下の出来だと感じることが多いです。
-※こだわり強めの個人的な感覚
-具体例やスタイルガイドを参照させても抜け落ちる部分がありますし、「追加情報や判断が必要な場合は質問して」と指示を入れると自分の手で大枠を作ったほうが早くなってしまう場合もあります。
-つまり、AI Agent の出力に対する期待値に対してコンテキスト管理が不十分なのです。
-
- ドキュメントを作らせるときの困りごと
-以下のプロンプトの構成では、何が足りないでしょうか。
-
-情報を 20〜30 行程度
-DesignDoc を作って
-追加情報や判断が必要な場合は質問して
-
-少し視点を変えて見る必要がありますが、以下は明確な指示がありません。
-
-DesignDoc の役割は？
-（一般的にではなくこのプロジェクトではどうなのか）
-このプロジェクトにおいてドキュメントはどういう扱い？
-（README・DesignDoc・ADR の使い分けは？）
-誰が読む？（エンジニア？ 非エンジニア？ チーム内？）
-どこまで書く？
-どういう構成で書く？
-
-明確な指示がないこれらは、質問攻めされて時間がかかるか、
-勝手に判断・推測されて AI Agent やモデルの癖・特徴に引っ張られたものになります。
-
- ドキュメントに関する「原則」をスキルにする
-以下の styleguide-markdown-document/SKILL.md と参照させている document.md が「原則」に当たります。
-他は「原則」を適用するためのガイドのようなことを書いてあります。
-styleguide-markdown-document/SKILL.md
----
-name: styleguide-markdown-document
-description: Write, review, and refactor Markdown documentation (README, PRD, DesignDoc, ADR, CONTRIBUTING) using the project's styleguide. Use when working on .md docs to enforce document boundaries, required sections, and link hygiene. Consult the referenced styleguide files under docs/styleguide/documents/*. Outputs are in English by default; also applicable to Japanese documents.
----
-
-# Styleguide: Markdown Document
-
-When writing or updating Markdown docs (README, PRD, DesignDoc, ADR, CONTRIBUTING), consult the corresponding styleguide file:
-
-- **README**: ./README.md
-- **PRD**: ./PRD.md
-- **DesignDoc**: ./DesignDoc.md
-- **ADR**: ./ADR.md
-- **CONTRIBUTING**: ./CONTRIBUTING.md
-- **Document System Guide**: ./document.md (Entry point and index for all document types and boundaries)
-
-Follow the required sections, boundaries, and link hygiene defined in each styleguide file.
-Apply the same structure for Japanese documents.
-この「原則」と「原則を適用するガイド」を使用して作成した DesignDoc とプロンプト
-
- プロンプト
-月単位で google calendar の予定を sync する機能の DesignDoc を作成してください。 
-決めなければならないこと、分からないことは聞いてください。 
-
-入力： 
-- calendar id 
-- 予定名 
-- 期間 
-- 追加する予定の名 (optional) 
-
-結果：
-- 該当する予定がカレンダーに sync される 
-- 期間、予定名が該当する予定がカレンダーに全く同じものがなければ追加される 
-- sync 元に全く同じ予定が無く、カレンダーにある場合は削除される
-  （このツールで作成されたものかどうかを判定する必要あり。更新があれば変更ではなく置き換え処理を行う）
-
-Usage
-\```
-# Login with Google
-gcal-sync login
-
-# Sync events to personal (or specified) calendar
-gcal-sync <src calendar id> [--dest <dest calendar id>] [--name <sync event name>] [--all] [[--month YYYYMM]] [--next-month]
-\```
-
-Options と仕様
---dest, -d: イベントの同期先
---name: コピーするイベントの名前（完全一致）（指定なしの場合は警告を出して y/n をプロンプトで入力させる）
---all: --name で一致したイベントをすべて同期する（指定なしでその日以降で最近の合致イベントを同期する）
---month: イベントの同期範囲（月指定）
---next-month: --month の省略用
-
-
- 成果物 (所要時間 20 分程度)
-※ 上記のプロンプトに加えて 5 往復くらい訂正・追加指示はしています。
-
-
-
- コーディングさせるときの困りごと
-DesignDoc や Plan にディレクトリ構成と共に「Clean Architecture を採用する。」や「DDD に準拠する。」とした場合も同様に不足している情報があります。
-
-何を重視する？
-何を無視する？
-どう実装する？
-DDD はどこまで？
-レイヤー構成は？
-テストはどこに重み？
-キャッシュはどこ？
-どう責務を分離する？
-
-プロダクトや運用方針によって採用したアーキテクチャやデザインパターンの上で更に判断が必要なはずです。
-ここを勝手に判断・推測されてしまっては困ります。
-
- コーディングに関する「原則」をスキルにする
-以下の styleguide-sourcecodes/SKILL.md 及び参照させているファイルすべてが「原則」に当たります。
-主に「責務の分離」「境界の設計」についてまとめています。
-styleguide-sourcecodes/SKILL.md
----
-name: styleguide-sourcecodes
-description: Apply the repository's source-code design principles (separation of concerns, sliced iterations, root ownership) when designing, reviewing, or refactoring code. Use for any language to keep responsibilities thin, testable, and referencable.
----
-
-# Styleguide: Source Codes
-
-Use these design principles to shape code structure and reviews:
-
-- **Separation of Concerns**: ./design-principles-separation-of-concerns.md
-- **Sliced Iterations**: ./design-principles-for-sliced-iterations.md
-- **Versioned Codebase Cleanup**: ./version-control-cleanup.md
-
-Key expectations for agents:
-
-- Treat a concern as a reason for change; assign one responsibility per concern.
-- Keep state owned by a clear Root Owner; avoid scattered or ambient state.
-- Prefer referential transparency; keep external dependencies thin at boundaries.
-- Express cross-iteration concerns as sliced iterations with explicit boundaries; keep pure per-item work as non-iterative functions.
-- Avoid invalid states by construction; push invariants to creation points.
-- Use testability as a signal—if tests are hard, re-check concern separation and state ownership.
-
- 「原則」の Rules/Skills による効果
-判断材料・指針をしっかり原則としてまとめることができればその基準を使って不足情報を補完できるため、以下の流れで進めさせることができます。
-原則 + コンテキスト → 判断 → 実装
-特に DesignDoc の作成では、完成までの壁打ち回数が 10〜20 往復程度から 5〜10 往復程度まで減ることが多くなりました。
-また、嬉しい誤算として Claude Sonnet 4.6 や GPT-5.4 mini などの比較的軽量なモデルでも不満を感じる場面が減りました。
-
- 「原則」の言語化
-もちろん、この「原則」を整理するためには相応の時間が必要です。
-私の場合も、styleguide や Skills を作る段階では AI やチームメンバーとかなりの壁打ちを行いました。
-
- プロンプトの例
-〇〇についての設計原則をドキュメント化してください。
-
-### ゴール
-
-以下の認識をチームメンバー及び AI Agent で合わせ、踏襲、応用が可能
-
-- 〇〇
-  - 何を重視するのか
-  - 何を避けたいのか
-  - どのような認知負荷を減らしたいのか
-  - どのような変更容易性を得たいのか
-  - どのようなテスト容易性を得たいのか
-  - どのような責務分離を目指すのか
-
-### あなたの役目
-
-- 特定の技術やフレームワークに囚われない
-- 背後にある設計意図や判断基準を抽出する
-- 個別ルールではなく原則へ一般化する
-- AI Agent が応用できるレベルまで抽象化する
-
-
- 原則や考え方を書いた Rules/Skills をレビューする (2026/06/15 追記)
-原則や考え方を書いた Rules/Skills についてはレビュー方法に少し工夫が必要でした。
-「特定パターンで期待する判断をしてくれるか」は実際に動かして確認することができますが、「未知のパターンでどう判断するか」は直接確認することはできません。
-私の場合は、代わりに「どう理解するか」「どう認識するか」を聞いて齟齬がないか確認する方法でレビューしました。
-この確認作業は実際の業務で使用する AI Agent・モデルで行っておくと良いでしょう。
-
- プロンプト例
-このドキュメントをレビューしてください。
-AI や人間が読んだときにどのような理解・認識するかをまとめてください。
-
-「書いてあるルールが守られるか」ではなく、
-「どのように解釈されるか」を中心に評価してください。
 
 ---
 

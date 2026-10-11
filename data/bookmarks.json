@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-10T03:13:26.213Z",
+  "updated_at": "2026-10-11T02:49:22.467Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9358,6 +9358,168 @@
       "status": "unread",
       "analyzed_at": "2026-10-10T03:13:26.212Z",
       "markdown_path": "data/notebooklm_sources/1879702273_Opus 5.5にプロンプトを渡したら、解説アニメーション動画ができた.md"
+    },
+    {
+      "id": "1879702259",
+      "url": "https://zenn.dev/u1/articles/claude5-rules-collapse-and-fix",
+      "title": "Opus5が思考が浅いように感じる問題への対策",
+      "excerpt": "Claude Code を Opus 5 に切り替えた直後から、応答の散文傾向が急に強まり、思考が浅くなる (構造化して考えられない) 変化が出ました。長年育ててきた rules (CLAUDE.md や常時ロードの指示ファイル群) は何も変えていないのに、です。調べていくと、モデルが悪いのでも rules が壊れたのでもなく、Claude 5 世代で Opus 5 に配られる本体 system prompt が大きく変わり、旧来の rules がその前提で書かれていなかったのが原因でした。",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-11T02:43:48.538Z",
+      "markdown_path": "data/notebooklm_sources/1879702259_Opus5が思考が浅いように感じる問題への対策.md"
+    },
+    {
+      "id": "1879702228",
+      "url": "https://zenn.dev/masayan1126/articles/claude-opus-4-8-dynamic-workflows",
+      "title": "Claude Opus 4.8 の動的ワークフローを触ってみたで ― 11エージェント並列でショート量産した話",
+      "excerpt": "Claude Opus 4.8 が出たんやけど、今回いちばんワイがテンション上がったんは、ベンチマークの数字でもfast modeの値下げでもなくて、動的ワークフロー（Dynamic Workflows） っていう新機能やった。",
+      "summary": "",
+      "score": 78,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "マルチエージェント",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-11T02:44:09.601Z",
+      "markdown_path": "data/notebooklm_sources/1879702228_Claude Opus 4.8 の動的ワークフローを触ってみたで ― 11エージェント並列でショート量産した話.md"
+    },
+    {
+      "id": "1879447091",
+      "url": "https://note.com/shi3zblog/n/n6e5d401dc6eb",
+      "title": "Claude Opus 5.5にモデリングをさせてみる｜shi3z",
+      "excerpt": "Claude Opus 5.5はモデリング能力が高いと言われている。 そこで試しに城下町のような光景をモデリングできるかやってみた。  まずGeminiで戦国時代の城下町を描いてもらう もうこんなものを見て誰も驚かなくなった よくわからんが謎の「豊臣」という旗が立っている。 さて、これをGemini、つまりAtnigravityにモデリングさせるとこうなった。 なんだかかわいい うーむ。コレジャナイ。 コレジャナイのだが、なんだか可愛い。ファンシーな世界観としてはどちらかというとアリではあるが、お世辞にも「元の写真に忠実」とはいかない。  Opus 5.5ではこうなった。 だいぶ似てる",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "3Dモデリング",
+        "マルチモーダルAI",
+        "Claude"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-11T02:44:29.285Z",
+      "markdown_path": "data/notebooklm_sources/1879447091_Claude Opus 5.5にモデリングをさせてみる｜shi3z.md"
+    },
+    {
+      "id": "1858006555",
+      "url": "https://qiita.com/leomarokun/items/a7a9068324a8fa2f6e0d",
+      "title": "Claude Code の Dynamic Workflows を試す前に知っておきたいこと（特にトークン消費の話） - Qiita",
+      "excerpt": "Claude Code の Dynamic Workflows を試す前に知っておきたいこと（特にトークン消費の話）",
+      "summary": "",
+      "score": 85,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-11T02:44:49.831Z",
+      "markdown_path": "data/notebooklm_sources/1858006555_Claude Code の Dynamic Workflows を試す前に知っておきたいこと（特にトークン消費の話） - Qiita.md"
+    },
+    {
+      "id": "1851223075",
+      "url": "https://note.com/aicu/n/n072491018e0c#200b7cbb-a9c9-4adb-845d-8e8090ca8cfd",
+      "title": "最新動画モデルWan2.2を自分のComfyUIで安定して動かすには(Mac/Win/Colab/サーバー編)｜AICU",
+      "excerpt": "2025年7月28日にリリースされたオープンな動画モデル「Wan2.2」、オープンリリースでライセンスモデルも商用利用可能な次世代動画モデルです。ローカルGPUやクラウド、MacBook(M4)などに横断的にインストールして安定性を評価してみた手順書とデータを公開します。 \n     WindowsやMacで動かすには  リリースがアナウンスされていますが、ComfyUI Desktopの自動更新には原稿執筆時点(7/29)では、最新のバージョンが配信されていないようです。  \n\n\nDownload ComfyUI:  Most Powerful Open Source Node-Ba",
+      "summary": "",
+      "score": 58,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ComfyUI",
+        "Wan2.2",
+        "動画生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-11T02:45:10.056Z",
+      "markdown_path": "data/notebooklm_sources/1851223075_最新動画モデルWan2.2を自分のComfyUIで安定して動かすには(Mac_Win_Colab_サーバー編)｜AICU.md"
+    },
+    {
+      "id": "1851221228",
+      "url": "https://okihiro-school.com/wan-animate-google-colab-free-tier-tutorial/",
+      "title": "【Colab無料枠】Wan-Animate (Wan2.1) で高品質なAI動画生成を実装する方法",
+      "excerpt": "Google Colabの無料枠(T4 GPU)で最新動画生成AI「Wan-Animate (Wan2.1)」を動作させる完全ガイド。Wan2GPを活用したメモリ最適化設定、LoRAによる高速推論、Video-to-Videoによる人物アニメーション生成の手順を詳しく解説します。",
+      "summary": "",
+      "score": 48,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "Wan2.1",
+        "GoogleColab"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-11T02:45:55.220Z",
+      "markdown_path": "data/notebooklm_sources/1851221228_【Colab無料枠】Wan-Animate (Wan2.1) で高品質なAI動画生成を実装する方法.md"
+    },
+    {
+      "id": "1850141510",
+      "url": "https://note.com/n_t7627/n/n73c888be4d7d",
+      "title": "第4回｜脱ゴミ屋敷！Obsidianメモを生きた情報に変えるコツ｜こじか🦌@教育×Obsidian",
+      "excerpt": "はじめに  前回（第3回）では、「考えることに集中する」ためのダッシュボード作りに使用したプラグインについて解説しました。 \n 今回は「第4回｜脱ゴミ屋敷！Obsidianメモを生きた情報に変えるコツ」についてです。  Obsidianを使っていると、次のような悩みを抱えがちです。    メモが増えすぎて、どこに何があるのか分からなくなる    整理したいけれど、日々の業務で手が回らない    完璧に整理しようとすると、時間も気力も消耗してしまう    これはObsidianに限らず、Notionなど他の情報管理ツールでもよくある話です。   情報管理ツールは、使っていれば散らかるのが",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Obsidian",
+        "ナレッジマネジメント",
+        "情報整理"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-11T02:46:17.171Z",
+      "markdown_path": "data/notebooklm_sources/1850141510_第4回｜脱ゴミ屋敷！Obsidianメモを生きた情報に変えるコツ｜こじか🦌@教育×Obsidian.md"
+    },
+    {
+      "id": "1821826800",
+      "url": "https://note.com/genel/n/n2b347fc9dbd9?magazine_key=m03efbb766a9a",
+      "title": "AIで「エモさ」を出すコツとプロンプト集｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは！GENELです。  よくSNSで「エモい画像ができるプロンプト」みたいな共有、たくさん見かけるんですけど、   実際にエモい映像を作ってみた！   みたいなポストはあまり見かけないなーと思いませんか？   AIでエモさを出すコツ📝 ━━━━━━━━━━  ①作品じゃなく記憶の中の思い出を意識 「cinematic」じゃなく「home video」。 日常のようなワードを選ぶことで、誰かが撮った瞬間っぽくなります💡  ②完璧すぎない方がリアル 「film grain」「VHS aesthetic」など、わざとノイズ系のワードを入れる。… pic.twitter.com/6g0",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "プロンプトエンジニアリング",
+        "画像生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-11T02:49:02.865Z",
+      "markdown_path": "data/notebooklm_sources/1821826800_AIで「エモさ」を出すコツとプロンプト集｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826798",
+      "url": "https://oshiete.ai/items/135941326698066944",
+      "title": "AIショート動画台本デザイナー │ バズる5つの型からショート動画の台本をつくります | GMO天秤AI",
+      "excerpt": "バズる動画の5つの型に沿ってショート動画台本をデザインします。競合や論文の検索から作成することも可能です。 YouTubeショート、Instagramリール、TikTok、Xの動画投稿、全てに使えるこれまでにない超高性能の動画台本作成ツールです。│ Designed by AIのある暮らし\n\n👉その他のおすすめGPTsはこちらです。\noshiete.ai/profiles/ainoarukurashiあなたの欲しいが見つかる生成AIのプロンプトポータルサイト",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "プロンプトエンジニアリング",
+        "生成AI",
+        "動画制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-11T02:49:22.467Z",
+      "markdown_path": "data/notebooklm_sources/1821826798_AIショート動画台本デザイナー │ バズる5つの型からショート動画の台本をつくります _ GMO天秤AI.md"
     }
   ]
 }
