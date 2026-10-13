@@ -1,5 +1,5 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/10/12 3:36:03
+最終更新日: 2026/10/13 4:27:45
 対象記事数: 50 件 (未読かつHigh優先度)
 
 ---
@@ -14565,7 +14565,45 @@ What's new — Claude Code Docs — 最新リリース情報
 
 ---
 
-## 32. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
+## 32. [Claude Code「ralph-loop」解説｜hirokaji](https://note.com/tasty_dunlin998/n/n411f62ec3c26)
+- **優先度**: High
+- **スコア**: 90
+- **解析日時**: 2026/10/13
+- **タグ**: #ClaudeCode, #AI駆動開発, #自律エージェント
+
+### 本文
+Stop hookで回す自律ループの仕組み・プロンプト設計・運用の勘所・落とし穴まではじめに：ralph-loopは「Claudeを止めずに回す」ための実務ツールですClaude Code は、普通に使うと「指示 → 1回の実行 → 応答で終了」という単発実行になりがちです。一方で現場では、次のような作業を「収束するまで繰り返してほしい」場面が多くあります。lint / format を全部直して、再実行して、ゼロになるまで詰めるテストが落ちたら直して、テストを回して、全部通るまで繰り返す生成物の品質が十分になるまで、自己チェックして改善する（ただし暴走は困る）ralph-loop は、この“反復”を Claude Code 内で扱いやすくするためのプラグインです。ただし便利な反面、仕組みを知らずに使うと「止まらない」「誤停止」「環境依存で壊れる」などが起きやすいので、この記事では導入だけでなく 設計・運用・トラブル対策までまとめます。目次Stop hookで回す自律ループの仕組み・プロンプト設計・運用の勘所・落とし穴まではじめに：ralph-loopは「Claudeを止めずに回す」ための実務ツールです要点（先に結論）1. ralph-loopの導入（あなたの手順を“意味”つきで整理）手順スコープ選択の実務的な指針2. 仕組み：ralph-loopは何をしているのか2.1 Stop hookで「終了」を横取りして反復する2.2 状態ファイルが“制御盤”になることが多い3. 実行コマンド：最重要は2つの引数要点（先に結論）ralph-loop は主に Stop hook（Stopイベント）を使って、Claude が止まる瞬間に「続行するか」を判定してループさせます。実運用の安全弁は --max-iterations です。ここが弱いとコストと時間が吹きます。完了判定の中心になる --completion-promise は設計が甘いと、止まらない／誤停止しやすいです。2025年末〜2026年初頭の報告として、マルチライン bash の実行制限、Windows の bash 前提、zsh/macOS のパース系など環境起因の不具合が踏まれやすいです。大きいタスクを一気に回すより、フェーズ分割 + 小さい max-iterations が安定します。1. ralph-loopの導入（あなたの手順を“意味”つきで整理）ここで紹介する導入フローは、Claude Code の標準導線に沿っています。以下に「なぜそのステップが必要か」も含めて整理します。手順Claude Code 起動後、/plugin を実行検索ボックスで ralph-loop を探して選択インストールするスコープを選ぶ（ユーザー / プロジェクト / ローカル）Claude Code を再起動コマンドで実行/ralph-loop "<プロンプト>" --max-iterations <数値> --completion-promise "<完了テキスト>"スコープ選択の実務的な指針スコープは事故りやすいポイントです。おすすめは次です。まずは「ローカル」影響範囲が最小で、hook が原因で遅くなる／壊れる場合の切り戻しも楽です。問題なければ「プロジェクト」チーム内で再現しやすく、運用も揃えられます（ただし他の人の環境でも動くか要確認）。個人の常用に耐えると判断できたら「ユーザー」全プロジェクトに効くので便利ですが、hook が絡むプラグインは影響が広くなります。2. 仕組み：ralph-loopは何をしているのか2.1 Stop hookで「終了」を横取りして反復するClaude Code には Hook 機構があり、あるイベント（例：Stop）で任意コマンドを走らせられます。ralph-loop はこの Stop を活用して、概ね次の流れで動きます。/ralph-loop で「ループ条件」をセットするClaude がタスクを実行して「終わる」Stop hook が発火する「完了条件を満たしたか」「回数上限に達したか」を見てまだなら続行（次の反復へ）満たしたら終了つまり、ralph-loop は「AIの思考を強化する魔法」ではなく、Claude Code のライフサイクルに割り込んで反復を実現する制御です。2.2 状態ファイルが“制御盤”になることが多いralph-loop 系は、プロジェクト配下に状態ファイルを置いて「今何回目か」「完了トークンは何か」を管理する実装が多いです。例として、次のようなファイルが作られるケースがあります。.claude/ralph-loop.local.mdここには、概ね次の情報が入りやすいです。iteration: 現在の反復回数max_iterations: 上限completion_promise: 完了判定文字列prompt / task: もともとの指示実務メモ：Git管理は慎重にこのファイルは成果物ではなく 実行状態です。チーム共有に明確な意図がない限り、.gitignore に入れるほうが安全です。3. 実行コマンド：最重要は2つの引数あなたが提示した実行形は、このプラグインの本質を押さえています。/ralph-loop "<プロンプト>" --max-iterations <数値> --completion-promise "<完了テキスト>"3.1 --max-iterations：安全弁（コスト弁）これは「暴走したらここで止める」というための上限です。現場ではこれが最重要です。目安（経験則の運用例）：lint 直し・小修正：5〜10テスト追加や中規模修正：10〜25大規模移行：30以上もあり得るが、基本は分割推奨3.2 --completion-promise：止めるための合図完了判定は、多くの実装で「出力にその文字列が含まれたか」を見ます。ここを甘くすると、次が起きます。止まらない：最後に promise を出し忘れる／一致しない誤停止：途中のログや引用で promise が混入する不安定：空白や装飾で一致条件を満たせない4. completion-promise設計：止まらせる“儀式”を作る4.1 推奨：長くてユニークなトークンを使う短い「DONE」「完了しました」は避けます。おすすめは「日付＋乱数＋用途」を混ぜたユニークトークンです。RALPH_DONE__LINT__20260123__X9Q4.2 推奨：最終行にだけ出させる（漏れを防ぐ）プロンプト側で次を強制します。成功条件をすべて満たした最終応答の末尾にだけ promise を出す途中経過、引用、コード、ログには promise を絶対に含めない実務テンプレ（コピペ用）あなたのタスク:
+- （やることを具体的に）
+
+成功条件（全部満たしたら完了）:
+- npm run lint がエラー0
+- npm test が成功
+- 変更は最小限
+- 変更点を要約する
+
+出力ルール（重要）:
+- 成功条件を満たした最終応答の「最終行」にだけ <promise>RALPH_DONE__20260123__X9Q</promise> を出力する
+- それ以外（途中経過・引用・コード・ログ）にはこの文字列を絶対に含めない起動例：/ralph-loop "（上のテンプレを貼る）" --max-iterations 10 --completion-promise "RALPH_DONE__20260123__X9Q"5. 安定運用のコツ：タスクを「収束する形」に変えるralph-loop は反復を回せますが、収束しない問いを投げると当然止まりません。安定させるには、次を意識します。5.1 成功条件を客観に寄せる良い例：npm test が通るnpm run lint がエラー0ビルドが成功する指定ファイルの差分が要件を満たす悪い例：「いい感じにして」「最適化して」「完成度を上げて」5.2 フェーズ分割する大きい改修を一気に回すと、コンテキストが肥大しやすく、不安定になります。おすすめは次の分割です。まず lint / format をゼロにする次にテストを通す次にリファクタ最後にドキュメント6. ありがちな落とし穴と対策（特に環境依存）ここは「導入はできたのに動かない」原因の大半です。6.1 マルチライン bash がセキュリティ制約に引っかかる症状：プラグイン側がマルチラインの bash を走らせようとして、実行が拒否される引数が渡らずにセットアップが落ちる対策（現場的な逃げ）：エラーに出てくる setup スクリプトのパスを、1行コマンドとして直接実行できるなら、それで回避できる場合がありますそれでも無理なら、プラグイン更新の影響を確認しつつ、運用を「手動セットアップ」に寄せます6.2 macOS（zsh）で bash 前提のスクリプトがパースエラーになる症状：(eval): parse error のようなエラーが出る対策：実行が bash 明示になっているか確認直らなければ upstream 修正待ちになりやすいので、運用側で「使う場面を限定」します6.3 Windows は bash 前提で壊れやすい症状：/bin/bash がないパス表現が崩れるsed/awk/grep/jq 前提で失敗する対策（実務で一番確実）：WSL（Linux環境）で Claude Code を動かすこれが一番事故が少ないです。6.4 「使ってないのに遅い」：Stop hook が常に走る問題症状：ralph-loop を使っていないのに、Claude Code 全体が重い対策：ralph-loop を使わない期間は プラグインを disable する（hook 系は影響が広いので、必要なときだけ有効が安全です）7. “最初の成功率”を最大化する最小構成（おすすめの試し方）いきなり大改修を回すのは危険です。最初は次の順が堅いです。新しい作業ブランチを切る小さなタスクを選ぶ（lint 0、フォーマット統一など）--max-iterations を小さくする（5〜8）promise を長くユニークにする失敗したらログを見て「環境依存」か「プロンプト設計」か切り分ける例（lint をゼロにする）：/ralph-loop "
+対象: src/utils 以下
+目的: ESLint エラーを 0 にする（挙動変更なし）
+
+手順:
+- npm run lint を実行してエラーを確認
+- エラーを修正
+- 再度 npm run lint を実行して確認
+
+成功条件:
+- npm run lint がエラー0
+- 変更差分を要約
+
+出力ルール:
+- 最終行にだけ <promise>RALPH_DONE__LINT__20260123__X9Q</promise> を出力
+- 途中経過・引用・コード・ログにこの文字列を絶対に含めない
+" --max-iterations 8 --completion-promise "RALPH_DONE__LINT__20260123__X9Q"8. よくある質問（FAQ）Q1. ループが止まりません典型原因：promise を出し忘れたpromise が途中のログやコードに混入して、挙動が崩れた完了条件が曖昧で、いつまでも改善を続ける問いになっている対処：--max-iterations を小さめに設定してまず安全に止める成功条件を「テスト」「lint」「ビルド」など客観に寄せるpromise を長くユニークにする＋最終行だけに限定するQ2. 途中で誤停止しました典型原因：promise が短い／一般的で、ログや引用に混入した対処：promise をユニーク化する（用途＋日付＋乱数）コードブロックやログ出力の中に promise が入らないルールを明示するQ3. 動きが重くなりました典型原因：Stop hook が常に実行される実装stdin 読み込み順序などで遅延が出る対処：使わない期間は disable影響が大きければスコープを Local に戻すまとめ：ralph-loopは「反復の設計」が9割ralph-loop を便利にする鍵は、プラグイン操作よりも “収束するタスク設計” と “止まる合図（promise）設計”にあります。max-iterations は常に安全弁として設定するpromise は長くユニークにし、最終行にだけ出させる成功条件を客観に寄せ、フェーズ分割して回すhook 系は環境依存が強いので、最初は Local スコープで小さく試す参考リンク：公式プラグイン（ralph-loop）次にやることまずは「lint をゼロにする」など小さなタスクで、--max-iterations 5〜8 の短いループを回し、promise で確実に止まるところまで確認してください。もし実行エラーが出たら、そのログ（permission check / hook / bash 関連の行）から、原因を「プロンプト設計」「環境依存」「プラグイン不具合」に切って、回避策を優先順位つきで整理してください。2026年9月18日追記｜停止後の再開条件まで試す短いループを回せたら、次は入力不足で止まったあとに、何を確認して再開するかを試せます。AIに任せて、止めて、再開する｜Harness Build #1では、架空の問い合わせCSVを使い、停止・補完・再承認・再開を一つの例で確認します。配布物はLLMや外部サービスを接続しないローカルの参照実装です。ralph-loopへ追加するプラグインではありません。まずは同梱の初回演習を読み、実行する場合はREADME.mdへ進みます。完了の目安は、問い合わせ6件・合計95分の下書きと、停止から再開までの記録を確認できることです。考え方は無料部分で読めます。演習・実装・配布ZIPはPromptOps Labのメンバー向けです。
+
+---
+
+## 33. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -14812,7 +14850,7 @@ AIに渡すルールは、自然言語ドキュメント1枚から三つの仕�
 
 ---
 
-## 33. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
+## 34. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -15320,7 +15358,7 @@ Skillは「自分専用のClaude Code」を育てることに近いと感じて�
 
 ---
 
-## 34. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
+## 35. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -15825,7 +15863,7 @@ Building agents with the Claude Agent SDK - Anthropic Engineering
 
 ---
 
-## 35. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
+## 36. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -15970,7 +16008,7 @@ banned_visual_motifs:
 
 ---
 
-## 36. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
+## 37. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/7
@@ -16206,7 +16244,7 @@ Slack, Google Calendar, Confluence等のMCPツールを活用して情報取得�
 
 ---
 
-## 37. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
+## 38. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -16400,7 +16438,7 @@ CLAUDE.mdにルールを書いて、WIP.mdに作業状態を残すようにし�
 
 ---
 
-## 38. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
+## 39. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -16709,7 +16747,7 @@ your-project/
 
 ---
 
-## 39. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
+## 40. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -16844,7 +16882,7 @@ Qiitaニュースを購読する
 
 ---
 
-## 40. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
+## 41. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/9
@@ -17646,7 +17684,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 41. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
+## 42. [Claude Codeで「1プロンプトサイト複製」が話題だけど、本当にヤバいのは“UI実装の重心”がズレ始めたこと #個人開発 - Qiita](https://qiita.com/taketsuyo/items/237af0096e00ab1638c0)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -17697,7 +17735,7 @@ AI活用や開発効率化について発信しています。フォローお気
 
 ---
 
-## 42. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
+## 43. [Claude Code Skills の作り方入門 — 実務で使えるカスタムコマンドを自作する #AI - Qiita](https://qiita.com/joinclass/items/19b96eff86619e2cdaeb)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -17956,7 +17994,7 @@ Claude Code や AI 自動化についてさらに深く学びたい方は、筆�
 
 ---
 
-## 43. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
+## 44. [日経225の株価予測AIを作って方向的中率67%を出すまでの全記録 #Python - Qiita](https://qiita.com/kashiwa350/items/37aa4a7297748b3b03a3)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -18499,7 +18537,7 @@ Prime 200銘柄
 
 ---
 
-## 44. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
+## 45. [Claude Codeで無駄に時間を消耗してしまう7つのミス（とその改善方法） #プログラミング - Qiita](https://qiita.com/Takumi_Kenta/items/ba51ac72fd10ebcd0a91)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/10
@@ -18679,7 +18717,7 @@ mainで作業 → worktreeを使う
 
 ---
 
-## 45. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
+## 46. [CLAUDE.md + メモリ3階層設計で始めるClaude Code活用術 ── 初心者から中級者へのステップアップガイド - Qiita](https://qiita.com/nogataka/items/0cd0851556572b4758ba)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/12
@@ -19388,7 +19426,7 @@ Claude Code の 6種類のメモリと優先順位を理解して効率的に活
 
 ---
 
-## 46. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
+## 47. [Claude Codeに実装を丸投げするための仕組み作り](https://zenn.dev/trefac/articles/dde38d1229ce19)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/22
@@ -20628,7 +20666,7 @@ AIの「揮発性の高い記憶」を補うための「外部メモリ」とし
 
 ---
 
-## 47. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
+## 48. [データサイエンティストのためのAGENTS.mdとSkills](https://zenn.dev/green_tea/articles/d310e5cf809190)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/8
@@ -22220,7 +22258,7 @@ AI に相談して書いてもらいました。 ↩︎
 
 ---
 
-## 48. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
+## 49. [Claude Codeのagents / skills / hooksをどう使い分ける？実プロダクト開発で出した運用ルール](https://zenn.dev/dx_pm_product/articles/claude-code-agents-skills-hooks)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -22471,7 +22509,7 @@ hooks は決定論的な強制です。必ず同じ処理を再現したいも�
 
 ---
 
-## 49. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
+## 50. [AIに毎回プロジェクトを説明するのをやめる — AGENTS.mdで、コーディングエージェントに「リポジトリの歩き方」を1枚で渡す実践ガイド - Qiita](https://qiita.com/akira_papa_AI/items/3fd7d14fc53d13a27f4a)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/6/10
@@ -22967,431 +23005,6 @@ READMEが人間への手紙なら、AGENTS.md は、明日の自分・明日の�
 そしてこれは、AI時代のエンジニアの役割の変化そのものでもあります。コードを1行ずつ手で打つ人から、What（何を）と Why（なぜ）と境界を設計して、How（どう実装するか）をAIに渡す人 へ。AGENTS.md は、その「文脈を設計する力」を、誰でも今日から持てる形にしてくれます。文脈はコードと同じで、ちゃんと書けば資産になる。育てれば育てるほど、勝手に効いてくれる資産に。
 完璧じゃなくていいんです。まずは10行。あなたのリポジトリに、明日のための置き手紙を、1枚置いてみませんか。
 明日のあなたが、きっと「あざっす」って言ってくれます。
-
----
-
-## 50. [Claude Code Skills設計パターン ： 段階的開示とコンテキスト2%ルール](https://zenn.dev/correlate_dev/articles/claude-code-skills-progressive-disclosure)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/6/16
-- **AI要約**:
-  Skillsのdescriptionを2%以下に抑える段階的開示と3層構造によるコンテキスト管理
-  常時ロードを避けるためのSKILL.md、サブエージェント、リファレンスの分離とファイル構成
-  AIの自己判断による品質低下を防ぐIron Law（合理化防止テーブル）の具体的な設計と定義例
-- **今読む理由**: AI駆動開発においてClaude Codeを使用する際、トークン消費を抑えつつエージェントの自律稼働品質を保証するための具体的なディレクトリ構成やIron Law（合理化防止ルール）の記述テンプレートを即座に適用できるため。
-- **タグ**: #Claude-Code, #AI-Driven-Development, #Prompt-Engineering, #Agent-Architecture
-
-### 本文
-はじめに
-Claude Code Skillsの入門記事は日本語でも増えてきましたが、「どう設計すれば良いか」の判断基準を体系化した記事はまだ少ない印象です。
-本記事では、15以上のSkillsを実運用してきた経験から、以下の設計思想を整理します。
-
-
-段階的開示（Progressive Disclosure） ：必要な情報を必要なタイミングで展開する
-
-コンテキスト2%ルール ：Skillsのdescription設計の定量的基準
-
-3層構造 ：SKILL.md / agents / references によるコンテキスト分離
-
-Iron Law + 合理化防止 ：品質を担保するパターン
-
-
-
- Skills設計の核心：段階的開示とは
-
- 問題：全てを書くとコンテキストが溢れる
-Claude Codeはセッション開始時に ~/.claude/CLAUDE.md、プロジェクトの .claude/CLAUDE.md、そして全Skillsの description を読み込みます。
-Skillsのdescriptionの合計サイズは コンテキストウィンドウ全体の約2% （最大16,000文字程度）を占めます。この2%は避けがたい固定コスト。Skillsが増えるほど、実際の作業コンテキストに使えるトークンが減る計算になります。
-コンテキストウィンドウ（200K tokens）
-├── システムプロンプト（固定）
-├── CLAUDE.md（固定）
-├── Skills descriptions（固定、最大〜16,000文字）← ここが問題
-├── 会話履歴（可変）
-└── 実際の作業内容（可変）←← これが削られる
-
- 解決策：段階的開示
-段階的開示（Progressive Disclosure）は、UIデザインの概念をコンテキストエンジニアリングに応用したものです。
-Level 1: description（常時ロード）
-  ↓ Skillが呼ばれたとき
-Level 2: SKILL.md（Skill実行時にロード）
-  ↓ 複雑な処理が必要なとき
-Level 3: agents / references（処理内でロード）
-descriptionは「このSkillが何をするか」を20〜50文字で伝えるだけにします。詳細な手順は SKILL.md に書き、Skill実行時に初めてロードします。
-
-
- Skills設計の3層構造
-
- 実際のディレクトリ構成
-~/.claude/skills/
-├── session-start.md     ← Skill本体（description + 手順）
-├── session-end.md
-├── da-review.md
-├── content-scout.md
-├── agents/              ← サブエージェント定義
-│   ├── pragmatist.md
-│   ├── skeptic.md
-│   ├── idealist.md
-│   └── connector.md
-└── references/          ← 詳細リファレンス（必要時のみ参照）
-    ├── da-review-criteria.md
-    ├── session-template.md
-    └── content-formats.md
-
- Layer 1: descriptionの設計
-<!-- ~/.claude/skills/da-review.md の冒頭部分 -->
-# da-review
-
-**description**: Runs a Devil's Advocate (Skeptic-only) critical review.
-Use for quick single-perspective review before commit or deploy.
-Triggered by: "/da-review", "DAレビュー", "レビューして".
-
-<!-- この後に詳細な手順を書く -->
-descriptionのルール：
-
-
-1〜2文で完結 ：トリガーとユースケースのみ
-
-英語推奨 ：日本語より約30%トークンを節約できる
-
-トリガーフレーズを必ず含める ：Claude Codeがどこでこのスキルを使うか判断するため
-
-
- Layer 2: SKILL.md（Skill本体）
-# da-review Skill
-
-## 概要
-
-Devil's Advocate（懐疑派）の視点から、コードや記事の批判的レビューを実行する。
-コミット前・デプロイ前の最終チェックに使う。
-
-## 実行手順
-
-### Step 1: レビュー対象の特定
-ユーザーのメッセージから以下を特定する：
-- 対象ファイル（またはコードブロック）
-- レビューの深度（quick / thorough）
-
-### Step 2: 懐疑派の視点でレビュー
-
-以下の観点でレビューを実施：
-
-** セキュリティ（Security） **
-- SQLインジェクション / XSS / CSRF の脆弱性
-- 認証・認可の抜け漏れ
-- シークレットのハードコード
-
-** データ整合性（Data Integrity） **
-- トランザクション処理の正確性
-- エラー時のロールバック
-- 冪等性の担保
-
-** エラーハンドリング（Error Handling） **
-- 全例外の握りつぶしがないか
-- ユーザーへのエラーメッセージが適切か
-
-<!-- ... 続く ... -->
-
- Layer 3: agents / references（処理内でロード）
-複雑な処理では、サブエージェントの定義を別ファイルに切り出します。
-<!-- ~/.claude/skills/agents/skeptic.md -->
-# Skeptic（懐疑派）エージェント定義
-
-あなたはDevil's Advocateです。以下の特性を持ちます：
-
-- 全ての前提に疑問を持つ
-- 「最悪のケース」を想定する
-- 楽観的な見通しに反証を示す
-- 具体的な失敗シナリオを提示する
-
-## 発言スタイル
-
-「〇〇という前提が成立しない場合は？」
-「この実装が本番環境で壊れるとしたら、何が原因か？」
-「レビュアーが見落としているリスクは？」
-<!-- ~/.claude/skills/da-review.md の中でロードを指示 -->
-## サブエージェントの読み込み
-
-懐疑派の視点でレビューする際は、以下を参照：
-`~/.claude/skills/agents/skeptic.md`
-
-
- コンテキスト2%ルールの実践
-
- description文字数の管理
-# 全Skillのdescription文字数を確認するスクリプト
-#!/bin/bash
-
-SKILLS_DIR=~/.claude/skills
-TOTAL=0
-
-echo "Skill                        | 文字数"
-echo "-----------------------------+-------"
-
-for skill_file in "$SKILLS_DIR"/*.md; do
-  skill_name=$(basename "$skill_file" .md)
-  
-  # description行を抽出（最初のコードブロック外の段落）
-  desc=$(awk '/^## /{exit} /^[^#]/{print}' "$skill_file" | \
-    head -5 | tr -d '\n')
-  
-  char_count=${#desc}
-  TOTAL=$((TOTAL + char_count))
-  
-  printf "%-30s | %d\n" "$skill_name" "$char_count"
-done
-
-echo "-----------------------------+-------"
-echo "Total: $TOTAL characters"
-echo "Estimated tokens: $((TOTAL / 4)) (÷4 approximation)"
-
- 実測データ（15 Skills）
-自社の15 Skillsを計測した結果：
-
-
-
-カテゴリ
-Skills数
-合計文字数
-推定トークン
-
-
-
-
-セッション管理
-3
-1,240
-310
-
-
-レビュー・品質
-4
-2,100
-525
-
-
-コンテンツ
-5
-1,870
-468
-
-
-経理・広告
-3
-980
-245
-
-
-合計
-15
-6,190
-1,548
-
-
-
-16,000文字の上限に対して6,190文字（約39%）で収まっています。この余裕があることで、新しいSkillを追加したときの影響を吸収できます。
-
-
- Iron Law：合理化を防ぐ品質パターン
-GitHubで39,700 Star（2026年3月時点）を獲得している superpowers リポジトリには「Iron Law」という概念があります。
-AIが作業中に「例外的に〇〇していい」と自己判断して品質基準を下げることを防ぐパターンです。
-
- 合理化防止テーブルの例
-<!-- ~/.claude/skills/da-review.md の中に記載 -->
-
-## 合理化防止テーブル
-
-以下の思考パターンが発生した場合、即座に作業を止めてユーザーに確認する：
-
-| 合理化パターン | 正しい対応 |
-|---|---|
-| 「小さな変更だから品質チェックを省略してもいい」 | 省略しない。チェックは必須 |
-| 「ユーザーが急いでいるからレビューを簡略化しよう」 | 急いでいても手順は変えない |
-| 「この部分は確認済みだから飛ばしていい」 | 全ての手順を実行する |
-| 「このファイルは影響範囲が小さいから」 | 影響範囲の判断はユーザーに委ねる |
-
-## Iron Law
-
-以下のルールは例外なく適用される：
-
-1. セキュリティチェックは全項目を実施する（スキップ禁止）
-2. 「HIGH」評価の指摘は修正が完了するまでレビューを完了としない
-3. ファクトチェックなしに事実主張を含む文章を承認しない
-
- 実装への応用
-<!-- 開発系Skillの合理化防止例 -->
-
-## 絶対ルール（Iron Law）
-
-以下は「効率化」「時間短縮」を理由にしても破れない：
-
-- `git push --force` は禁止（`--force-with-lease` を提案する）
-- 本番DBへの直接操作は禁止（ステージング経由必須）
-- APIキーのハードコードは禁止（環境変数化を提案する）
-- セキュリティレビュー未実施のコードをコミットしない
-
-「ユーザーが急いでいる」「小さな変更」「確認済み」はいずれも例外理由にならない。
-
-
- トリガーフレーズの設計
-
- 日英両方のトリガーを設定する
-**Triggered by:**
-- "/da-review"
-- "/DAレビュー"
-- "DAレビュー"
-- "レビューして"
-- "コードレビュー"
-- "デプロイ前にチェック"
-- "review this"
-- "check this code"
-日本語のトリガーを追加することで、日常会話の中でSkillが自然に発火します。
-
- モデル指定のパターン
-<!-- Skillでモデルをopusかsonnetかhaikusで指定する -->
-
-## 使用モデル
-
-このSkillは **claude-opus-4** で実行する。
-
-理由：セキュリティレビューの見落としは手戻りコストが大きいため、
-精度最優先でopusを選択する。
-
-<!-- haiku向けSkillの例 -->
-## 使用モデル
-
-このSkillは **claude-haiku** で実行する。
-
-理由：テンプレートへの値の埋め込みは単純タスクのため、
-速度・コスト優先でhaikuを選択する。
-
-
- disable-model-invocationの活用
-Skillsの中でサブエージェントを呼び出す場合、disable-model-invocation フラグを使うと、Skill実行中のモデル切り替えを防げます。
-## 実行設定
-
-- disable-model-invocation: true
-
-このフラグを設定することで、Skill実行中にユーザーが別のモデルを
-指定しても無視される。品質ゲートの確実な実行に有効。
-
-
- 実運用からの知見
-
- 15 Skillsの運用で学んだこと
-1. Skillは小さく保つ
-1つのSkillに複数の責務を持たせると、どちらの用途にも使いにくくなります。session-start と session-update は分離した方が使いやすかった実例です。
-<!-- NG: 1つのSkillに全部詰め込む -->
-# session-management
-セッション開始・更新・終了を全て管理する
-
-<!-- OK: 責務を分割する -->
-# session-start    ← セッション開始専用
-# session-update   ← 作業中の更新専用
-# session-end      ← 終了・自動抽出専用
-2. descriptionにuse whenを明記する
-いつ使うSkillかを明示することで、Claude Codeの自律的なSkill選択が改善します。
-**Use when**: コミット前、デプロイ前の最終チェック時。
-  成果物（コード/記事）の品質確認に使う。
-
-**Do NOT use when**: 仕様検討段階、アイデア出しフェーズ。
-  実装済みのコードや完成した文章に対してのみ使う。
-3. 失敗ケースを明示する
-何が失敗とみなされるかを書くことで、曖昧な完了基準を防ぎます。
-## 完了の定義
-
-以下が全て満たされた場合のみ「完了」とする：
-- [ ] 全セキュリティ項目にHIGHが0件
-- [ ] 型チェックがエラー0件
-- [ ] テスト通過率100%
-- [ ] ファクトチェック済み（記事の場合）
-
-1つでも未達の場合は「完了」とせず、修正を促す。
-
-
- テンプレート：新規Skill作成時の雛形
-# {skill-name}
-
-## description（50文字以内を目標）
-
-{このSkillが何をするかを1〜2文で記述。トリガーフレーズを含める。}
-
-**Triggered by**: "/{skill-name}", "{日本語トリガー}", "{英語トリガー}"
-**Use when**: {どんな状況で使うか}
-**Do NOT use when**: {使ってはいけない状況}
-**Model**: {claude-opus-4 / claude-sonnet-4 / claude-haiku} — {理由}
-
----
-
-## 実行手順
-
-### Step 1: {最初のステップ名}
-{具体的な処理内容}
-
-### Step 2: {次のステップ名}
-{具体的な処理内容}
-
----
-
-## 合理化防止テーブル
-
-| 合理化パターン | 正しい対応 |
-|---|---|
-| {よくある例外理由} | {正しい対応} |
-
-## Iron Law（絶対ルール）
-
-- {例外なく守るルール1}
-- {例外なく守るルール2}
-
----
-
-## 完了の定義
-
-- [ ] {完了条件1}
-- [ ] {完了条件2}
-
-
- まとめ
-Claude Code Skillsの設計で重要な原則をまとめます。
-
-
-
-原則
-具体的な実践
-
-
-
-
-段階的開示
-descriptionは20〜50文字、詳細はSKILL.md
-
-
-コンテキスト2%ルール
-description合計を16,000文字以内に収める
-
-
-3層構造
-SKILL.md / agents / references で分離
-
-
-Iron Law
-合理化防止テーブルで品質を担保
-
-
-日英トリガー
-日常会話からの自然な発火を実現
-
-
-
-Skillsは「プロンプトを再利用する仕組み」ではなく、「AIの振る舞いを設計する仕組み」です。段階的開示の思想を取り入れることで、コンテキスト消費を抑えながら高品質な作業を実現できます。
-
- 関連記事
-
-Claude CodeのCLAUDE.mdで作業品質を担保する
-Claude Code Knowledge Filesでチーム知識を外部化する
-Claude Code Parallel Agentsで複数タスクを同時処理する
-
-GitHubで編集を提案
 
 ---
 

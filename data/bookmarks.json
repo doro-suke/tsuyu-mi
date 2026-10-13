@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-12T03:35:48.270Z",
+  "updated_at": "2026-10-13T04:27:30.046Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9682,6 +9682,167 @@
       "status": "unread",
       "analyzed_at": "2026-10-12T03:35:48.270Z",
       "markdown_path": "data/notebooklm_sources/1821826788_2025年版｜画像から動画生成AIおすすめ5選.md"
+    },
+    {
+      "id": "1886518216",
+      "url": "https://note.com/tasty_dunlin998/n/n411f62ec3c26",
+      "title": "Claude Code「ralph-loop」解説｜hirokaji",
+      "excerpt": "Stop hookで回す自律ループの仕組み・プロンプト設計・運用の勘所・落とし穴まで   はじめに：ralph-loopは「Claudeを止めずに回す」ための実務ツールです  Claude Code は、普通に使うと「指示 → 1回の実行 → 応答で終了」という単発実行になりがちです。一方で現場では、次のような作業を「収束するまで繰り返してほしい」場面が多くあります。    lint / format を全部直して、再実行して、ゼロになるまで詰める    テストが落ちたら直して、テストを回して、全部通るまで繰り返す    生成物の品質が十分になるまで、自己チェックして改善する（ただし暴",
+      "summary": "",
+      "score": 90,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "自律エージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-13T04:23:28.345Z",
+      "markdown_path": "data/notebooklm_sources/1886518216_Claude Code「ralph-loop」解説｜hirokaji.md"
+    },
+    {
+      "id": "1821826787",
+      "url": "https://note.com/genel/n/n31436dc0f92d?magazine_key=m6978390622df",
+      "title": "1枚の画像から作れる！美容系AIインフルエンサーの作り方の全手順を公開 [ Seedream4.0 / OmniHuman 1.5 ] #PR｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "👇🏻以前、こちらの記事でご紹介したBytePlusの『OmniHuman 1.5』 \n 今回は、実際に手を動かして「化粧品を紹介するAI動画」を作ってみました！    この動画はだいたい1時間～2時間くらいで完成しました！  「ちゃんと指示通り動いて喋ってくれるかな…？」とちょっと不安でしたが、完成した動画を見て「あ、この動作もいけるんだ」と、改めてOmniHuman 1.5の良さを実感しました👏🏻  ということで今回は、企画から完成までの全工程を詳しく解説していきます✨   この記事では、BytePlus（バイトプラス）による提供・協力のもと、GENEL目線で分析・検証した見解をご紹",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "AIアバター",
+        "OmniHuman"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-13T04:24:52.498Z",
+      "markdown_path": "data/notebooklm_sources/1821826787_1枚の画像から作れる！美容系AIインフルエンサーの作り方の全手順を公開 [ Seedream4.0 _ OmniHuman 1.5 ] #PR｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826786",
+      "url": "https://zenn.dev/favarodesir/articles/c6f7d363df15e7",
+      "title": "1枚の画像から広告動画まで：PythonとAIで組む「クリエイティブパイプライン」実践記",
+      "excerpt": "開示： この記事で紹介しているツール・サービスとの商業的な利害関係はありません。あくまで個人の実験・検証記録です。",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "自動化パイプライン",
+        "動画生成AI",
+        "Python"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-13T04:25:11.742Z",
+      "markdown_path": "data/notebooklm_sources/1821826786_1枚の画像から広告動画まで：PythonとAIで組む「クリエイティブパイプライン」実践記.md"
+    },
+    {
+      "id": "1821826785",
+      "url": "https://note.com/kashin_ailabo/n/nf325ed06fd7b",
+      "title": "Nfedfdb",
+      "excerpt": "クリエイターが文章やマンガ、写真、音声を投稿することができ、ユーザーはそのコンテンツを楽しんで応援できるメディアプラットフォームです。だれもが創作を楽しんで続けられるよう、安心できる雰囲気や、多様性を大切にしています。",
+      "summary": "",
+      "score": 10,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "note",
+        "未分類"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-13T04:25:32.370Z",
+      "markdown_path": "data/notebooklm_sources/1821826785_Nfedfdb.md"
+    },
+    {
+      "id": "1821826784",
+      "url": "https://note.com/genel/n/n40e26f70aec9?magazine_key=m03efbb766a9a",
+      "title": "12本、本気で作ってわかったAIショートドラマのコツ4選｜総再生1500万↑｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは！GENELです。  SNSで今伸びやすいAIコンテンツの一つの『ショートドラマ』 11件投稿で3万人フォロワー越え これまで、AIでつくるショートドラマについてのコツ解説を何度かしてきましたが、このnoteでは   ・さらに実用的でニッチなコツ ・実際に10本つくってはじめて気づいたこと   を紹介していきます！  10本以上作ってきた中で、「1本目からこれを知りたかった…！」というTIPSを、今回は4つに絞ってシェアします。   コツ①：ナレーションの「間」を意識する  こちらのnoteでもお話していますが、ショートドラマのナレーションはすべてElevenLabsで生成し",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "ElevenLabs",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-13T04:25:52.869Z",
+      "markdown_path": "data/notebooklm_sources/1821826784_12本、本気で作ってわかったAIショートドラマのコツ4選｜総再生1500万↑｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826783",
+      "url": "https://note.com/hachilock/n/n3d15efe6c40b",
+      "title": "10秒でゆっくり解説と縦型ショート動画が出来るAI「No Lang 2.0」が神すぎる【本当は教えたくない】｜きみ",
+      "excerpt": "最近、ショート動画がすごく人気になってきていますよね。みんなが簡単に良い動画を作れるツールがあったらいいのに、って思いませんか？今までのツールって、使い方が難しかったり、お金がかかりすぎたりして、なかなか「これだ！」っていうのが見つからなかったんですよね。そこで今回紹介するのが、AIを使った動画生成ツール「No Lang 2.0」です。このツールは、わずか10秒程度の作業で高品質なゆっくり解説動画や縦型ショート動画を作成できる、まさに神ツールと言える存在です。  No Lang 2.0ってどんなツール？  「No Lang 2.0」は、日本国内で開発されたAIを利用した動画生成サービス",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "NoLang",
+        "ショート動画"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-13T04:26:12.546Z",
+      "markdown_path": "data/notebooklm_sources/1821826783_10秒でゆっくり解説と縦型ショート動画が出来るAI「No Lang 2.0」が神すぎる【本当は教えたくない】｜きみ.md"
+    },
+    {
+      "id": "1821826782",
+      "url": "https://zenn.dev/zhener/articles/consent-dilemma-10beat-pipeline",
+      "title": "1 行アイデアを 40 秒コメディ動画にする 10-beat パイプライン",
+      "excerpt": "1 行のアイデアを Gemma 4 31B が 10-beat 構造に展開、HiDream で 2048² 画像 11 枚、LTX-2 A2V/I2V で 11 clip、Irodori-TTS で台詞と男性ナレーター、ffmpeg で字幕焼き込みと Hook タイトル overlay まで全自動。実測 25-30 分で 40 秒の縦長 (512×768) 動画。すべてローカル GPU 1 枚 (96 GB Blackwell)、API コストゼロ。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "自動化パイプライン",
+        "動画生成",
+        "マルチモーダルAI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-13T04:26:34.663Z",
+      "markdown_path": "data/notebooklm_sources/1821826782_1 行アイデアを 40 秒コメディ動画にする 10-beat パイプライン.md"
+    },
+    {
+      "id": "1821826781",
+      "url": "https://note.com/ai_nana_2025/n/nebfb0df56ec3",
+      "title": "🚀 ショート動画プロンプトアプリを作ろう・第4回【全文公開】AI設計図を丸投げ実行！誰でもできるバイブコーディング実践編｜🌸Nana｜忙しい事務職の判断を整える人",
+      "excerpt": "皆さん、こんにちは！👋 nana🌸です。  前回、AI（Gemini）が設計してくれた「ショート動画用 要件定義書（設計図）」を解説しました。「10秒制約の自動チェック」「継続生成のためのデータ連携」など、専門家レベルの仕組みが組み込まれていましたね。  この設計図を手に入れたことで、私のアプリ作りは一気に加速しました。難解なプログラミングは一切不要。私がやったのは、たった2ステップのシンプルな作業です。  それが、私のアプリ作り、「バイブコーディング」です！  今回は、この「設計図を丸ごとAIに渡して、アプリを形にする」プロセスを具体的にご紹介します。そして、記事の最後には、あなたが",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "バイブコーディング",
+        "Gemini",
+        "ノーコード"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-13T04:27:09.516Z",
+      "markdown_path": "data/notebooklm_sources/1821826781_🚀 ショート動画プロンプトアプリを作ろう・第4回【全文公開】AI設計図を丸投げ実行！誰でもできるバイブコーディング実践編｜🌸.md"
+    },
+    {
+      "id": "1821826780",
+      "url": "https://note.com/ai_nana_2025/n/n799cb0e99a9a",
+      "title": "🚀 ショート動画プロンプトアプリを作ろう・第3回【難解な設計図】AIと乗り越えた究極の要件定義書を解剖！｜🌸Nana｜忙しい事務職の判断を整える人",
+      "excerpt": "皆さん、こんにちは！👋nana🌸です。  前回の記事では、AIを最高のパートナーにするための「目的」と「ワークフロー」の渡し方について解説しました。過去の設計書をGeminiにインプットしたことで、アプリ作りの初速は上がったものの...  実は私、「要件定義書」って言葉を聞いても何のことって感じでした。  「機能要件？ JSONスキーマ？ 何それ美味しいの？」...そう。私、専門用語アレルギーなんです(笑)。  でも、そんな私でもアプリを作れたのは、全てAIのおかげです。AI開発の最大のチート行為は、この難解で面倒な設計作業をAIが代行し、私たちはその結果を「理解」するだけで済むという",
+      "summary": "",
+      "score": 35,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "要件定義",
+        "Gemini",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-13T04:27:30.046Z",
+      "markdown_path": "data/notebooklm_sources/1821826780_🚀 ショート動画プロンプトアプリを作ろう・第3回【難解な設計図】AIと乗り越えた究極の要件定義書を解剖！｜🌸Nana｜忙しい事務.md"
     }
   ]
 }
