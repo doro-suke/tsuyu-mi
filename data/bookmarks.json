@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-13T04:27:30.046Z",
+  "updated_at": "2026-10-14T02:51:00.756Z",
   "articles": [
     {
       "id": "1702129693",
@@ -9843,6 +9843,166 @@
       "status": "unread",
       "analyzed_at": "2026-10-13T04:27:30.046Z",
       "markdown_path": "data/notebooklm_sources/1821826780_🚀 ショート動画プロンプトアプリを作ろう・第3回【難解な設計図】AIと乗り越えた究極の要件定義書を解剖！｜🌸Nana｜忙しい事務.md"
+    },
+    {
+      "id": "1821826779",
+      "url": "https://note.com/ai_nana_2025/n/n5d34eafe9b79",
+      "title": "🚀 10秒ショート動画アプリ開発の旅・第2回：【AIを動かす秘訣】開発の初手で「何を」「どう伝えるか」の極意｜🌸Nana｜忙しい事務職の判断を整える人",
+      "excerpt": "皆さん、こんにちは！👋 nana🌸です。  （※前回の記事は「10秒ショート動画用のJSONコードとプロンプトを作成するアプリの開発を始めた」という内容でした）  「さあ、アプリ開発を始めるぞ！」となったとき、私は一番最初にGoogle AI StudioのGeminiに相談しました。  しかし、AIは魔法使いではありません。最高の仕事を引き出せるかどうかは、私たちがAIに何を、どう伝えるかにかかっています。  今回は、私がGeminiとの開発で最も重要だと考えている秘訣、すなわち**「何を、どう伝えれば、AIは最高の提案をしてくれるのか」というノウハウを、実際のプロンプトを交えて徹底",
+      "summary": "",
+      "score": 30,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "プロンプトエンジニアリング",
+        "Gemini",
+        "AI活用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-14T02:34:18.705Z",
+      "markdown_path": "data/notebooklm_sources/1821826779_🚀 10秒ショート動画アプリ開発の旅・第2回：【AIを動かす秘訣】開発の初手で「何を」「どう伝えるか」の極意｜🌸Nana｜忙しい事務.md"
+    },
+    {
+      "id": "1821826778",
+      "url": "https://note.com/ryo1144/n/n2a44819b4b92",
+      "title": "🎯 2026年YouTube市場完全攻略ガイド｜バズる動画ジャンルと先行者利益を狙う戦略｜RYO_AIcreator",
+      "excerpt": "🎯 2026年YouTube市場完全攻略ガイド｜バズる動画ジャンルと先行者利益を狙う戦略  📊 2026年予測が重要な3つの理由  1. YouTubeアルゴリズムの転換期  2024年から2025年にかけて、YouTubeは大きな変革期を迎えています。  主要な変化：    ショート動画の収益化本格化：登録者1,000人以上 + 90日間で1,000万回視聴で収益化が可能に    AI生成コンテンツポリシーの明確化（2025年7月施行）：「量産型コンテンツ」として大量生産されたAI動画は収益化対象外に    質重視のアルゴリズム：単純な再生数よりも、コメントの質、視聴維持率、エンゲー",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "YouTube運用",
+        "コンテンツ戦略",
+        "SNSマーケティング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-14T02:34:41.488Z",
+      "markdown_path": "data/notebooklm_sources/1821826778_🎯 2026年YouTube市場完全攻略ガイド｜バズる動画ジャンルと先行者利益を狙う戦略｜RYO_AIcreator.md"
+    },
+    {
+      "id": "1821826777",
+      "url": "https://note.com/hiroai_lab/n/n59af76835cf0",
+      "title": "Nafcf",
+      "excerpt": "クリエイターが文章やマンガ、写真、音声を投稿することができ、ユーザーはそのコンテンツを楽しんで応援できるメディアプラットフォームです。だれもが創作を楽しんで続けられるよう、安心できる雰囲気や、多様性を大切にしています。",
+      "summary": "",
+      "score": 10,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "note",
+        "未分類"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-14T02:35:18.281Z",
+      "markdown_path": "data/notebooklm_sources/1821826777_Nafcf.md"
+    },
+    {
+      "id": "1821826776",
+      "url": "https://www.youtube.com/watch?v=0b14Bgaeq5U",
+      "title": "【有料ツールなし】AI×ショート動画で月20万稼ぐ！【1日30分】",
+      "excerpt": "【期間限定で開催中の『AI占い勉強会』】\nアリサの無料AI副業勉強会こちらから参加できます🔮\n\n公式LINE：https://utage-system.com/p/HFVeB1Kk5Gt2\n\nこの勉強会に参加するだけで、AI占いで本業収入を超えちゃった人もいるぐらいなので、ぜひぜひ参加してください！",
+      "summary": "",
+      "score": 10,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI副業",
+        "ショート動画",
+        "マネタイズ"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-14T02:36:46.536Z",
+      "markdown_path": "data/notebooklm_sources/1821826776_【有料ツールなし】AI×ショート動画で月20万稼ぐ！【1日30分】.md"
+    },
+    {
+      "id": "1821826775",
+      "url": "https://note.com/nk_88/n/nfbbaba90adf6",
+      "title": "【無料配布】ショート動画自動作成キット｜YouTubeショート・Instagramリール・TikTokをAIで1コマンド作成（Claude Code）｜KEISUKE |ヨーロッパ放浪中",
+      "excerpt": "（▼キットのDownloadは以下のGoogleドライブから行ってください。）  https://drive.google.com/drive/folders/16ccEnAQob6Lrpy4dFXRBiq2-kkUnLZul?usp=drive_link     ▼Youtubeで詳しく解説しています https://youtu.be/qnKCWW9tknE     こんにちは。 普段はAIで企業や個人の「困った」を解決する仕事をしています。     YouTubeショート、Instagramリール、TikTok・・・ **縦型のショート動画**を作りたい。 AIで自動化したいけど、",
+      "summary": "",
+      "score": 60,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "動画自動生成",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-14T02:45:29.307Z",
+      "markdown_path": "data/notebooklm_sources/1821826775_【無料配布】ショート動画自動作成キット｜YouTubeショート・Instagramリール・TikTokをAIで1コマンド作成（Claude Code）｜KEISUKE _ヨーロッパ.md"
+    },
+    {
+      "id": "1821826774",
+      "url": "https://note.com/firm_roses4956/n/n20d6ac8dc96c",
+      "title": "【未経験から月5万】AI動画生成×SNSで「自分だけの収益モデル」を構築する完全ロードマップ｜稼ぐ方法【手取り20万からAIで人生を変えた記録】",
+      "excerpt": "はじめに 「副業を始めたいけれど、スキルがない」「動画編集は難しそう」と諦めていませんか？  2026年現在、AIツールの進化によって、これまでプロが数日かけていた作業が数分で完結するようになりました。  本記事では、最新のAIツールを組み合わせて、知識ゼロから収益化を実現するための具体的なステップを、私の実践データとともに公開します。  第1章：なぜ今「AI動画」が最も稼ぎやすいのか  現在、YouTubeショートやTikTok、Instagramリールなどの「縦型ショート動画」の需要は爆発的に伸びています。  • 制作コストの激減: AIを使えば、顔出し不要、撮影不要でハイクオリテ",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "マネタイズ",
+        "プロンプト"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-14T02:50:00.727Z",
+      "markdown_path": "data/notebooklm_sources/1821826774_【未経験から月5万】AI動画生成×SNSで「自分だけの収益モデル」を構築する完全ロードマップ｜稼ぐ方法【手取り20万からAIで人生を変.md"
+    },
+    {
+      "id": "1821826773",
+      "url": "https://www.youtube.com/watch?v=StpmoL4UFv4&ab_channel=KEITO%E3%80%90AI%26WEBch%E3%80%91",
+      "title": "Watch",
+      "excerpt": "",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI情報",
+        "YouTube",
+        "動画"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-14T02:50:19.803Z",
+      "markdown_path": "data/notebooklm_sources/1821826773_Watch.md"
+    },
+    {
+      "id": "1821826772",
+      "url": "https://note.com/regal_rose1270/n/n58a8bf21d4a7",
+      "title": "Nabfda",
+      "excerpt": "クリエイターが文章やマンガ、写真、音声を投稿することができ、ユーザーはそのコンテンツを楽しんで応援できるメディアプラットフォームです。だれもが創作を楽しんで続けられるよう、安心できる雰囲気や、多様性を大切にしています。",
+      "summary": "",
+      "score": 5,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "note",
+        "未分類"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-14T02:50:38.594Z",
+      "markdown_path": "data/notebooklm_sources/1821826772_Nabfda.md"
+    },
+    {
+      "id": "1821826771",
+      "url": "https://www.youtube.com/watch?v=Kp5SdOmeLeo",
+      "title": "【保存版】YouTube初心者でも顔出しなしで稼げる話題ジャンルから穴場ジャンルまで13選を完全解説！これ1本で迷わず始められる！【超有料級】",
+      "excerpt": "🏆YouTubeを最短で成功に導く”豪華10大特典”配布中⬇︎🏆\n【毎月10名限定】YouTube無料相談も実施中！\nhttps://utage-system.com/line/open/ML...\n【「アプリで開く」を押してください）】\n\n🏆⬇︎LINE登録で限定特典10個無料プレゼント⬇︎🏆\n✅YouTube完全攻略・裏技集など スライド全225枚\n✅外注費50%削減！累計10000字超の5大マニュアル・テンプレート\n✅【完全保存版】秘密の穴場ジャンル総まとめ\nなど！\n特大ボリュームの【豪華特典10個】を無料プレゼント✨✨\nhttps://utage-system.com/line/open/ML...\n【「アプリで開く」を押してください）】\n\n◆━━━━━━━━━━━━━━━━━━◆\n 🏆 有料級情報と最高の環境をご用意 🏆\n　⬇︎  テシマのYouTube攻略 公式LINE  ⬇︎\n◆━━━━━━━━━━━━━━━━━━◆\n\n✅今なら公式LINE登録で\n \n╋━━━━━━━━╋\n🏆豪華特典1個目🏆\nこれ1つで全て身に付く！\nYouTube完全攻略ガイドブック スライド123枚\n╋━━━━━━━━╋\n🏆豪華特典2個目🏆\nバズるサムネワード\n全13ジャンル 143選\n╋━━━━━━━━╋\n🏆豪華特典3個目🏆\n速攻実践可能！\nバズるサムネテクニック28選\n╋━━━━━━━━╋\n🏆豪華特典4個目🏆\n稼げる参考チャンネルと穴場ジャンルを発掘する\n最強リサーチ術 徹底解説！\n╋━━━━━━━━╋\n🏆豪華特典5個目🏆\n超厳選!!稼げる穴場ジャンル101選\n╋━━━━━━━━╋\n🏆豪華特典6個目🏆\n絶対にやるべきYouTube設定\n完全解説！(設定画面付き） \n╋━━━━━━━━╋\n🏆豪華特典7個目🏆\n1000人以上のワーカー選考・200万円以上を外注費に投資した経験を濃縮！\n外注・自動化徹底攻略の教科書！\n╋━━━━━━━━╋\n🏆豪華特典8個目🏆\n外注費50％削減！1日30分労働で月100万を実現した\n累計10000字超えの外注マニュアル・テンプレート\n╋━━━━━━━━╋\n🏆豪華特典9個目🏆\nYouTube運営の効率を爆上げする\nテクニック・ツール33選\n╋━━━━━━━━╋\n🏆豪華特典10個目🏆\n完全初心者から最短で月100万\n1年後に利益1000万円超えを達成するロードマップ\n╋━━━━━━━━╋\nこれら全ての豪華10大特典を無料でプレゼント！\n\n【⬇️公式LINE登録はこちらから⬇️】\nhttps://utage-system.com/line/open/ML...\n【「アプリで開く」を押してください）】\n\n\nよかったらチャンネル登録・高評価・コメントください。\nご視聴いただきありがとうございました。\n\n▼お仕事の相談はこちらまで▼\nteshima.231201@gmail.com\n\n\n#youtube始め方\n#youtube稼ぐ \n#youtube攻略\n#youtubeジャンル",
+      "summary": "",
+      "score": 5,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "YouTube運用",
+        "副業",
+        "マーケティング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-14T02:51:00.756Z",
+      "markdown_path": "data/notebooklm_sources/1821826771_【保存版】YouTube初心者でも顔出しなしで稼げる話題ジャンルから穴場ジャンルまで13選を完全解説！これ1本で迷わず始められる！【.md"
     }
   ]
 }
