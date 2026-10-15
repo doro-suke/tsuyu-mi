@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-14T02:51:00.756Z",
+  "updated_at": "2026-10-15T02:21:52.449Z",
   "articles": [
     {
       "id": "1702129693",
@@ -10003,6 +10003,132 @@
       "status": "unread",
       "analyzed_at": "2026-10-14T02:51:00.756Z",
       "markdown_path": "data/notebooklm_sources/1821826771_【保存版】YouTube初心者でも顔出しなしで稼げる話題ジャンルから穴場ジャンルまで13選を完全解説！これ1本で迷わず始められる！【.md"
+    },
+    {
+      "id": "1890040413",
+      "url": "https://zenn.dev/genda_jp/articles/haiku-5-5-subagent-roles",
+      "title": "Haiku 5.5 を機に Sonnet 以下で動かしていたサブエージェントを見直した",
+      "excerpt": "株式会社GENDA 開発部エンジニアの奥山です。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-15T02:15:42.678Z",
+      "markdown_path": "data/notebooklm_sources/1890040413_Haiku 5.5 を機に Sonnet 以下で動かしていたサブエージェントを見直した.md"
+    },
+    {
+      "id": "1890040300",
+      "url": "https://qiita.com/y0us91/items/2feffd2cc6c672717973",
+      "title": "AIが実装し、AIがテストし、AIが「問題ありません」と言う時代の品質保証 - Qiita",
+      "excerpt": "AIが実装し、AIがテストし、AIが「問題ありません」と言う時代の品質保証",
+      "summary": "",
+      "score": 78,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "品質保証",
+        "AIエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-15T02:16:06.335Z",
+      "markdown_path": "data/notebooklm_sources/1890040300_AIが実装し、AIがテストし、AIが「問題ありません」と言う時代の品質保証 - Qiita.md"
+    },
+    {
+      "id": "1890040170",
+      "url": "https://qiita.com/fuyunoki/items/5818688d20225aa8088a",
+      "title": "【新卒エンジニア向け】Claude Code、とりあえずこれ読んどけばOKなまとめ（2026年版） - Qiita",
+      "excerpt": "【新卒エンジニア向け】Claude Code、とりあえずこれ読んどけばOKなまとめ（2026年版）",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "開発効率化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-15T02:16:43.077Z",
+      "markdown_path": "data/notebooklm_sources/1890040170_【新卒エンジニア向け】Claude Code、とりあえずこれ読んどけばOKなまとめ（2026年版） - Qiita.md"
+    },
+    {
+      "id": "1890039942",
+      "url": "https://qiita.com/K5K/items/72cc4282819ace823524",
+      "title": "【入門記事】ClaudeCodeの中級者になりたい人は集合してください - Qiita",
+      "excerpt": "【入門記事】ClaudeCodeの中級者になりたい人は集合してください",
+      "summary": "",
+      "score": 75,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "MCP"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-15T02:17:05.373Z",
+      "markdown_path": "data/notebooklm_sources/1890039942_【入門記事】ClaudeCodeの中級者になりたい人は集合してください - Qiita.md"
+    },
+    {
+      "id": "1890039385",
+      "url": "https://qiita.com/kskwtnk/items/aa21e7f57feb43e970e0",
+      "title": "AIを使っても「自分の文章」に仕上げるためにやっていること - Qiita",
+      "excerpt": "AIを使っても「自分の文章」に仕上げるためにやっていること",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIライティング",
+        "生成AI活用",
+        "ドキュメンテーション"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-15T02:20:03.544Z",
+      "markdown_path": "data/notebooklm_sources/1890039385_AIを使っても「自分の文章」に仕上げるためにやっていること - Qiita.md"
+    },
+    {
+      "id": "1821826770",
+      "url": "https://blogsmile117.com/shortmovie_monetization/",
+      "title": "Shortmovie monetization",
+      "excerpt": "",
+      "summary": "",
+      "score": 10,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ショート動画",
+        "収益化",
+        "SNS運用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-15T02:21:09.432Z",
+      "markdown_path": "data/notebooklm_sources/1821826770_Shortmovie monetization.md"
+    },
+    {
+      "id": "1821826769",
+      "url": "https://qiita.com/papi_pappy/items/8d09c1d778827a2fe7dc",
+      "title": "【副業】AIで月10万円稼ぐYouTube動画を全自動製作【n8n】 - Qiita",
+      "excerpt": "【副業】AIで月10万円稼ぐYouTube動画を全自動製作【n8n】",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "n8n",
+        "業務自動化",
+        "YouTube"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-15T02:21:52.449Z",
+      "markdown_path": "data/notebooklm_sources/1821826769_【副業】AIで月10万円稼ぐYouTube動画を全自動製作【n8n】 - Qiita.md"
     }
   ]
 }
