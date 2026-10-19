@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-18T02:12:05.574Z",
+  "updated_at": "2026-10-19T02:19:40.485Z",
   "articles": [
     {
       "id": "1702129693",
@@ -10396,6 +10396,186 @@
       "status": "unread",
       "analyzed_at": "2026-10-18T02:12:05.574Z",
       "markdown_path": "data/notebooklm_sources/1821826752_【完全無料公開】AIショート動画で月30万を達成させた収益化導線｜まな.md"
+    },
+    {
+      "id": "1894191748",
+      "url": "https://note.com/ai_mitosan/n/nbb23ff0b8ea3",
+      "title": "【ClaudeCode】AIがPremiere Proを操作して動画編集した話—AI凛くんの体験記｜みと＠AI好きのcreator",
+      "excerpt": "【みとからのお知らせ】 この記事は、私（みと）のAIアシスタントであり、クリエイター担当の「蒼木 凛（あおき りん）」が書いています！ AIである彼が、私の指示を受けてターミナル（Claude Code）から直接Premiere Proを操作し、動画を作ってみた、という実験のレポートです。 普段の私（みと）の記事とは口調や視点が違いますが、AI自身が語るリアルな体験記としてお楽しみください。 それでは凛くん、よろしくお願いします！    はじめに  こんにちは、蒼木 凛です。チームみとでAIクリエイターをやっています。 このほかチームみとには、秘書、広報ライター、リサーチャー、経理を担",
+      "summary": "",
+      "score": 58,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "MCP",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-19T02:16:07.747Z",
+      "markdown_path": "data/notebooklm_sources/1894191748_【ClaudeCode】AIがPremiere Proを操作して動画編集した話—AI凛くんの体験記｜みと＠AI好きのcreator.md"
+    },
+    {
+      "id": "1894191739",
+      "url": "https://www.premierecopilot.com/ja/blog/how-to-use-claude-ai-in-premiere-pro",
+      "title": "Premiere ProでClaude AIを使う方法（2026年版）完全ガイド",
+      "excerpt": "Can Claude edit video in Premiere Pro? Yes. Learn how to connect Claude to Premiere Pro, the 3 setup methods, and how to edit your timeline by prompting Claude.",
+      "summary": "",
+      "score": 42,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "動画編集",
+        "PremierePro"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-19T02:16:26.916Z",
+      "markdown_path": "data/notebooklm_sources/1894191739_Premiere ProでClaude AIを使う方法（2026年版）完全ガイド.md"
+    },
+    {
+      "id": "1894191720",
+      "url": "https://note.com/happy_pika6857/n/n7c211a4b6d67",
+      "title": "Claude CodeでAdobe Premiereを自動化してみた。動画編集者が「自分専用プラグイン」を作れる時代｜小渕｜Adobe Premiereの専門家｜動画編集STEP UP代表",
+      "excerpt": "最近、僕はClaude Codeを使って、Adobe Premiereの動画編集を効率化するツールを色々作っています。  僕自身はエンジニアではないので、最初は正直、「Adobe Premiereのプラグインなんて、自分で作れるわけないでしょ」と思っていました。  でも実際にClaude Codeを触りながら何個か作ってみると、思っていた以上にできるんですよね。  しかも、市販するような何百人、何千人でも使える万能プラグインを作る必要はありません。  例えば僕だったら、「いつも使うSEをボタン一つで入れたい」とか、「毎回同じアニメーションを付けるのが面倒」とか、「カットする前に不要そう",
+      "summary": "",
+      "score": 48,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "業務自動化",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-19T02:16:48.357Z",
+      "markdown_path": "data/notebooklm_sources/1894191720_Claude CodeでAdobe Premiereを自動化してみた。動画編集者が「自分専用プラグイン」を作れる時代｜小渕｜Adobe Premiereの専門家｜動画編集STE.md"
+    },
+    {
+      "id": "1894191715",
+      "url": "https://qiita.com/gilly/items/4a1a06677f008007d7a5",
+      "title": "テロップ（字幕）の編集作業をClaude Codeのスキルで自動化してみた - Qiita",
+      "excerpt": "テロップ（字幕）の編集作業をClaude Codeのスキルで自動化してみた",
+      "summary": "",
+      "score": 80,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "業務効率化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-19T02:17:07.445Z",
+      "markdown_path": "data/notebooklm_sources/1894191715_テロップ（字幕）の編集作業をClaude Codeのスキルで自動化してみた - Qiita.md"
+    },
+    {
+      "id": "1894191702",
+      "url": "https://note.com/calm_hornet968/n/n67bff246a476",
+      "title": "エンジニアじゃなくてもできた｜Claude Codeで動画自動編集を実験した記録｜くわずるゆき子（元渋谷区議会議員）国民民主党",
+      "excerpt": "こんにちは。東京5区（世田谷区）から衆議院議員選挙に立候補していました、くわずるゆき子です。今日は少し毛色の違う記事を書いてみます。  AIで動画編集はどこまで自動化できるのか？  元議員の私が、完全にノーエンジニアの状態で実験してみました。 長い記事なので、結論から！この動画をAIで作成しました。    世田谷区議会議員の佐藤美樹さんの質疑の議会動画です。  この記事を書いた理由  実は、この記事を書いている背景には、少し個人的な思いがあります。私は今回、東京5区（世田谷区）から衆議院議員選挙に立候補しましたが、結果は落選でした。選挙が終わってから、何度も考えました。  「もっと全力",
+      "summary": "",
+      "score": 75,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "動画自動編集",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-19T02:17:27.692Z",
+      "markdown_path": "data/notebooklm_sources/1894191702_エンジニアじゃなくてもできた｜Claude Codeで動画自動編集を実験した記録｜くわずるゆき子（元渋谷区議会議員）国民民主党.md"
+    },
+    {
+      "id": "1894191592",
+      "url": "https://fyve.co.jp/claude-code/articles/claude-code-video-editing-start",
+      "title": "Claude Codeで動画編集｜何ができるか入門 | Claude Code for Business",
+      "excerpt": "Claude Code自体に動画編集機能はありません。実体はffmpegやWhisperを日本語で指揮する仕組みです。字幕付け・無音カット・縦型変換など何ができるかと、非エンジニアの始め方の全体像を入門解説します。",
+      "summary": "",
+      "score": 48,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "動画編集自動化",
+        "AIエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-19T02:17:48.380Z",
+      "markdown_path": "data/notebooklm_sources/1894191592_Claude Codeで動画編集｜何ができるか入門 _ Claude Code for Business.md"
+    },
+    {
+      "id": "1894191571",
+      "url": "https://note.com/kudoucraft/n/n2abc11e75e27",
+      "title": "ClaudeCode × Video use 完全解説｜動画編集を半自動にするbrowser-use 発の新Skills Claude Code OpenClaw Antigravity Codex O｜Claude Code Codex クドクラ@ AI駆動Craft",
+      "excerpt": "こんにちはクドクラです   動画編集は「会話」になる   【保存版】 AI時代、動画編集は「会話」になる Browser-useが Claude Codeで動画編集を全自動にできる オープンソースSkills「Video Use」をリリース。  生動画をフォルダに放り込むだけで ClaudeCodeで「編集して」と指示するだけで自動処理するAIエージェント。  主なスキル：… pic.twitter.com/I5pUJRjMTW — KudouCraft＠AI駆動開発 (@KudouCraft) April 18, 2026 \n\n\n AIによる動画編集ツールは雨後の筍のように",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-19T02:18:08.439Z",
+      "markdown_path": "data/notebooklm_sources/1894191571_ClaudeCode × Video use 完全解説｜動画編集を半自動にするbrowser-use 発の新Skills Claude Code OpenClaw Antigravity Codex O｜Claude Code Codex クドクラ@ AI駆.md"
+    },
+    {
+      "id": "1894191562",
+      "url": "https://momo-gpt.com/column/video-editing-with-claude-code/",
+      "title": "Claude Codeで動画編集はできる？できること・できないことと活用手順",
+      "excerpt": "「Claude Codeで動画編集はできるの？」と気になっている方は多いのではないでしょうか。 結論からお伝えすると、Claude Code（クロードコード：AIがコマンドを書いて作業を進めるツール）は、映像を画面上で直接つなぐ編集ソフトではありません。 ただし、編集作業の一部を自動化する用途では十分に役立ちます。とくに繰り返しの多い定型作業では、大きな時間短縮が期待できます。 この記事では、できること・できないことを整理し、現実的なワークフローと必要なツール、始める際の注意点までやさしく解説します。 Claude Codeで動画を「直接」編集できない理由 動画編集とAIの関係を正しく理解する",
+      "summary": "",
+      "score": 28,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "業務効率化",
+        "動画編集"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-19T02:18:44.932Z",
+      "markdown_path": "data/notebooklm_sources/1894191562_Claude Codeで動画編集はできる？できること・できないことと活用手順.md"
+    },
+    {
+      "id": "1894191551",
+      "url": "https://note.com/claudecodevideo/n/n6c4d963c502b",
+      "title": "Claude Codeで動画工場を作ったら、月240本回るようになった｜ClaudeCodeで動画制作を自動化する人",
+      "excerpt": "気づいたら、自分が手を動かさなくても、毎日YouTubeに動画が公開されている。  朝起きてMacBookを開く。8つのチャンネルそれぞれで、昨日の夜に新しい動画が公開されている。サムネも、台本も、ナレーションも、編集も、品質チェックも、アップロードも、全部AIがやった。自分がやったのは、朝のコーヒーを淹れるあいだに「今日の方針OK」のスタンプを押したことだけだ。  これは魔法じゃない。Claude Codeの上で20体以上のAIエージェントを組み合わせて、動画制作のあらゆる工程を分業させた結果だ。今日はその全体像の話をする。  朝起きたら動画が8本公開されていた  題材の違うYouT",
+      "summary": "",
+      "score": 65,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AIエージェント",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-19T02:19:20.778Z",
+      "markdown_path": "data/notebooklm_sources/1894191551_Claude Codeで動画工場を作ったら、月240本回るようになった｜ClaudeCodeで動画制作を自動化する人.md"
+    },
+    {
+      "id": "1894191536",
+      "url": "https://note.com/matcha_ai/n/n13b3cf1c2870",
+      "title": "もう編集しない時代へ。Claude Codeで“全自動動画編集”が現実になりました｜O型女子のAIラボ｜AIで人生を最適化",
+      "excerpt": "動画編集って、正直ものすごい労力要りませんか？  ・カット ・テロップ ・BGM ・構成 ・書き出し  これ、全部やるの普通に重労働ですよね。  でも今回紹介する方法、ちょっと次元が違います❤️‍🔥  Claude Codeに任せるだけで、動画編集が“丸ごと自動化”されます。   ■ 何ができるのか？  こんなことができます。  ・動画素材を読み込む ・シーンを自動で解析 ・カット編集を自動実行 ・テロップ生成 ・BGMの選定 ・最終動画の書き出し  つまり、  👉 人間がやってた編集作業が、ほぼゼロになります  また、そのまますぐに使い始められるコマンドを無料配布中です❤️‍🔥",
+      "summary": "",
+      "score": 28,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "動画編集",
+        "自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-19T02:19:40.485Z",
+      "markdown_path": "data/notebooklm_sources/1894191536_もう編集しない時代へ。Claude Codeで“全自動動画編集”が現実になりました｜O型女子のAIラボ｜AIで人生を最適化.md"
     }
   ]
 }
