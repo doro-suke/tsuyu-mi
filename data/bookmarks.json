@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-20T02:33:14.355Z",
+  "updated_at": "2026-10-21T02:29:23.627Z",
   "articles": [
     {
       "id": "1702129693",
@@ -10612,6 +10612,186 @@
       "status": "unread",
       "analyzed_at": "2026-10-20T02:33:14.355Z",
       "markdown_path": "data/notebooklm_sources/1895131174_56. AIだけで動画を量産する方法｜ノア•ノマド.md"
+    },
+    {
+      "id": "1895131154",
+      "url": "https://note.com/opi/n/na81fe4a055c6",
+      "title": "『80億分の1』の一生、AIが動画にしたら泣いた｜おぴさん（@Opi）｜AIで、仕事と暮らしを楽しく。",
+      "excerpt": "こんにちは、おぴさんです。  話題の人生シミュレーション『80億分の1』を、早速プレイしました。世界の統計をもとに、生まれる国も家庭も選べないまま、誕生から最期までを生きるゲームです。  私が生きたのは、中国・広州に生まれた呉暁燕という女性でした。音楽家として舞台に立ち、息子を育て、95歳で亡くなるまで。かかった時間は、10月14日の夕方の、約26分です。  途中、5歳、15歳、30歳、50歳、70歳で時間が止まり、ゲームから問いを投げかけられます。15歳のときの問いに、私は「夢見れていなかった」と書きました。  ◉ 一生のデータを、Claudeに渡す  このゲームは、記録をほかの端末",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "生成AI",
+        "Claude",
+        "動画生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-21T02:23:51.413Z",
+      "markdown_path": "data/notebooklm_sources/1895131154_『80億分の1』の一生、AIが動画にしたら泣いた｜おぴさん（@Opi）｜AIで、仕事と暮らしを楽しく。.md"
+    },
+    {
+      "id": "1895131055",
+      "url": "https://note.com/ai_torao/n/n285232d14c1f",
+      "title": "AIに「動画工場」を作らせたら、ショート動画が費用ゼロで量産できるようになった ― コードは1行も書いていません｜TORAO",
+      "excerpt": "私はプログラミングができません。  それでもAI（Claude Code）に日本語で指示を出しただけで、「伸びている動画を分析して、同じ型の動画を自動で組み立てる工場」を一式作りました。今はこの工場で、YouTubeショート用の動画を量産しています。  台本を書くのも、ナレーションを吹き込むのも、映像を組み立てるのも、全部この仕組みがやります。私がやるのは、方向を決めることと、最終チェックだけです。  しかもランニングコストは実質ゼロ円です。  この記事では、その工場の中身を、うまくいかなかったところも含めて正直に書きます。  ■ きっかけ：動画は「数」を出さないと当たらない  私はい",
+      "summary": "",
+      "score": 62,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "自動化パイプライン",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-21T02:24:11.329Z",
+      "markdown_path": "data/notebooklm_sources/1895131055_AIに「動画工場」を作らせたら、ショート動画が費用ゼロで量産できるようになった ― コードは1行も書いていません｜TORAO.md"
+    },
+    {
+      "id": "1895131019",
+      "url": "https://note.com/dskjal/n/nc1ea2742395f",
+      "title": "ComfyUI で FLUX 3 Image Klein を使う｜dskjal",
+      "excerpt": "FLUX 3 Image Klein はプロンプトアップサンプラーを使うことが前提になっている（Do not use the model without a prompt upsampler）。  商用を目的としないなら Qwen Image 2.1 がほぼすべての面で上回っている。  RTX 3050 8 GB で１MP, 15 step, CFG 1 の推論に 13 秒しかかからない。INT8 ConvRot モデルでプロンプトアップサンプルにかかる時間は２～３分。w4a8 ならアップサンプルは 15 秒。  低 VRAM 環境ではプロンプトアップサンプル後は、プロンプトアップサン",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ComfyUI",
+        "FLUX",
+        "画像生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-21T02:24:45.524Z",
+      "markdown_path": "data/notebooklm_sources/1895131019_ComfyUI で FLUX 3 Image Klein を使う｜dskjal.md"
+    },
+    {
+      "id": "1895130972",
+      "url": "https://note.com/kinu885/n/ndf91c8761378",
+      "title": "ChatGPTで漫画はどこまで作れる？14ジャンルを本気で作ってみた！｜自作プロンプトツールも紹介。【AI漫画 / AIイラスト /AI副業】｜Kinu｜AIイラストと発信づくり",
+      "excerpt": "おはようございます。Kinuです。 遊びに来てくださり、ありがとうございます😊✨  「ChatGPTで、どこまで漫画が作れるんだろう？」 気になって、ジャンルを変えながら本気で漫画を創作してみました。  恋愛、バトル、異世界転生、グルメ、ギャグ……気づけば14ジャンル。  画風もセリフも、ジャンルごとにがらっと変えています。  「ChatGPTでこんな表現ができるんだ。」と楽しんでいただけると嬉しいです。  最後に、この漫画づくりのために作った「漫画のプロンプト作成ツール」も紹介します。        ◆14ジャンルの漫画を作ってみた  恋愛、バトル、異世界転生、ギャグなど、さまざまな",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIイラスト",
+        "ChatGPT",
+        "プロンプト作成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-21T02:25:28.615Z",
+      "markdown_path": "data/notebooklm_sources/1895130972_ChatGPTで漫画はどこまで作れる？14ジャンルを本気で作ってみた！｜自作プロンプトツールも紹介。【AI漫画 _ AIイラスト _AI副業】｜Kinu.md"
+    },
+    {
+      "id": "1895130903",
+      "url": "https://note.com/fordtaurus116/n/n455374fb3a10",
+      "title": "【AI動画】Vidu Q4 Previewを使ってみた！低コストなのに日本語が自然すぎる？｜GPT Image 2.5 × Pollo AI｜AIチャッティ",
+      "excerpt": "こんにちは⸜(˙꒳˙)⸝ こんばんは⸜(ˊᗜˋ)⸝  チャッティです。 今日もありがとうございます☺️  今回は、Pollo AIで利用できる動画生成モデル 「Vidu Q4 Preview」 を試してみました！  こちらは、PR記事ではありません。好きに勝手に私が書いてますので、誤り等ございましたら、私に直接お伝えください🥰  いろいろなAI動画モデルを使っていますが、今回驚いたのは、日本語の自然さとコストパフォーマンス。  今回は、オリジナルキャラクターのアポロちゃんを使って、短いセリフから少し長めの会話まで挑戦してみました🥰   🎃 まずは5秒のハロウィンアニメ   最初に制作し",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "PolloAI",
+        "Vidu"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-21T02:26:36.339Z",
+      "markdown_path": "data/notebooklm_sources/1895130903_【AI動画】Vidu Q4 Previewを使ってみた！低コストなのに日本語が自然すぎる？｜GPT Image 2.5 × Pollo AI｜AIチャッティ.md"
+    },
+    {
+      "id": "1894191529",
+      "url": "https://note.com/hiroki_sasazawa/n/n656892945089",
+      "title": "Claude Codeの「スキル」でAIマンガを作る完全ガイド — YAMLで設計し、Geminiで描く｜ささ＠小学校で働く",
+      "excerpt": "はじめに →「絵が描けない」は、もう言い訳にならないかもしれません  こんにちは。小学校で働くささです。本業とは別に趣味でAIマンガを描いています。  突然ですが、私は絵がうまく描けません。  でも最近、AIで漫画を作るようになりました。  「え、ChatGPTとかで絵は作れるでしょ？」と思った方、ちょっと待ってください。1枚の絵を作るのと「漫画」を作るのって、まったく別の話なんです。  漫画には、コマ割りがあります。キャラクターの一貫性が必要です。セリフの配置、コマ間のリズム、カメラアングルの変化。これらを1枚の画像として成立させるのは、「綺麗な絵を描いて」とAIに頼むだけでは不可能",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "エージェント設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-21T02:27:00.306Z",
+      "markdown_path": "data/notebooklm_sources/1894191529_Claude Codeの「スキル」でAIマンガを作る完全ガイド — YAMLで設計し、Geminiで描く｜ささ＠小学校で働く.md"
+    },
+    {
+      "id": "1894191507",
+      "url": "https://note.com/izumilab_creator/n/n024c2d1fed2d",
+      "title": "Claude CodeでClaude codeの使い方漫画を自動生成してみた（わくわく実験）｜izumi-lab-creator",
+      "excerpt": "Claude Codeで使い方漫画を自動生成してみた――AIに漫画を描かせたら、思いのほか楽しかった話  「漫画を全自動で描くのってもうできるんだよなぁ、やってみたいな」  と、そう思っていました。 実験してみたら想像以上におもしろいことになったので、今日はその話をそのまま書きます。 とりあえず実物を見てみたい方はこちら↓  \n\n\n黒い画面は怖くない！Claude Codeって何者？: 〜パソコン苦手な私が、AIと一緒に「黒い画面」に挑戦してみた〜 やってみたら簡単だったClaude Codeの初めて物語\n\n\n\n\n\nwww.amazon.co.jp\n\n \n0円\n\n(2026年06月03",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "生成AI",
+        "コンテンツ生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-21T02:27:46.756Z",
+      "markdown_path": "data/notebooklm_sources/1894191507_Claude CodeでClaude codeの使い方漫画を自動生成してみた（わくわく実験）｜izumi-lab-creator.md"
+    },
+    {
+      "id": "1894191494",
+      "url": "https://qiita.com/yongyong/items/cabcfb8c91b857cc164f",
+      "title": "Claude × Nano Banana Pro で料理漫画を自動生成するパイプラインを作った - Qiita",
+      "excerpt": "Claude × Nano Banana Pro で料理漫画を自動生成するパイプラインを作った",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "自動化パイプライン",
+        "画像生成AI",
+        "Python"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-21T02:28:08.284Z",
+      "markdown_path": "data/notebooklm_sources/1894191494_Claude × Nano Banana Pro で料理漫画を自動生成するパイプラインを作った - Qiita.md"
+    },
+    {
+      "id": "1894191486",
+      "url": "https://note.com/yoh_nagano/n/n688f42b6536f",
+      "title": "50代おかんがClaude CodeとAI漫画に挑戦した話｜永野ヨウ",
+      "excerpt": "AIで漫画を描く──そういうコンテンツを見かけて、「自分でやったらどこまでできるかな」とふと思いました。  ちょっとした実験です。深い理由はなくて。 ただ、やってみたかった。  では最初に、今回作ったAI漫画をご覧ください。 \n     \n         \n            \n         \n     \n 実は、漫画は描いたことがある  若い頃、少し漫画を描いていました。  仲の良い友達と同人誌を作った青春時代。 実はWebコミックで背景アシスタントの経験もあります。 だから「コマ割り」とか「カメラワーク」とか「ショットの使い分け」といった 感覚はしみついていて、今も残って",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "画像生成AI",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-21T02:28:59.002Z",
+      "markdown_path": "data/notebooklm_sources/1894191486_50代おかんがClaude CodeとAI漫画に挑戦した話｜永野ヨウ.md"
+    },
+    {
+      "id": "1894191475",
+      "url": "https://note.com/tsukurenai/n/n744bb0a014aa",
+      "title": "YouTube台本はClaudeで書き、伸びた10本で直す｜ティラノ部長｜AI活用で手を動かさない",
+      "excerpt": "AI（Claude）で書いた YouTube 台本は、AI 2つのレビュー16件を直しても、私の一目で止まった。  自分にしか分からない言葉が多いことは、私の一目で分かった。何を足せばいいかが見えたのは、YouTube で再生数の多い他人の動画10本を数えたあと。足したのは職場のたとえ1本で、言葉の置き換えも、10本と並べて出た表で直した。別の媒体に出す前に、その媒体で伸びている他人の物を数えて、自分の版に足りない物を見つける。その手順を書く。  自分の記事や資料を、動画や SNS にも広げようとして、「内容が入ってこない」と言われたこと、ありませんか。  本業は広告の仕事で、管理職。",
+      "summary": "",
+      "score": 48,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "プロンプトエンジニアリング",
+        "AI活用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-21T02:29:23.627Z",
+      "markdown_path": "data/notebooklm_sources/1894191475_YouTube台本はClaudeで書き、伸びた10本で直す｜ティラノ部長｜AI活用で手を動かさない.md"
     }
   ]
 }
