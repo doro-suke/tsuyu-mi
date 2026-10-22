@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-21T02:29:23.627Z",
+  "updated_at": "2026-10-22T02:34:26.960Z",
   "articles": [
     {
       "id": "1702129693",
@@ -10792,6 +10792,186 @@
       "status": "unread",
       "analyzed_at": "2026-10-21T02:29:23.627Z",
       "markdown_path": "data/notebooklm_sources/1894191475_YouTube台本はClaudeで書き、伸びた10本で直す｜ティラノ部長｜AI活用で手を動かさない.md"
+    },
+    {
+      "id": "1896938774",
+      "url": "https://note.com/genel/n/n0f3cb3faed93",
+      "title": "NanoBananaProで作る「実写映画のような世界観のアニメ」の全プロンプト公開 | 制作フローをイチから解説｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "先日Xにポストした『実写映画のような世界観のアニメ』   動画生成AIでつくるアニメ 『母とのメッセージ』  NanoBananaProのライティングと日本語文字の生成を活かし、実写映画のような世界観にチャット画面を表現しました◎  ▼使用したAI 画像：Midjourney(@midjourney) 編集：Google NanoBananaPro 動画：Seedance1.0Pro（@BytePlus_Japan） pic.twitter.com/IW9O1HlHAy — GENEL | 動画生成AI (@genel_ai) November 22, 2025 \n\n\n これがありがた",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "画像生成AI",
+        "動画生成AI",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-22T02:19:25.876Z",
+      "markdown_path": "data/notebooklm_sources/1896938774_NanoBananaProで作る「実写映画のような世界観のアニメ」の全プロンプト公開 _ 制作フローをイチから解説｜GENEL ｜ AIを用いた動画制作.md"
+    },
+    {
+      "id": "1896938724",
+      "url": "https://note.com/opi/n/n7366b895496b",
+      "title": "一発生成で終わらないAI動画 Google Flowの6ツールを工程で読む｜おぴさん（@Opi）｜AIで、仕事と暮らしを楽しく。",
+      "excerpt": "Googleは2026年9月23日、音響、字幕、サムネイル、3D空間、コラージュ、モーショングラフィックスを扱う「6 new Google Flow tools built by industry creatives」（日本語訳：業界クリエイターが作ったGoogle Flowの新しい制作ツール6種）を発表しました。  面白いのは、「動画を作るAI」が一つ増えたのではなく、作り手が工程ごとの道具を作っていることです。公式ページでは試用だけでなく、ツールの複製・改変や、自然言語から独自のツールを作る方法も案内されています。  この記事のチャームポイント    「一発生成」と「工程ごとにAI",
+      "summary": "",
+      "score": 48,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "GoogleFlow",
+        "ワークフロー自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-22T02:20:21.381Z",
+      "markdown_path": "data/notebooklm_sources/1896938724_一発生成で終わらないAI動画 Google Flowの6ツールを工程で読む｜おぴさん（@Opi）｜AIで、仕事と暮らしを楽しく。.md"
+    },
+    {
+      "id": "1894191460",
+      "url": "https://note.com/kou_ai_works/n/n659796c8eecc",
+      "title": "【1本7万円の動画を30分で？】未経験がAIだけで漫画動画を作ってみた記録｜こう｜AIでYouTube実録",
+      "excerpt": "会社を辞めたい。でも辞められない。 ノルマもあるし、給料は見合わないし、何から始めればいいかも分からない。 そんな会社員の「こう」です。プログラミングは分かりません。  今回は、AIで「漫画動画」を30分で作れるかを試しました。かかった時間、お金、失敗、全部書きます。  漫画動画を選んだ理由  漫画動画は、コマの絵に声と字幕がついて、カメラがゆっくり動くタイプの動画です。 ココナラでは、漫画動画まで込みの出品が1本1万円台〜7万円で出ています（出品ページの記載・2026-10-18時点。実際に払われた額ではありません）。 YouTubeでも、ぬくぬく恋愛漫画さんの漫画動画が107万回再",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "生成AI",
+        "動画生成",
+        "やってみた"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-22T02:21:23.347Z",
+      "markdown_path": "data/notebooklm_sources/1894191460_【1本7万円の動画を30分で？】未経験がAIだけで漫画動画を作ってみた記録｜こう｜AIでYouTube実録.md"
+    },
+    {
+      "id": "1894191453",
+      "url": "https://note.com/fukugyoreal/n/nf02968b87924",
+      "title": "AIで商品を作った次は、「もしも」を動画にするチャンネルを作りました。｜副業リアル｜AI収益化実験",
+      "excerpt": "AI収益化実験、第12話です。  前回は、AIと作った500円の商品が、1個も売れなかった話を書きました。  作るところまではできた。 販売もできた。 でも、買ってもらうところまでは届かなかった。  前回の最後では「売れなかった理由を分析して改善する」と書きましたが、今回は少し方向を変えて、新しく始めたことを紹介します。  InstagramとYouTubeに「もしもチャンネル」を作りました！  今度は、動画で「もしも」を形にする  「もしも、こんなことが起きたら？」  そんな想像を、動画として形にしていくチャンネルです。  文章で「もしも」を読むのと、映像で見るのとでは、伝わり方も違",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "副業",
+        "コンテンツ制作"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-22T02:22:21.150Z",
+      "markdown_path": "data/notebooklm_sources/1894191453_AIで商品を作った次は、「もしも」を動画にするチャンネルを作りました。｜副業リアル｜AI収益化実験.md"
+    },
+    {
+      "id": "1894191442",
+      "url": "https://note.com/willeder/n/n22816397a3db",
+      "title": "撮影ゼロでAI動画を作ってみた｜ChatGPT×Kling AIの3ステップと注意点｜ウィルダー株式会社",
+      "excerpt": "こんにちは、ウィルダー株式会社です。  「動画を作りたいけど、撮影は大変そう…」 そう思っている方、多いのではないでしょうか。  カメラも、スタジオも、出演者もいない。それでも、AIを使えば動画は作れます。 実際にウィルダーでもAI動画を制作してみたので、そのやり方と、やってみて分かった注意点をまとめました。  結論から言うと、AI動画はこの3ステップで作れます。  ① ChatGPTで場面ごとの画像を生成 ② Kling AIで画像を動かす ③ 編集ソフトでつなげて、BGM・テロップを入れる  順番に見ていきます。   まずは「構成」を決める  いきなりAIツールを開く前に、やってお",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI動画生成",
+        "Kling AI",
+        "ChatGPT"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-22T02:24:34.398Z",
+      "markdown_path": "data/notebooklm_sources/1894191442_撮影ゼロでAI動画を作ってみた｜ChatGPT×Kling AIの3ステップと注意点｜ウィルダー株式会社.md"
+    },
+    {
+      "id": "1893548853",
+      "url": "https://note.com/yuruyuruwork/n/nb1a038c0b34c",
+      "title": "1日10分でただのパート主婦がAIで5万稼げた話｜時短副業術｜ゆるママ|楽天アフィでパートやめた主婦",
+      "excerpt": "noteを手にとってくれてありがとうございます！  私、田舎でゆる〜く暮らしてるゆるママです。  早速ですが、これを見てください👇   これ今の私の収益です。  月5万。  何で稼いでるか。  それは、、           Threads×楽天アフィリエイト      です！！！！    月5万円。  作業時間、1日10分です。  、、、って書くと、怪しいですよね？？笑 分かります。私も逆の立場なら絶対疑います、、、    でも先に言っておくと、これ私がすごいわけじゃないんです。     AIにやってもらってるだけなので。     今日はそのやり方を書きます。 実際に私が毎朝使ってる",
+      "summary": "",
+      "score": 10,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ChatGPT",
+        "副業",
+        "プロンプト"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-22T02:26:03.611Z",
+      "markdown_path": "data/notebooklm_sources/1893548853_1日10分でただのパート主婦がAIで5万稼げた話｜時短副業術｜ゆるママ_楽天アフィでパートやめた主婦.md"
+    },
+    {
+      "id": "1893548712",
+      "url": "https://note.com/ulyssesx00/n/n54060feffae2",
+      "title": "NanoBanana越え!?漫画自動生成のUni-1 の使い方｜ゆりしー@AIであそぶ",
+      "excerpt": "漫画の自動生成がLumaから出たとのことで試してみます。   Uni-1 is built on Luma's Unified Intelligence architecture, it understands intention, responds to direction, and thinks with you.  Try today → https://t.co/OEmsCmO7f0 — Luma (@LumaLabsAI) March 23, 2026 \n\n\n こちらのURLからアクセスできます。  \n\n\nUNI-1 | Less Artificial. More Intel",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "生成AI",
+        "ツールレビュー",
+        "画像生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-22T02:30:25.715Z",
+      "markdown_path": "data/notebooklm_sources/1893548712_NanoBanana越え!_漫画自動生成のUni-1 の使い方｜ゆりしー@AIであそぶ.md"
+    },
+    {
+      "id": "1893548701",
+      "url": "https://note.com/mbbs/n/n523edccf693f",
+      "title": "【AI漫画500ページ一気に制作】Codexで実現したAI漫画自動生成のやり方を完全解説｜佐藤源彦@MBBS",
+      "excerpt": "今回は、OpenAIのCodex（コーデックス）を活用して、約500ページものAI漫画を一気に制作した方法をご紹介します！   👇こんな感じです  👇宇宙艦隊モノです（ただしオンボロ宇宙船 ガルガンチュア・ロンド AI画像生成の進化によって、漫画制作は新たなステージへ突入しました。 しかし、今回500ページもの漫画を制作できたのは、単純にAIの性能が向上したからだけではありません。  これまで取り組んできたAI漫画制作、プロンプトエンジニアリング、画像生成AI、AIエージェント、漫画の自動生成技術など、さまざまな研究と実践の積み重ねがあったからこそ実現できたものです。  そこで今回は、",
+      "summary": "",
+      "score": 52,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "自動化パイプライン",
+        "画像生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-22T02:32:04.763Z",
+      "markdown_path": "data/notebooklm_sources/1893548701_【AI漫画500ページ一気に制作】Codexで実現したAI漫画自動生成のやり方を完全解説｜佐藤源彦@MBBS.md"
+    },
+    {
+      "id": "1893548514",
+      "url": "https://note.com/yuyuyuhhhy/n/ndb88bcebb510",
+      "title": "漫画1本を作るのに、私がやることは「ボタンを1回押すだけ」になった｜AIに二度言わせない人",
+      "excerpt": "正直に言うと、もう漫画を「作っている」という感覚がありません。  シナリオを書いて、ボタンを押す。それだけ。 あとはAIエージェントが全部やってくれます。        以前の私の漫画制作フロー     少し前まで、漫画1本を仕上げるのに以下の工程が必要でした。  キャラクターのポーズや表情をイメージして指示を考える 画像生成AIに何度もプロンプトを試す 生成された画像をダウンロードして確認する コマ割りを決めてレイアウトを手動で組む セリフをテキストで入力して位置を調整する 縦書きに変換してフォントを整える 最終確認して書き出す この作業を、1本あたり最低でも2〜3時間繰り返していま",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "自動化",
+        "画像生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-22T02:33:31.226Z",
+      "markdown_path": "data/notebooklm_sources/1893548514_漫画1本を作るのに、私がやることは「ボタンを1回押すだけ」になった｜AIに二度言わせない人.md"
+    },
+    {
+      "id": "1893548399",
+      "url": "https://note.com/tothinks/n/n70cea0942415",
+      "title": "【どこでもAIくん】アップデートしました！4コマ漫画機能を追加——テーマを入力するだけで漫画が完成する時代が来た｜ひで｜AI時短ツール",
+      "excerpt": "ご報告です。どこでもAIくん、アップデートしました。 \n 今回の目玉は、ずばり「4コマ漫画作成機能」。キャラクターを細かく設定して、テーマを入力するだけで、4コマ漫画が自動生成される。しかもGeminiでもChatGPTでも、どちらのAIでも作れる。  「え、AIで漫画？　クオリティ大丈夫なの？」と思った人、正直その気持ちはわかる。僕も最初はそう思っていた。でも実際に使ってみると、想像以上にちゃんとした4コマ漫画が出てくる。もちろん商業漫画のクオリティではないけど、noteの記事やブログに添える4コマとしては十分すぎるレベルだ。  この記事では、新しく追加された4コマ漫画機能の詳細と使",
+      "summary": "",
+      "score": 35,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "画像生成",
+        "Gemini",
+        "ツール紹介"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-22T02:34:26.960Z",
+      "markdown_path": "data/notebooklm_sources/1893548399_【どこでもAIくん】アップデートしました！4コマ漫画機能を追加——テーマを入力するだけで漫画が完成する時代が来た｜ひで｜AI時.md"
     }
   ]
 }
