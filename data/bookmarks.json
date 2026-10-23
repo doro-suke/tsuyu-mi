@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-22T02:34:26.960Z",
+  "updated_at": "2026-10-23T02:34:10.783Z",
   "articles": [
     {
       "id": "1702129693",
@@ -10972,6 +10972,186 @@
       "status": "unread",
       "analyzed_at": "2026-10-22T02:34:26.960Z",
       "markdown_path": "data/notebooklm_sources/1893548399_【どこでもAIくん】アップデートしました！4コマ漫画機能を追加——テーマを入力するだけで漫画が完成する時代が来た｜ひで｜AI時.md"
+    },
+    {
+      "id": "1898134386",
+      "url": "https://note.com/make_a_change/n/n0248a03a1765",
+      "title": "忙しすぎて限界だったので、自分の仕事を全て任せる\"Claude Code AIカンパニー\"を作った話（前編）｜MAKE A CHANGE, inc",
+      "excerpt": "経営者の皆さん、毎日忙しすぎませんか？  朝起きた瞬間から未読メールやメッセージが数十件、多数のレビュー待ちタスク、オンライン・現地問わずのミーティング。営業活動も提案書も書いてプロダクトの仕様も考えないといけない。月次の経理処理、労務管理、マーケ、採用など。  「今日も未来を見据えた中長期的なタスクに着手できなかったな」  私は株式会社MAKE A CHANGEという、AI受託開発・PM・AI顧問をやっている会社の代表をしています。ソロプレナーとして私自身が経営・PM・エンジニア・営業・マーケまで全部やっているような状況です。  ありがたいことに沢山のお仕事のお話をいただいておりまし",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AIエージェント",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-23T02:26:24.615Z",
+      "markdown_path": "data/notebooklm_sources/1898134386_忙しすぎて限界だったので、自分の仕事を全て任せる_Claude Code AIカンパニー_を作った話（前編）｜MAKE A CHANGE, inc.md"
+    },
+    {
+      "id": "1898134371",
+      "url": "https://freelance-meikan.com/freelance/604/blog/1416",
+      "title": "Claude Codeで「一人会社」を作る方法｜フリーランス名鑑",
+      "excerpt": "人を雇う前に、AIを雇う時代へ「会社を作る」と聞くと、昔はまず人を採用し、外注先を探し、営業体制を整え、制作や開発のチームを作る必要がありました。ですが今は、その順番が変わり始めています。先にAIを仕",
+      "summary": "",
+      "score": 50,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-23T02:27:56.637Z",
+      "markdown_path": "data/notebooklm_sources/1898134371_Claude Codeで「一人会社」を作る方法｜フリーランス名鑑.md"
+    },
+    {
+      "id": "1898134358",
+      "url": "https://note.com/nao23s/n/n3d23f310298b",
+      "title": "Claude Codeで「会社」を作ったらほぼすべての仕事をAIに任せられるようになった｜そねっち@ClaudeCode仕事術",
+      "excerpt": "こんにちは。そねっちです。 2026年も4月になりました・・・noteも更新しなきゃしなきゃと思っているうちにどんどん月日が経ってしまいました。  ぼくはクライアントワークを多くやっているのと、今年の凶悪な花粉症にやられてぜんぜんnoteの記事がかけてなかったんですが、 ようやくどちらも少し落ち着きつつあるので、リアルで会っている人に話している「Claude Codeに全部仕事をやらせる術」を紹介させてもらおうと思います。  1人社長の「全部やらなきゃ」問題  1人で会社をやっていると、全部が自分ごとなんですよね。営業のしなきゃ、来週の提案資料を作らなきゃ、リサーチの仕事もある、経理も",
+      "summary": "",
+      "score": 78,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-23T02:28:28.413Z",
+      "markdown_path": "data/notebooklm_sources/1898134358_Claude Codeで「会社」を作ったらほぼすべての仕事をAIに任せられるようになった｜そねっち@ClaudeCode仕事術.md"
+    },
+    {
+      "id": "1898134304",
+      "url": "https://genai-ai.co.jp/ai-kanri/blog/cc-yt-company-management-108/",
+      "title": "【2026年8月最新】Claude Codeで会社経営を自動化する方法｜AI社員で1人会社を作る・回す全手順",
+      "excerpt": "Claude Codeで会社経営を自動化する方法を徹底解説。これから会社を作る1人社長・個人事業主にも対応し、AI社員（秘書・営業・経理）をゼロから配置する手順と株式会社GENAIの実運用データを公開します。",
+      "summary": "",
+      "score": 72,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AIエージェント",
+        "自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-23T02:29:02.346Z",
+      "markdown_path": "data/notebooklm_sources/1898134304_【2026年8月最新】Claude Codeで会社経営を自動化する方法｜AI社員で1人会社を作る・回す全手順.md"
+    },
+    {
+      "id": "1898133613",
+      "url": "https://qiita.com/TMiyamoto/items/4afd0f5c74dd898d9a33",
+      "title": "Claude Codeで11人のAIエージェント組織を作ってみた ── マルチエージェントで業務を回す実験 - Qiita",
+      "excerpt": "Claude Codeで11人のAIエージェント組織を作ってみた ── マルチエージェントで業務を回す実験",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "マルチエージェント",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-23T02:29:42.865Z",
+      "markdown_path": "data/notebooklm_sources/1898133613_Claude Codeで11人のAIエージェント組織を作ってみた ── マルチエージェントで業務を回す実験 - Qiita.md"
+    },
+    {
+      "id": "1898133578",
+      "url": "https://note.com/qrozier/n/n52c07c00615d",
+      "title": "Claude Codeで\"AI社員10人の会社\"を作った件｜クロージャー",
+      "excerpt": "今朝も安定的に2時に目が覚めました。いや、正確には1時半だった。  前回、「AIのおかげで仕事が10倍速くなったけど、やりたいことも10倍に増えて睡眠時間が消えた件」について書きました。  あの記事を書いたとき、「さすがに朝4時までは寝るルールを作ろう」とか殊勝なことを言ってたんですけど。  はい。無理でした。  今朝も1時半に目が覚めて、ベッドの中でMacBook開いて、気づいたら朝5時半。で、今この記事を書いてます。成長しない人間の見本みたいな朝を過ごしています。  ただ、今回は「やらかした」じゃなくて「できちゃった」話です。  昨日、行政書士法人クロノスの立ち上げ準備をしながら、",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "CLAUDE.md"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-23T02:30:36.036Z",
+      "markdown_path": "data/notebooklm_sources/1898133578_Claude Codeで_AI社員10人の会社_を作った件｜クロージャー.md"
+    },
+    {
+      "id": "1898131945",
+      "url": "https://note.com/piske_cc/n/nb9cc5c3d7376",
+      "title": "Claude Codeが「別物」になる神リポジトリ10選【2026年最新版】｜ぴすけ｜仕事で即使えるAI効率化",
+      "excerpt": "Claude Code、使ってる？  「使ってるけど、なんか思った通りに動かないんだよな…」って人、めっちゃ多いと思う。  実はこれ、Claude Code本体の問題じゃない。拡張機能を入れてないから。  素のClaude Codeは「優秀だけど何も知らない新人」みたいなもの。でもここに適切なプラグインやスキルを入れると、一緒に設計してくれる頼れる相棒に変わる。  今Xでもこの手の投稿がめちゃくちゃバズってて、「入れるだけで別物になった」って声が続出してる。  今回は、GitHubで実際に評価が高くて、自分も使ってるものを含めた神リポジトリ10選を紹介する。初心者でもインストールできる",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "MCP"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-23T02:31:38.383Z",
+      "markdown_path": "data/notebooklm_sources/1898131945_Claude Codeが「別物」になる神リポジトリ10選【2026年最新版】｜ぴすけ｜仕事で即使えるAI効率化.md"
+    },
+    {
+      "id": "1898131920",
+      "url": "https://note.com/clever_turkey674/n/nbebf58b73ed5",
+      "title": "SNSでよく見る「Claude Codeで組織を作った」を検証してみました｜なかしま｜AI Webライター",
+      "excerpt": "「Xで見かける『AIに7人チームを組ませた』という投稿、本当なのか判断がつかない…」  「毎日書くのがきつくて、仕組みでどうにかならないかと考えている…」  「どこまで任せて、どこから自分がやるのか、切り分けられない…」  こんなこと、考えていませんか。  私は東北の片田舎でラーメン屋を15年やっていて、今も厨房に立っています。1日の拘束は12時間。その前はエンジニアを7年やっていました。  今日は、Claude Codeの公式ドキュメントに直接当たって、SNSで見かける「AIチーム」がどこまで本当なのかを確かめました。先に言うと、組めます。ただし、任せきることはできませんでした。",
+      "summary": "",
+      "score": 72,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "マルチエージェント",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-23T02:32:41.934Z",
+      "markdown_path": "data/notebooklm_sources/1898131920_SNSでよく見る「Claude Codeで組織を作った」を検証してみました｜なかしま｜AI Webライター.md"
+    },
+    {
+      "id": "1898131909",
+      "url": "https://zenn.dev/shio_shoppaize/articles/shogun-claudemd-gachi",
+      "title": "CLAUDE.mdがバズってるので、AI部下7人が毎晩読んでるガチのやつを見せる",
+      "excerpt": "XのTLが「CLAUDE.md」で埋まった。",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-23T02:33:19.619Z",
+      "markdown_path": "data/notebooklm_sources/1898131909_CLAUDE.mdがバズってるので、AI部下7人が毎晩読んでるガチのやつを見せる.md"
+    },
+    {
+      "id": "1898131800",
+      "url": "https://note.com/yona_teacher/n/n51d9bb708675",
+      "title": "【知らなきゃ損】Claude CodeでAI社員を7人作る方法｜一人会社でも最強チーム化|生産性が10倍になった話｜Claude Code大学",
+      "excerpt": "Claude Codeに何かを頼むとき、いつも「1人の万能アシスタント」に全部お願いしていませんか。  私も最初はそうでした。  でも、頼むことが増えるほど返事はぼやけ、指示は長くなり、途中で何を頼んでいたのか自分でも分からなくなる。  そこで発想を変えました。  1人の天才に全部やらせるのをやめて、役割ごとに「AI社員」を雇い、会社のように分業させることにしたのです。  コードを書いたりとプログラミングの知識は一切不要です。一緒に読み進めながら最強チームを作っていきましょう♪  この記事は、その仕組みを実際に作ってみた記録です。   この記事を読むと何ができるようになるか  読み終わ",
+      "summary": "",
+      "score": 42,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "サブエージェント",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-23T02:34:10.783Z",
+      "markdown_path": "data/notebooklm_sources/1898131800_【知らなきゃ損】Claude CodeでAI社員を7人作る方法｜一人会社でも最強チーム化_生産性が10倍になった話｜Claude Code大学.md"
     }
   ]
 }
