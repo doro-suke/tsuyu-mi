@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-23T02:34:10.783Z",
+  "updated_at": "2026-10-24T02:33:54.547Z",
   "articles": [
     {
       "id": "1702129693",
@@ -11152,6 +11152,168 @@
       "status": "unread",
       "analyzed_at": "2026-10-23T02:34:10.783Z",
       "markdown_path": "data/notebooklm_sources/1898131800_【知らなきゃ損】Claude CodeでAI社員を7人作る方法｜一人会社でも最強チーム化_生産性が10倍になった話｜Claude Code大学.md"
+    },
+    {
+      "id": "1898131724",
+      "url": "https://zenn.dev/nexta_/articles/be13a2395a5d2a",
+      "title": "Claude Code に「7人の意地悪なQA」を仕込んでテストケースの観点漏れを潰した",
+      "excerpt": "こんにちは、QAエンジニアのAyakaです。\n製造業向けSaaS（Blazor＋Radzen / SQL Server で開発）のテスト設計・品質管理を担当しつつ、最近はコーポレートIT寄りの仕事も兼務しています。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "QA"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-24T02:23:42.394Z",
+      "markdown_path": "data/notebooklm_sources/1898131724_Claude Code に「7人の意地悪なQA」を仕込んでテストケースの観点漏れを潰した.md"
+    },
+    {
+      "id": "1893548242",
+      "url": "https://note.com/miyabin_plan/n/ne3dd0d83639a",
+      "title": "【史上初のAI漫画自動生成ノウハウ】1ページたったの10分で完成！AI漫画の常識がひっくり返る｜みやびん｜最強のAIマイスター",
+      "excerpt": "あああ…AI漫画作るのって楽しい！！  僕がこのAI漫画自動生成ノウハウの開発に成功したとき、一番最初に思ったことです。     なぜなら AI漫画を自動生成する専用ツールを、左クリックでポチってコピペするだけで 簡単にかっこいい漫画のページがガンガン量産できるからです。   いやいや、そんな事は絶対にありえない！ AI漫画を作るためには    非常に難解な画像生成ソフトを使いこなす必要がある    そもそもツールによってはインストールすら難しい    画像を生成するための複雑なプロンプトを勉強しなきゃいけない    漫画ページのネーム画を構成の勉強もしなきゃいけない    各ページの",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "生成AI",
+        "コンテンツ制作",
+        "画像生成"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-24T02:24:50.782Z",
+      "markdown_path": "data/notebooklm_sources/1893548242_【史上初のAI漫画自動生成ノウハウ】1ページたったの10分で完成！AI漫画の常識がひっくり返る｜みやびん｜最強のAIマイスター.md"
+    },
+    {
+      "id": "1893548198",
+      "url": "https://zenn.dev/branbran/articles/047821d64590f0",
+      "title": "【速報】Claude の新機能 Claude Motion 早速使ってみた",
+      "excerpt": "2026年10月8日、Anthropic が Claude の新機能 Claude Motion をベータで公開しました。同じ日に Claude Dashboards も出ています。",
+      "summary": "",
+      "score": 45,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "ClaudeMotion",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-24T02:26:48.794Z",
+      "markdown_path": "data/notebooklm_sources/1893548198_【速報】Claude の新機能 Claude Motion 早速使ってみた.md"
+    },
+    {
+      "id": "1893546398",
+      "url": "https://mysite-87g.pages.dev/blog/n8n_ai_youtuber/",
+      "title": "【n8n】全自動で月10万円！YouTube動画をAIにつくってもらう方法",
+      "excerpt": "AIによる動画一本の製作費用は約300円で1本1万~5万再生を狙える10分程度のYouTube動画を自動作成~自動投稿まで構築する方法",
+      "summary": "",
+      "score": 65,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "n8n",
+        "自動化パイプライン",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-24T02:28:13.452Z",
+      "markdown_path": "data/notebooklm_sources/1893546398_【n8n】全自動で月10万円！YouTube動画をAIにつくってもらう方法.md"
+    },
+    {
+      "id": "1893546346",
+      "url": "https://qiita.com/fuga-if/items/9fed3e53191b2b2604a5",
+      "title": "個人開発で月17万稼いでみたので生々しいスクショとともに振り返る - Qiita",
+      "excerpt": "個人開発で月17万稼いでみたので生々しいスクショとともに振り返る",
+      "summary": "",
+      "score": 28,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "個人開発",
+        "マネタイズ",
+        "iOSアプリ"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-24T02:28:35.552Z",
+      "markdown_path": "data/notebooklm_sources/1893546346_個人開発で月17万稼いでみたので生々しいスクショとともに振り返る - Qiita.md"
+    },
+    {
+      "id": "1893546284",
+      "url": "https://qiita.com/Eitaro_dotlog/items/c1e2f6d696ea88854186",
+      "title": "伸びる動画の特徴をAIに言語化させたら、リール作りが回り始めた話 - Qiita",
+      "excerpt": "伸びる動画の特徴をAIに言語化させたら、リール作りが回り始めた話",
+      "summary": "",
+      "score": 75,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "ClaudeCode",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-24T02:29:26.607Z",
+      "markdown_path": "data/notebooklm_sources/1893546284_伸びる動画の特徴をAIに言語化させたら、リール作りが回り始めた話 - Qiita.md"
+    },
+    {
+      "id": "1893546240",
+      "url": "https://qiita.com/satoshot/items/3308a7e025cd9f049813",
+      "title": "【個人開発】無機質なToDo管理にサヨナラ！「タスク娘」を爆誕させた話（この記事もGemini 4 Argonで生成しました） - Qiita",
+      "excerpt": "【個人開発】無機質なToDo管理にサヨナラ！「タスク娘」を爆誕させた話（この記事もGemini 4 Argonで生成しました）",
+      "summary": "",
+      "score": 38,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "個人開発",
+        "Gemini",
+        "LLM"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-24T02:30:56.398Z",
+      "markdown_path": "data/notebooklm_sources/1893546240_【個人開発】無機質なToDo管理にサヨナラ！「タスク娘」を爆誕させた話（この記事もGemini 4 Argonで生成しました） - Qiita.md"
+    },
+    {
+      "id": "1893546200",
+      "url": "https://note.com/me_m_ma/n/nef27c4d5a854",
+      "title": "X有料サブスクで月5万を安定化させる全手順｜めんまのAI",
+      "excerpt": "# X有料サブスクで月5万を安定化させる全手順  はじめに——なぜ今、Xのサブスクなのか     私がXの有料サブスクリプション（以下、サブスク）で最初の1万円を得たのは、フォロワーが1,200人のときだった。インフルエンサーでも何でもない。ただ、ある特定の領域で「この人の情報は追う価値がある」と思ってもらえる状態を地道に作った結果だ。  Xのサブスク機能は、月額のサブスクリプション料金を設定して、登録者だけが見られる限定ポストを配信する仕組みだ。noteやメルマガと違い、普段の発信の延長線上に課金導線がある。つまり、読者が「わざわざ別のプラットフォームに移動する」という心理的ハードル",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "マネタイズ",
+        "SNS運用",
+        "コンテンツ戦略"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-24T02:31:44.761Z",
+      "markdown_path": "data/notebooklm_sources/1893546200_X有料サブスクで月5万を安定化させる全手順｜めんまのAI.md"
+    },
+    {
+      "id": "1893546187",
+      "url": "https://note.com/me_m_ma/n/n2ff979b576b4",
+      "title": "Instagram×AIで月5万円売る仕組み完全ガイド｜めんまのAI",
+      "excerpt": "# Instagram×AIで月5万円売る仕組み完全ガイド  私がInstagramで最初に商品を売ったのは、フォロワー280人のときだった。売れたのはCanvaで作った30枚のデザインテンプレート集で、価格は980円。正直なところ「こんな少ないフォロワーで本当に買う人がいるのか」と半信半疑だったが、投稿した翌日に3件売れた。そこから仕組みを整えていった結果、3か月後には月5万円を安定して超えるようになった。この記事では、私が実際にやった手順をそのまま書く。     何を売るかを決める前にやること     多くの人が「まず商品を作ろう」とするが、私はそれで最初に失敗した。自分が作りたい",
+      "summary": "",
+      "score": 18,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "SNSマーケティング",
+        "ChatGPT",
+        "副業"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-24T02:33:54.547Z",
+      "markdown_path": "data/notebooklm_sources/1893546187_Instagram×AIで月5万円売る仕組み完全ガイド｜めんまのAI.md"
     }
   ]
 }
