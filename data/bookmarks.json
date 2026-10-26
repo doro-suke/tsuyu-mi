@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T02:22:09.093Z",
+  "updated_at": "2026-10-26T02:56:23.279Z",
   "articles": [
     {
       "id": "1702129693",
@@ -11475,6 +11475,150 @@
       "status": "unread",
       "analyzed_at": "2026-10-25T02:22:09.093Z",
       "markdown_path": "data/notebooklm_sources/1821826744_【ViduAI Q3】音声付き動画が一発生成！使い方やプロンプトのコツを徹底解説｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826743",
+      "url": "https://www.kyoukasho.net/entry/webuiapi",
+      "title": "【Stable Diffusion WebUI】Pythonから直接実行するには？[webuiapi] - AI教科書.net",
+      "excerpt": "Stable Diffusion WebUIの本体の描画機能をPythonからコールして実行する方法です。 Stable Diffusion WebUI、Pythonから実行するには？ 利用モデルは？ ConnectionRefusedError: [WinError 10061] 対象のコンピューターによって拒否されたため、接続できませんでした。？ Stable Diffusion WebUI、Pythonから実行するには？ Stable Diffusion WebUIは便利ですが、プロンプトを変えて出力を自動化したい場合はPythonからそれを直接コールできた方が楽です。 webuiapi…",
+      "summary": "",
+      "score": 50,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "StableDiffusion",
+        "Python",
+        "画像生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-26T02:13:32.802Z",
+      "markdown_path": "data/notebooklm_sources/1821826743_【Stable Diffusion WebUI】Pythonから直接実行するには？[webuiapi] - AI教科書.net.md"
+    },
+    {
+      "id": "1821826742",
+      "url": "https://promptpark.jp/column/videobyai/",
+      "title": "【SNS】ショート動画の内容をGPTで大量生産するプロンプトを例文付きで紹介｜プロンプトパーク コラム",
+      "excerpt": "色々なSNSでショート動画が取り上げられて久しくなってきました。 YouTube、Instagram、TikTokなど様々な媒体がありますが、SNSというプラットフォームの特性上、更新の頻度は共通して重要な要素です。 し […]",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "プロンプトエンジニアリング",
+        "SNS運用",
+        "ChatGPT"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-26T02:18:19.710Z",
+      "markdown_path": "data/notebooklm_sources/1821826742_【SNS】ショート動画の内容をGPTで大量生産するプロンプトを例文付きで紹介｜プロンプトパーク コラム.md"
+    },
+    {
+      "id": "1821826741",
+      "url": "https://zenn.dev/norimax/articles/ce181df8081ae0",
+      "title": "【n8nでなんでも自動化】バイラル動画を9つのSNSで爆速展開！AIアバターで差別化する完全自動化システム",
+      "excerpt": "",
+      "summary": "",
+      "score": 75,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "n8n",
+        "ワークフロー自動化",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-26T02:22:54.185Z",
+      "markdown_path": "data/notebooklm_sources/1821826741_【n8nでなんでも自動化】バイラル動画を9つのSNSで爆速展開！AIアバターで差別化する完全自動化システム.md"
+    },
+    {
+      "id": "1821826740",
+      "url": "https://zenn.dev/norimax/articles/599f754452b0c4",
+      "title": "【n8nでなんでも自動化】SNS運用者必見！AI完全自動化でショート動画制作から複数SNS投稿まで一気に解決",
+      "excerpt": "",
+      "summary": "",
+      "score": 78,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "n8n",
+        "ワークフロー自動化",
+        "生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-26T02:26:57.668Z",
+      "markdown_path": "data/notebooklm_sources/1821826740_【n8nでなんでも自動化】SNS運用者必見！AI完全自動化でショート動画制作から複数SNS投稿まで一気に解決.md"
+    },
+    {
+      "id": "1821826739",
+      "url": "https://note.com/sakisuta/n/n94c269693a22",
+      "title": "【Midjourney V8.2】プロンプトを極めてきたのに、極める意味がなくなった。誰がやっても圧倒的な映画のワンシーン感。覚えておきたい画像生成AIプロンプト17選｜さきすた",
+      "excerpt": "こんにちは！ さきすたです！  画像・動画生成AI関連のnoteのサムネイルに番号を記載し始めてから、なんと100回目！ Midjourneyのアップデートと重なるとは…笑 次回から番号の記載やめます。100とかになるとあまり意味がないので…。  動画生成AIのnoteを書いていた途中だったのですが、 Midjourneyのアップデートが来たため、ひたすら生成し続けていて、こっちを先に出すことにしました。   Midjourney V8.2とは  2026年7月25日に、画像生成AIの王者Midjourneyから、 最新バージョンV8.2がリリースされました。  【V8.2】アップデー",
+      "summary": "",
+      "score": 40,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "画像生成AI",
+        "Midjourney",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-26T02:29:57.496Z",
+      "markdown_path": "data/notebooklm_sources/1821826739_【Midjourney V8.2】プロンプトを極めてきたのに、極める意味がなくなった。誰がやっても圧倒的な映画のワンシーン感。覚えておきたい.md"
+    },
+    {
+      "id": "1821826738",
+      "url": "https://note.com/genel/n/n279dbdf33556?magazine_key=m03efbb766a9a",
+      "title": "【AI動画制作のコツ】 このシーン、どうすれば正しく動く？｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは！GENELです。  突然ですが、この動画、あんまりよくないですよね。 もたついてる感じ、疾走感がない… 以下の画像から動画化したのですが、正しく動作させるためにはどういう工夫をすべきか分かりますか？  AIで動画をつくっていく中で、   この動き、何回生成しても上手くいかない   と思ったこと、誰にでもありますよね...！  そんな中、動画生成AIを始めたての方に教える機会が最近増えているのですが、  自分の体験上、うまく動かせない原因には同じ共通点があります。  1番の原因は「画像生成」  まずは圧倒的にコレです。  「これ、うまくいかなんだけどどうすればいいですか？」",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "AI動画制作",
+        "画像生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-26T02:34:51.983Z",
+      "markdown_path": "data/notebooklm_sources/1821826738_【AI動画制作のコツ】 このシーン、どうすれば正しく動く？｜GENEL ｜ AIを用いた動画制作解説.md"
+    },
+    {
+      "id": "1821826737",
+      "url": "https://www.youtube.com/watch?v=BfAoeVJHB3A",
+      "title": "How to Create AI Videos: A Beginner's Guide. How to Use AI to Turn Anime into Live-Action",
+      "excerpt": "Monetization Methods Using AI Videos and More Details 👉 https://tips.jp/u/ai-freak/a/0P2nzf4Q\n(japanese only, sorry🙏)\n\nIn this video, I'll show you how to create a live-action style AI video of Studio Ghibli's Spirited Away using the image generation AI Midjourney and the video generation AI Haiper.ai.\n\nYou may have seen videos like this on TikTok, Instagram Reels, or YouTube Shorts, but with the right knowledge, anyone can create them.\n\nTo make it easy for beginners, I've simplified the process and will walk you through how to create a video like this.\n\nNote: As mentioned in the video, the copyrights for Spirited Away and other Ghibli or anime content are in a gray area, so I do not recommend commercializing these videos. Uploading them to social media is also at your own risk.\n\n🎨 Image Generation AI\nMidjourney: https://www.midjourney.com/\nLeonardo.ai: https://app.leonardo.ai/?via=signup-l...\n\n📹 Video Generation AI\nHaiper.ai: https://haiper.ai/\nFor more in-depth information, check out this article: https://note.com/ai_freak/n/nc83665af...\n\n🔽 For the latest updates, follow me on Twitter(X): \n  / aifreak_tool  \n 🔽 For advertising inquiries, please contact me here: \nhttps://ai-freak.com/contact/\n\nVideo Chapters:\n0:00 of How to Create AI Videos\n0:31 Recommended Image Generation AI Tools\n1:16 How to Create Spirited Away-Style Images\n1:58 How to Maintain a Consistent Image Style\n2:34 How to Specify a Particular Character\n3:21 How to Create Untrained Characters\n3:46 How to Use the Video Generation AI Tool Haiper\n5:11 How to Stitch Together Created Videos\n5:47 Recap of the Video Creation Process\n6:20 Brief Introduction to Monetization Methods\n7:33 More Details on Tips\n\n#aianimation\n#LiveAction\n#VideoGenerationAI",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "Midjourney",
+        "画像生成AI"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-26T02:44:05.362Z",
+      "markdown_path": "data/notebooklm_sources/1821826737_How to Create AI Videos_ A Beginner's Guide. How to Use AI to Turn Anime into Live-Action.md"
+    },
+    {
+      "id": "1821826735",
+      "url": "https://www.youtube.com/watch?v=IuF9b5MH59o&t=109s",
+      "title": "[AI Video] How to make \"AI Cat x Cooking\" videos that will explode in popularity in 2025",
+      "excerpt": "〇A Message\nX will do its best, so please follow me.\n\n▼X Account\nhttps://x.com/e_aidori_mu\n\nThis time, we compared four of the latest video generation technologies to see which one is best for creating cooking videos. If you found this helpful, please subscribe and like the channel.\n\n▼Eleven Labs\nhttps://www.videotosoundeffects.com/\n\nTable of Contents\n0:00 Opening\n1:49 How to Create AI Images\n2:55 Comparing Video Generation Technologies\n5:33 How to Make AI Videos\n6:43 Summary\n\n#AISideHustle\n#AIMonetization\n#AIShort",
+      "summary": "",
+      "score": 20,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "画像生成AI",
+        "AI副業"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-26T02:56:23.279Z",
+      "markdown_path": "data/notebooklm_sources/1821826735_[AI Video] How to make _AI Cat x Cooking_ videos that will explode in popularity in 2025.md"
     }
   ]
 }
