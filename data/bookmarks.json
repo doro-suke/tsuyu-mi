@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T03:25:13.116Z",
+  "updated_at": "2026-10-28T03:03:24.466Z",
   "articles": [
     {
       "id": "1702129693",
@@ -11781,6 +11781,42 @@
       "status": "unread",
       "analyzed_at": "2026-10-27T03:25:13.116Z",
       "markdown_path": "data/notebooklm_sources/1821826727_【2026年最新】YouTubeショートが伸びない原因と対策。アルゴリズムが重視する「視聴維持率」の正解とは？ _ ムビスケ.md"
+    },
+    {
+      "id": "1821826726",
+      "url": "https://www.aquallc.jp/remotion-ai-video-guide/",
+      "title": "【2026年最新】Remotion × Claude Codeで動画自動生成｜Agent Skills完全ガイド",
+      "excerpt": "RemotionがClaude CodeのAgent Skillsに対応。プロンプトを打つだけで動画が生成できるようになった。実際に試してみた結果と、その可能性・限界を正直にレポートする。",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "Remotion",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-28T03:01:44.032Z",
+      "markdown_path": "data/notebooklm_sources/1821826726_【2026年最新】Remotion × Claude Codeで動画自動生成｜Agent Skills完全ガイド.md"
+    },
+    {
+      "id": "1821826725",
+      "url": "https://note.com/quick_nerine7507/n/n40ca34b4af5b",
+      "title": "【2026年最新】AI美女動画の「顔崩れ」をゼロにする。Veo 3.1 & Kling 3.0 秘伝のパラメータ設定と運用ロードマップ｜AIクリエイター皐月",
+      "excerpt": "AI画像生成の次の戦場は「動画」です。しかし、多くの人がこう悩んでいます。    「動かした瞬間に顔が別人になる」    「腕や指が溶けてホラー映画のようになる」    「どのプロンプトが本当に効いているのかわからない」    2026年現在、Google Veo 3.1やKling 3.0といった神ツールが登場しましたが、ただボタンを押すだけでは「売れるクオリティ」には届きません。  本記事では、私が数百回の検証を経てたどり着いた、キャラクターの一貫性を100%維持しながら、実写と見紛う滑らかな動きを実現する「秘伝のプロンプト・チェーン」と「パラメータ設定」をすべて公開します。  こ",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "プロンプトエンジニアリング",
+        "マネタイズ"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-28T03:03:24.466Z",
+      "markdown_path": "data/notebooklm_sources/1821826725_【2026年最新】AI美女動画の「顔崩れ」をゼロにする。Veo 3.1 & Kling 3.0 秘伝のパラメータ設定と運用ロードマップ｜AIクリエイター皐月.md"
     }
   ]
 }
