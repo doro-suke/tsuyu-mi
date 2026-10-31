@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30T03:44:16.364Z",
+  "updated_at": "2026-10-31T03:29:59.069Z",
   "articles": [
     {
       "id": "1702129693",
@@ -12105,6 +12105,131 @@
       "status": "unread",
       "analyzed_at": "2026-10-30T03:44:16.364Z",
       "markdown_path": "data/notebooklm_sources/1812877286_エージェント3〜5個が限界：「人間がボトルネック」と気づいたOpenAIが作った自律化の仕組み.md"
+    },
+    {
+      "id": "1812877246",
+      "url": "https://qiita.com/y-morimatsu/items/0271f85171f4ea084aea",
+      "title": "DESIGN.md とは — GoogleがOSS化した「AIエージェント向けデザイン仕様」 - Qiita",
+      "excerpt": "DESIGN.md とは — GoogleがOSS化した「AIエージェント向けデザイン仕様」",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "デザインシステム",
+        "コーディングエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-31T03:09:02.233Z",
+      "markdown_path": "data/notebooklm_sources/1812877246_DESIGN.md とは — GoogleがOSS化した「AIエージェント向けデザイン仕様」 - Qiita.md"
+    },
+    {
+      "id": "1812877194",
+      "url": "https://note.com/tokyomakers/n/nbd3fade4b1ec",
+      "title": "ClaudeにBlenderを30分動かしてもらった—コストとプロンプトの実感録｜東京九段工作ラボ",
+      "excerpt": "Claudeに「北欧風のリビングを作って」と頼んだら、30分後にBlenderの中に86個のオブジェクトが並んでいました。  え？ほんとにコーヒー飲んでいる間に終わってる？  途中、私は何も指示していないのに、Claudeは「Cyclesだと重すぎますね」とつぶやいてレンダラーを勝手にEEVEEに切り替え、「露出が飛んでいます」と自分で色味を直し、「観葉植物が枝っぽすぎる」とまた直して——その様子を私は横で眺めていました。  便利！！！ Blender ただ同時に、月額プランで使える枠を、この30分でかなり持っていかれる感覚です。Claudeの契約プランによっては要注意ですね・・・",
+      "summary": "",
+      "score": 65,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "MCP",
+        "AIエージェント",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-31T03:10:01.403Z",
+      "markdown_path": "data/notebooklm_sources/1812877194_ClaudeにBlenderを30分動かしてもらった—コストとプロンプトの実感録｜東京九段工作ラボ.md"
+    },
+    {
+      "id": "1812876755",
+      "url": "https://claudemd-builder.vercel.app/",
+      "title": "Claudemd builder",
+      "excerpt": "",
+      "summary": "",
+      "score": 0,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "Claude",
+        "リンク切れ"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-31T03:12:57.004Z",
+      "markdown_path": "data/notebooklm_sources/1812876755_Claudemd builder.md"
+    },
+    {
+      "id": "1812876643",
+      "url": "https://zenn.dev/sonicgarden/articles/claude-code-self-improving-loop",
+      "title": "Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った",
+      "excerpt": "この記事は Claude on SonicGarden の記事です。ソニックガーデンのプログラマが、Claude Codeの活用について書いています。#claude_on_sonicgarden",
+      "summary": "",
+      "score": 90,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "エージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-31T03:16:48.943Z",
+      "markdown_path": "data/notebooklm_sources/1812876643_Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った.md"
+    },
+    {
+      "id": "1812876436",
+      "url": "https://qiita.com/TakanobuSano/items/73ae018dbdaa423d1899",
+      "title": "プロンプト集は配らない。安全設定とSkillを配る — Claude Codeをチームの仕組みにする9ステップ【全48記事】 - Qiita",
+      "excerpt": "プロンプト集は配らない。安全設定とSkillを配る — Claude Codeをチームの仕組みにする9ステップ【全48記事】",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "AIエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-31T03:21:39.781Z",
+      "markdown_path": "data/notebooklm_sources/1812876436_プロンプト集は配らない。安全設定とSkillを配る — Claude Codeをチームの仕組みにする9ステップ【全48記事】 - Qiita.md"
+    },
+    {
+      "id": "1809466600",
+      "url": "https://note.com/malfoy_eatwalk/n/n12cc54f138d0#be2c75b5-596d-4e45-8cd7-f248ec97243c",
+      "title": "Claude Codeで投資AI秘書を作った1ヶ月｜個人投資家が「やらかさないAI」を作った話｜malfoy_eatwalk",
+      "excerpt": "コードを書けない個人投資家が、売買ルール・損切りミス・後追いエントリーをAIで管理し始めた記録   はじめに  Claude Codeを使って、個人投資家向けの「投資AI秘書」を作り始めて1ヶ月が経ちました。  目的は、AIで銘柄を当てることではありません。  売買回数が増えすぎる。 高値で後追いする。 ロットを急に大きくする。 信用で無理に入る。 損切り注文を入れたつもりで、期限切れに気づかない。  3月の自分は、こういう失敗を何度も繰り返していました。  振り返ると、問題は銘柄選びだけではありませんでした。 自分の判断のクセが、そのまま売買に出ていた。  そこで、Claude Co",
+      "summary": "",
+      "score": 48,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "業務自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-31T03:28:24.717Z",
+      "markdown_path": "data/notebooklm_sources/1809466600_Claude Codeで投資AI秘書を作った1ヶ月｜個人投資家が「やらかさないAI」を作った話｜malfoy_eatwalk.md"
+    },
+    {
+      "id": "1809466572",
+      "url": "https://qiita.com/N-i-ke/items/b87d1d144ef6eef9d257",
+      "title": "Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita",
+      "excerpt": "Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話",
+      "summary": "",
+      "score": 90,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "ワークフロー自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-10-31T03:29:59.069Z",
+      "markdown_path": "data/notebooklm_sources/1809466572_Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita.md"
     }
   ]
 }
