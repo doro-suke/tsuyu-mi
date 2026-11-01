@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31T03:29:59.069Z",
+  "updated_at": "2026-11-01T03:16:14.279Z",
   "articles": [
     {
       "id": "1702129693",
@@ -12230,6 +12230,114 @@
       "status": "unread",
       "analyzed_at": "2026-10-31T03:29:59.069Z",
       "markdown_path": "data/notebooklm_sources/1809466572_Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita.md"
+    },
+    {
+      "id": "1809466653",
+      "url": "https://zenn.dev/tamai_hideyuki/articles/claude-code-config-best-practices",
+      "title": "Claude Codeを使い倒すための設定術：CLAUDE.md・自動メモリ・コンテキスト管理の3本柱",
+      "excerpt": "「毎回同じことを説明している」。Claude Code を使い始めてしばらくたった頃、私はこの感覚に気づいた。セッションを開くたびにプロジェクトの構成を教え、コーディングスタイルを伝え、使ってはいけないライブラリを注意する。AIが有能であることはわかっていても、文脈がリセットされるたびに準備コストが発生していた。",
+      "summary": "",
+      "score": 90,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "コンテキスト管理"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-01T03:04:33.534Z",
+      "markdown_path": "data/notebooklm_sources/1809466653_Claude Codeを使い倒すための設定術：CLAUDE.md・自動メモリ・コンテキスト管理の3本柱.md"
+    },
+    {
+      "id": "1809466528",
+      "url": "https://zenn.dev/yui/articles/740da24e9ee419",
+      "title": "Fable 5をトークン破産させずに使い倒す — オーケストレーターに徹させる運用",
+      "excerpt": "Claude Fable 5、今までのモデルと比べても頭ひとつ飛び出るぐらい賢いですよね。\n以前出た時にすぐメインモデルに設定して、実装からデバッグから雑務まで全部やらせた結果、トークンが凄い勢いで食われていくので対策しました。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-01T03:07:44.596Z",
+      "markdown_path": "data/notebooklm_sources/1809466528_Fable 5をトークン破産させずに使い倒す — オーケストレーターに徹させる運用.md"
+    },
+    {
+      "id": "1809466512",
+      "url": "https://qiita.com/yukurash/items/a4caa9c63bf9e1f283ff",
+      "title": "MBTI 16タイプの人格に議論させる Claude Code プラグイン『16-minds』を作った - Qiita",
+      "excerpt": "MBTI 16タイプの人格に議論させる Claude Code プラグイン『16-minds』を作った",
+      "summary": "",
+      "score": 85,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "マルチエージェント",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-01T03:11:16.993Z",
+      "markdown_path": "data/notebooklm_sources/1809466512_MBTI 16タイプの人格に議論させる Claude Code プラグイン『16-minds』を作った - Qiita.md"
+    },
+    {
+      "id": "1809464915",
+      "url": "https://note.com/alpaka_ai/n/n1ed089b7d3c6",
+      "title": "何故、note記事は読まれないのか？文章を書くことさえ、メタゲーム化するこの時代に【noteの続け方 / エッセイ / ブログ / 副業ライティング】｜Alpaka",
+      "excerpt": "「質の高い記事を書けば、きっとみんなに読まれるはず」  noteを始めたばかりの頃、私はどこかでそう思っていました。 自分なりにテーマを考えて、文章を丁寧に書いて、伝えたいことをちゃんと整理して、読みやすく整えていく。  そうすれば、いずれは読んでくれる人が自然に増えてくれるのだと。 質こそが正義なのだと。     でも、続けているうちに、はたと気づいていく。 noteが読まれるかは、記事の良し悪しだけでは決まっていないということに。       記事の中身以前の問題  noteを書き始める以前から、読んでいて疑問に思うことがあったんですよね。 スキやコメントが多い記事であったとしても",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "note運用",
+        "コンテンツ戦略",
+        "エッセイ"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-01T03:12:54.682Z",
+      "markdown_path": "data/notebooklm_sources/1809464915_何故、note記事は読まれないのか？文章を書くことさえ、メタゲーム化するこの時代に【noteの続け方 _ エッセイ _ ブログ _ 副業ライテ.md"
+    },
+    {
+      "id": "1809464748",
+      "url": "https://zenn.dev/ettomio0518/articles/7ffcf709a1af84",
+      "title": "何故この年で「舞いカレンダー」を作ったのか",
+      "excerpt": "初めまして。山口県在住の 中本富雄（ettomio イーティートミオ） と申します。",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "個人開発",
+        "エッセイ",
+        "アプリ開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-01T03:14:42.683Z",
+      "markdown_path": "data/notebooklm_sources/1809464748_何故この年で「舞いカレンダー」を作ったのか.md"
+    },
+    {
+      "id": "1809464723",
+      "url": "https://note.com/frepara/n/ncd8c49ce278e",
+      "title": "会社の看板がないフリーランスが、noteを書いたほうがいい理由｜フリパラ（フリーランス協会公式note）",
+      "excerpt": "「営業せずとも依頼が来るようにしたい……！」 「でも、SNSで何をどこまで出せば仕事に繋がるのかわからない」  そんな悩みを抱えるフリーランスに、みずのけいすけさんは意外な答えをくれました。 「大切なのは、5分前のオムライスの投稿なんです」  noteを知り尽くしたプロが教える、飾らない「生存報告」が仕事を引き寄せる理由。その驚きの効果と、実際に人生が変わった3人の実例をお届けします。   15年の会社員生活を経て独立し、この春で5年目。 最もやってよかったのは、noteで「生存報告」としての発信を続けてきたことです。  noteが店先となり、営業せずともお客さんが来てくれるようになり",
+      "summary": "",
+      "score": 15,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "フリーランス",
+        "情報発信",
+        "ブランディング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-01T03:16:14.279Z",
+      "markdown_path": "data/notebooklm_sources/1809464723_会社の看板がないフリーランスが、noteを書いたほうがいい理由｜フリパラ（フリーランス協会公式note）.md"
     }
   ]
 }
