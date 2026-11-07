@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-06T04:35:06.527Z",
+  "updated_at": "2026-11-07T03:50:23.263Z",
   "articles": [
     {
       "id": "1702129693",
@@ -12804,6 +12804,96 @@
       "status": "unread",
       "analyzed_at": "2026-11-06T04:35:06.527Z",
       "markdown_path": "data/notebooklm_sources/1909572709_AIで記事の反応を整理して翌週に試すことを1つ選ぶ方法【コピペOK】｜佐藤旭｜40代の「AI×コンテンツ集客」専門家.md"
+    },
+    {
+      "id": "1915676861",
+      "url": "https://zenn.dev/nrs/articles/c777388530aa84",
+      "title": "コードを読まずにマージするために必要なこと",
+      "excerpt": "AI に実装を任せると PR が次々にできあがります。\nその差分を開発者がひとつずつ読み、指摘を返して修正を待ち、修正後のコードをまた読む。\n実装が速くなった分だけレビュー待ちの PR がたまっていきます。",
+      "summary": "",
+      "score": 72,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "コードレビュー",
+        "CI/CD"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-07T03:45:00.786Z",
+      "markdown_path": "data/notebooklm_sources/1915676861_コードを読まずにマージするために必要なこと.md"
+    },
+    {
+      "id": "1915676837",
+      "url": "https://zenn.dev/karamage/articles/ac71f1c89c73ff",
+      "title": "人間がコードを読まずにPRをマージする技術 ─ それでも、品質は手放さない",
+      "excerpt": "ある日ブラウザを開くと、私のGitHubの通知欄に未レビューのPRが20件ほどたまっていました。\n全部、Claude Codeが書いたPRで、私が1件を読み終えるあいだに、Claudeは次のPRを2件出してきます。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "コードレビュー"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-07T03:45:24.233Z",
+      "markdown_path": "data/notebooklm_sources/1915676837_人間がコードを読まずにPRをマージする技術 ─ それでも、品質は手放さない.md"
+    },
+    {
+      "id": "1915676776",
+      "url": "https://zenn.dev/nexta_/articles/42a828ca2b8a02",
+      "title": "コードを読まずにバイブコーディングしたら、Claude Codeは分かっていてスルーしていた",
+      "excerpt": "Claude Code のセッションを、VSCode の拡張機能で5つほど並べて使っている。\nMarkdown が見やすく、コードも見られて、VSCode から離れなくて済むからだ。\nただ、パネルの見出しは短く、5枚並べるとどれが何をしているのか分からなくなる。\n使用枠があとどれくらい持つのかも気になる。",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "バイブコーディング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-07T03:45:44.251Z",
+      "markdown_path": "data/notebooklm_sources/1915676776_コードを読まずにバイブコーディングしたら、Claude Codeは分かっていてスルーしていた.md"
+    },
+    {
+      "id": "1915676766",
+      "url": "https://zenn.dev/dress_code/articles/193d3a753af2bf",
+      "title": "「足さない案」を AI に比べさせる設計ゲートの作り方と回し方",
+      "excerpt": "こんにちは、Dress Code株式会社 でプロダクトエンジニアをやっているなたこんです。",
+      "summary": "",
+      "score": 85,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "アーキテクチャ設計",
+        "エージェント設計"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-07T03:46:07.152Z",
+      "markdown_path": "data/notebooklm_sources/1915676766_「足さない案」を AI に比べさせる設計ゲートの作り方と回し方.md"
+    },
+    {
+      "id": "1915676759",
+      "url": "https://delaymania.com/202611/webservice/ai-coding-spare-tokens/",
+      "title": "CodexやClaude Codeのトークンが余った時によくやってること – ディレイマニア",
+      "excerpt": "CodexやClaude Codeを使ってるとよくあるのが、いつもはトークンが足らない感じがするのに、リセット直前に余ってたら使い切れるほど何ができるか分からなくなることです。 自分用のメモとしても使えるように、トークンが余った時によくや…",
+      "summary": "",
+      "score": 25,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "トークン活用"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-07T03:50:23.263Z",
+      "markdown_path": "data/notebooklm_sources/1915676759_CodexやClaude Codeのトークンが余った時によくやってること – ディレイマニア.md"
     }
   ]
 }
