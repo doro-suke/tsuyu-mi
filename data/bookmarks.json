@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-08T03:20:35.984Z",
+  "updated_at": "2026-11-09T04:00:10.357Z",
   "articles": [
     {
       "id": "1702129693",
@@ -13038,6 +13038,150 @@
       "status": "unread",
       "analyzed_at": "2026-11-08T03:20:35.984Z",
       "markdown_path": "data/notebooklm_sources/1809463547_【重要】AIでソロ起業して分かった、「ゴミ箱行き」確定スキル.md"
+    },
+    {
+      "id": "1809463514",
+      "url": "https://zenn.dev/eurekalabo/articles/eureka-agent-driven-dev",
+      "title": "実装の大半をAIエージェントに任せて1年経った",
+      "excerpt": "僕は Eureka Labo（https://www.eurekalabo.com）で受託開発とAIコンサルティングをしています。この連載「AI開発を頼む前に」（全6回）は、開発を頼む側の人に向けて書いています。",
+      "summary": "",
+      "score": 58,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "開発プロセス"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-09T03:34:58.653Z",
+      "markdown_path": "data/notebooklm_sources/1809463514_実装の大半をAIエージェントに任せて1年経った.md"
+    },
+    {
+      "id": "1796512301",
+      "url": "https://zenn.dev/japannomu/articles/20260329_claude-code-harness-indexing",
+      "title": "Claude Codeのハーネス設定を「インデックス化」してコンテキスト消費を77%削減した話",
+      "excerpt": "Claude Code（Anthropic公式CLI）を使い込んでいくと、ルールやスキルの設定ファイルがどんどん肥大化していきます。",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-09T03:38:27.127Z",
+      "markdown_path": "data/notebooklm_sources/1796512301_Claude Codeのハーネス設定を「インデックス化」してコンテキスト消費を77%削減した話.md"
+    },
+    {
+      "id": "1796512281",
+      "url": "https://note.com/jujunjun110/n/n0903bad8b2f2",
+      "title": "ClaudeCode無限ループ(ralph-loop)による完全自律開発ワークフローで開発者のウェルビーイングを取り戻す！｜Jun Ito",
+      "excerpt": "こんにちは。チームみらい 永田町エンジニアチームの伊藤（エディ）です。  先日投稿した記事では、Claude Code Webを8並列で回すためのハーネスエンジニアリングについて書きましたが、そこから試行錯誤を進め、人間が細かく指示しなくても、1コマンドのロングセッションで大量の機能を作り切る開発手法（いわゆる ralph loop ）を自分でも研究してみました。  現時点で、15分程度でドキュメントを仕上げてAIに任せると、3~4時間のロングセッションで、数千〜1万行程度の、比較的品質の高い実装が安定して完成するような状態になったので、工夫を紹介してみようと思います。  思",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "自律エージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-09T03:43:18.185Z",
+      "markdown_path": "data/notebooklm_sources/1796512281_ClaudeCode無限ループ(ralph-loop)による完全自律開発ワークフローで開発者のウェルビーイングを取り戻す！｜Jun Ito.md"
+    },
+    {
+      "id": "1796512267",
+      "url": "https://note.com/modern_ferret431/n/ned339de15e1f",
+      "title": "Claude Codeのリミットをなるべく消費しない方法——長く使い続けるための実践テクニック｜東京 AI 研究所",
+      "excerpt": "Claude Codeを使い始めてすぐ「使用量の上限に達しました」という壁にぶつかった経験はないだろうか。 Claude Codeはトークン（文字数に近い単位）を消費して動作するため、使い方によっては驚くほど早くリミットに到達してしまう。 この記事では、同じ作業をより少ないトークンで完遂するための実践的なテクニックをまとめる。リミットを「節約する」というより「賢く使う」ための方法だ。   なぜすぐリミットに到達するのか  Claude Codeのトークン消費が多くなる主な原因は以下のとおりだ。    コンテキストウィンドウに大量のファイルが読み込まれている    漠然とした指示で何度も",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプトエンジニアリング"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-09T03:47:04.573Z",
+      "markdown_path": "data/notebooklm_sources/1796512267_Claude Codeのリミットをなるべく消費しない方法——長く使い続けるための実践テクニック｜東京 AI 研究所.md"
+    },
+    {
+      "id": "1796512245",
+      "url": "https://zenn.dev/nrs/articles/db4120beb0e601",
+      "title": "Claude Code や Codex をオーケストレーションして自動でレビュー FB ループを回して洗い物をしてる話",
+      "excerpt": "皆さんはもう AI コーディングツールを使っているでしょうか。Claude Code や GitHub Copilot、Cursor など、さまざまなツールが登場して、「AI がコードを書いてくれる時代」がやってきました。",
+      "summary": "",
+      "score": 90,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-09T03:52:18.579Z",
+      "markdown_path": "data/notebooklm_sources/1796512245_Claude Code や Codex をオーケストレーションして自動でレビュー FB ループを回して洗い物をしてる話.md"
+    },
+    {
+      "id": "1796512220",
+      "url": "https://qiita.com/noujiru/items/eb346d22aef782ee8619",
+      "title": "Claude Code エージェント管理を全自動化するパイプラインを作った - Qiita",
+      "excerpt": "Claude Code エージェント管理を全自動化するパイプラインを作った",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-09T03:54:29.087Z",
+      "markdown_path": "data/notebooklm_sources/1796512220_Claude Code エージェント管理を全自動化するパイプラインを作った - Qiita.md"
+    },
+    {
+      "id": "1796512194",
+      "url": "https://note.com/ai_jissennkai/n/naaa2cb5ba613",
+      "title": "Claude Code Skillsで記事作成を「自動化」した話 ── Skills + Githubで育てるコンテンツ運営｜AIで何でもできると勘違いして解決する部",
+      "excerpt": "こんにちは。AIで勘違いして何でも作ってみる部です。  「AIに記事を書かせたら、すごく一般的な内容が出てきた」── そんな経験、ありませんか？  私たちもそうでした。ChatGPTやGemini・Claude等のAIに「○○について記事を書いて」と入力して、出てきた文章にがっかりした経験は何度もあります。  でも今は、Claude Code Skillsという仕組みを使って、記事作成を「仕組み化」しています。  この記事では、私たちが実際に構築・運用している記事作成システムの全体像を紹介します。  Skillsとは何か、Gitでナレッジを育てるとはどういうことか、noteの下書きまで",
+      "summary": "",
+      "score": 68,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "自動化パイプライン",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-09T03:57:02.470Z",
+      "markdown_path": "data/notebooklm_sources/1796512194_Claude Code Skillsで記事作成を「自動化」した話 ── Skills + Githubで育てるコンテンツ運営｜AIで何でもできると勘違いして解決する部.md"
+    },
+    {
+      "id": "1796512179",
+      "url": "https://qiita.com/pythonista0328/items/7a0833e9484b40586f0f",
+      "title": "【実践】Claude Codeの開発速度を2倍にする10のTips - Qiita",
+      "excerpt": "【実践】Claude Codeの開発速度を2倍にする10のTips",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "自動化"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-09T04:00:10.357Z",
+      "markdown_path": "data/notebooklm_sources/1796512179_【実践】Claude Codeの開発速度を2倍にする10のTips - Qiita.md"
     }
   ]
 }
