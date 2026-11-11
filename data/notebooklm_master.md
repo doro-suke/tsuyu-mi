@@ -1,5 +1,5 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/11/10 5:31:03
+最終更新日: 2026/11/11 3:42:58
 対象記事数: 50 件 (未読かつHigh優先度)
 
 ---
@@ -12481,7 +12481,1714 @@ SessionStart の8段階
 
 ---
 
-## 32. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
+## 32. [Loop Engineering入門：AIコーディングエージェントを動かすシステムを設計する](https://zenn.dev/suwash/articles/loop-engineering_20260610)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/11/11
+- **タグ**: #AI駆動開発, #エージェントアーキテクチャ, #ClaudeCode
+
+### 本文
+Loop engineering は、AI コーディングエージェントを手動で逐次プロンプトする代わりに、エージェントを自律的にプロンプト・オーケストレートするシステムを設計する実践方法論です。本記事は方法論として、構成要素・論理構造・データモデル・実装パターン・運用・限界を整理します。
+
+調査日: 2026-06-10 / 対象リポジトリ: cobusgreyling/loop-engineering / 起点記事: Addy Osmani "Loop Engineering"（2026-06-07）
+
+
+この記事の全体像。以下、順に解説します。
+
+ 概要
+Loop engineering は、設計対象を「個々のプロンプト」から「ループ（システム）」へ移行させる方法論です。エンジニアがエージェントへ毎ターン指示するのではなく、エージェントへ指示するシステムそのものを設計します。
+ループとは、ゴール達成または人間へのハンドオフまで反復する制御単位です。AI がサブエージェント・検証・外部状態を組み合わせ、目的を満たすまで自律的に回します。
+Boris Cherny（Anthropic の Claude Code 責任者、Head of Claude Code at Anthropic）はこの転換を次のように表現しています。
+
+"I don't prompt Claude anymore. I have loops running that prompt Claude and figuring out what to do. My job is to write loops"
+
+Peter Steinberger も同様に述べています。
+
+"You shouldn't be prompting coding agents anymore. You should be designing loops that prompt your agents."
+
+この概念は Addy Osmani（Google のソフトウェアエンジニア、Google Cloud / Gemini を担当）が 2026 年 6 月 7 日の記事 "Loop Engineering" で体系化したことで広く普及しました。Cobus Greyling がその実践的なリファレンスリポジトリ（cobusgreyling/loop-engineering）を整備し、パターン集・チェックリスト・CLI ツールを提供しています。
+
+ なぜ今登場したか
+AI エンジニアリングは以下の段階を経て進化してきました。
+
+
+
+要素名
+説明
+
+
+
+
+オートコンプリート 2023
+補完ベースの AI 支援
+
+
+プロンプトでコード生成 2024
+人間が逐次プロンプトを入力する
+
+
+並列エージェント実行 2025
+複数エージェントを手動で管理する
+
+
+自己プロンプトループ 2026
+システムがエージェントを自律的にプロンプトする
+
+
+
+単一セッションで完結しない複雑なタスク（継続的インテグレーション監視、依存関係管理、PR レビュー等）では、逐次プロンプトは非効率です。ループ設計により、スケジューリング・状態管理・検証・エスカレーションを人間の介在なしに実行できます。
+ReAct（Reason + Act、Yao らが 2022 年に提唱）が「一回のエージェント推論サイクル」を定義したのに対し、loop engineering はその外側にある「複数サイクルを束ねる制御システム全体の設計」を対象とします。系譜としては、ReAct が推論と行動のインターリーブを、SWE-agent / Devin 等が単一タスクの自律解決を扱ってきたのに対し、loop engineering は「複数の自律ループを協調・統治するメタ設計」に焦点を移した点が新しさです。
+
+ Prompt Engineering / Context Engineering との比較
+
+
+
+観点
+Prompt Engineering
+Context Engineering
+Loop Engineering
+
+
+
+
+設計対象
+個々のプロンプト文
+モデルウィンドウの中身（ドキュメント・履歴・ツール定義）
+ループ全体の制御システム
+
+
+介入タイミング
+ターンごとに人間が入力する
+各レスポンス前にコンテキストを整備する
+スケジュール駆動で自律実行する
+
+
+成果物
+最適化されたプロンプト文
+コンテキスト管理の仕組み
+ゴール達成まで自走するシステム
+
+
+人間の関与
+ターンごとに必須
+レスポンスごとに必須
+例外・承認ゲートのみ
+
+
+状態管理
+なし（ステートレス）
+セッション内のみ
+外部永続化（セッション横断）
+
+
+自律性
+なし
+なし
+スケジュールから完全自律まで段階的
+
+
+スタック関係
+基盤層
+中間層（プロンプトを含む）
+最上位層（コンテキスト・プロンプトを包含）
+
+
+
+これらの層は相互排他ではなく積み重なります。ループはプロンプトで構成されるため、ループ内のずさんなプロンプトはずさんな作業を速く生産するだけになります。
+
+ 特徴
+
+ 1. 再帰的ゴール（Recursive Goal）
+ループはゴールを定義し、検証条件を満たすまでエージェントが自律的に反復します。単一ターンの完結ではなく、複数サイクルにわたる収束が前提です。
+
+ 2. 自己プロンプト（Self-Prompting）
+人間がプロンプトを入力するのではなく、システム（オートメーション）が何をいつプロンプトするかを決定します。これがループをエンジニアリングの対象にする本質です。
+
+ 3. Maker-Checker 分離（Sub-agents）
+実装エージェント（Maker）と検証エージェント（Checker）を分離します。実装者が自分の成果を採点する自己評価バイアスを構造的に排除します。
+本記事では Maker = Implementer = 実装者、Checker = Verifier = 検証者として扱います。以降は原則「実装者 / 検証者」で統一し、CLI 例や引用部分のみ英語表記を残します。
+
+ 4. 段階的自律（L1 → L2 → L3）
+自律度の段階を Autonomy Tier（自律ティア）と呼びます。以降の見出し・表では「自律ティア」で統一します。
+
+
+
+要素名
+説明
+
+
+
+
+L1 Report
+分析結果を人間がレビューする。自動修正なし。トークンコスト最小
+
+
+L2 Assisted
+修正案を機械が提示し、人間がゲートを通過させる
+
+
+L3 Unattended
+拒否リスト（denylist）の制約内で完全自律実行する
+
+
+
+
+ 5. 外部状態管理（Memory / State）
+エージェントはセッション間で記憶を持ちません。ループは Markdown ファイル・課題トラッカー・永続ストアに状態を書き出し、次のサイクルがその状態を読み込みます。
+
+ 6. トークンコストの増大
+高頻度・高自律ループはトークン消費を増大させます。PR Babysitter（常時監視）は Daily Triage（日次）に比べコストが大幅に高くなります。設計段階でコストと自律レベルのトレードオフを計画することが必要です。
+
+ 7. Comprehension Debt（理解負債）
+ループの生成速度がコードレビュー速度を上回ると、コードベースへの実際の理解が追いつかなくなります。自動化はジャッジメントを削除するのではなく、レバレッジポイントを移動させます。
+
+ 構造
+loop engineering の論理構造を C4 モデルの読み替えで記述します。各図はコンポーネント名と責務のみを示します。
+
+ システムコンテキスト図
+アクターと loop engineering システム本体、外部システムの関係を示します。
+
+ アクター
+
+
+
+要素名
+説明
+
+
+
+
+開発者
+ループの目的・スキル・状態スキーマを設計する人間
+
+
+SRE
+トークン予算・スケジュール・停止基準を管理する人間
+
+
+レビュアー
+ヒューマンゲートで最終承認を行う人間
+
+
+
+
+ 外部システム
+
+
+
+要素名
+説明
+
+
+
+
+CI/CD 基盤
+ビルド・テスト・デプロイの実行環境
+
+
+Git ホスト
+リポジトリ・ブランチ・PR の管理先
+
+
+チケット管理
+作業単位の発見・更新・クローズ先
+
+
+MCP 連携先
+Model Context Protocol 経由で接続するツール群
+
+
+LLM プロバイダ
+エージェントが利用する推論サービス
+
+
+
+
+ コンテナ図
+ループを構成する主要プリミティブ（コンテナ）とその依存関係を示します。
+
+
+
+要素名
+説明
+
+
+
+
+Automations / Scheduling
+定期または条件に基づいてループをトリガーする制御層
+
+
+Worktrees
+並列実行を安全に行うための隔離されたコピー作業空間
+
+
+Skills
+作業手順・ドメイン知識を永続化した再利用可能な知識単位
+
+
+Plugins / Connectors - MCP
+MCP プロトコルを通じて外部サービスやツールと接続する統合レイヤ
+
+
+Sub-agents
+実装担当（Implementer）と検証担当（Verifier）に役割を分離したエージェント群
+
+
+Memory / State
+セッションをまたいで状態を保持する外部永続ストア（ファイル・DB）
+
+
+
+
+
+ コンポーネント図
+ループの実行フロー（アナトミー）を構成するコンポーネントと制御の流れを示します。
+
+
+
+要素名
+説明
+
+
+
+
+Schedule / Automation
+定時または条件トリガーでループの起点となる制御
+
+
+Triage Skill
+受信した作業を評価し優先度を付けて実行可否を判断するスキル
+
+
+Read / Write State
+外部永続ストアへの状態読み書き。セッション間の連続性を保証する
+
+
+Isolated Worktree
+主ブランチを汚染しない独立した実行空間。実験後に廃棄できる
+
+
+Implementer Sub-agent
+コード変更・修正を担当する実装特化エージェント
+
+
+Verifier Sub-agent
+実装結果をテスト・検査する検証特化エージェント。実装担当と分離することで自己採点を防ぐ
+
+
+MCP / Git / Tickets
+CI 結果取得・PR 作成・チケット更新を行う外部コネクタ群
+
+
+Human Gate
+変更の危険度を判定し自動適用と人間承認への分岐を制御するゲート
+
+
+Auto-commit / PR
+安全と判定された変更を自動でコミット・PR 作成する自動適用パス
+
+
+Escalate to Human
+高リスク変更を人間レビューキューへ転送する昇格パス
+
+
+
+
+
+ 自律度ごとのゲート構成図
+Human Gate は自律度ティア（L1 / L2 / L3）によって構成が変わります。
+
+
+
+要素名
+説明
+
+
+
+
+L1 - レポートのみ
+Implementer / Verifier を起動しない。Triage が状態を書き込み、すべての判断を人間に委ねる
+
+
+L2 - アシスト修正
+Implementer と Verifier を起動する。テスト通過時でも PR 作成までで停止し、マージは人間が行う
+
+
+L3 - 無人実行
+除外リスト（denylist）の外にある変更に限り Auto-commit まで自動実行する。除外リスト内は人間キューへ昇格する
+
+
+
+
+ Maker-Checker と Human Gate の構造的役割
+Implementer と Verifier は同一エージェントにしません。Implementer が自身の成果物を検証すると自己採点になり、エラーを見逃す確率が高まります。Verifier を別エージェントに分離し、テスト実行・CI 結果確認・品質ゲートを独立した視点で適用します。この分離は無人実行時の品質保証の基盤になります。
+Human Gate は変更の危険度を path allowlist と denylist の両方で判定します。L3 では allowlist 内かつ denylist 非該当の変更のみ Auto-commit / PR へ直進し、denylist 該当・allowlist 外・大規模リファクタ・新パターン追加は人間レビューキューへ転送されます。L1 では Gate 自体が存在せず全件を人間に回します。L2 では Gate はあるが自動マージを行いません。L3 では Gate が安全判定した変更のみ自動適用します。
+
+ データ
+loop engineering が扱う概念をモデル化します。方法論のため明示的な ER 図はなく、登場する概念を一次ソースから抽出して構成します。
+
+ 概念モデル
+
+
+
+要素名
+説明
+
+
+
+
+Loop
+再帰的ゴール駆動の自動化単位。AI・サブエージェント・検証・外部状態を組み合わせて完了または人手ハンドオフまで反復する
+
+
+Automations / Scheduling
+ループをトリガーするスケジュールおよびイベント駆動の自動化機構
+
+
+Worktree
+サブエージェントが安全に並列実行するための隔離 git 環境
+
+
+Skill
+ループ間で再利用可能なプロジェクト固有の知識・手順
+
+
+Plugins and Connectors
+MCP を介して外部ツールやシステムへ到達するアダプタ
+
+
+Sub-agent
+Maker（実装）と Checker（検証）の役割を担うエージェント。ループ内で分業する
+
+
+Memory / State
+ループ実行をまたいで状態を永続化する外部ストア
+
+
+Autonomy Tier
+ループの自律度合いを L1 から L3 で段階定義する分類
+
+
+Human Gate
+高リスク操作の前に人手承認を必須とする制御ポイント
+
+
+Denylist
+Human Gate が拒否する操作・パッケージ・パターンの列挙
+
+
+Artifact
+ループが生成する成果物（ドキュメント・スコア・ワークフロー定義など）
+
+
+State
+STATE.md に代表されるループの現在状態スナップショット
+
+
+Pattern
+ループの典型的な適用パターン。cadence・risk・cost を台帳的に定義する
+
+
+
+
+ 情報モデル
+
+
+
+要素名
+説明
+
+
+
+
+Loop.cadence
+実行間隔（例: 1d、5-15m）。Pattern から継承する場合がある
+
+
+Loop.risk_level
+リスク分類（L1 / L2）。Autonomy Tier と対応する
+
+
+Loop.autonomy_tier
+L1 から L3 のいずれか。ループが何を自律実行できるかを規定する
+
+
+Loop.handoff_trigger
+人手ハンドオフを発動する条件（設計判断・大規模リファクタ等）
+
+
+Loop.token_cost
+トークン消費量の相対評価（Low / Medium / High / Very High）
+
+
+AutonomyTier.level
+L1（Report）/ L2（Assisted）/ L3（Unattended）の列挙
+
+
+AutonomyTier.label
+各段階の短縮名称
+
+
+AutonomyTier.description
+各段階で AI が許可される行動範囲の定義
+
+
+Primitive.type
+Automations / Worktrees / Skills / Plugins / Sub-agents / Memory の列挙
+
+
+Primitive.job
+そのプリミティブの責務
+
+
+Primitive.storage_format
+永続化形式（Markdown / JSON / TOML など）。一次ソース未記載・実装/docs から補完
+
+
+Primitive.invocation_method
+名前指定・暗黙マッチング等の起動方式。一次ソース未記載・実装/docs から補完
+
+
+Skill.file_format
+
+SKILL.md 形式
+
+
+Skill.storage_scope
+project-level / user-level の保存スコープ
+
+
+Worktree.lifecycle
+1 実験ごとに生成し検証 REJECT で破棄するサイクル
+
+
+Worktree.thread_model
+スレッド per ワークツリーの並列実行モデル
+
+
+SubAgent.role
+Maker（実装者）/ Checker（検証者）/ Triage の役割列挙
+
+
+SubAgent.model
+使用するモデル（Grok / Claude Code / Codex 等）。一次ソース未記載・実装/docs から補完
+
+
+State.readiness_score
+ループ準備スコア。閾値と現在値を持つ
+
+
+State.update_trigger
+更新トリガー（daily-triage ワークフローによる定期更新）
+
+
+State.recent_noise
+フィルタ済みの非アクション項目一覧
+
+
+State.acting_on
+現在処理中のアイテム識別子。Multi-loop の衝突検出でピア間が照合する
+
+
+Artifact.type
+ドキュメント / スコア / ワークフロー定義 / レポートの列挙
+
+
+Pattern.gate_condition
+このパターンを適用すべき状況条件
+
+
+Pattern.overlap_rule
+他パターンと並行実行する際の制約
+
+
+HumanGate.trigger_condition
+ゲートを発動する条件（リスク判定・Denylist 一致等）
+
+
+HumanGate.escalation_context
+人手に渡す際に添付するコンテキスト情報
+
+
+Denylist.entries
+禁止対象の列挙（パッケージ名・操作種別・パターン名など）
+
+
+Denylist.scope
+適用範囲（依存関係 / コード領域 / 操作種別）。一次ソース未記載・実装/docs から補完
+
+
+
+
+ 構築方法
+
+ 前提条件
+loop engineering を導入する前に、以下の環境を整備します。
+
+
+
+要素
+内容
+
+
+
+
+git ホスト
+GitHub（GitHub Actions との連携が前提）
+
+
+Node.js
+loop-init / loop-audit の実行に必要
+
+
+エージェントランタイム
+Claude Code / OpenAI Codex / Grok のいずれか
+
+
+MCP（任意）
+GitHub MCP、Slack / Linear MCP など（L1 では省略できる）
+
+
+
+概念的な前提は以下のとおりです。
+
+外部状態ファイル（STATE.md など）の設計
+スキル（SKILL.md）によるプロジェクト規約の文書化
+maker / checker（実装者と検証者の分離）パターンの理解
+worktree 隔離による並列実行の理解
+
+
+ loop-audit によるレディネス評価
+既存リポジトリに loop を導入する前に loop-audit でスコアリングします。
+# リポジトリのレディネスをスコアリングする
+npx @cobusgreyling/loop-audit /path/to/your/repo
+
+# 改善提案付きで表示する（テンプレートからのコピーコマンドを提示）
+npx @cobusgreyling/loop-audit /path/to/your/repo --suggest
+
+# JSON 出力（CI 組み込み用）／ Markdown レポート出力
+npx @cobusgreyling/loop-audit /path/to/your/repo --json > audit.json
+npx @cobusgreyling/loop-audit /path/to/your/repo --md > audit.md
+主なフラグは --json / --md / --suggest（--fix も同義）です。CLI の exit code はスコア 40 以上で 0、40 未満で 2、実行エラーで 1 を返します。
+スコアと自律ティアの対応（tools/loop-audit/src/auditor.ts の computeScore を根拠とする 4 段階）は以下のとおりです。
+
+
+
+要素名
+説明
+
+
+
+
+L0（スコア 38 未満）
+導入前。SKILL.md・STATE.md を先に整備する
+
+
+L1（スコア 38 以上 + state file）
+レポートのみ運用ができる
+
+
+L2（スコア 58 以上 + triage skill）
+小規模な自動修正を検証付きで行える
+
+
+L3（スコア 78 以上 + verifier + state file）
+明示的なゲートつきで無人実行を検討できる
+
+
+
+
+ loop-init による scaffolding
+# daily-triage パターンを Grok で scaffolding する
+npx @cobusgreyling/loop-init . --pattern daily-triage --tool grok
+
+# Claude Code を使う場合
+npx @cobusgreyling/loop-init . --pattern daily-triage --tool claude
+
+# Codex を使う場合
+npx @cobusgreyling/loop-init . --pattern daily-triage --tool codex
+loop-init は以下のファイルを生成します（生成物は tools/loop-init/ を参照）。
+
+
+STATE.md — ループの状態ファイル（High Priority / Watch List セクション）
+トリアージスキル（エージェントランタイムに応じた配置）
+検証者サブエージェント定義
+
+LOOP.md — ループ設計の正本
+
+
+ pattern-picker によるパターン選択
+導入するループが決まらない場合は docs/pattern-picker.md の意思決定フローを使います。
+
+
+
+パターン
+推奨 cadence
+初期ティア
+トークンコスト
+
+
+
+
+Daily Triage
+1 日 - 2 時間
+L1
+低
+
+
+PR Babysitter
+5-15 分
+L1 → L2
+高
+
+
+CI Sweeper
+5-15 分
+L2
+非常に高
+
+
+Dependency Sweeper
+6 時間 - 1 日
+L2
+中
+
+
+Post-Merge Cleanup
+1 日 - 6 時間
+L1
+低
+
+
+Changelog Drafter
+1 日 / タグトリガー
+L1
+低
+
+
+
+迷ったときは Daily Triage の L1 から始めます。state discipline を学べ、auto-merge リスクがありません。
+
+ 最初の L1 ループ立ち上げ
+Daily Triage を例に、最小構成で立ち上げます。
+# Step 1: State ファイルを作成する
+printf '# Loop State\n\nLast run: never\n\n## High Priority\n\n## Watch List\n\n## Recent Noise (ignored this run)\n' > STATE.md
+
+# Step 2: トリアージスキルを配置する（正規手順は loop-init。以下は手動配置の代替）
+mkdir -p .claude/skills/loop-triage
+cp templates/SKILL.md.loop-triage .claude/skills/loop-triage/SKILL.md
+
+# Step 3: audit で L1 ゲートを確認する
+npx @cobusgreyling/loop-audit . --suggest
+スコアが L1 ゲートを満たせば L1 運用を開始できます。
+
+ 利用方法
+
+ 必須パラメータの整理
+ループを起動する前に、以下のパラメータを確定します。
+
+
+
+パラメータ
+説明
+L1 例
+L2 例
+
+
+
+
+cadence
+実行間隔
+1d
+15m
+
+
+risk level
+自律ティア
+L1（レポートのみ）
+L2（worktree 修正あり）
+
+
+gating
+人間のゲート条件
+全アクションを人間が判断
+verifier 承認後のみ auto-PR
+
+
+verifier
+検証者サブエージェント
+不要（L1）
+必須（L2 以上）
+
+
+denylist
+自動変更の禁止パス
+—
+auth / payment / secrets / インフラ
+
+
+state file
+状態ファイルパス
+STATE.md
+パターン固有の state md
+
+
+max attempts
+1 アイテムあたりの最大試行数
+—
+3 回
+
+
+
+
+ skill / starter の使い方
+Claude Code では /loop コマンドでループを起動します。
+L1 レポートのみ（Week 1）:
+/loop 1d Run $loop-triage. Read STATE.md. Merge findings into High Priority and Watch List. Update Last run. Do not edit code.
+L2 自動修正（Week 3 以降）:
+/loop 1d Run $loop-triage. For high-priority items that are single-file bugfixes: spawn implementer in worktree, then verifier agent. Update STATE.md. Escalate ambiguous items.
+CI Sweeper（15 分ごと）:
+/loop 15m $ci-triage — update ci-sweeper-state.md. Classify failures first. Fix only clear regressions in a worktree with verifier. Max 3 attempts. Escalate infra and security test failures.
+Dependency Sweeper（6 時間ごと）:
+/loop 6h $dependency-triage — patch-only with verifier in worktree. Update dependency-sweeper-state.md. Escalate majors and high-severity CVEs.
+PR Babysitter（5 分ごと）:
+/loop 5m For each open PR I care about: triage CI and reviews. Propose minimal fixes in worktree. Verifier agent must approve before commenting. Update pr-babysitter-state.md. Max 3 attempts per PR.
+Changelog Drafter（日次またはタグトリガー）:
+/loop 1d Run $changelog-drafter. Read merged PRs since the last tag from git log. Draft a RELEASE_NOTES_DRAFT.md entry grouped by feat/fix/chore. Do not push. Update changelog-state.md.
+単一の到達状態を一発で満たすワンショット実行には /goal を使います。
+/goal PR #1234 has green CI, no blocking review comments, and is rebased on main
+
+ worktree 隔離の設定
+自動修正を行う L2 以上のループでは、worktree 隔離が必須です。Claude Code では subagent のフロントマターに isolation: worktree を指定します（実装例。examples/claude-code/ を参照）。
+---
+isolation: worktree
+---
+You are an implementer. Work only in your isolated worktree.
+After completing the fix, signal the verifier. Do not merge directly.
+
+
+isolation: worktree を subagent のフロントマターに指定する
+1 アイテム = 1 worktree を原則とする
+verifier が REJECT した場合、または人間がエスカレーションした場合は worktree を破棄する
+
+LOOP.md の worktree 運用ルールは以下のとおりです。
+
+unattended でのコード変更実験はすべて isolated git worktree で行う
+タスク完了または手動エスカレーション後に worktree を削除する
+
+
+ GitHub Actions による定期起動
+GitHub Actions は、エージェントランタイムが常時起動していない環境でループを継続するために使います。以下は examples/github-actions/ をベースにした実装例です。エージェント起動ステップはプレースホルダー（ランタイムを差し込む設計）です。
+# 実装例 — examples/github-actions/daily-triage.yml をベースに改変
+name: Daily Triage Loop
+
+on:
+  schedule:
+    - cron: '0 8 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  checks: read
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Gather CI context
+        run: gh run list --limit 10 --json conclusion,name,headBranch,createdAt
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Ensure STATE.md exists
+        run: |
+          if [ ! -f STATE.md ]; then
+            printf '# Loop State\n\nLast run: never\n\n## High Priority\n\n## Watch List\n' > STATE.md
+          fi
+
+      # ここをエージェントハーネスに置き換える（以下は実装案の 3 通り）
+      # 案1: Codex CLI headless（GitHub Actions 上で直接実行）
+      #   run: codex exec --skip-git-repo-check "Run loop-triage. Update STATE.md. Report only."
+      # 案2: repository_dispatch で外部ランナー（常駐エージェント）を呼ぶ
+      #   run: gh api repos/${{ github.repository }}/dispatches -f event_type=run-loop-triage
+      # 案3: 自前スクリプトでエージェントを起動する
+      #   run: ./scripts/run-loop.sh loop-triage --state STATE.md --report-only
+      - name: Run triage agent
+        run: |
+          echo "Prompt: Run loop-triage skill. Update STATE.md. Report only unless L2 enabled."
+
+      - name: Upload state artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: loop-state
+          path: STATE.md
+          if-no-files-found: ignore
+CI Sweeper はワークフロー失敗をトリガーに起動します。
+# 実装例 — examples/github-actions/ci-sweeper.yml をベースに改変
+name: CI Sweeper Loop
+
+on:
+  workflow_run:
+    workflows: ['*']
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: read
+
+jobs:
+  sweep:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Record failure context
+        run: |
+          echo "Failed: ${{ github.event.workflow_run.name }}"
+          echo "Branch: ${{ github.event.workflow_run.head_branch }}"
+
+      - name: Invoke fix agent
+        run: echo "Wire to agent: classify failure, worktree fix, verifier, open PR."
+エージェントの起動方法は「Codex CLI / API（CI 内 headless 実行）」「repository_dispatch で外部ランナー（Grok / Claude）を呼ぶ」「カスタムスクリプト（ルールベースの triage のみ。L0 限定）」の 3 通りです（examples/github-actions/README.md より）。
+
+ maker / checker サブエージェントの構成
+maker（実装者）と checker（検証者）を別のエージェントセッションで走らせることで、自己承認を防ぎます（実装例。examples/claude-code/ を参照）。
+実装者エージェント:
+---
+isolation: worktree
+---
+You are an implementer sub-agent for loop-engineering.
+Apply only the specific fix described in the task.
+Do not self-merge. Signal the verifier when done.
+検証者エージェント:
+You are an adversarial reviewer.
+Run the test suite, check the diff against CONVENTIONS.md,
+and reject anything that is not verifiably done.
+Use a fresh context — do not share memory with the implementer.
+Report APPROVE or REJECT with reasons.
+maker / checker の設計原則（docs/loop-design-checklist.md より）は以下のとおりです。
+
+実装者は自分の成果物を承認できない
+検証者は独立したテスト実行で確認する（実装者のセッションを再利用しない）
+検証者には強力なモデルを使うことを推奨する
+stop condition の評価にも fresh model を使う
+
+
+ 自律ティアを上げる手順（L1 → L2 → L3）
+段階的ロールアウトが必須です。本番リポジトリで新パターンの L1 をスキップしません（docs/operating-loops.md より）。
+
+
+
+ティア
+内容
+維持期間の目安
+
+
+
+
+L1（レポートのみ）
+レポートと STATE.md の更新だけを行う。コードへの自動変更なし。人間が毎回の出力を確認する
+1-2 週間
+
+
+L2（検証付き自動修正）
+worktree で修正し verifier 承認時のみ PR を作成する。auto-merge はパス allowlist 限定。試行上限 3 回
+安定後に L3 検討
+
+
+L3（無人運用）
+denylist・予算上限・人間ゲートが機能していることを確認後に移行する。観測性を強化する
+条件達成後のみ
+
+
+
+L1 → L2 移行チェックリスト（docs/loop-design-checklist.md より）:
+
+
+
+項目
+確認内容
+
+
+
+
+state 設計
+state file スキーマが文書化されている
+
+
+スキル整備
+SKILL.md に build / test コマンドが記載されている
+
+
+maker / checker
+実装者と検証者が別セッションになっている
+
+
+denylist
+auth・payments・secrets・インフラが明記されている
+
+
+auto-merge allowlist
+auto-merge 可能なパスを allowlist で制限している
+
+
+コスト上限
+日次トークン上限と最大サブエージェント数が設定されている
+
+
+ログ
+run start / findings / actions / escalations を記録している
+
+
+
+
+ 運用
+
+ 稼働中ループの監視
+稼働中ループの健全性は、以下の 4 軸で継続的に計測します。
+
+
+
+軸
+計測値
+警戒閾値
+
+
+
+
+トークンコスト
+token-per-task（タスク単位コスト）
+ベースラインの 2 倍超
+
+
+実行回数
+loop iterations（同一アイテムへのリトライ数）
+同一対象に 3 回超
+
+
+成功率
+completion rate / false positive rate
+false positive 30% 超
+
+
+コンテキスト利用率
+context window 占有率
+85% 超
+
+
+
+各ループ実行時は、以下のフィールドをログに記録します（loop-run-log.md または JSON）。
+run_id: 20260610-001
+pattern: daily-triage
+duration_sec: 42
+findings: 3
+actions: 1
+escalations: 0
+token_estimate: 18000
+outcome: completed
+週次ダッシュボードで追跡する集計指標は、実行完了数・自動修正提案数・人手エスカレーション数・false positive 率・平均検知時間（MTTA）・ループ別トークン消費量です。
+トークンコストは二次関数的に拡大しがちです。naive に毎ステップ全会話履歴を再送し、各ステップの追加コンテキスト量が同程度と仮定すると、累積コストは概算で 1 ステップ分の N(N+1)/2 倍に近づきます（context reset・要約・prompt caching を入れると緩和されます）。この特性を踏まえ、コスト監視を必須とします。
+
+ STATE.md の週次レビュー
+STATE.md はループの外部記憶（durable spine）として機能します。ループが停止しても状態は残りますが、放置するとクローズ済みチケットや解決済み PR への参照が蓄積し、state rot（状態腐敗）が発生します。
+週次レビューの手順は以下のとおりです。
+
+
+STATE.md の全アイテムをライブ API（GitHub / Linear）で実在確認する
+クローズ済みアイテムを削除または done セクションへ移動する
+48 時間以内に 2 回以上エスカレーションされたアイテムを人手インボックスに移す
+
+LOOP.md と照合し、各ループの cadence・停止条件が実態と一致しているか確認する
+週次サマリを loop-run-log.md に追記する
+
+
+ ループの停止と再開
+状況に応じて 3 段階の対応を使い分けます。
+
+
+
+段階
+トリガー例
+
+
+
+
+速度を落とす（Slow Down）
+トークン予算が週半ばで 80% 超 / false positive 30% 超 / リリースフリーズ期間
+
+
+一時停止（Pause）
+本番インシデント発生中 / 破壊的スキーママイグレーション / auto-merge 有効でレビュアー不在
+
+
+完全停止（Kill）
+S2 以上の障害が反復 / 2 週連続でコスト対価値比が逆転 / イベント駆動の代替手段が登場
+
+
+
+停止基準は LOOP.md に明記します。
+## 停止条件
+- token_daily_budget: 2,000,000
+- pause_at_budget_pct: 80
+- kill_on_consecutive_s2_failures: 2
+- kill_on_cost_inversion_weeks: 2
+
+ Autonomy Tier の昇降
+ループのリスクレベルは L1 → L2 → L3 の 3 段階で管理します。昇格は慎重に、降格は即座に行います。
+昇格の前提条件は累積的です（下位層の前提が引き継がれます）。
+
+
+
+要素名
+説明
+
+
+
+
+L1 → L2
+1-2 週間の安定稼働。triage 精度を測定済み
+
+
+L2 → L3
+verifier 設置済み。path denylist 設定済み。token 予算設定済み。人手ゲート設置済み
+
+
+
+新しいパターンをプロダクションリポジトリに適用するときは、必ず L1 から開始します。L1 の検証なしに L2 以上を起動することは禁止します。
+
+ Multi-loop の協調
+複数のループが同一リポジトリを操作する場合、以下の 5 原則を適用します。
+
+ブランチ排他所有 — 1 ブランチにつき同時に操作できるループは 1 つのみとする
+状態ファイルの分離 — 各ループは専用の状態ファイルを持つ（例: state-triage.md / state-pr-watcher.md）
+役割の分離 — Triage ループは L1 でレポートのみ。Action ループは独立して実行し競合しない
+統一 denylist — 全ループが同一の path denylist を共有する
+予算の合算管理 — 全ループのトークン消費を合算して日次予算上限を管理する
+
+衝突検出は、各 Action ループが実行前にピア状態ファイルの acting_on フィールドを確認して行います。
+# ピア状態ファイルを確認して acting_on の重複を検出する
+grep -h "acting_on:" state-*.md | sort | uniq -d
+acting_on が重複している場合、後発のループが処理をスキップして run ログに記録します。優先順位は CI 失敗 → アクティブ PR → 依存関係アップデート → クリーンアップ → レポートの順です。推奨開始構成は Daily Triage / PR Babysitter / Post-Merge Cleanup の 3 ループです。
+
+ 人手ゲートの運用
+ゲートはループが止まって人間が判断する点であり、自律性と安全性のバランスを調整する主要な制御点です。ゲートを設ける状況の目安は以下のとおりです。
+
+medium-risk な変更（security / schema / public API の変更を含む）
+verifier が拒否理由ありと判定した変更
+同一アイテムへの 2 回目以上のエスカレーション
+auto-merge が有効なパスへの変更
+
+ゲートの通知先は Slack / Linear への Ping とし、状態ファイルの human_inbox セクションに待機アイテムを列挙します。ゲートの応答がない場合、ループは当該アイテムをスキップして次のサイクルに進みます（無限待機しません）。
+
+ ベストプラクティス
+
+ 段階的ロールアウト（L1 → L2 → L3）
+段階的導入の原則は「測定してから拡大する」です。
+Week 1-2: L1 Report-only
+  └─ triage 精度を計測（false positive 率 < 30% が目標）
+Week 3-4: L2 Assisted
+  └─ verifier 設置 + worktree 分離 + 小規模自動修正
+Week 5+: L2+ Connectors
+  └─ PR / チケット自動更新
+Month 2+: L3 Unattended（条件達成後のみ）
+  └─ denylist + 予算 + metrics + 人手ゲートがすべて確立済み
+新しいパターンを既存ループに追加するときも、同じ L1 → L2 の順序を踏みます。既存ループが L3 であっても、新機能は L1 から開始します。
+
+ Maker-Checker（Verifier 必須）
+単一エージェントによる自己検証は確証バイアス（confirmation bias）を生みます。コードを書いたエージェントと、それをレビューするエージェントは必ず分離します。
+Verifier の設計原則は以下のとおりです。
+
+デフォルトの姿勢を「拒否」とする（承認ではなく拒否する理由を探す）
+プロンプトに CI テスト出力と lint 結果を含める
+モデルは実行エージェントより強力なもの、または別系統のものを使う
+
+Verifier が承認しても CI が失敗する場合（Verifier Theater）は、verifier のプロンプトが曖昧か、テスト実行を省いていることが多いです。
+
+ 停止条件を First-Class に設計する
+ループを作るより先に、ループをどう止めるかを設計します。
+# LOOP.md の停止条件セクション（テンプレート）
+
+## 停止条件
+### ループ: daily-triage
+- slow_down: token_daily_pct > 80
+- pause: release_freeze == true
+- kill: consecutive_s2_failures >= 2 OR cost_inversion_weeks >= 2
+
+## 人手インボックス
+- escalation_channel: #eng-alerts
+- notify_on: escalation, s2_failure, kill_trigger
+停止条件なしに L3 を起動してはならない、を不変ルールとします。
+
+ Token 予算管理
+トークンコストは無制限に拡大する性質を持つため、予算管理を設計に組み込みます。
+
+日次上限を設定し、80% 到達で一時停止トリガーを用意する
+安価なモデルで triage パスを実行し、処理すべきアイテムがある場合のみサブエージェントを起動する
+アイテムが空のウォッチリストに対しては早期終了する（コスト削減の最大の機会）
+会話履歴のリセット（state reset）を phase 境界ごとに実施し、蓄積コストを抑える
+
+コスト圧縮パターンの効果比較は以下のとおりです（一般的なエージェント設計の参考値であり、loop engineering 固有の計測値ではありません）。
+
+
+
+パターン
+トークン削減率
+
+
+
+
+スコープ限定（サブエージェント分離）
+約 40%
+
+
+コーディネーター / スペシャリスト分離
+約 54%
+
+
+文脈トリミング（10-15 呼び出しごと）
+約 23%
+
+
+Prompt caching（固定系プロンプト）
+固定部のみ最大 90%
+
+
+
+
+ Denylist / MCP スコープ制約
+MCP コネクターは最小権限の原則に基づきます。
+# MCP 設定例（実装案）
+connectors:
+  github:
+    read: [repo, issues, pulls]
+    write: [pull_request_comments]
+    deny: [branch_protection, secrets, admin]
+
+path_denylist:
+  - "**/.env"
+  - "**/credentials*"
+  - "**/secrets*"
+  - "**/migration/*.sql"
+  - "**/infrastructure/**"
+段階別の権限設定は以下のとおりです。
+
+
+
+要素名
+説明
+
+
+
+
+L1
+Read-only。PR コメントへの書き込みのみ許可する
+
+
+L2
+承認済み path への limited write。branch 作成を許可する
+
+
+L3
+allowlist 内パスへの write。auto-merge は allowlist 必須
+
+
+
+denylist は全ループで共有します。ループごとに個別 denylist を持つと、一部ループからの侵害が検知されなくなります。
+
+ Security（最小権限化）
+無人自動化は攻撃対象領域を広げます。以下を必ず実施します。
+
+クレデンシャル・.env・シークレットファイルを denylist に含める
+シークレットがログに出力されないことを確認する
+allowlist 外のパスへの変更は人手レビューを必須とする
+依存関係の初回更新は auto-merge しない（supply chain attack 対策）
+コネクターのトークンは短命・タスクスコープ型にする（長命な広権限トークンを避ける）
+
+
+ Comprehension Debt の管理
+ループの速度が上がるほど、人間の理解が追いつかない Comprehension Debt（理解債務）が蓄積します。放置すると Cognitive Surrender（認知的降伏）に至り、チームがループの出力をそのまま受け入れる状態になります。
+防止策は以下のとおりです。
+
+週次ダイジェストを義務化し、auto-merge された変更を人間が定期的にレビューする
+medium-risk 以上の変更には人手ゲートを設ける
+「ループが解決した」ではなく「チームがループを使って解決した」という姿勢を維持する
+成功指標を処理量ではなく品質に紐付ける
+
+Cognitive Surrender に陥っていないかは、以下の判定基準で確認します。
+
+週次レビューで auto-merge された変更を 1 件ずつ自分の言葉で要約できるか
+変更の意図と根拠を、ループの出力に頼らず説明できるか
+ループが承認した変更に後追いの Revert が 2 週連続で発生していないか（発生したら当該ループを L2 へ降格する）
+
+
+ トラブルシューティング
+
+ 頻出 Failure Mode 一覧
+
+
+
+症状
+原因
+対処
+
+
+
+
+同一 PR に 5 回以上自動修正が適用される
+Verifier が弱い、または根本原因の診断が誤っている（Infinite Fix Loop）
+リトライ上限を 3 回に設定。より強力なモデルで Verifier を置き換える
+
+
+CI が通らないのに Verifier が承認する
+Verifier プロンプトが曖昧。テスト実行を省略している（Verifier Theater）
+プロンプトに「拒否する理由を探す」フレーミングを追加。テスト / lint 出力を必須化する
+
+
+
+STATE.md にクローズ済みチケットが増殖する
+pruning ステップなし。複数ループが同一ファイルを書き込む（State Rot）
+実行ごとにクローズ済みアイテムを削除。ループごとにファイルを分離する
+
+
+変更内容の意図がチームに理解されなくなる
+auto-merge 範囲の拡大。週次レビューの省略（Comprehension Debt Spiral）
+週次ダイジェストを義務化。medium-risk の auto-merge を人手ゲートに戻す
+
+
+チームが「ループが何とかする」と思い始める
+品質指標なしの量的メトリクス優先（Cognitive Surrender）
+KPI を品質に紐付ける。medium-risk 作業に人手ゲートを追加する
+
+
+同一ファイルへのマージコンフリクトが多発する
+worktree 分離なし。複数ループが同一ブランチを操作（Parallel Collision）
+
+isolation: worktree を設定。acting_on フィールドでピア確認を義務化する
+
+
+ループが無限リトライして通知も来ない
+attempt cap なし。サイレントエスカレーション設定（Escalation Failure）
+attempt cap を 3 に設定。Slack / Linear への Ping を escalation 時に送信する
+
+
+コストが週の途中で予算を超過する
+低コスト triage パスなし。空のウォッチリストへの処理継続（Token Burn）
+triage-first パターンに変更。早期終了ロジックを追加。日次予算 80% で一時停止する
+
+
+無関係なモジュールやファイルが変更される
+path denylist なし（Over-Reach）
+denylist を即時設定。変更ファイルが denylist 内かを verifier で確認する
+
+
+コンテキスト肥大化でエージェントの品質が劣化する
+会話履歴が無制限に蓄積（Context Rot）
+phase 境界でコンテキストリセット。10-15 呼び出しごとに文脈トリミングを実施する
+
+
+エスカレーション通知が多すぎてチームが無視する
+人手不要な更新も全件通知している（Notification Fatigue）
+人手アクションが必要な場合のみ通知。報告のみの更新はバッチ化する
+
+
+
+
+ Context Rot（コンテキスト腐敗）
+会話履歴が蓄積されるにつれモデルの実効性能が低下し、ループの後半ターンで提案の品質が低下します。phase 境界（triage → fix → verify の切り替え時）でコンテキストをリセットし、外部ファイル（STATE.md / git）に状態を引き渡します。10-15 ツール呼び出しごとに文脈トリミングを実施し、スペシャリストにはタスクスコープの文脈のみ渡します。
+
+ トークン爆発（Token Explosion）
+1 ステップごとに全会話履歴を再送する naive ループ、または空のウォッチリストへの継続処理が原因でコストが急増します。token-per-task を監視して 2 倍超でアラートを発火し、「アイテムなし → 即時終了」パスを実装します。安価なモデルで triage パスを通し、アクションが必要な場合のみ強力なモデルを起動します。
+
+ 無限ループ（Infinite Loop）
+attempt cap の未設定、または verifier の誤承認が自動修正を再トリガーすることで、同一アイテムへのリトライが収束しません。attempt cap を 3 に設定して上限到達時は人手インボックスにエスカレーションし、ループ cadence をサブ分単位にせず数分以上に設定します。kill switch を LOOP.md に明記します。
+
+ Verifier すり抜け
+Verifier プロンプトの曖昧さやテスト実行の省略、path denylist の未設定により、承認された変更が CI で失敗します。Verifier プロンプトを「拒否する理由を探す」フレーミングに変更し、CI テスト出力と lint 結果を必須入力にします。auto-merge を path allowlist 限定にし、allowlist 外は人手レビュー必須にします。
+
+ 競合する Multi-loop
+worktree 分離なし、acting_on フィールド未確認により、マージコンフリクトや状態ファイル破損が発生します。全 Action ループで isolation: worktree を設定し、実行前に全ピアの acting_on を確認して重複時はスキップします。状態ファイルをループごとに分離します。
+
+ コスト暴走
+予算上限の未設定、サブ分 cadence、triage パスなしによりトークン予算を大幅超過します。日次上限を設定して 80% 到達で自動一時停止し、triage パス（安価なモデル）→ action パス（強力なモデル）の 2 段構造にします。「アイテムなし → 即時終了」を実装し、cadence を 5-10 分以上に設定します。observability プラットフォームでリアルタイム監視します。
+
+ 限界と適用条件
+loop engineering は強力な方法論ですが、以下の点を過信しません。
+
+無人ループは無人ミスも生む。自動化はスループットを上げるが、判断の品質は保証しない
+ループは良い判断も悪い判断も増幅する。verifier が弱ければ、速度が上がるほど被害が広がる
+Verification は人間の責任。ループが承認したことは、人間が確認した代替にならない
+Comprehension Debt は静かに蓄積する。ループを高速化するほど、積極的な読書と週次レビューが必要になる
+コストは予測通りにいかない。token 消費の二次関数的性質を前提に予算設計する
+L3 は目標ではなく、条件が揃ったときの選択肢。多くのパターンは L2 で十分な価値を生む
+
+
+ まとめ
+Loop engineering は、AI コーディングエージェントを「手で動かす」段階から「動かすシステムを設計する」段階へ引き上げる方法論です。6 つのプリミティブと L1 → L3 の段階的自律、実装者・検証者の分離、停止条件の先行設計を押さえれば、暴走やコスト爆発を避けながら自動化のレバレッジを効かせられます。
+この記事が少しでも参考になった、あるいは改善点などがあれば、ぜひリアクションやコメント、SNSでのシェアをいただけると励みになります！
+
+ 関連記事
+
+
+5つのAIエンジニアリングを2軸3階層で整理する — Loop を、Prompt / Context / Harness / Graph との関係の中に位置づける
+
+AI Harness Engineering入門 — loop を回す実行層そのものを、責務と証跡の契約として定義する
+
+Context Engineering入門 — loop の各ターンでエージェントに何を渡すかを設計する
+
+プロンプトエンジニアリングの進化 — 各ターンの 1 回の model 呼び出しに与える指示を設計する
+
+
+ 参考リンク
+
+公式リポジトリ（cobusgreyling/loop-engineering）
+
+GitHub - cobusgreyling/loop-engineering
+README.md
+LOOP.md
+AGENTS.md
+STATE.md
+SECURITY.md
+
+
+概念・系譜
+
+Loop Engineering - Addy Osmani
+Loop Engineering - Addy Osmani (Substack)
+Loop Engineering - Cobus Greyling (Medium)
+docs/concepts.md
+docs/primitives-matrix.md
+ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al. 2022)
+AI Coding Just Evolved Again - Princeton AI Newsletter
+
+
+実装・パターン・examples
+
+docs/pattern-picker.md
+docs/loop-design-checklist.md
+docs/operating-loops.md
+examples/claude-code/daily-triage.md
+examples/github-actions/README.md
+.github/workflows/audit.yml
+.github/workflows/daily-triage.yml
+
+
+反証・運用・失敗モード・セキュリティ
+
+docs/anti-patterns.md
+docs/failure-modes.md
+docs/multi-loop.md
+AI Agent Loop Token Costs - Augment Code
+Agentic AI Cost Runaway and Token Budget 2026 - LeanOps
+Least Privilege Access for AI Agents - Security Boulevard
+
+
+解説記事
+
+Loop Engineering: AI Coding Agents Guide - LushBinary
+What is Loop Engineering? - MindStudio
+Loop Engineering Concepts - LoomStack
+Context Engineering: Agent Reliability Playbook 2026 - Digital Applied
+
+---
+
+## 33. [【Claude Code×SDD】requirements→design→tasks→dev-report→QAの開発ワークフロー全公開](https://zenn.dev/emuni/articles/claude-code-sdd-workflow-guide)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/11/11
+- **タグ**: #ClaudeCode, #AI駆動開発, #SDD
+
+### 本文
+こんにちは、株式会社エムニでPM兼、ソフトウェアエンジニア/LLMエンジニアをしている、まさぴょんです🐱
+今回は、実案件(AI開発のPoC)で実際に回してきた SDD(Spec Driven Development / 仕様駆動開発) × Claude Code の開発ワークフロー を、セットアップ用プロンプトから各フェーズの実プロンプト・成果物のルールまで、まるっと全公開します🐱
+「Claude Codeに雑に依頼して、雑なコードが量産されて、あとで自分が困る……」という vibe codingの限界 を感じている人に、いちばん効いたのがこのSDDワークフローでした🌟
+
+
+ この記事でわかること
+
+なぜ vibe coding ではなく SDD なのか
+requirements → design → tasks → development → dev-report → test(QA) の開発フロー全体像
+セットアップ: SDDルールをCLAUDE.mdに追加するプロンプト
+各フェーズで実際に使っている依頼プロンプトと成果物のルール
+運用Tips(Review依頼を挟む・批判的検証・残課題確認)
+
+
+
+ 1. なぜSDDか？ vibe codingの限界
+Claude Codeはとても優秀なので、「〇〇作って」と雑に投げても、それっぽいものが一瞬でできあがります。
+ただ、実案件でこれをやり続けると、次の壁にぶつかります。
+
+
+仕様が会話ログにしか残らない: 「あの機能、なんでこの挙動なんだっけ？」の答えが、流れ去ったチャット履歴の中にしかない
+
+手戻りが大きい: 要件のすり合わせをしないまま実装が走るので、「思ってたのと違う」が実装完了後に発覚する
+
+引き継げない: 新しいセッション(または人間のメンバー)に、コンテキストを渡す手段がない
+
+レビューできない: 差分は見えても、「そもそも何を作ろうとしたのか」が無いので、レビューの基準が立てられない
+
+
+SDD(仕様駆動開発)は、この問題を「実装の前に仕様ドキュメントを作り、ドキュメントを資産としてリポジトリに積み上げる」ことで解決するアプローチです。
+ポイントは、ドキュメント作成のコストがAIによってほぼゼロになったこと。
+人間だけの開発では「ドキュメントを書く時間がない」が言い訳になりましたが、Claude Codeなら要件定義書も設計書もタスクリストも数分で生成できます。人間の仕事は「書くこと」から「レビューして承認すること」に変わります。
+
+ 2. 開発フロー全体像
+私が実案件で回しているフローは、次の6フェーズです。
+requirements → design → tasks → development → dev-report → test(QA)
+
+
+
+フェーズ
+成果物
+人間の役割
+
+
+
+
+1. requirements
+要件定義書 REQ-XXX
+
+内容をレビューして承認
+
+
+2. design
+設計書 DES-XXX
+
+技術選定・構成をレビュー
+
+
+3. tasks
+タスクリスト TASK-XXX
+
+分解粒度と順序をレビュー
+
+
+4. development
+実装コード + commit
+差分レビュー(タスク単位)
+
+
+5. dev-report
+開発レポート DR-XXX
+
+未対応事項の確認
+
+
+6. test(QA)
+QAレポート + issue
+重要度の判断・修正指示
+
+
+
+
+大事なのは、各フェーズの間に必ず「人間のReviewゲート」を挟むことです。
+ドキュメントはClaude Codeが書きますが、承認するのは人間。ここを飛ばすと、結局 vibe coding と同じ手戻りが発生します。
+
+ 3. セットアップ: SDDルールをCLAUDE.mdに追加する
+このワークフローを毎回口頭(プロンプト)で指示するのは大変なので、最初にClaude Code自身にルールを書かせて、CLAUDE.mdに焼き込みます。
+私が実際に使ったセットアップ用プロンプトがこちらです👇
+
+カスタムルール追加プロンプト
+ultrathink
+このプロジェクトにSDD(Spec Driven Development)のルールを導入したいです。
+CLAUDE.mdに以下のルールを追記してください。
+
+## SDDドキュメント運用ルール
+- 仕様ドキュメントはすべて docs/spec-driven-dev/ 配下で管理する
+  - requirements/ : 要件定義書 (REQ-001-<topic>.md 形式、番号は自動採番)
+  - design/       : 設計書     (DES-001-<topic>.md 形式)
+  - tasks/        : タスクリスト (TASK-001-<topic>.md 形式)
+  - dev-reports/  : 開発レポート (DR-001-<topic>.md 形式)
+- 新機能の開発は必ず requirements → design → tasks → development
+  → dev-report → test(QA) の順で進める
+- 各ドキュメントの冒頭に、関連ドキュメントへの相互リンクを必ず張る
+  (REQ ↔ DES ↔ TASK ↔ DR が互いに辿れる状態にする)
+- 各フェーズの成果物は、私(人間)がレビュー・承認するまで
+  次のフェーズに進まない
+- 実装(development)はTASKのチェックリストに沿って進め、
+  完了したタスクにはチェックを入れて更新する
+
+これを一度流しておくと、以降は「REQ作って」「次はDES」と言うだけで、フォーマット・置き場所・採番をClaude Codeが守ってくれるようになります。
+ディレクトリ構成はこんなイメージです。
+
+
+
+ 4. 各フェーズの実プロンプトと成果物例
+ここからは、各フェーズで実際に使っているプロンプトを紹介します。
+例として「お知らせ機能」を開発するケースで書きます(実案件の内容はマスキングしています🙏)。
+どのフェーズも基本形は同じで、「作成依頼 → Review依頼 → 修正 → 人間が承認 → 次のフェーズ」のサイクルを回します。
+
+
+ 4-1. requirements(要件定義)
+
+要件定義の作成依頼
+ultrathink
+「お知らせ機能」の要件定義書を docs/spec-driven-dev/requirements/ に
+REQ形式で作成してください。
+
+## 背景・目的
+- 管理者が全ユーザーに向けてお知らせを配信したい
+- ユーザーはヘッダーのベルアイコンから未読のお知らせを確認したい
+
+## わかっている要件
+- 管理画面からお知らせのCRUDができること
+- 未読バッジの表示
+- 既読管理はユーザー単位
+
+## お願い
+- 曖昧な点・決めるべき点は「未確定事項」セクションに列挙してください
+- スコープ外(今回やらないこと)も明記してください
+
+ポイントは、「未確定事項」を書かせることです。
+Claude Codeは要件の穴を埋めるのが得意なので、勝手に埋めさせるのではなく「ここは人間が決めるべき」という論点として出させます。成果物のREQを見ながら未確定事項を潰していくと、そのまま要件のすり合わせが完了します。
+成果物イメージ(抜粋):
+
+docs/spec-driven-dev/requirements/REQ-012-notification.md
+# REQ-012: お知らせ機能 要件定義書
+
+- 関連: [DES-012](../design/DES-012-notification.md) / [TASK-012](../tasks/TASK-012-notification.md)
+- ステータス: 承認済み (2026-07-01)
+
+## 1. 背景・目的
+...
+
+## 5. 未確定事項
+- [ ] お知らせの配信対象を全ユーザー以外(セグメント)に絞る要件はあるか？
+- [ ] 既読の定義は「一覧を開いた時点」か「詳細を開いた時点」か？
+
+## 6. スコープ外
+- プッシュ通知(メール/モバイル)は今回のスコープ外
+
+
+ 4-2. design(設計)
+REQが承認できたら、それを入力にして設計書を作らせます。
+
+設計書の作成依頼
+ultrathink
+docs/spec-driven-dev/requirements/REQ-012-notification.md を元に、
+設計書を docs/spec-driven-dev/design/ にDES形式で作成してください。
+
+- 既存のコードベースの構成・技術スタックに合わせてください
+- DB設計(テーブル定義)、API設計(エンドポイント一覧)、
+  画面構成、処理フローを含めてください
+- 設計上の選択肢が複数ある場合は、比較表と推奨案を書いてください
+
+ここでも「選択肢が複数ある場合は比較表と推奨案」がポイントです。
+「既読管理をテーブルで持つか、最終閲覧時刻で持つか」みたいな分岐を、Claude Codeに比較させた上で人間が意思決定します。
+
+ 4-3. tasks(タスク分解)
+
+タスクリストの作成依頼
+docs/spec-driven-dev/design/DES-012-notification.md を元に、
+実装タスクリストを docs/spec-driven-dev/tasks/ にTASK形式で作成してください。
+
+- 1タスク = 1commit で完結する粒度に分解してください
+- 依存関係がわかるように、実施順に並べてください
+- 各タスクに完了条件(どうなったら完了か)を書いてください
+- チェックボックス形式にしてください
+
+「1タスク = 1commit」の粒度指定が効きます。これでdevelopmentフェーズのcommit履歴がそのままタスクの進捗になり、レビューも差分単位でやりやすくなります。
+
+ 4-4. development(実装)
+
+実装依頼
+ultrathink
+docs/spec-driven-dev/tasks/TASK-012-notification.md に沿って実装を進めてください。
+
+- タスクを1つ完了するごとに、TASKファイルのチェックボックスを更新して、
+  適切な粒度でcommitしてください
+- REQ/DESと矛盾する実装が必要になった場合は、勝手に進めずに
+  一度止まって相談してください
+- テストも各タスクの完了条件に含めてください
+
+ここまでのフェーズで仕様が固まっているので、実装はかなり安定して走ります。
+「REQ/DESと矛盾したら止まって相談」のルールで、仕様とコードの乖離(SDDの一番の敵)を防ぎます。
+
+ 4-5. dev-report(開発レポート)
+実装が終わったら、そのセッションのうちに開発レポートを書かせます。
+
+Dev Report作成依頼
+今回の実装内容を docs/spec-driven-dev/dev-reports/ にDR形式でまとめてください。
+
+- 実装した内容(TASKとの対応)
+- 変更したファイル一覧
+- 未対応事項・残課題(あれば理由も)
+- 実装中に発見した学び・ハマりどころ
+- 動作確認の方法
+
+Dev Reportは「未来の自分と、次のセッションのClaude Codeへの引き継ぎ資料」です。
+特に「未対応事項・残課題」と「学び・ハマりどころ」は、次の開発の入力としてそのまま使えます。コンテキストが消えるAI開発では、ここに書いたことだけが資産として残ります。
+
+ 4-6. test(QA)
+最後に、実装をブラウザで実際に触ってQAさせます。
+
+QA依頼
+今回実装した「お知らせ機能」を、ブラウザを実際に操作してQAしてください。
+
+- 開発サーバーを起動して、主要なユーザーフローを一通り確認
+- REQ-012の要件を満たしているかの観点でチェック
+- 見つけたissueは重要度(Critical/High/Medium/Low)をつけて、
+  スクリーンショット付きでレポートにまとめてください
+
+私は playwright-cli(agent-browser)を使っていますが、Playwright MCPでもOKです。
+「実装した本人にQAさせるの？」と思うかもしれませんが、別セッションで(実装のコンテキストなしで)QAさせると、けっこう自分のバグを見つけてきます😇
+
+ 5. 運用Tips
+最後に、このワークフローを実際に回す中で効果が大きかったTipsを3つ紹介します。
+
+
+ Tip 1: 各成果物に「Review依頼」を挟む
+作成依頼のあと、そのまま承認せずに一度Review依頼を挟みます。
+
+Review依頼
+作成したREQ-012を、批判的な観点でセルフレビューしてください。
+- 要件の抜け漏れ、矛盾、曖昧な表現はないか
+- 非機能要件(性能・セキュリティ)の考慮漏れはないか
+- 指摘事項を重要度つきで列挙してください(修正はまだしない)
+
+**「修正はまだしない」**が地味に重要で、指摘の取捨選択を人間側でやってから修正させることで、過剰修正を防げます。
+
+ Tip 2: 批判的検証を依頼する
+Claude Codeは基本的に「できました！」と報告してきますが、鵜呑みにせず検証させます。
+
+批判的検証
+本当に完了していますか？批判的な観点で検証してください。
+- TASK-012の完了条件を1つずつ確認して、証拠(テスト結果・動作確認)を示してください
+- 「動くはず」ではなく、実際に動かした結果で示してください
+
+
+ Tip 3: セッションの終わりに「残課題確認」
+セッションを閉じる前に、必ずこれを聞きます。
+
+残課題確認
+今回のセッションで対応しきれなかったこと、途中で諦めたこと、
+気になっているけど手をつけていないことを、すべて列挙してください。
+Dev Reportの「未対応事項」に反映してください。
+
+コンテキストが消える前に残課題を吐き出させてDRに書いておくことで、次のセッションの立ち上がりが劇的に速くなります。
+
+ まとめ
+
+vibe codingの限界は「仕様が残らない・手戻り・引き継げない」
+SDDは requirements → design → tasks → development → dev-report → test(QA) の6フェーズ
+各フェーズの間に必ず人間のReviewゲートを挟む
+ルールはCLAUDE.mdに焼き込んで、docs/spec-driven-dev/ にドキュメントを資産として積む
+Dev Reportと残課題確認で、次のセッションへの引き継ぎまで仕組み化する
+
+AIによってドキュメント作成コストがほぼゼロになった今、SDDは「重厚長大な昔のやり方」ではなく、AI駆動開発でこそ真価を発揮するワークフローだと感じています。
+このシリーズでは、今後もテンプレ集・Skills運用・QA自動化などを深掘りしていく予定です。
+それでは、また次の記事でお会いしましょう🐱🌟
+
+---
+
+## 34. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/7/13
@@ -12519,7 +14226,7 @@ SessionStart の8段階
 
 ---
 
-## 33. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
+## 35. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/7/22
@@ -13005,7 +14712,7 @@ OSS: github.com/bokuwalily 🐙
 
 ---
 
-## 34. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
+## 36. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/8/31
@@ -13235,7 +14942,7 @@ CLAUDE.md・Skills・MCP という「ハーネス」の先にある「ループ�
 
 ---
 
-## 35. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
+## 37. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/10/4
@@ -15421,7 +17128,7 @@ Sun*は「誰もが価値創造に夢中になれる世界」をビジョンに�
 
 ---
 
-## 36. [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
+## 38. [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/10/7
@@ -15761,7 +17468,7 @@ What's new — Claude Code Docs — 最新リリース情報
 
 ---
 
-## 37. [Claude Code「ralph-loop」解説｜hirokaji](https://note.com/tasty_dunlin998/n/n411f62ec3c26)
+## 39. [Claude Code「ralph-loop」解説｜hirokaji](https://note.com/tasty_dunlin998/n/n411f62ec3c26)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/10/13
@@ -15799,7 +17506,7 @@ Stop hookで回す自律ループの仕組み・プロンプト設計・運用�
 
 ---
 
-## 38. [Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った](https://zenn.dev/sonicgarden/articles/claude-code-self-improving-loop)
+## 40. [Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った](https://zenn.dev/sonicgarden/articles/claude-code-self-improving-loop)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/10/31
@@ -15950,7 +17657,7 @@ hiroro-work/claude-plugins
 
 ---
 
-## 39. [Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita](https://qiita.com/N-i-ke/items/b87d1d144ef6eef9d257)
+## 41. [Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita](https://qiita.com/N-i-ke/items/b87d1d144ef6eef9d257)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/10/31
@@ -16129,7 +17836,7 @@ AI にどこまで任せて、どこから決定的処理（CLI）に渡すか�
 
 ---
 
-## 40. [Claude Codeを使い倒すための設定術：CLAUDE.md・自動メモリ・コンテキスト管理の3本柱](https://zenn.dev/tamai_hideyuki/articles/claude-code-config-best-practices)
+## 42. [Claude Codeを使い倒すための設定術：CLAUDE.md・自動メモリ・コンテキスト管理の3本柱](https://zenn.dev/tamai_hideyuki/articles/claude-code-config-best-practices)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/1
@@ -16316,7 +18023,7 @@ GitHubで編集を提案
 
 ---
 
-## 41. [Claude Code や Codex をオーケストレーションして自動でレビュー FB ループを回して洗い物をしてる話](https://zenn.dev/nrs/articles/db4120beb0e601)
+## 43. [Claude Code や Codex をオーケストレーションして自動でレビュー FB ループを回して洗い物をしてる話](https://zenn.dev/nrs/articles/db4120beb0e601)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/9
@@ -16431,7 +18138,511 @@ AI コーディングの「ベビーシッター問題」に悩んでいる皆�
 
 ---
 
-## 42. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
+## 44. [もうプロンプトを書くな──「Loop Engineering」という新しいパラダイムの正体](https://zenn.dev/acrosstudioblog/articles/38509c0473683a)
+- **優先度**: High
+- **スコア**: 90
+- **解析日時**: 2026/11/11
+- **タグ**: #AI駆動開発, #ClaudeCode, #LoopEngineering
+
+### 本文
+はじめに：あの人がもうプロンプトを書いていない
+ある日、X のタイムラインを眺めていたら、こんな引用が流れてきました。
+
+Boris Cherny（Claude Code 責任者）
+"I don't prompt Claude anymore. I have loops running that prompt Claude. My job is to write loops."
+（もう Claude にプロンプトは出していない。Claude にプロンプトを出す「ループ」を走らせている。私の仕事はループを書くことになった）
+
+…ちょっと待ってほしい。Claude Code を作った張本人が、もう Claude にプロンプトを書いていない？
+最初に読んだとき、正直「ポジショントークでは？」と思いました。半分ネタだろう、と。でも Google Chrome のエンジニアリングディレクター Addy Osmani が 2026/06/07 に出した Loop Engineering というブログを読み、Peter Steinberger の連投を読み、自分の手元の運用を眺めて、ようやく「ああ、たぶん本気で言ってるな」と腹に落ちました。
+ここ半年、僕のところでも実際そうなりつつあるからです。朝起きたら知らない PR が3つできていて、知らないチケットが2つクローズされていて、知らないバグが1つ直っている。自分は何もプロンプトを書いていない。最初は気持ち悪かったし、今でも少し気持ち悪い。
+この記事では、いま静かに広まりつつある「Loop Engineering」という考え方を、ニュース要約・実装の中身・チームに入れるときの注意点、の3レイヤーで整理します。半分は速報のメモ、半分は明日から自分のチームで使えるチェックリストのつもりで書きました。
+
+
+
+ 1. AIパラダイムは4世代変遷した
+ここ数年のAI活用の言い回しを並べてみると、レバレッジが「人間 → システム」へじわじわ移動してきたのが見えます。
+
+
+
+世代
+期間
+名前
+人間の仕事
+価値の源泉
+
+
+
+
+第1世代
+2022 - 2024
+Prompt Engineering
+1つの指示を磨き上げる
+指示の質
+
+
+第2世代
+2025
+Context Engineering
+十分な情報・前提・例を与える
+文脈の質
+
+
+第3世代
+2026年初
+Harness Engineering
+エージェントに馬具（ハーネス）を着ける
+実行環境の質
+
+
+第4世代
+2026年現在
+Loop Engineering
+エージェントを自律稼働させるシステムを設計
+サイクルそのもの
+
+
+
+誤解されやすいのは「前の世代が消えるのか？」という話。消えません。Prompt も Context も Harness も今でも普通に必要で、Loop の部品として中に組み込まれただけです。料理に例えるなら、火加減のコツが要らなくなったわけではなく、ただし鍋の前に立ち続ける必要はなくなった、というイメージに近い。
+
+プロンプトを上手く書く人ではなく、ループを上手く設計する人が、次の希少人材になる。たぶん。
+
+
+
+Addy Osmani の定義はシンプルです。
+
+Loop engineering is replacing yourself as the person who prompts the agent. You design the system that does it instead.
+
+ようは、自分がエージェントを叩く側を辞めて、エージェントを叩く役を機械にやらせる、ということ。
+1つの Loop の中身は意外と素朴で、こう書けます。
+あなたが目的を定義する
+   ↓
+AIが完了まで反復する
+   ↓
+次のラウンドが自動的に始まる
+
+ Harness と Loop の違い
+ここはよく混ぜて語られるので、表にしておきます。
+
+
+
+観点
+Harness Engineering
+Loop Engineering
+
+
+
+
+対象
+単一エージェント
+複数エージェント＋スケジューラ
+
+
+レイヤー
+実行環境レイヤー
+制御プレーンレイヤー
+
+
+比喩
+1台の機械にレールと安全柵を設置する
+工場全体を自動スケジューリングする生産ライン
+
+
+起動方法
+人間がプロンプトで起動
+時刻・イベント・条件で自律起動
+
+
+終了判断
+エージェントが完了を宣言
+検証ゲートが「合格」を判定
+
+
+
+工場で言うと、Harness は機械1台の安全装置、Loop は工場全体を回す生産管理システム。Harness は Loop の前提なので、Loop が Harness を置き換えるという話ではないです。
+
+
+
+ 3. Loop を構成する6つのコアモジュール
+Addy Osmani は Loop を最初「5つのパーツ」に分解し、後から memory（記憶）を6つ目として加えました。ここがじわじわ効いてくる構成なので、1つずつ見ていきます。
+
+ Automations（ハートビート）
+定期的に、もしくは何かのイベントで勝手に起動して、タスクを拾い上げる役。
+
+毎朝の CI 失敗
+積み上がっている issue
+最近のコミットに混入したバグ
+
+このあたりを人間がいちいちチェックしなくてよくなります。システムが拾い上げて、triage の受信トレイに勝手に書き込んでくれる。地味だけど効きます。
+
+ Worktrees（防護壁）
+複数のエージェントを並行で走らせるための分離レイヤー。
+各エージェントが独立した git ブランチを持ち、自分の作業領域で動く。Codex と Claude Code はネイティブで対応していて、これがあると「2つのエージェントが同じ行を同時に書き換えてコンフリクト爆発」という事故が起きません。これ、地味に効きます。
+
+ Skills（記憶チップ）
+プロジェクトの仕様、ビルド手順、過去の意思決定を1つのファイルに刻んだもの。
+
+.claude/skills/build.md
+# Build Skill
+- 依存関係インストール: `pnpm install --frozen-lockfile`
+- 型チェック: `pnpm typecheck`
+- テスト: `pnpm test --coverage`
+- 受け入れ基準: カバレッジ80%以上、tsc エラー0件
+- 過去の罠: monorepo 内で `npm` を使うと lockfile が壊れる
+
+Loop が起動するたびにこれを読み込むので、知識が貯まっていきます。毎ラウンド最初からゼロ推論を強いられることはない。
+
+ Sub-agents（牽制メカニズム）
+コードを書くエージェントは、ほぼ確実に自分に高得点をつけます。人間と同じです。なので「粗探し専門のエージェント」を別に走らせる。
+
+
+
+役割
+仕事
+推奨モデル
+
+
+
+
+Explorer
+コードベース調査・前提収集
+高速モデル
+
+
+Implementer
+実装案を起草
+主力モデル
+
+
+Verifier
+spec/test に照らし受け入れ判定
+別モデル推奨
+
+
+
+ポイントは Verifier をあえて別モデルにすること。同じモデルだと、自分の盲点を一緒に見逃します。
+
+ Connectors（腕）
+MCP（Model Context Protocol）経由で現実世界につなぐ口。Linear、GitHub、データベース、Staging API、Slack。
+Loop は「提案」だけしないのが特徴で、PR を作って、チケットを更新して、CI が通ったら自分で Slack にメンションを飛ばすところまでやります。これがあるとないとで、体感がまるで違います。
+
+ Memory（一番過小評価されている部品）
+Addy の記事の中で「これが一番過小評価されている」と書かれていた6つ目。読んだとき僕も「あ、そっか」と一瞬遅れて納得しました。
+markdown ファイル、Linear のボード、会話の外にあるあらゆる状態記録。
+
+モデルは忘れる。リポジトリは忘れない。
+
+外部状態がないと、翌日の Loop はゲームを最初からやり直す羽目になります。これをサボると、Loop が「毎日同じところで同じ事故を踏むやつ」に化けます。
+
+
+ 4. 1つの Loop の完全フロー
+ここまでの部品を組み合わせると、1日のループはこんな絵になります。
+注目してほしいのは、人間が最初に設計した後、どのステップにもプロンプトを書いていないこと。これが「もうプロンプトは書かない」の正体です。
+
+
+ 5. 検証可能なループの5ステップ方法論
+「で、具体的にどう作るの？」の話。コアは1行で済みます。検証可能なループの中でAIを目標に近づけ、停止条件まで走らせる。それだけ。
+ただ、この「検証可能」が一番手を抜きやすいところで、ここで手を抜くと Loop は便利な乱数発生機になります。
+
+ Step 1. 目標契約 ──まず完了基準を決める
+
+明確な目標と範囲
+定量化できる受け入れ基準
+制約と境界条件
+成功したときの成果物の形式
+
+例： ページ読み込み P95 < 1.5秒、エラー率 < 0.1%、テスト全合格、ドキュメント更新済み。
+数字に落ちないものは Loop で扱わない方が無難です。
+
+ Step 2. Agent の実行 ──複数ツール・複数インスタンスで進める
+
+タスクを分解して計画を立てる
+ツールを呼ぶ（コード、検索、コマンド）
+必要なら複数インスタンスで並列に
+思考と行動の軌跡を記録する
+
+よく使う道具はだいたい固定で、エディタ、ターミナル、検索、ブラウザ、データベース。
+
+ Step 3. 証拠によるフィードバック ──テスト、ログ、スクリーンショット、CI
+「動きました！」を信じてはいけない、という話。証拠を出させましょう。
+
+自動テスト結果
+実行ログとエラースタック
+スクリーンショット／画面録画／UIスナップショット
+パフォーマンス指標と監視データ
+CI/CD のステータスと成果物
+
+ここで雑だと、後で全部跳ね返ってきます。経験上。
+
+ Step 4. 停止条件 ──合格、ロールバック、人間に引き渡し
+
+
+
+停止種別
+条件
+次のアクション
+
+
+
+
+合格
+すべての受け入れ基準を満たす
+デリバリー
+
+
+ロールバック
+リスク発生 or 目標から逸脱
+変更を取り消す
+
+
+人間に引き渡し
+人間の意思決定 or 介入が必要
+エスカレーション
+
+
+タイムアウト
+最大イテレーション回数 or 時間を超過
+中断＋現状報告
+
+
+
+リスクシグナルとして見るべきもの： テスト失敗、エラー率上昇、パフォーマンス低下、スコープが勝手に膨らんでいるとき。
+
+ Step 5. 経験の還元 ──ルール、skills、harness の更新
+
+成功体験はルールやテンプレートに落とす
+失敗の教訓はネガティブルールやチェックポイントに落とす
+skills を更新する（ツールの使い方、よくある罠）
+harness を更新する（テストスイート、スキャフォールド）
+ナレッジベースと同期する
+
+これをやると、次回のループが少しだけ速くなって、少しだけ安定します。1日単位だと差は見えませんが、3ヶ月で振り返るとかなり違ってきます。
+
+
+
+ 6. Loop は Cron ではない ──4つの実行方式を比較する
+「定期実行ならいままでも cron や GitHub Actions でやってきたよ」と思った人へ。違いはだいたい3つに集約されます。コンテキスト、ツール、フィードバック。
+
+
+
+特徴
+手動Prompt
+Loop
+システムCron
+GitHub Actions
+
+
+
+
+コンテキスト
+毎回人間が補足／履歴消失
+セッション記憶を保持／自動継承
+コールドスタート／記憶なし
+コールドスタート（ログは追跡可）
+
+
+ツール
+一時的呼び出し／コピペ
+MCP＋skills を継承／必要に応じ編成
+スクリプトで繋ぐ／統合コスト高
+公式 Action 豊富／成熟
+
+
+適したタスク
+探索、ブレスト、計画評価
+作業中の継続的状態監視／完了まで
+固定の定期タスク（ログ清掃、バックアップ）
+クラウドの信頼性パイプライン
+
+
+リスク
+人間が中断される／忘れる
+コストと脱線／予算境界の設定が必要
+コンテキスト喪失／障害特定困難
+YAML 複雑化／権限肥大
+
+
+停止条件
+人間が主観で判断
+期限切れ or 検証合格／多条件組合せ
+時刻トリガー／結果に無頓着
+CI/承認イベント／人間承認
+
+
+
+
+ どれを選ぶか？
+選ぶ前に自分に問いかけるといいです。コンテキストを保持する必要があるか？ タスクは途中で変化するか？ 完了を自動判断する必要があるか？ それとも固定スクリプトで済むか？
+短期サイクルなら Loop、長期で信頼性が要るなら Actions、固定された機械的タスクなら Cron。ざっくりこの感覚で外れません。
+
+
+ 7. チームへの導入：6ステップと2つの品質ゲート
+「個人で試すのは分かった。チームでどう入れる？」という話。コツは「いきなり全部を Loop 化しない」につきます。たぶんどのチームも、最初は小さく始めた方がいいです。
+
+
+タスクを選ぶ
+CI修復、リグレッション検証、ログ巡回点検あたりが鉄板。小さく明確で、効果が定量化できるもの。
+
+
+目標契約を書く
+入力（AIに何を与えるか）、出力（何が欲しいか）、合格基準（数字で）、禁止領域（やってはいけないこと）。
+
+
+ツールへつなぐ
+repo、テストフレームワーク、lint、MCP、issue トラッカー。
+
+
+センサーを足す
+テスト結果、スクショ、録画、パフォーマンス指標、エラースタック、カバレッジ。
+ここまで来たら品質ゲート #1。証拠が揃わない限り次に進まない、というラインを引く。
+
+
+停止条件を決める
+合格、タイムアウト、コスト上限、リスクトリガー、人間引き渡し。
+ここで品質ゲート #2。条件が曖昧だと、サイクルが終わらないか、終わったのか分からないものが量産されます。
+
+
+経験を貯める
+ルール、テンプレート、skill、eval ケース、改善点。次のサイクルが少し速く、少し正確になる。
+
+
+
+ やった方がいいこと
+
+
+ やらない方がいいこと
+
+優先順位はシンプルで、検証可能 > 自動化可能 > 拡張可能。順番を逆にすると、後で全部跳ね返ってきます。
+
+
+ 8. Loop 導入チェックリスト：4つの質問でゴー／ノーゴー判定
+「このタスク、Loop 化していいんだっけ？」と迷ったら、この4問を通せばだいたい判定できます。
+
+ Loop に向いているタスク
+
+CIの赤信号修復。ビルドとテストの失敗を自動で特定して直す
+テストの補完。単体テストを生成・補完して通す
+ログの巡回点検。異常検知、分類、修復提案
+ドキュメント同期。API、README、インターフェースの自動更新
+依存関係のアップグレード。バージョン確認、PR、リグレッション
+
+
+ 注意したほうがいいタスク
+
+広範囲のリファクタリング。ロールバックが重い
+本番環境の権限操作。事故の影響が大きい
+セキュリティに敏感な変更。権限ポリシー、キー、アクセス制御
+純粋な美的判断。客観基準がなく、検証ができない
+
+迷ったら、まず小さく試して、証拠が出てから広げる。これに尽きます。
+
+ Loop 開始前に決めておくこと
+
+
+
+設定項目
+目的
+
+
+
+
+Owner（責任者）
+追跡可能性の保証
+
+
+締め切り時間
+無限ループの回避
+
+
+最大ラウンド数
+コストの暴走を防ぐ
+
+
+証拠の出力
+ログ／スクショ／テスト／CI結果の必須化
+
+
+停止理由
+デリバリー or ロールバックの明示
+
+
+
+Loop Engineering の重点は「停止条件」であって、「循環回数」ではない。回せば偉い、ではないです。
+
+
+ 9. Loop の3つの罠 ──スムーズに回るほど怖い
+ここからが個人的に一番大事だと思っているところで、Addy Osmani も記事の最後でわざわざ冷や水を浴びせています。Loop には「スムーズに回ること自体が危険」というパラドックスがある。
+
+ 罠1：検証の死角
+Loop は無人で動くので、無人のままミスを犯します。
+「done（完了）」は自己申告であり、証明ではない。
+これを潰すのが Step 3 の証拠駆動で、証拠が出ない Loop は実質的に自信過剰な乱数発生機です。便利だけど、信用してはいけない。
+
+ 罠2：Comprehension Debt（理解の負債）
+
+Loop がスムーズであるほど、自ら生成させたコードに対して疎遠になりやすい。
+デリバリーを加速させる一方で、乖離も加速させる。
+
+これ、本当にそうで、自分で書いていないコードが日々増えていって、ある日デバッガを開いたときに「これ、誰が書いたんだっけ……自分か」となる瞬間がある。技術的負債とはちょっと違う、新しい種類の負債だと思います。
+
+ 罠3：Cognitive Surrender（認知的降伏）
+一番怖いやつ。
+
+Loop を走らせ、自分の判断基準を持つことをやめ、それがもたらすすべてを受け入れてしまうこと。
+
+「AIがそう言うので…」が口癖になりはじめたら、危ない。これは本当に少しずつ侵食してくるので、半年に1回くらい、自分のレビュー基準を意識的に書き出した方がいいです。
+
+3時にエージェントがコードをこねくり回している横で、自分が何も理解できなくなっている未来。たぶん完全には避けられないけど、せめて自覚はしておきたい。
+
+
+ 10. おわりに：レバレッジポイントは移動した
+Boris Cherny が言っているのは、仕事が楽になったという話ではないと思います。
+彼が言っているのは、レバレッジポイントが動いた、という話。
+
+
+
+Before
+After
+
+
+
+
+良いプロンプトを書く人
+良いループを設計する人
+
+
+個別の答えを出す力
+答えを出し続ける機械を作る力
+
+
+自分が動く
+自分の代わりに動くシステムが動く
+
+
+
+同じ Loop を2人のエンジニアが組んでも、出てくる結果はまったく違うものになり得る。差を分けるのは、その仕事を本当に理解しているか、Loop を理解の代替にしているかだと思います。
+Loop Engineering は Prompt Engineering より難しい。1つの答えを出すのと、答えを出し続ける機械を作るのは、本当に別の能力なので。とはいえ、難しい代わりに効きます。たぶんここ1〜2年で、これができる人とできない人の差はかなりはっきり出ます。
+僕個人の感想を最後に書いておくと、Loop は確かに便利で、寝ている間に仕事が進むのは率直に気持ちいい。一方で、ちょっと薄ら寒い瞬間もある。あの薄ら寒さを忘れない範囲で付き合っていくのが、当面の正解な気がしています。
+
+
+ 参考文献・ソース
+
+Addy Osmani『Loop Engineering』— addyosmani.com, 2026.06.07
+Boris Cherny — Acquired Podcast 出演, 2026
+Peter Steinberger — X @steipete
+
+Anthropic Claude Code 公式ドキュメント
+
+この記事の元になった3つの一次情報メモ
+
+メモ1: Boris Cherny の発言とパラダイム変遷（Prompt → Context → Harness → Loop）
+メモ2: Addy Osmani のブログ要約（Automations / Worktrees / Skills / Sub-agents / Connectors / Memory）
+メモ3: 実装方法論（目標契約 → Agent実行 → 証拠フィードバック → 停止条件 → 経験還元）と Loop vs Cron 比較、チーム導入チェックリスト
+
+ニュース速報の部分と、明日チームで使えるチェックリストの部分、両方を1記事に押し込むためにこの3つを混ぜています。
+
+---
+
+## 45. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -16678,7 +18889,7 @@ AIに渡すルールは、自然言語ドキュメント1枚から三つの仕�
 
 ---
 
-## 43. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
+## 46. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -17186,7 +19397,7 @@ Skillは「自分専用のClaude Code」を育てることに近いと感じて�
 
 ---
 
-## 44. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
+## 47. [Claude Codeのサブエージェントを使い倒す ── Anthropic公式「計画・生成・評価」3分離パターンの実践 #ClaudeCode - Qiita](https://qiita.com/nogataka/items/efe8eb9df612d2211221)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -17691,7 +19902,7 @@ Building agents with the Claude Agent SDK - Anthropic Engineering
 
 ---
 
-## 45. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
+## 48. [note記事を“生成して終わり”にしない執筆ハーネスを作った｜hirokaji](https://note.com/tasty_dunlin998/n/n28fc06725c2f)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/4
@@ -17836,7 +20047,7 @@ banned_visual_motifs:
 
 ---
 
-## 46. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
+## 49. [Markdownだけで作るハーネスエンジニアリング](https://zenn.dev/genda_jp/articles/e09cab2916c241)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/7
@@ -18072,7 +20283,7 @@ Slack, Google Calendar, Confluence等のMCPツールを活用して情報取得�
 
 ---
 
-## 47. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
+## 50. [Claude Codeに何回言えば覚えるの——CLAUDE.md・auto memory・compact 記憶の生存戦略](https://zenn.dev/helloworld/articles/dce7eb8033aac7)
 - **優先度**: High
 - **スコア**: 88
 - **解析日時**: 2026/5/8
@@ -18263,1252 +20474,6 @@ SQLite + Chromaで記録して、3層の検索（インデックス→時系列�
 セッションの最初の10分が「前回の引き継ぎ」で消えてた頃がある。
 CLAUDE.mdにルールを書いて、WIP.mdに作業状態を残すようにしただけで、開始直後からいきなり本題に入れるようになった。
 消える場所に置かなければ、消えない。
-
----
-
-## 48. [Claude Codeで開発を自動化するSkills 5選 #AI - Qiita](https://qiita.com/kamome_susume/items/3b9b18e7e54f15721837)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/5/8
-- **AI要約**:
-  Claude CodeのSKILL.mdを用いた具体的で再利用可能な5つの自動化定義を紹介。
-  GitHub CLI連携によるPR要約やIssue修正の完結、自律型エージェントの活用法を解説。
-  プロジェクト配下でのSkill共有により、チーム全体の開発規約やフローを自動化する手法を提示。
-- **今読む理由**: AI駆動開発の最新ツール「Claude Code」において、定型作業を削減する具体的な設定ファイル（SKILL.md）が提示されており、即座にプロジェクトに導入して生産性を向上できるため。
-- **タグ**: #Claude Code, #AI自動化
-
-### 本文
-「Claude Codeを使い始めたけど、毎回同じような指示をプロンプトに書いている気がする…」と感じていませんか？
-Claude Codeは素のままでも強力ですが、Skillsを使うことで繰り返しの作業を自動化し、開発のルーティンをまるごとコマンド一発に変えることができます。この記事では、開発の自動化に特に役立つSkills 5選を、具体的な使いどころとともに紹介します。
-「毎回同じプロンプトを書くのが面倒」「チームの開発フローを統一したい」と感じているエンジニアに、特に読んでほしい内容です。
-
-
-結論：Skillsは「賢いマクロ」ではなく「文脈を持った自動化」
-一般的なマクロやシェルスクリプトは、決められた手順を機械的に繰り返すだけです。でも Claude Code の Skills は違います。プロジェクトのコンテキストを理解した上で、状況に応じた判断をしながら自動化を実行してくれます。
-
-
-
-従来の自動化
-Skills による自動化
-
-
-
-
-手順が固定されている
-状況を読んで柔軟に対応する
-
-
-コードの中身を見ない
-コードベースを理解して動く
-
-
-エラーが出たら止まる
-エラーの原因を判断して対処する
-
-
-設定ファイルが必要
-SKILL.md に自然言語で書くだけ
-
-
-
-一度 Skill を作ってしまえば、チーム全員が同じ品質で同じフローを実行できます。これが Skills の本質的な価値だと私は感じています。
-
-
-エンジニアなら読むべき本を30冊以上紹介しています。
-正直、私の仕事のやり方をガラッと変えた神本やSQLのチューニングに悩んだ時にめちゃくちゃ役に立ったもあります👇
-→記事を読む
-
-
-
-
-開発の自動化に役立つ Skills 5選
-
-1. pr-summary：プルリクエストの説明文を自動生成する
-毎回 PR の説明を一から書くのが地味に時間がかかる、あの悩みを解決するSkill。
-Claude Code の公式ドキュメントで紹介されているこの Skill は、GitHub CLI を使ってライブの PR データを取得し、変更内容・コメント・差分ファイルをもとに PR サマリーを自動で生成します。
-# SKILL.md の例
----
-name: pr-summary
-description: プルリクエストの変更内容を要約する
-context: fork
-allowed-tools: Bash(gh *)
----
-
-## Pull request context
-- PR diff: !`gh pr diff`
-- PR comments: !`gh pr view --comments`
-- Changed files: !`gh pr diff --name-only`
-
-## タスク
-このプルリクエストを要約してください。変更の目的・影響範囲・レビュアーが注意すべき点を含めること。
-
-使いどころ：
-
-
-
-シーン
-効果
-
-
-
-
-毎日の PR 作成
-説明文の作成時間をほぼゼロに
-
-
-大規模リファクタリング
-変更の全体像を自動で整理
-
-
-新メンバーのオンボーディング
-PR の書き方を Skill が手本を示す
-
-
-
-! 構文でシェルコマンドを事前実行し、その出力を Claude に渡せるのがこの Skill の肝です。Claude は「説明してくれ」と言われるのではなく、実際のコードの差分を見た上でサマリーを生成するので、精度が高くなります。
-
-
-2. fix-issue：GitHub Issue 番号を渡すだけで修正まで自動実行
-Issue を開いてコードを追って修正して PR を出す——この一連の流れをコマンド一発にするSkill。
----
-name: fix-issue
-description: GitHub Issue を修正する
-disable-model-invocation: true
----
-
-GitHub Issue $ARGUMENTS を修正してください。
-
-1. Issue の内容を gh コマンドで取得する
-2. 関連するコードを特定する
-3. 修正を実装する
-4. テストが通ることを確認する
-5. 変更をコミットする
-
-呼び出しは /fix-issue 1234 のように Issue 番号を渡すだけです。$ARGUMENTS プレースホルダーがその番号に置き換わります。
-実際の自動化の流れ：
-/fix-issue 1234
-↓
-Claude が Issue #1234 を gh コマンドで取得
-↓
-関連ファイルを特定・修正
-↓
-テストを実行して確認
-↓
-コミットまで完了
-
-私はこの Skill を使い始めてから、軽微なバグ修正にかける時間が体感で半分以下になりました。特に「内容は理解できるけど修正が単純作業」な Issue との相性が抜群です。
-
-
-3. deep-research：コードベースをフォークエージェントで深く調査する
-「このバグの根本原因はどこだ」「この設計はなぜこうなっているのか」を自律的に調べてくれるSkill。
----
-name: deep-research
-description: トピックを徹底的に調査する
-context: fork
-agent: Explore
----
-
-$ARGUMENTS について徹底的に調査してください：
-
-1. 関連するすべてのファイルを特定する
-2. 依存関係とデータフローを追う
-3. 潜在的な問題点や改善余地を洗い出す
-4. 調査結果をまとめたレポートを作成する
-
-context: fork を指定することで、現在の会話履歴から独立した専用のサブエージェントとして動作します。長い調査が現在の会話を汚染しません。
-使いどころ：
-
-
-
-シーン
-具体的な指示例
-
-
-
-
-障害調査
-/deep-research 決済処理でタイムアウトが発生する原因
-
-
-設計理解
-/deep-research 認証モジュールのアーキテクチャ
-
-
-技術的負債の棚卸し
-/deep-research 非推奨APIの使用箇所
-
-
-
-既存コードを引き継いだときや、大規模なリファクタリングの前調査として特に効果を発揮します。
-
-
-4. commit：ステージング〜コミットを承認なしで自動実行
-「git add して git commit して…」を毎回やるのが面倒な人向けの Skill。
----
-name: commit
-description: 現在の変更をステージングしてコミットする
-disable-model-invocation: true
-allowed-tools: Bash(git add *) Bash(git commit *) Bash(git status *)
----
-
-現在の変更をステージングして、変更内容を説明するコミットメッセージを生成してコミットしてください。
-Conventional Commits の形式（feat/fix/refactor/docs など）を使うこと。
-
-allowed-tools に git コマンドを明示することで、このSkill が有効な間は git 操作を都度承認なしで実行できます。
-コミットメッセージ自動生成の例：
-# Claude が生成するコミットメッセージの例
-feat(auth): JWTトークンの有効期限を設定可能にする
-
-- 環境変数 JWT_EXPIRES_IN で有効期限を設定できるように変更
-- デフォルト値を24hに設定
-- テストケースを追加
-
-変更内容を見て適切な prefix を選んでくれるので、チームのコミット規約を自然に守れます。
-
-
-5. explain-code：コードの説明をビジュアル図解付きで自動生成
-「このコード、何をやっているか説明して」を構造化されたドキュメントとして出力するSkill。
----
-name: explain-code
-description: コードをビジュアル図解と類推を使って説明する
----
-
-指定されたコードを以下の形式で説明してください：
-
-1. 一言で何をするコードか
-2. 処理の流れを図解（Mermaid 記法）
-3. 複雑な部分を日常的な例えで説明
-4. 潜在的な改善点
-
-自動化の観点では、以下のシーンで特に役立ちます：
-
-
-
-シーン
-効果
-
-
-
-
-コードレビュー準備
-PR に図解付きの説明を自動添付
-
-
-新メンバーの技術共有
-複雑なモジュールの解説資料を即生成
-
-
-技術ドキュメント整備
-コメントのないレガシーコードの文書化
-
-
-
-このSkill は「コードが動くかどうか」ではなく「チームがコードを理解できるか」という観点の自動化です。ドキュメントのメンテナンスコストを大幅に下げられます。
-
-
-5つの Skills 早見表
-
-
-
-#
-Skill 名
-自動化する作業
-呼び出し例
-
-
-
-
-1
-pr-summary
-PR の説明文生成
-/pr-summary
-
-
-2
-fix-issue
-Issue の調査〜修正〜コミット
-/fix-issue 1234
-
-
-3
-deep-research
-コードベースの深掘り調査
-/deep-research 認証モジュールの構造
-
-
-4
-commit
-ステージング〜コミット
-/commit
-
-
-5
-explain-code
-コード解説ドキュメント生成
-/explain-code
-
-
-
-
-
-Skills をチームに導入するときのコツ
-Skillsの自動化は個人で使っても便利ですが、チームで共有するときに本当の価値が出ます。
-プロジェクトルートの .claude/skills/ に置けばリポジトリで管理でき、チーム全員が同じ Skill を使えます。「このプロジェクトの PR はこのフォーマットで書く」「コミットメッセージはこの規約で」という暗黙のルールを、Skill というかたちで明文化・自動化できるのが最大のメリットです。
-your-project/
-├── .claude/
-│   └── skills/
-│       ├── pr-summary/
-│       │   └── SKILL.md
-│       ├── fix-issue/
-│       │   └── SKILL.md
-│       └── commit/
-│           └── SKILL.md
-├── src/
-└── ...
-
-まずは自分がよく繰り返している作業を1つ Skill にしてみてください。「あ、これも Skill にできる」という発見が連鎖していくはずです。
-
-
-エンジニアなら読むべき本を30冊以上紹介しています。
-正直、私の仕事のやり方をガラッと変えた神本やSQLのチューニングに悩んだ時にめちゃくちゃ役に立ったもあります👇
-→記事を読む
-
----
-
-## 49. [Qiitaニュース | Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita Zine](https://qiita.com/official-columns/news/2026-04-29/)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/5/9
-- **AI要約**:
-  Opus 4.7リリースに伴うClaude Codeの非推奨事項と公式が提唱する新ベストプラクティス
-  Google APIキー脆弱性による13時間で900万円の被害事例とFirebase/Geminiの対策
-  AI駆動開発を加速させるClaude Codeの実ファイル構成例や自動化用MCP設定の紹介
-- **今読む理由**: 最新のOpus 4.7環境下でClaude Codeの利用方法が大きく変化しており、誤った手法（禁止事項）を続けると開発効率の低下や予期せぬ挙動を招く恐れがあるため。また、API管理のセキュリティ事故情報は実損を防ぐために即座に確認すべき内容である。
-- **タグ**: #Claude Code, #AI駆動開発, #セキュリティ対策, #LLM, #自動化パイプライン
-
-### 本文
-ホーム
-          
-          Qiita, ニュース        
-      
-      
-      2026年4月30日
-
-
-      
-        2026/04/29に配信された Qiitaニュースのバックナンバーです。
-
-Dear great hackers,
-こんにちは！いつもQiitaをご利用いただきありがとうございます。
-先週いいねが多かった投稿ベスト20(計測期間：2026/04/20 〜 2026/04/26）
-
-
-
-1位
-
-エンジニア歴20年の私が、素人バイブコーディング勢に物申す by Akira-Isegawa (294いいね)
-
-
-2位
-
-Claude Code を Level 5 まで育てたら、開発が「指示と確認だけ」になった — 実ファイル構成で解説 by teppei19980914 (211いいね)
-
-
-3位
-
-New Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと by ot12 (169いいね)
-
-
-4位
-
-【こわい】Google APIキーの脆弱性により13時間で約900万円請求される事案が発生！ Firebase×Geminiで今すぐやるべきセキュリティ対策 by miruky (156いいね)
-
-
-5位
-
-New 【徹底解説】DBスペシャリストなりぞこないが教える、データベースの教科書（設計もあるよ） by miruky (141いいね)
-
-
-6位
-
-Claude Codeで実際に起きたセキュリティ事故7選と防止策 by masa_ClaudeCodeLab (115いいね)
-
-
-7位
-
-New Claude Codeで開発を自動化するSkills 5選 by kamome_susume (104いいね)
-
-
-8位
-
-New 一人で悩み続けてしまう新人エンジニアへ。その時間、無駄かもしれません。 by hitomin_poke (97いいね)
-
-
-9位
-
-New 【初心者エンジニア向け】開発を前に進めるための行動3選 by masa20057 (92いいね)
-
-
-10位
-
-New 【前編】9割の新人エンジニアがやっている 「承知しました」の落とし穴 by hitomin_poke (88いいね)
-
-
-11位
-
-New 【初心者必見】今から追いつくClaude Code 入門・徹底解説 by i-inose (86いいね)
-
-
-12位
-
-New Claude Code × Obsidian Vault で作る「何でも相談」プロジェクト ― フォルダ構成・CLAUDE.md・MCP設定まで全公開 by htani0817 (81いいね)
-
-
-13位
-
-New その“親切な設計”、たぶん無駄です – エンジニアがハマる「やりすぎ問題」- by prum_hitomi (78いいね)
-
-
-14位
-
-New クソバズワード「ハーネスエンジニアリング」と向き合う by retore (74いいね)
-
-
-15位
-
-New 【初心者エンジニア向け】開発業務の視野を広げる運用のはなし by masa20057 (71いいね)
-
-
-16位
-
-AIコーディング時代に必要なプログラミングスキル by hokutoh (67いいね)
-
-
-17位
-
-マークダウン記法は奥深く、楽しい — テキストだけで「伝わるドキュメント」を作る技術 by teppei19980914 (59いいね)
-
-
-18位
-
-New Neovim で最高の Markdown ビューワーを作る – md-render.nvim by delphinus (43いいね)
-
-
-18位
-
-New Claude Codeの利用状況をチームで可視化するダッシュボードをOSSで公開しました by tamepicomaru (43いいね)
-
-
-20位
-
-New Chrome DevTools MCP の全ツールをまとめて理解する by softbase (40いいね)
-
-
-
-Qiitaニュースは、「エンジニアを最高に幸せにする」ことを目指すQiita株式会社が配信しています。
-Qiitaニュースを購読する
-
----
-
-## 50. [Claude Codeで安全にバイブコーディングするためのセキュリティガイド【個人・チーム開発対応 / コピペで社内展開OK】 #AI - Qiita](https://qiita.com/kotaro_ai_lab/items/af25eb6608ff58893c74)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/5/9
-- **AI要約**:
-  AIエージェントによるコード生成時のシークレット漏洩や、存在しないパッケージの誤導入リスクを詳説
-  CLAUDE.mdへの機密情報混入防止や、AIが生成したコードに対する重点的なレビュー項目を網羅
-  ローカルに.envを置かない設計や、そのまま社内マニュアルに転用可能な具体的チェックリストを提示
-- **今読む理由**: AI駆動開発特有の「スロップスクワッティング」等の新型脆弱性への対策や、Claude Code導入時に必須となるCLAUDE.mdの安全な運用ルールが具体的に示されているため。
-- **タグ**: #AI駆動開発, #セキュリティガイドライン
-
-### 本文
-株式会社Good Labでエンジニアをしている コータロー です。
-日々、Java・SQL・Gitなどの技術情報や、新人エンジニア向けの学習ノウハウ、
-AI活用についての情報を発信しています。
-Good Labについて気になった方は、コーポレートサイトもぜひご覧ください。
-▶コーポレートサイト
-
-※本記事はそのまま社内マニュアルとして転用しやすいよう、本文は「である調」で統一しています。
-
-
-はじめに
-Claude CodeやCursorなどのAIエージェントを使い、自然言語の指示だけでアプリを組み上げる「バイブコーディング」が急速に普及している。プロトタイプの作成速度は劇的に向上したが、その一方でセキュリティリスクも加速している。AIが自律的にファイルを読み書きし、外部パッケージを導入し、コマンドを実行する以上、従来の手動コーディングとは異なるリスクへの備えが必要である。
-特にバイブコーディングでは「動けばOK」の精神でレビューが省略されがちであり、APIキーの漏洩やサプライチェーン攻撃といった脅威が見過ごされやすい。GitHubにAWSキーをpushした結果、ボットが数分以内にそれを検出し、不正利用によって数十万円の請求が発生した報告もある。AIが関わるからこそ、人間が意識的にセキュリティの防壁を構築しなければならない。
-この記事は読み物としてセキュリティの勘所を学ぶだけでなく、チェックリスト部分を切り取ってそのまま社内マニュアルとして運用できるように設計している。NotionやGitHubにそのまま貼り付けて、プロジェクトごとにカスタマイズしてご自由にご活用いただきたい。
-
-用語定義
-本記事では以下の用語を統一して使用する。
-
-
-シークレット：APIキー、トークン、パスワード、秘密鍵など、漏洩時に不正利用される可能性のある値の総称
-
-バイブコーディング：AIエージェントに自然言語で指示し、コードの大部分をAIに生成させる開発スタイル
-
-
-個人開発編：セキュリティチェックリスト
-
-⚠️ 1. シークレットのハードコード
-バイブコーディングではプロンプトにAPIキーを含めて指示しがちである。AIはその値をそのままソースコードに埋め込むため、Gitにpushした瞬間に全世界に公開されるリスクがある。手動コーディングであれば.envから読む実装を自分で書くが、バイブコーディングではプロンプト自体が汚染源になる。「このAPIキーを使って実装して」と書いた瞬間、AIはそれをコードにベタ書きする。
-被害例：GitHubにAWSのアクセスキーをpushした場合、自動スキャンボットが数分以内に検出し、暗号通貨マイニングなどに悪用されて数十万円の請求が発生した事例が複数報告されている。
-❌ 悪い例：
-let apiKey = "sk-ant-api03-xxxxxxxxxxxxxxxx"
-let client = APIClient(key: apiKey)
-
-✅ 良い例（Bundle.main.infoDictionary経由で取得する例）：
-import Foundation
-
-guard let apiKey = Bundle.main.infoDictionary?["API_KEY"] as? String, !apiKey.isEmpty else {
-    // 本番ビルドではビルド設定（xcconfig等）から注入する
-    // デバッグ時はスキームの環境変数で設定する
-    preconditionFailure("API_KEY is not configured in build settings")
-}
-let client = APIClient(key: apiKey)
-
-📋 チェックリスト：
-
-
-ソースコード内にAPIキー・トークンが直書きされていないか
-
-.envファイルが.gitignoreに含まれているか
-
-.env.example（値なしテンプレート）をリポジトリに用意しているか
-
-プロンプトにシークレットの実値を含めていないか（環境変数名で指示しているか）
-
-
-⚠️ 2. CLAUDE.mdへのシークレット混入
-CLAUDE.mdはGitで管理されるファイルであり、プロジェクトのルートに配置してAIへの指示を記述する。ここにDBパスワードや内部APIのエンドポイントを書くと、リポジトリ経由で第三者に漏洩する。CLAUDE.mdは指示ファイルであり、シークレットの保管場所ではない。
-バイブコーディングでは「AIに正確な情報を伝えたい」という動機から、接続情報をCLAUDE.mdに直書きしてしまうケースが特に多い。手動コーディングなら設定ファイルに書く内容を、バイブコーディングではAIへの指示書に書いてしまうという構造的な罠がある。
-❌ 悪い例：
-<!-- CLAUDE.md に以下を記載 -->
-DBパスワードは「prod_Pass!789」を使用すること
-本番APIは https://internal-api.company.com/v2
-
-✅ 良い例：
-<!-- CLAUDE.md に以下を記載 -->
-DB接続情報は環境変数 DATABASE_URL から取得すること
-API エンドポイントは .env の API_BASE_URL を参照すること
-シークレットをソースコードにハードコードしてはならない
-
-📋 チェックリスト：
-
-
-CLAUDE.mdにパスワード・トークン・内部URLが含まれていないか
-
-シークレットは環境変数名のみ記載し、実値を書いていないか
-
-CLAUDE.mdをコミットする前にdiffを目視確認しているか
-
-
-⚠️ 3. 依存パッケージのサプライチェーン攻撃
-AIは指示に応じて外部パッケージを自動追加する。ここには2つの脅威がある。
-1つ目は typosquatting（タイポスクワッティング）である。正規パッケージに酷似した名前の悪意あるパッケージを登録し、タイプミスを狙う攻撃である。
-2つ目は slopsquatting（スロップスクワッティング）である。これはバイブコーディング特有のリスクで、AIが実在しないパッケージ名を幻覚（ハルシネーション）し、攻撃者がその名前で悪意あるパッケージを事前に登録しておく攻撃である。2025年のUSENIX Securityの研究では、16モデル・576,000コードサンプルの調査で、AIが幻覚したパッケージ名の58%以上が複数回の実行で再出現し、43%が同一プロンプトの10回の試行で一貫して出現したと報告されている。この予測可能性が攻撃を実行可能にしている。
-手動コーディングなら開発者がパッケージを自分で検索して選ぶが、バイブコーディングではAIが提案したパッケージ名をそのまま受け入れてしまいやすい。AIの提案を無条件に信頼せず、パッケージ追加前に必ずレジストリで実在と正当性を確認すること。
-❌ 悪い例：
-# AIが提案したパッケージをそのまま追加
-swift package add SwiftCrytpoUtils
-# → 正規の「CryptoKit」ではなく、typoした偽パッケージ
-# → またはAIが幻覚した実在しないパッケージ名
-
-✅ 良い例：
-# パッケージ追加前に公式リポジトリとスター数を確認
-# 公式: https://github.com/apple/swift-crypto
-swift package add swift-crypto --from 3.0.0
-
-📋 チェックリスト：
-
-
-AIが追加したパッケージの名前とリポジトリURLを確認したか
-
-パッケージがレジストリに実在し、正規のものであることを確認したか（AIが幻覚した偽パッケージへの対策）
-
-パッケージのスター数・最終更新日・メンテナンス状況を確認したか
-
-バージョンを固定（ピン留め）しているか
-
-
-⚠️ 4. AIコードのレビューなしリリース
-バイブコーディングの速さに慣れると、AIが生成したコードをレビューせずにリリースしがちである。SQL組み立てやユーザー入力の処理に脆弱性が潜む可能性がある。
-AIが大量のコードを短時間で生成するため、diffが膨大になりレビューが追いつかないという構造的な問題がある。手動コーディングなら自分が書いたコードなので内容を把握しているが、バイブコーディングでは自分が書いていないコードが大量にコミットされる。だからこそ、セキュリティ関連箇所に絞った重点レビューが不可欠である。
-❌ 悪い例（SQLite.swift使用時）：
-import SQLite
-
-// AIが生成したコードをそのままリリース
-// → SQLインジェクションの脆弱性
-let query = "SELECT * FROM users WHERE name = '\(userInput)'"
-
-✅ 良い例（SQLite.swift使用時）：
-import SQLite
-
-// パラメータバインディングでSQLインジェクションを防止
-let users = Table("users")
-let name = SQLite.Expression<String>("name")
-let result = try db.prepare(users.filter(name == userInput))
-
-📋 チェックリスト：
-
-
-ユーザー入力を直接クエリやコマンドに埋め込んでいないか
-
-セキュリティ関連箇所（認証・暗号化・入力検証・権限設定）を中心にdiffを確認してからコミットしているか
-
-認証・暗号化・入力検証の変更に対し、意図した動作であることを確認したか
-
-
-上級編：そもそもローカルにシークレットを置かない
-ここまでの対策は「.envをGitに載せない」「Claude Codeに読ませない」といった守りのアプローチである。しかし根本的な問題は、ローカルPCに本物のシークレットが存在していること自体にある。
-Claude Codeは .env を読める。パーミッション設定やHooksで「読ませない」制御はできるが、それは鍵のかかったドアの向こうに金庫があるのと同じである。設定ミス、Claude Codeのアップデートによる挙動変化、あるいは悪意あるnpmパッケージが fs.readFile('.env') を実行するなど、突破されるシナリオは常に存在する。
-根本解決は、ローカルにシークレットを置かないことである。金庫そのものが存在しなければ、ドアの鍵が壊れても何も盗まれない。
-
-考え方：ローカル＝モック、クラウド＝実通信
-【ローカル（開発者のPC）】
-├── シークレット → 存在しない
-├── 外部API通信 → モック（固定データを返す）
-└── やること → UI開発、ロジックのテスト
-
-【クラウド（AWS ECS / Cloud Run 等）】
-├── シークレット → Secrets Managerから自動取得
-├── 外部API通信 → 本物のAPIと通信
-└── やること → 結合テスト、本番運用
-
-ローカルではAPIの「フリをする」だけである。本物のシークレットはクラウドにしか存在せず、開発者のPCには一度も保存されない。
-
-なぜ .env すら危険なのか
-.gitignore に .env を入れていても、以下のリスクは残る。
-
-
-
-リスク
-具体例
-
-
-
-
-悪意あるパッケージが読む
-npm/pipの偽パッケージが .env のパスを直接読み取って外部に送信する事例がある
-
-
-PC紛失・盗難
-ディスクにアクセスすれば .env の中身は平文で読める
-
-
-Claude Codeが読む
-AIがデバッグ目的で .env を参照し、その内容をログやコードに出力してしまう
-
-
-誤操作
-
-.gitignore の記述ミスや git add -A で .env ごとコミットしてしまう
-
-
-
-
-実装方法：プロトコル（インターフェース）でモックと本番を切り替える
-外部APIとの通信層をプロトコルで抽象化し、ローカルではモック実装、本番では実API実装を使う設計にする。
-import Foundation
-
-// 通信層のプロトコル（インターフェース）
-protocol WeatherService {
-    func fetchForecast(city: String) async throws -> Forecast
-}
-
-struct Forecast {
-    let temperature: Double
-    let condition: String
-}
-
-モック実装（ローカル開発用）：シークレット不要
-// ローカル開発ではこちらを使う
-// APIキーは一切不要。固定データを返すだけ
-final class MockWeatherService: WeatherService {
-    func fetchForecast(city: String) async throws -> Forecast {
-        // ローカルのJSONやハードコードした固定値を返す
-        return Forecast(temperature: 25.0, condition: "晴れ")
-    }
-}
-
-本番実装（クラウド環境用）：Secrets Managerからキーを取得
-import Foundation
-
-// 本番・ステージング環境ではこちらを使う
-// シークレットは環境変数から取得（ECSが起動時にSecrets Managerから注入）
-final class RealWeatherService: WeatherService {
-    func fetchForecast(city: String) async throws -> Forecast {
-        guard let apiKey = ProcessInfo.processInfo.environment["WEATHER_API_KEY"] else {
-            throw ServiceError.missingAPIKey
-        }
-        let url = URL(string: "https://api.weather.com/v1/forecast?city=\(city)")!
-        var request = URLRequest(url: url)
-        request.setValue(apiKey, forHTTPHeaderField: "X-API-Key")
-        let (data, _) = try await URLSession.shared.data(for: request)
-        return try JSONDecoder().decode(Forecast.self, from: data)
-    }
-}
-
-切り替え：ビルド設定や環境変数で判定
-// 環境に応じて実装を切り替える
-func createWeatherService() -> WeatherService {
-    #if DEBUG
-    return MockWeatherService()
-    #else
-    return RealWeatherService()
-    #endif
-}
-
-この設計なら、ローカルの DEBUG ビルドでは MockWeatherService が使われるため、APIキーがPCに存在する必要がない。
-
-クラウド側のシークレット管理：AWS Secrets Manager
-本番環境ではシークレットをどこに保管するか。AWSの場合、Secrets Managerが標準的な選択肢である。
-
-
-
-サービス
-役割
-コスト目安
-
-
-
-
-Secrets Manager
-シークレットを暗号化して保管。自動ローテーション対応
-$0.40/シークレット/月
-
-
-Parameter Store
-設定値の一元管理。シークレットにも対応。Secrets Managerより安価
-標準パラメータは無料
-
-
-ECS
-コンテナを実行するサービス。起動時にSecrets Managerからシークレットを環境変数に注入
-コンテナ利用分
-
-
-
-設定の流れ（AWS ECS + Secrets Manager）：
-# 1. Secrets Managerにシークレットを登録（管理者が1回だけ実行）
-aws secretsmanager create-secret \
-  --name "myapp/weather-api-key" \
-  --secret-string "sk-xxxxxxxxxxxxxxxx"
-
-// 2. ECSタスク定義でSecrets Managerを参照
-{
-  "containerDefinitions": [
-    {
-      "name": "myapp",
-      "secrets": [
-        {
-          "name": "WEATHER_API_KEY",
-          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:123456789:secret:myapp/weather-api-key"
-        }
-      ]
-    }
-  ]
-}
-
-// 3. アプリ側のコードは環境変数から読むだけ（従来と同じ）
-let apiKey = ProcessInfo.processInfo.environment["WEATHER_API_KEY"]
-
-開発者はSecrets Managerの登録権限だけ持ち、シークレットの実値を自分のPCにダウンロードする必要がない。ECSが起動時に自動で取得し、コンテナの環境変数に注入する。
-
-バイブコーディングとの相性
-この設計がバイブコーディングと特に相性が良い理由は、プロンプトにシークレットを書く必要が完全になくなることである。
-❌ 従来のプロンプト（シークレットを含む）：
-天気予報機能を実装して。
-APIキーは sk-xxxxxxxxxxxxxxxx を使って。
-
-✅ モック方式のプロンプト（シークレットを含まない）：
-天気予報機能を実装して。
-WeatherServiceプロトコルに準拠し、ローカルではモック実装、
-本番ではRealWeatherServiceに差し替える設計にして。
-モックは固定データ（気温25度、晴れ）を返すようにして。
-
-AIにシークレットの実値を渡さないので、AIが何をしても漏洩しない。コードにベタ書きされる心配も、プロンプト履歴から漏れる心配もない。これがバイブコーディングにおける最も根本的なセキュリティ対策である。
-
-いつモック方式を採用すべきか
-
-
-
-判断基準
-モック方式を推奨
-
-.env方式で十分
-
-
-
-
-チーム規模
-複数人開発
-個人の趣味開発
-
-
-扱うシークレット
-課金API、決済、認証
-公開APIのみ
-
-
-環境
-本番サービスがある
-ローカルで完結
-
-
-バイブコーディング
-積極的に使用
-部分的に使用
-
-
-
-個人開発でも「課金が発生するAPIキー」や「ユーザーデータにアクセスできる認証キー」を扱う場合は、モック方式の導入を強く推奨する。
-📋 チェックリスト：
-
-
-外部APIとの通信層をプロトコル（インターフェース）で抽象化しているか
-
-ローカル開発用のモック実装を用意しているか
-
-本番のシークレットはSecrets Manager等のクラウドサービスで管理しているか
-
-プロンプトにシークレットの実値を含めずに開発できる設計になっているか
-
-
-チーム開発編：セキュリティチェックリスト
-
-個人開発編の項目はチーム開発でもすべて適用される。チーム開発編はそれに加えて、組織的に対応すべき項目を記載している。チーム開発では個人開発編のチェックリストも併せて運用すること。
-
-
-⚠️ 1. 最小権限の原則の崩壊
-AIに「このエラーを直して」と指示すると、権限設定を緩和する方向で解決しようとする場合がある。IAMポリシーやファイル権限を過剰に開放すると、攻撃対象面が広がる。
-バイブコーディングでは、AIが「とにかく動かす」ことを最優先にするため、権限を最大に開放する解決策を提示しやすい。手動コーディングなら権限エラーの原因を調べて最小限の変更で対応するが、AIは最も単純な（＝最も危険な）方法を選びがちである。
-被害例：chmod 777にした設定ファイルから認証情報を抜き取られた事例がある。同一サーバー上の他ユーザーやプロセスから読み取り可能になるため、多層防御が崩壊する。
-❌ 悪い例：
-# AIが提案した「動く」修正
-chmod 777 /var/app/config
-# → 全ユーザーに読み書き実行を許可
-
-✅ 良い例：
-# 必要最小限の権限のみ付与
-chmod 640 /var/app/config
-chown appuser:appgroup /var/app/config
-
-📋 チェックリスト：
-
-
-AIが変更した権限設定（IAM・ファイル・DB）をレビューしたか
-
-chmod 777や*ワイルドカード権限が含まれていないか
-
-本番環境の権限変更にはダブルチェック体制があるか
-
-
-⚠️ 2. CI/CDへのシークレット漏洩
-AIにCI/CDの設定ファイルを書かせると、動作を優先してシークレットをYAMLに直書きしたり、デバッグ用にログに出力するステップを生成することがある。CI/CDのログは開発メンバー全員が閲覧できるため、漏洩の影響範囲が広い。
-バイブコーディングでは「GitHub Actionsのワークフローを書いて」と指示するだけでCI/CD設定が生成されるため、シークレット管理の設計を飛ばしてしまいやすい。手動で書くならSecrets設定を調べるところから始めるが、AIは手っ取り早くベタ書きする傾向がある。
-❌ 悪い例：
-# GitHub Actions のワークフロー
-env:
-  API_KEY: sk-ant-api03-xxxxxxxxxxxxxxxx
-  DB_PASSWORD: prod_password_123
-
-✅ 良い例：
-# GitHub Secrets を参照
-env:
-  API_KEY: ${{ secrets.API_KEY }}
-  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-
-📋 チェックリスト：
-
-
-CI/CD設定ファイルにシークレットが直書きされていないか
-
-GitHub Secrets等のシークレット管理機能を使用しているか
-
-ビルドログにシークレットが出力されない設定になっているか
-
-
-⚠️ 3. プロンプト履歴・ログからの情報漏洩
-Claude Codeのセッション履歴やプロンプトログには、コードベースの構造・ビジネスロジック・データベース設計といった機密性の高い情報が含まれる。共有端末やスクリーンキャストでこれらが第三者に見られるリスクがある。
-セッション履歴は~/.claude/配下に保存されるためリポジトリには通常含まれないが、共有端末では定期的にセッションデータを削除すること。リポジトリ内で管理すべきでないファイルとしては.claude/settings.local.json（個人設定）がある。
-❌ 悪い例：
-# 個人設定ファイルを共有リポジトリにコミット
-git add .claude/settings.local.json
-git commit -m "Claude Codeの設定を共有"
-
-✅ 良い例：
-# .gitignore で個人設定を除外
-echo ".claude/settings.local.json" >> .gitignore
-# 共有するのはチーム共通の設定のみ
-git add .claude/settings.json
-
-📋 チェックリスト：
-
-
-.claude/settings.local.jsonが.gitignoreに含まれているか
-
-共有端末のセッションデータ（~/.claude/配下）を定期削除しているか
-
-画面共有・録画時にプロンプト履歴が映り込まない運用があるか
-
-退職者のセッションデータ削除手順が定められているか
-
-
-⚠️ 4. レビュープロセスの形骸化
-AIが大量のコードを短時間で生成するため、レビュアーが「AIが書いたなら大丈夫だろう」と流してしまう心理が働きやすい。特にバイブコーディングでは生成量が多く、差分が膨大になるため、レビューの質が低下しやすい。
-手動コーディングのPRなら差分が数十行〜数百行で済むことが多いが、バイブコーディングでは一度の指示で数百〜数千行の差分が生まれることがある。これに対して「全行レビュー」は非現実的であり、セキュリティ関連箇所への重点レビューとツールによる自動チェックの併用が不可欠である。
-❌ 悪い例：
-<!-- PRの説明 -->
-Claude Codeで生成。テスト通過済み。LGTM
-<!-- → セキュリティ観点のレビューがゼロ -->
-
-✅ 良い例：
-<!-- PRテンプレートにセキュリティチェック項目を必須化 -->
-## セキュリティレビュー
-- [ ] 認証・認可の変更はないか
-- [ ] ユーザー入力の検証は適切か
-- [ ] 新規パッケージのセキュリティ確認済みか
-- [ ] AI生成コードであることを明示しているか
-
-📋 チェックリスト：
-
-
-PRテンプレートにセキュリティチェック項目が含まれているか
-
-AI生成コードであることを明示するラベル運用があるか
-
-認証・暗号化・入力検証の変更に対し、レビューコメントを残したか
-
-セキュリティ関連の変更は専任レビュアーを必須にしているか
-
-
-Claude Codeのセキュリティ機能を活用する
-Claude Code自体に備わっているセキュリティ機能を適切に設定することで、バイブコーディングの安全性を大幅に高められる。
-
-サンドボックス
-サンドボックスはBashコマンドのファイルシステムアクセスとネットワークアクセスをOS レベルで制限する機能である。macOSではSeatbelt、LinuxではBubblewrapを利用して強制される。
-Claude Code上で/sandboxコマンドを実行すると有効化できる。
-{
-  "sandbox": {
-    "enabled": true,
-    "filesystem": {
-      "allowWrite": ["~/.kube", "/tmp/build"]
-    }
-  }
-}
-
-
-
-ファイルシステム隔離：デフォルトではカレントディレクトリとそのサブディレクトリにのみ書き込みが許可される。sandbox.filesystem.allowWriteで追加パスを指定可能
-
-ネットワーク隔離：許可されたドメインのみにアクセスが制限される。未許可ドメインへのアクセスはブロックされ、通知が表示される
-
-プロンプトインジェクション対策：サンドボックス内のプロセスはOS レベルで制限されるため、仮にAIの判断が操作されても、システムファイルの改ざんやデータの外部送信を防止できる
-
-
-パーミッションモード
-Claude Codeには複数のパーミッションモードがあり、プロジェクトの性質に応じて使い分ける。
-
-
-
-モード
-説明
-推奨場面
-
-
-
-
-default
-ツールの初回使用時に許可を求める
-通常の開発
-
-
-plan
-分析のみ。ファイル変更やコマンド実行は不可
-コードレビュー・調査
-
-
-acceptEdits
-ファイル編集を自動許可。コマンドは許可を求める
-信頼できるプロジェクト
-
-
-dontAsk
-事前許可されたツールのみ自動実行。それ以外は拒否
-CI/CD環境・厳格な制限
-
-
-
-チーム開発では、管理者設定（managed settings）を使い、全権限をスキップするモード（bypassPermissions）を無効化することを推奨する。
-{
-  "permissions": {
-    "disableBypassPermissionsMode": "disable"
-  }
-}
-
-
-Hooks（コマンド実行前の自動チェック）
-Hooksは、Claude Codeの操作の前後に自動実行されるカスタムスクリプトである。コマンド実行前に動作する「PreToolUse」フックを使えば、危険なコマンドのブロックやシークレットの検出を自動化できる。
-シークレット検出フックの例（.claude/hooks/detect-secrets.sh）：
-#!/bin/bash
-INPUT=$(cat)
-COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
-
-# コマンド内のシークレットパターンを検出
-if echo "$COMMAND" | grep -qE '(password|token|api.?key|secret).*='; then
-  jq -n '{
-    hookSpecificOutput: {
-      hookEventName: "PreToolUse",
-      permissionDecision: "deny",
-      permissionDecisionReason: "Potential secret detected in command"
-    }
-  }'
-  exit 0
-fi
-exit 0
-
-設定例（.claude/settings.json）：
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": ".claude/hooks/detect-secrets.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-
-このフックにより、Bashコマンド実行前にシークレットのパターンが検出された場合、自動的にブロックされる。
-
-推奨ツール
-チェックリストの「毎コミット」の負荷を軽減するため、以下の自動化ツールの導入を推奨する。人間のレビューは必須だが、機械的に検出可能な問題はツールに任せるべきである。
-
-シークレットスキャン（pre-commitフック）
-
-
-
-ツール
-概要
-
-
-
-
-gitleaks
-Git履歴を含むシークレットスキャン。pre-commitフックとして導入可能
-
-
-trufflehog
-高精度なシークレット検出。600以上のパターンに対応
-
-
-
-
-静的解析（CI連携）
-
-
-
-ツール
-概要
-
-
-
-
-Semgrep
-軽量な静的解析。SQLインジェクション等のパターンを検出
-
-
-CodeQL
-GitHubネイティブの静的解析。PRに自動コメント
-
-
-
-
-依存関係の脆弱性チェック
-
-
-
-ツール
-概要
-
-
-
-
-Dependabot
-GitHubネイティブ。脆弱な依存関係を検出しPRを自動作成
-
-
-osv-scanner
-Googleが開発。OSVデータベースと照合して脆弱性を検出
-
-
-
-gitleaksをpre-commitフックとして導入するだけでも、シークレットの誤コミットを大幅に削減できる。
-
-シークレット漏洩時の緊急対応
-万が一シークレットがリポジトリにコミットされた場合、以下のフローで対応する。git履歴から削除しても、pushした時点でシークレットは漏洩したとみなすこと。
-
-対応フロー
-
-
-即時無効化：漏洩したシークレット（APIキー・トークン・パスワード）をプロバイダの管理画面から即座に無効化・ローテーションする
-
-影響範囲の調査：漏洩したシークレットで何が実行可能だったかを特定する。ログを確認し、不正利用の痕跡がないか調査する
-
-新しいシークレットの発行：新しいキーを発行し、環境変数やシークレット管理サービスに安全に設定する
-
-原因の特定と再発防止：なぜ漏洩が起きたかを特定し、pre-commitフック（gitleaks等）の導入やCLAUDE.mdへのルール追記など、再発防止策を実施する
-
-報告：チーム開発の場合、セキュリティ担当者・テックリードに報告する。影響範囲に応じて顧客やユーザーへの通知が必要な場合もある
-
-
-重要な注意点
-
-
-git rebaseやgit filter-branchで履歴からシークレットを削除しても、GitHub等ではキャッシュが残る可能性がある。シークレットの削除ではなく、無効化が最優先である
-GitHub Secret Scanningが有効な場合、パートナーパターンに該当するシークレットは自動的にプロバイダに通知される
-
-
-まとめ：全項目チェックリスト（コピペ用）
-以下のチェックリストをそのままプロジェクトに貼り付けて使用できる。
-
-個人開発チェックリスト
-シークレット管理
-
-
-ソースコード内にAPIキー・トークンが直書きされていないか（担当：自分 / 頻度：毎コミット ※gitleaks等で自動化推奨）
-
-.envファイルが.gitignoreに含まれているか（担当：自分 / 頻度：プロジェクト開始時）
-
-.env.example（値なしテンプレート）をリポジトリに用意しているか（担当：自分 / 頻度：プロジェクト開始時）
-
-プロンプトにシークレットの実値を含めていないか（担当：自分 / 頻度：毎プロンプト）
-
-CLAUDE.md
-
-
-CLAUDE.mdにパスワード・内部URL等のシークレットが含まれていないか（担当：自分 / 頻度：毎コミット）
-
-シークレットは環境変数名のみ記載し実値を書いていないか（担当：自分 / 頻度：毎コミット）
-
-サプライチェーン
-
-
-AIが追加したパッケージの名前・リポジトリURL・更新日を確認したか（担当：自分 / 頻度：パッケージ追加時）
-
-パッケージがレジストリに実在し正規のものか確認したか（担当：自分 / 頻度：パッケージ追加時）
-
-パッケージバージョンをピン留めしているか（担当：自分 / 頻度：パッケージ追加時）
-
-コードレビュー
-
-
-セキュリティ関連箇所（認証・暗号化・入力検証・権限設定）を中心にdiffを確認してからコミットしているか（担当：自分 / 頻度：毎コミット）
-
-ユーザー入力を直接クエリやコマンドに埋め込んでいないか（担当：自分 / 頻度：毎コミット）
-
-上級：ローカルにシークレットを置かない設計
-
-
-外部APIとの通信層をプロトコルで抽象化しているか（担当：自分 / 頻度：設計時）
-
-ローカル開発用のモック実装を用意しているか（担当：自分 / 頻度：設計時）
-
-本番のシークレットはSecrets Manager等で管理しているか（担当：自分 / 頻度：プロジェクト開始時）
-
-プロンプトにシークレットの実値を含めずに開発できる設計になっているか（担当：自分 / 頻度：毎プロンプト）
-
-Claude Code設定
-
-
-サンドボックスを有効化しているか（担当：自分 / 頻度：プロジェクト開始時）
-
-パーミッションモードをプロジェクトの性質に合わせて設定しているか（担当：自分 / 頻度：プロジェクト開始時）
-
-
-チーム開発チェックリスト
-
-個人開発チェックリストの全項目に加えて、以下を確認すること。
-
-権限管理
-
-
-AIが変更した権限設定（IAM・ファイル・DB）をレビューしたか（担当：レビュアー / 頻度：PR作成時）
-
-chmod 777やワイルドカード権限が含まれていないか（担当：レビュアー / 頻度：PR作成時）
-
-本番環境の権限変更にはダブルチェック体制があるか（担当：テックリード / 頻度：PR作成時）
-
-CI/CD
-
-
-CI/CD設定ファイルにシークレットが直書きされていないか（担当：レビュアー / 頻度：PR作成時）
-
-GitHub Secrets等のシークレット管理機能を使用しているか（担当：インフラ担当 / 頻度：CI/CD変更時）
-
-ビルドログにシークレットが出力されない設定になっているか（担当：インフラ担当 / 頻度：CI/CD変更時）
-
-情報管理
-
-
-.claude/settings.local.jsonが.gitignoreに含まれているか（担当：テックリード / 頻度：プロジェクト開始時）
-
-共有端末のセッションデータを定期削除しているか（担当：テックリード / 頻度：四半期）
-
-画面共有・録画時にプロンプト履歴が映り込まない運用があるか（担当：テックリード / 頻度：四半期）
-
-退職者のセッションデータ削除手順が定められているか（担当：テックリード / 頻度：発生時）
-
-レビュープロセス
-
-
-PRテンプレートにセキュリティチェック項目が含まれているか（担当：テックリード / 頻度：プロジェクト開始時）
-
-AI生成コードであることを明示するラベル運用があるか（担当：テックリード / 頻度：プロジェクト開始時）
-
-認証・暗号化・入力検証の変更に対し、レビューコメントを残したか（担当：レビュアー / 頻度：PR作成時）
-
-セキュリティ関連の変更は専任レビュアーを必須にしているか（担当：テックリード / 頻度：PR作成時）
-
-Claude Code設定（チーム共通）
-
-
-Claude Codeの権限バイパス（bypassPermissions）を管理者設定で禁止しているか（担当：テックリード / 頻度：プロジェクト開始時）
-
-Claude CodeのHooks機能でシークレットの自動検出を設定しているか（担当：テックリード / 頻度：プロジェクト開始時）
-
-gitleaks等のシークレットスキャンをpre-commitフックに導入しているか（担当：テックリード / 頻度：プロジェクト開始時）
-
-
-おわりに
-バイブコーディングは開発速度を劇的に向上させる強力な手法である。しかし、AIが生成するコードは人間が書くコードと同様に、あるいはそれ以上にセキュリティレビューが必要である。AIが大量のコードを高速に生成するからこそ、人間によるセキュリティの防壁が重要になる。
-このチェックリストを社内に展開する際は「バイブコーディングを禁止するためのルールではなく、安全に活用するためのガイドラインである」と一言添えると、チームの抵抗感なく導入できるはずである。たとえば、以下のようなメッセージと共にチームに共有するとよいだろう。
-
-「Claude Code等のAIエージェントを使ったバイブコーディングは推奨しています。ただし、AIが生成するコードにもセキュリティリスクがある以上、チェックリストに沿った確認を習慣化しましょう。このガイドラインはAI活用を制限するものではなく、安全に最大限活用するためのものです。」
-
-セキュリティは一度設定して終わりではなく、継続的に改善していくものである。まずはgitleaksの導入とサンドボックスの有効化から始めてみてほしい。
-
-参考
-
-Claude Code Security - Anthropic
-Claude Code Settings - Anthropic
-Claude Code Sandboxing - Anthropic
-Claude Code Permissions - Anthropic
-Claude Code Hooks - Anthropic
-Best Practices for Claude Code - Anthropic
-OWASP Top 10 for LLM Applications 2025
-gitleaks - GitHub
-Semgrep
-AWS Secrets Manager - AWS
-ECS でのシークレット管理 - AWS
-
-
-@kotaro_ai_lab
-AI活用や開発効率化について発信しています。フォローお気軽にどうぞ！
 
 ---
 

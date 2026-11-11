@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-09T04:00:10.357Z",
+  "updated_at": "2026-11-11T03:42:43.661Z",
   "articles": [
     {
       "id": "1702129693",
@@ -13182,6 +13182,150 @@
       "status": "unread",
       "analyzed_at": "2026-11-09T04:00:10.357Z",
       "markdown_path": "data/notebooklm_sources/1796512179_【実践】Claude Codeの開発速度を2倍にする10のTips - Qiita.md"
+    },
+    {
+      "id": "1796512149",
+      "url": "https://qiita.com/nero-15/items/c12a9403a7d7673ae432",
+      "title": "Claude Code Agent Teams を試す：複数AIエージェントの協調作業 - Qiita",
+      "excerpt": "Claude Code Agent Teams を試す：複数AIエージェントの協調作業",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-11T03:39:51.392Z",
+      "markdown_path": "data/notebooklm_sources/1796512149_Claude Code Agent Teams を試す：複数AIエージェントの協調作業 - Qiita.md"
+    },
+    {
+      "id": "1796507798",
+      "url": "https://zenn.dev/layerx/articles/9f25ec86a31730",
+      "title": "Agent Skills自動最適化の研究、中身はほぼ深層学習の訓練ループだった",
+      "excerpt": "Ai Workforce事業部FDE部エンジニアの堤(@ozro_223)です。\n本記事では、Coding Agent（以降、エージェントと呼びます）に持たせるスキルを、ハーネスの工夫でエージェントの実行経験から学習させる2026年上半期の研究動向を紹介します。ここでいうスキルは、Agent Skillsに代表される、SKILL.mdを含むフォルダを指します。",
+      "summary": "",
+      "score": 85,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "LLMエージェント",
+        "AgentSkills"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-11T03:40:24.214Z",
+      "markdown_path": "data/notebooklm_sources/1796507798_Agent Skills自動最適化の研究、中身はほぼ深層学習の訓練ループだった.md"
+    },
+    {
+      "id": "1796507792",
+      "url": "https://zenn.dev/kun432/scraps/ef10ea28c0500a",
+      "title": "メモ: Loop Engineering",
+      "excerpt": "kun432さんのスクラップ",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-11T03:40:44.645Z",
+      "markdown_path": "data/notebooklm_sources/1796507792_メモ_ Loop Engineering.md"
+    },
+    {
+      "id": "1796507755",
+      "url": "https://zenn.dev/karamage/articles/5b7fbabcb04da6",
+      "title": "猫でもわかるループエンジニアリング",
+      "excerpt": "",
+      "summary": "",
+      "score": 82,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ループエンジニアリング",
+        "AIエージェント",
+        "AI駆動開発"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-11T03:41:05.760Z",
+      "markdown_path": "data/notebooklm_sources/1796507755_猫でもわかるループエンジニアリング.md"
+    },
+    {
+      "id": "1796507747",
+      "url": "https://zenn.dev/acrosstudioblog/articles/38509c0473683a",
+      "title": "もうプロンプトを書くな──「Loop Engineering」という新しいパラダイムの正体",
+      "excerpt": "ある日、X のタイムラインを眺めていたら、こんな引用が流れてきました。",
+      "summary": "",
+      "score": 90,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "LoopEngineering"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-11T03:41:25.594Z",
+      "markdown_path": "data/notebooklm_sources/1796507747_もうプロンプトを書くな──「Loop Engineering」という新しいパラダイムの正体.md"
+    },
+    {
+      "id": "1796507730",
+      "url": "https://zenn.dev/suwash/articles/loop-engineering_20260610",
+      "title": "Loop Engineering入門：AIコーディングエージェントを動かすシステムを設計する",
+      "excerpt": "Loop engineering は、AI コーディングエージェントを手動で逐次プロンプトする代わりに、エージェントを自律的にプロンプト・オーケストレートするシステムを設計する実践方法論です。本記事は方法論として、構成要素・論理構造・データモデル・実装パターン・運用・限界を整理します。",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "エージェントアーキテクチャ",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-11T03:41:46.438Z",
+      "markdown_path": "data/notebooklm_sources/1796507730_Loop Engineering入門：AIコーディングエージェントを動かすシステムを設計する.md"
+    },
+    {
+      "id": "1796507723",
+      "url": "https://engineering.dena.com/blog/2026/07/claude-code-harness-app/",
+      "title": "Claude Codeのハーネスを育てるアプリを作ってみた 〜~/.claudeには宝が眠っている〜 | BLOG - DeNA Engineering",
+      "excerpt": "こんにちは、松島です。元々はバックエンドエンジニアで、今はDeSCヘルスケアでデータアナリスト兼アナリティクスエンジニアをしています。「LLM×データ×分析×エンジニアリング」の交差点あたりが好きで、気づけばいつもそのあたりで手を動かしています。\n普段は業務でClaude Codeを触りまくっています。使っていると、~/.claude の下にはいろいろなものが溜まっていきます。CLAUDE.mdに …",
+      "summary": "",
+      "score": 88,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "LLMエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-11T03:42:22.783Z",
+      "markdown_path": "data/notebooklm_sources/1796507723_Claude Codeのハーネスを育てるアプリを作ってみた 〜~_.claudeには宝が眠っている〜 _ BLOG - DeNA Engineering.md"
+    },
+    {
+      "id": "1796507708",
+      "url": "https://zenn.dev/emuni/articles/claude-code-sdd-workflow-guide",
+      "title": "【Claude Code×SDD】requirements→design→tasks→dev-report→QAの開発ワークフロー全公開",
+      "excerpt": "こんにちは、株式会社エムニでPM兼、ソフトウェアエンジニア/LLMエンジニアをしている、まさぴょんです🐱",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "SDD"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-11T03:42:43.661Z",
+      "markdown_path": "data/notebooklm_sources/1796507708_【Claude Code×SDD】requirements→design→tasks→dev-report→QAの開発ワークフロー全公開.md"
     }
   ]
 }
