@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-11T03:42:43.661Z",
+  "updated_at": "2026-11-12T05:25:23.474Z",
   "articles": [
     {
       "id": "1702129693",
@@ -13326,6 +13326,42 @@
       "status": "unread",
       "analyzed_at": "2026-11-11T03:42:43.661Z",
       "markdown_path": "data/notebooklm_sources/1796507708_【Claude Code×SDD】requirements→design→tasks→dev-report→QAの開発ワークフロー全公開.md"
+    },
+    {
+      "id": "1796507700",
+      "url": "https://zenn.dev/arufian/articles/4676070054c347",
+      "title": "Claude Codeのスキル×サブエージェントで開発ワークフローを丸ごと自動化したらデリバリー速度が3倍になった",
+      "excerpt": "フリーランスとして、日本の大手コンサルティングファームのAI駆動開発を支援しています。そこで「Claude Codeのスキルとサブエージェントを組み合わせて、設計からデプロイまでを丸ごとオーケストレーションするワークフロー」を作ったところ、案件のデリバリー速度が 約3倍 になりました。",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "マルチエージェント"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-12T04:57:38.603Z",
+      "markdown_path": "data/notebooklm_sources/1796507700_Claude Codeのスキル×サブエージェントで開発ワークフローを丸ごと自動化したらデリバリー速度が3倍になった.md"
+    },
+    {
+      "id": "1796507681",
+      "url": "https://dev.classmethod.jp/articles/claude-loop-engineering-practice/",
+      "title": "Loop EngineeringをClaudeを使って実践してみた。 | DevelopersIO",
+      "excerpt": "こんにちは、せーのです。",
+      "summary": "",
+      "score": 92,
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "LoopEngineering"
+      ],
+      "status": "unread",
+      "analyzed_at": "2026-11-12T05:25:23.474Z",
+      "markdown_path": "data/notebooklm_sources/1796507681_Loop EngineeringをClaudeを使って実践してみた。 _ DevelopersIO.md"
     }
   ]
 }
