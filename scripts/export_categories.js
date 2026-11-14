@@ -9,6 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const { CATEGORIES, resolvePrimaryCategory } = require('./tag_taxonomy');
+const { extractMdBody } = require('./structured_md');
 
 const ROOT_DIR = path.resolve(__dirname, '..');
 const BOOKMARKS_JSON = path.join(ROOT_DIR, 'data', 'bookmarks.json');
@@ -45,8 +46,7 @@ function formatArticleForPack(article, indexInCat, rawMdContent) {
   const tagsStr = (article.tags || []).map((t) => `#${t}`).join(', ');
   let body = '';
   if (rawMdContent) {
-    const parts = rawMdContent.split(/^##\s+本文\s*$/m);
-    body = (parts[1] !== undefined ? parts[1] : rawMdContent).trim();
+    body = extractMdBody(rawMdContent).trim();
   } else {
     body = article.excerpt || '(本文なし)';
   }

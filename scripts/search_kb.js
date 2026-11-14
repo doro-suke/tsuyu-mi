@@ -9,6 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const { normalizeTags } = require('./tag_taxonomy');
+const { extractMdBody } = require('./structured_md');
 
 if (process.stdout.setDefaultEncoding) {
   process.stdout.setDefaultEncoding('utf8');
@@ -159,21 +160,7 @@ function resolveSafeMdPath(article) {
   return resolved;
 }
 
-/**
- * Markdownファイルから「## 本文」以降を抽出する
- */
-function extractMdBody(rawMd) {
-  const marker = /^##\s+本文\s*$/m;
-  const match = rawMd.match(marker);
-  if (match && match.index !== undefined) {
-    return rawMd.slice(match.index + match[0].length).replace(/^\r?\n+/, '');
-  }
-  const hrIdx = rawMd.indexOf('\n---\n');
-  if (hrIdx !== -1) {
-    return rawMd.slice(hrIdx + 5).replace(/^\r?\n+/, '');
-  }
-  return rawMd;
-}
+// extractMdBody は ./structured_md からインポート（新旧両フォーマット対応）
 
 /**
  * 本文内の Markdown 見出し（H1〜H4）を一覧抽出する
@@ -255,9 +242,9 @@ function extractHeadingSection(text, keyword) {
 }
 
 /**
- * 記事一覧からクエリとフィルタに一致する記事を検索・スコアリングする
+ * 共通のフィルタ・キーワード検索・ランキング処理を実行する
  */
-function handleSearch(positionals, flags) {
+function queryArticles(positionals, flags, { defaultTier = null, defaultLimit = DEFAULT_LIMIT } = {}) {
   const data = loadBookmarks();
   const tierMap = buildTierMap(data.articles);
 
@@ -267,9 +254,10 @@ function handleSearch(positionals, flags) {
     .map((t) => t.trim().toLowerCase())
     .filter(Boolean);
 
-  const limit = parseBoundedInt(flags.limit, DEFAULT_LIMIT, 1, MAX_LIMIT);
+  const limit = parseBoundedInt(flags.limit, defaultLimit, 1, MAX_LIMIT);
   const filterTag = typeof flags.tag === 'string' ? flags.tag.trim().replace(/^#/, '').toLowerCase() : null;
-  const filterTier = typeof flags.tier === 'string' ? flags.tier.trim().toLowerCase() : null;
+  const rawTier = typeof flags.tier === 'string' ? flags.tier.trim().toLowerCase() : defaultTier;
+  const filterTier = rawTier && rawTier !== 'all' ? rawTier : null;
   const filterUnread = Boolean(flags.unread);
   const sortMode = typeof flags.sort === 'string' ? flags.sort.trim().toLowerCase() : 'relevance';
   const feedback = loadFeedback();
@@ -280,7 +268,8 @@ function handleSearch(positionals, flags) {
     if (filterTier && tier !== filterTier) return false;
     if (filterUnread && article.status !== 'unread') return false;
     if (filterTag) {
-      const rawTags = (article.tags || []).map((t) => String(t).replace(/^#/, '').toLowerCase());
+      const rawTags = [...(article.tags || []), ...(article.specific_tags || [])]
+        .map((t) => String(t).replace(/^#/, '').toLowerCase());
       const normTags = normalizeTags(article.tags).map((t) => t.toLowerCase());
       const allTags = [...new Set([...rawTags, ...normTags])];
       if (!allTags.some((t) => t.includes(filterTag))) return false;
@@ -301,8 +290,14 @@ function handleSearch(positionals, flags) {
       }))
       .sort((a, b) => b.baseScore - a.baseScore);
 
-    printSearchResults(ranked.slice(0, limit), ranked.length, queryText, tokens, false, flags);
-    return;
+    return {
+      items: ranked.slice(0, limit),
+      totalMatched: ranked.length,
+      queryText,
+      tokens,
+      isOrFallback: false,
+      effectiveTier: filterTier,
+    };
   }
 
   // クエリあり：bookmarks.json + MD本文のハイブリッド検索
@@ -312,8 +307,12 @@ function handleSearch(positionals, flags) {
     const titleLower = (article.title || '').toLowerCase();
     const normTags = normalizeTags(article.tags);
     const tagsLower = normTags.join(' ').toLowerCase();
-    const rawTagsLower = (article.tags || []).join(' ').toLowerCase();
-    const summaryExcerptLower = `${article.summary || ''} ${article.excerpt || ''}`.toLowerCase();
+    const rawTagsLower = [
+      ...(article.tags || []),
+      ...(article.specific_tags || []),
+      article.domain || '',
+    ].join(' ').toLowerCase();
+    const summaryExcerptLower = `${article.summary || ''} ${article.core_rule || ''} ${article.anti_pattern || ''} ${article.excerpt || ''}`.toLowerCase();
     const reasonLower = (article.read_now_reason || '').toLowerCase();
 
     let bodyText = '';
@@ -403,7 +402,25 @@ function handleSearch(positionals, flags) {
     return b.searchScore - a.searchScore;
   });
 
-  printSearchResults(results.slice(0, limit), results.length, queryText, tokens, isOrFallback, flags);
+  return {
+    items: results.slice(0, limit),
+    totalMatched: results.length,
+    queryText,
+    tokens,
+    isOrFallback,
+    effectiveTier: filterTier,
+  };
+}
+
+/**
+ * 記事一覧からクエリとフィルタに一致する記事を検索・スコアリングする
+ */
+function handleSearch(positionals, flags) {
+  const { items, totalMatched, queryText, tokens, isOrFallback } = queryArticles(positionals, flags, {
+    defaultTier: null,
+    defaultLimit: DEFAULT_LIMIT,
+  });
+  printSearchResults(items, totalMatched, queryText, tokens, isOrFallback, flags);
 }
 
 /**
@@ -510,10 +527,23 @@ function handleView(positionals) {
   console.log(`Title: ${article.title}`);
   console.log(`URL: ${article.url}`);
   console.log(`Score: ${baseScore} (Tier: ${tier.toUpperCase()}) | Status: ${article.status} | Analyzed: ${article.analyzed_at || '-'}`);
+  if (article.domain || article.source) {
+    console.log(`Domain: ${article.domain || '-'} | Source: ${article.source || '-'} | Structured: ${article.is_structured ? 'Yes' : 'No'}`);
+  }
   console.log(`Tags: ${normTags.map((t) => `#${t}`).join(', ') || '(なし)'}`);
+  if (Array.isArray(article.specific_tags) && article.specific_tags.length > 0) {
+    console.log(`Specific Tags: ${article.specific_tags.join(', ')}`);
+  }
   console.log(`MD Path: ${article.markdown_path || '(なし)'}`);
   console.log(`Body Length: ${bodyText.length} chars`);
   console.log('');
+
+  if (article.core_rule || article.anti_pattern) {
+    console.log('## Structured Takeaways');
+    if (article.core_rule) console.log(`- Core Rule: ${article.core_rule}`);
+    if (article.anti_pattern) console.log(`- Anti-Pattern: ${article.anti_pattern}`);
+    console.log('');
+  }
 
   if (article.summary && article.summary.trim()) {
     console.log('## AI Summary');
@@ -779,11 +809,290 @@ function handleFeedback(positionals, flags) {
   }
 }
 
+/**
+ * テキストを指定文字数でコンパクトに省略する
+ */
+function truncateText(str, maxLen) {
+  const clean = compactWhitespace(str);
+  if (clean.length <= maxLen) return clean;
+  return clean.slice(0, maxLen) + '...';
+}
+
+/**
+ * 構造化 Markdown セクションから見出しを除いた本文行を連結する
+ */
+function cleanSectionLines(content) {
+  if (!content) return '';
+  const lines = content
+    .split(/\r?\n/)
+    .slice(1)
+    .map((l) => l.replace(/^\s*[-*+•]\s*/, '').replace(/^\s*\d+\.\s*/, '').trim())
+    .filter((l) => l && !l.startsWith('#') && !/^https?:\/\/\S+$/.test(l));
+  return compactWhitespace(lines.join(' / '));
+}
+
+/**
+ * 記事本文から挨拶・URL・コードブロック等を除外した実質的な文候補を抽出する
+ */
+function extractBodySentences(bodyText) {
+  if (!bodyText) return [];
+  const lines = bodyText.split(/\r?\n/);
+  const cleanedLines = [];
+  let inCodeBlock = false;
+
+  for (const rawLine of lines) {
+    const trimmed = rawLine.trim();
+    if (trimmed.startsWith('```')) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock || !trimmed) continue;
+    if (/^[-*_]{3,}$/.test(trimmed)) continue;
+    if (/^!\[[^\]]*\]\([^)]*\)$/.test(trimmed)) continue;
+    if (/^https?:\/\/\S+$/.test(trimmed)) continue;
+
+    let line = trimmed
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/\*\*|__/g, '')
+      .replace(/`/g, '')
+      .replace(/^\s*(?:>+\s*|#{1,6}\s+|[-*+•]\s+|\d+\.\s+)+/, '')
+      .trim();
+
+    if (line && !/^https?:\/\/\S+$/.test(line)) {
+      cleanedLines.push(line);
+    }
+  }
+
+  const sentences = [];
+  const seen = new Set();
+  for (const line of cleanedLines) {
+    const parts = line.split(/(?<=[。！？])\s*|(?<=\.)\s+(?=[A-Z0-9\u3040-\u9FFF])/);
+    for (const part of parts) {
+      const s = compactWhitespace(part);
+      if (s.length < 15) continue;
+      const withoutUrls = s.replace(/https?:\/\/\S+/g, '').trim();
+      if (withoutUrls.length < 12) continue;
+      if (/^(こんにちは|こんばんは|おはようございます|はじめまして|どうも|お疲れ様|皆さん|みなさん)[、。！\s]?/.test(s)) continue;
+      if (/^(今回は|本記事では|この記事では).{0,35}(解説します|紹介します|まとめます|書きました|共有します|説明します)[。！]?$/.test(s)) continue;
+      if (/^(目次|まとめ|おわりに|はじめに|参考|リンク|PR|スポンサー|関連記事)[：:\s]*$/.test(s)) continue;
+      if (/^(?:📺\s*YouTube|この(?:記事|動画)でわかること)/.test(s)) continue;
+      if (/^(\d+\/\d+\s*$|いいね|リポスト|フォロー|ブックマーク)/.test(s)) continue;
+      if (/^@\w{2,}/.test(s) && s.length < 40) continue;
+
+      const dedupeKey = s.slice(0, 30).toLowerCase();
+      if (seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
+      sentences.push(s);
+    }
+  }
+  return sentences;
+}
+
+/**
+ * 3世代のスキーマ（core_rule / summary / 本文のみ）から要点と注意点を抽出する
+ */
+function extractArticleTakeaways(article, bodyText, tokens = []) {
+  let takeaway = '';
+  let caution = '';
+
+  // 1. 第3世代スキーマ（JSONフィールド直接保持）
+  if (article.core_rule && String(article.core_rule).trim()) {
+    takeaway = truncateText(article.core_rule, 240);
+  }
+  if (article.anti_pattern && String(article.anti_pattern).trim()) {
+    caution = truncateText(article.anti_pattern, 200);
+  }
+
+  // 2. 第3世代スキーマ（Markdown構造化セクションからの補完）
+  if (!takeaway && bodyText) {
+    const sec = extractHeadingSection(bodyText, '実践ルール・判断基準') || extractHeadingSection(bodyText, '実践ルール');
+    const txt = cleanSectionLines(sec && sec.content);
+    if (txt) takeaway = truncateText(txt, 240);
+  }
+  if (!caution && bodyText) {
+    const sec = extractHeadingSection(bodyText, '避けるべきアンチパターン') || extractHeadingSection(bodyText, 'アンチパターン');
+    const txt = cleanSectionLines(sec && sec.content);
+    if (txt) caution = truncateText(txt, 200);
+  }
+
+  // 3. 第1世代スキーマ（article.summary）
+  const hasSummary = Boolean(article.summary && article.summary.trim());
+  if (hasSummary) {
+    const rawSummary = article.summary.trim();
+    const ngInlineMatch = rawSummary.match(/【(?:NG|注意|アンチパターン)】[:：]?\s*([^/\n]+)/);
+    if (!caution && ngInlineMatch && ngInlineMatch[1]) {
+      caution = truncateText(ngInlineMatch[1], 200);
+    }
+
+    if (!takeaway) {
+      const cleanedLines = rawSummary
+        .split(/\r?\n/)
+        .map((l) => l.replace(/^[-*•]\s*/, '').trim())
+        .filter((l) => l && !/^【(?:NG|注意|アンチパターン)】/.test(l))
+        .map((l) => l.replace(/\/?\s*【(?:NG|注意|アンチパターン)】[:：]?\s*[^/\n]+/g, '').trim())
+        .filter(Boolean);
+      const joined = cleanedLines.join(' / ').replace(/^【結論】[:：]?\s*/, '');
+      if (joined) {
+        takeaway = truncateText(joined, 240);
+      }
+    }
+
+    // サマリー内に注意系の行が含まれ、未抽出なら拾う
+    if (!caution) {
+      const summaryLines = rawSummary
+        .split(/\r?\n/)
+        .map((l) => l.replace(/^[-*•]\s*/, '').trim())
+        .filter(Boolean);
+      const strongCaution = summaryLines.find((l) => /(禁止|NG|避けるべき|アンチパターン|やってはいけない|落とし穴|罠|悪手)/i.test(l));
+      if (strongCaution && compactWhitespace(strongCaution) !== takeaway) {
+        caution = truncateText(strongCaution, 200);
+      }
+    }
+  }
+
+  // 4. 第2世代スキーマ（本文のみ）または Caution 未抽出時の本文スキャン
+  if ((!takeaway || !caution) && bodyText) {
+    const sentences = extractBodySentences(bodyText);
+    const tokenMatchers = tokens.map((t) => createTokenMatcher(t));
+
+    if (!caution && sentences.length > 0) {
+      const cautionJaRe = hasSummary
+        ? /(禁止|避けるべき|アンチパターン|やってはいけない|してはいけない|落とし穴|罠|悪手)/g
+        : /(禁止|避ける|アンチパターン|やってはいけない|してはいけない|落とし穴|失敗|罠|悪手|危険|リスク|注意|問題|限界|劣化)/g;
+      const cautionNgRe = /(?<![A-Za-z])NG(?![A-Za-z])/g;
+      const cautionEnRe = /(?<![a-z])(?:don't|do not|never|avoid|anti-pattern|pitfall|warning)(?![a-z])/gi;
+
+      let bestCaution = null;
+      let bestCautionScore = 0;
+      for (const s of sentences) {
+        const hitCount =
+          (s.match(cautionJaRe) || []).length +
+          (s.match(cautionNgRe) || []).length +
+          (s.match(cautionEnRe) || []).length;
+        if (hitCount === 0) continue;
+        let score = hitCount * 3;
+        for (const match of tokenMatchers) {
+          if (match(s.toLowerCase())) score += 2;
+        }
+        if (s.length > 180) score -= 1;
+        if (/目次|この(?:記事|動画)でわかること/.test(s)) score -= 4;
+        if (score > bestCautionScore) {
+          bestCautionScore = score;
+          bestCaution = s;
+        }
+      }
+      if (bestCaution) {
+        caution = truncateText(bestCaution, 200);
+      }
+    }
+
+    if (!takeaway && sentences.length > 0) {
+      const takeawayJaRe = /(結論|原則|重要|鉄則|ポイント|ルール|べき|必須|推奨|効果|解決|コツ|ベストプラクティス|方法|手順)/g;
+      const takeawayEnRe = /(?<![a-z])(?:key|rule|best practice|should|must|instead)(?![a-z])/gi;
+      const scored = sentences
+        .map((s, index) => {
+          if (caution && truncateText(s, 200) === caution && sentences.length > 1) {
+            return null;
+          }
+          const hitCount =
+            (s.match(takeawayJaRe) || []).length +
+            (s.match(takeawayEnRe) || []).length;
+          let score = hitCount * 3;
+          for (const match of tokenMatchers) {
+            if (match(s.toLowerCase())) score += 2;
+          }
+          if (s.length >= 25 && s.length <= 140) score += 1;
+          if (/[?？]$/.test(s)) score -= 2;
+          if (/^目次|この(?:記事|動画)でわかること/.test(s)) score -= 4;
+          return { s, index, score };
+        })
+        .filter(Boolean);
+
+      scored.sort((a, b) => (b.score !== a.score ? b.score - a.score : a.index - b.index));
+      const picked = scored.slice(0, 2).sort((a, b) => a.index - b.index);
+      if (picked.length > 0) {
+        takeaway = truncateText(picked.map((p) => p.s).join(' / '), 240);
+      }
+    }
+  }
+
+  if (!takeaway) {
+    takeaway = article.excerpt && article.excerpt.trim()
+      ? truncateText(article.excerpt, 220)
+      : '(要約・本文なし)';
+  }
+
+  return { takeaway, caution };
+}
+
+/**
+ * 品質ゲート（Verifier）およびルール還元用の高密度チェックリストを出力する
+ */
+function handleChecklist(positionals, flags) {
+  const { items, totalMatched, queryText, tokens, isOrFallback, effectiveTier } = queryArticles(positionals, flags, {
+    defaultTier: 'high',
+    defaultLimit: 10,
+  });
+
+  const filterDesc = [];
+  if (queryText) filterDesc.push(`Query: "${queryText}"`);
+  if (flags.tag) filterDesc.push(`Tag: #${flags.tag}`);
+  filterDesc.push(`Tier: ${effectiveTier || 'all'}`);
+  if (flags.unread) filterDesc.push('Unread only');
+
+  console.log(`[Vesper KB Checklist] ${totalMatched}件中 ${items.length}件表示 (${filterDesc.join(' | ')})`);
+  if (isOrFallback) {
+    console.log('[Fallback] 全キーワード一致(AND)が0件のため、部分一致(OR)上位を表示しています。');
+  }
+  if (items.length > 0 && items.every((i) => i.tier === 'low')) {
+    console.log('[Notice] 上位ヒットがすべて LOW ティアです。この領域の良質な記事が KB 内に不足している可能性があります。');
+  }
+  console.log('--------------------------------------------------------------------------------');
+
+  if (items.length === 0) {
+    console.log('該当する記事が見つかりませんでした。条件（--tier all や別のタグ・キーワード）を見直してください。');
+    return;
+  }
+
+  items.forEach((item, idx) => {
+    const a = item.article;
+    const normTags = normalizeTags(a.tags);
+    const tagStr = normTags.map((t) => `#${t}`).join(', ') || '(なし)';
+
+    let bodyText = item.bodyText;
+    if (bodyText === undefined || bodyText === null) {
+      const mdPath = resolveSafeMdPath(a);
+      if (mdPath) {
+        try {
+          bodyText = extractMdBody(fs.readFileSync(mdPath, 'utf8'));
+        } catch {
+          bodyText = '';
+        }
+      } else {
+        bodyText = '';
+      }
+    }
+
+    const { takeaway, caution } = extractArticleTakeaways(a, bodyText, tokens);
+
+    console.log(`[${idx + 1}] ID: ${a.id} | Score: ${item.baseScore} (${item.tier.toUpperCase()}) | Tags: ${tagStr}`);
+    console.log(`Title: ${a.title}`);
+    console.log(`Takeaway: ${takeaway}`);
+    if (caution) {
+      console.log(`Caution/NG: ${caution}`);
+    }
+    console.log(`Read Detail: node "${SCRIPT_FWD_PATH}" read ${a.id}`);
+    console.log('');
+  });
+}
+
 function printUsage() {
   console.log(`Vesper KB Search CLI (Zero-Dependency)
 
 Usage:
-  node "${SCRIPT_FWD_PATH}" search [query...] [--tag <tag>] [--tier high|medium|low] [--unread] [--sort relevance|score] [--limit N]
+  node "${SCRIPT_FWD_PATH}" search [query...] [--tag <tag>] [--tier high|medium|low|all] [--unread] [--sort relevance|score] [--limit N]
+  node "${SCRIPT_FWD_PATH}" checklist [query...] [--tag <tag>] [--tier high|medium|low|all] [--unread] [--sort relevance|score] [--limit N]
   node "${SCRIPT_FWD_PATH}" view <id>
   node "${SCRIPT_FWD_PATH}" read <id> [--section <keyword>] [--offset N] [--max-chars N]
   node "${SCRIPT_FWD_PATH}" feedback <id> --useful | --miss [--query "..."] [--note "..."]
@@ -804,6 +1113,9 @@ function main() {
   switch (cmd) {
     case 'search':
       handleSearch(rest, flags);
+      break;
+    case 'checklist':
+      handleChecklist(rest, flags);
       break;
     case 'view':
       handleView(rest);

@@ -103,6 +103,13 @@
   - 上部タグフィルターで大文字・小文字の不一致により絞り込みが 0 件になっていた不具合（`currentTag` 未小文字化）を解消。
   - 各記事カード内のタグを `<span>` からクリック可能な `<button>`（`.card-tag-btn`）へ変更し、カード内のタグクリックで即座に絞り込み・ハイライトできるよう改善。
   - 選択中タグの再クリックによる解除（トグル動作）および折りたたみ領域外タグの自動表示を追加。
+- **`vesper-kb` 他プロジェクト還元・品質ゲート対応 (`checklist` コマンド実装)**:
+  - `scripts/search_kb.js` の検索・ランキング共通処理を `queryArticles()` に抽出し、新コマンド `checklist`（既定 `--tier high`・`--limit 10`・`--tier all` 対応）および `extractArticleTakeaways()` を実装（`core_rule`/`anti_pattern`、構造化MDセクション、`summary`、`bodyText` 本文抽出の3世代スキーマ全対応）。
+  - `templates/vesper_kb_skill.md` に Step 1.5（`checklist`）、パターンA（Generator-Verifier 分離による敵対的品質レビュー）、パターンB（Distill & Merge の4原則＋人間承認ゲート＋`bookmarks.json` 未読保護）を追記し、`scripts/install_skills.js` で Antigravity / Claude Code グローバルスキルへ同期完了。
+- **専属司書エージェント（`vesper-librarian`）＆ Agent-as-a-Tool アーキテクチャ構築**:
+  - `templates/vesper_librarian_agent_agy.md`（`model: flash`）および `templates/vesper_librarian_agent_claude.md`（`model: sonnet`）を新規作成し、`scripts/install_skills.js` で Antigravity / Claude Code 両環境へスキル＋エージェントを一括配布できる構成に拡張。
+  - 作業側のコンテキスト汚染を防ぐため、「文脈翻訳レファレンス → 上位精読 → 3点処方箋（適用ルール・NG行動・最小スニペット / 300〜500字）のみ返却」および `feedback --useful` 自律記録プロトコルを確立。
+  - `templates/vesper_kb_skill.md`（司書サブエージェント委任・`claude -p` ワンショット呼び出し）と `GEMINI.md`（2画面手動プロトタイピング用 Librarian Mode）を更新・同期完了。
 
 【現在のステータス】
 システムは完全に自律動作可能な状態です。毎日 09:00 (JST) に自動実行され、未処理のブックマークが確実に「Vesper」のダッシュボードへ反映されます。同時に、NotebookLMにロード可能な統合ナレッジファイルも毎朝最新に自動生成されます。

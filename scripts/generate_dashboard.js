@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { normalizeTags } = require('./tag_taxonomy');
 const { exportCategories } = require('./export_categories');
+const { extractMdBody } = require('./structured_md');
 
 const CONFIG = {
   DATA_DIR: path.join(__dirname, '..', 'data'),
@@ -161,12 +162,8 @@ function generateNotebookMaster(bookmarks) {
     if (localMdPath && fs.existsSync(localMdPath)) {
       try {
         const localContent = fs.readFileSync(localMdPath, 'utf8');
-        const bodyMatch = localContent.split('## 本文');
-        if (bodyMatch[1]) {
-          content += `### 本文\n${bodyMatch[1].trim()}\n\n`;
-        } else {
-          content += `### 本文\n${localContent}\n\n`;
-        }
+        const body = extractMdBody(localContent).trim();
+        content += `### 本文\n${body || localContent}\n\n`;
       } catch (err) {
         content += `### 本文\n(ローカル本文の読み込みに失敗しました: ${err.message})\n\n`;
       }

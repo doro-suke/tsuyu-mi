@@ -4,17 +4,18 @@ const { JSDOM } = require('jsdom');
 const { Readability } = require('@mozilla/readability');
 const { execSync } = require('child_process');
 const { normalizeTags } = require('./tag_taxonomy');
+const {
+  assembleStructuredMarkdown,
+  buildSummaryFromStructured,
+  normalizeDomain,
+  inferSourceFromUrl,
+} = require('./structured_md');
 
 // ローカル実行時のみ .env を読み込み、クラウドでは process.env を優先する
 require('dotenv').config();
 
 const RAINDROP_API_KEY = process.env.RAINDROP_API_KEY;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
-if (!RAINDROP_API_KEY || !GEMINI_API_KEY) {
-  console.error("【CRITICAL ERROR】RAINDROP_API_KEY または GEMINI_API_KEY が環境変数に設定されていません。GitHub Secrets と sync.yml の env 設定を確認してください。");
-  process.exit(1);
-}
 
 /**
  * 設定
@@ -257,9 +258,25 @@ async function getSummary(apiKey, prompt, retryCount = 0) {
     throw new Error("Gemini API からの応答が不正です（候補がありません）。");
   }
   const text = responseJson.candidates[0].content.parts[0].text;
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("有効なJSONが得られませんでした。");
-  return JSON.parse(jsonMatch[0]);
+  try {
+    return JSON.parse(text);
+  } catch {
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error("有効なJSONが得られませんでした。");
+    return JSON.parse(jsonMatch[0]);
+  }
+}
+
+/**
+ * プロンプトテンプレートへ記事メタデータ・本文を安全に埋め込む
+ */
+function buildSummarizePrompt(template, { title, url, date, contentText }) {
+  const safeExcerpt = String(contentText || '').substring(0, 15000);
+  return template
+    .replace('{{title}}', () => String(title || ''))
+    .replace('{{url}}', () => String(url || ''))
+    .replace('{{date}}', () => String(date || new Date().toISOString().slice(0, 7)))
+    .replace('{{excerpt}}', () => safeExcerpt);
 }
 
 /**
@@ -290,6 +307,11 @@ function cleanupOrphanedMarkdowns(bookmarks) {
  * メイン処理
  */
 async function main() {
+  if (!RAINDROP_API_KEY || !GEMINI_API_KEY) {
+    console.error("【CRITICAL ERROR】RAINDROP_API_KEY または GEMINI_API_KEY が環境変数に設定されていません。GitHub Secrets と sync.yml の env 設定を確認してください。");
+    process.exit(1);
+  }
+
   console.log('=== Vesper: 全自動同期パイプライン開始 ===');
   
   const maxProcess = process.argv[2] ? parseInt(process.argv[2], 10) : CONFIG.MAX_PROCESS_DEFAULT;
@@ -328,37 +350,47 @@ async function main() {
       try {
         const extracted = await extractContent(item.link);
         const contentText = extracted ? extracted.textContent.trim() : (item.excerpt || '内容なし');
-        const prompt = promptTemplate
-          .replace('{{title}}', item.title)
-          .replace('{{url}}', item.link)
-          .replace('{{excerpt}}', contentText.substring(0, 5000));
-        
-        const analysis = await getSummary(GEMINI_API_KEY, prompt);
-        const score = typeof analysis.score === 'number' ? analysis.score : 50;
-        const tagsSuggested = Array.isArray(analysis.tags_suggested) ? analysis.tags_suggested : [];
+        const fallbackDate = (item.created || new Date().toISOString()).slice(0, 7);
+        const prompt = buildSummarizePrompt(promptTemplate, {
+          title: item.title,
+          url: item.link,
+          date: fallbackDate,
+          contentText,
+        });
 
-        // AI用ソース（本文 Markdown）の生成
-        const mdContent = `# ${item.title}\n` +
-          `- **Source URL**: ${item.link}\n` +
-          `- **Score**: ${score}\n` +
-          `- **Suggested Tags**: ${tagsSuggested.map(t => `#${t}`).join(', ')}\n` +
-          `- **Processed Date**: ${new Date().toLocaleDateString('ja-JP')}\n\n` +
-          `---\n\n` +
-          `## 本文\n${contentText}\n`;
-        
+        const analysis = await getSummary(GEMINI_API_KEY, prompt);
+        const rawScore = Number(analysis.score);
+        const score = Number.isFinite(rawScore) ? Math.max(0, Math.min(100, Math.round(rawScore))) : 50;
+        const tagsSuggested = Array.isArray(analysis.tags_suggested) ? analysis.tags_suggested : [];
+        const specificTags = Array.isArray(analysis.tags) ? analysis.tags : [];
+
+        // 高密度な構造化 Markdown の生成（ノイズ排除・YAMLフロントマター＋4セクション）
+        const mdContent = assembleStructuredMarkdown(
+          { title: item.title, url: item.link, fallbackDate },
+          { ...analysis, score }
+        );
+
+        fs.mkdirSync(path.dirname(mdPath), { recursive: true });
         fs.writeFileSync(mdPath, mdContent, 'utf8');
 
-                const newArticle = {
+        const structuredSummary = buildSummaryFromStructured(analysis);
+        const newArticle = {
           id: item._id.toString(),
           url: item.link,
           title: item.title,
           excerpt: item.excerpt || (extracted ? extracted.excerpt : '') || '',
-          summary: existing?.summary || '', // 旧データの要約があれば保持、新規は空文字
+          summary: structuredSummary || existing?.summary || '',
           score: score,
+          domain: normalizeDomain(analysis.domain),
+          source: inferSourceFromUrl(item.link, analysis.source),
+          core_rule: String(analysis.core_rule || '').trim(),
+          anti_pattern: String(analysis.anti_pattern || '').trim(),
+          specific_tags: specificTags,
           read_now_reason: existing?.read_now_reason || '',
           defer_reason: existing?.defer_reason || '',
-          tags: normalizeTags([...(item.tags || []), ...tagsSuggested], 4),
+          tags: normalizeTags([...(item.tags || []), ...tagsSuggested, ...specificTags], 4),
           status: existing ? existing.status : 'unread',
+          is_structured: true,
           analyzed_at: new Date().toISOString(),
           markdown_path: relativeMdPath
         };
@@ -372,7 +404,7 @@ async function main() {
         bookmarks.updated_at = new Date().toISOString();
         fs.writeFileSync(CONFIG.BOOKMARKS_JSON, JSON.stringify(bookmarks, null, 2), 'utf8');
         processedCount++;
-        console.log(`  成功: Score ${score} / Tags: [${tagsSuggested.join(', ')}]`);
+        console.log(`  成功: Score ${score} | Domain: ${newArticle.domain} | Tags: [${newArticle.tags.join(', ')}]`);
       } catch (err) {
         errorCount++;
         console.error(`  失敗: ${err.message}`);
@@ -413,4 +445,16 @@ async function main() {
   }
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  CONFIG,
+  sleep,
+  curl,
+  extractContent,
+  getSummary,
+  buildSummarizePrompt,
+  sanitizeFileName,
+};
