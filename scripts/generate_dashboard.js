@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const { normalizeTags } = require('./tag_taxonomy');
+const { exportCategories } = require('./export_categories');
 
 const CONFIG = {
   DATA_DIR: path.join(__dirname, '..', 'data'),
@@ -22,26 +24,6 @@ function assignTiers(articles) {
   sorted.forEach((article, i) => {
     article._tier = i < highCut ? 'high' : i < medCut ? 'medium' : 'low';
   });
-}
-
-const TAG_MAP = {
-  'prompt engineering': 'プロンプトエンジニアリング',
-  'promptengineering': 'プロンプトエンジニアリング',
-  'aiプロンプト': 'プロンプトエンジニアリング',
-  'claudecode': 'ClaudeCode',
-  'claude code': 'ClaudeCode',
-  'llm': '生成AI',
-  'ai自動化': 'AI自動化',
-  'ai駆動開発': 'AI駆動開発',
-  'ai開発': 'AI駆動開発'
-};
-
-function normalizeTags(tags = []) {
-  const normalized = tags.map(tag => {
-    const lowTag = tag.toLowerCase().trim().replace(/^#/, '');
-    return TAG_MAP[lowTag] || tag.trim().replace(/^#/, '');
-  });
-  return [...new Set(normalized)];
 }
 
 function generateDashboard(data) {
@@ -203,9 +185,10 @@ function main() {
 
   const bookmarks = JSON.parse(fs.readFileSync(CONFIG.BOOKMARKS_JSON, 'utf8'));
   
-  // ダッシュボードとNotebookLMマスターの生成
+  // ダッシュボード、NotebookLMマスター、カテゴリ別フォルダの生成
   generateDashboard(bookmarks);
   generateNotebookMaster(bookmarks);
+  exportCategories(bookmarks);
   
   console.log(`[Dashboard] 更新処理がすべて完了しました。`);
 }

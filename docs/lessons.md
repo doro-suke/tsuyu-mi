@@ -14,6 +14,17 @@ AIはタスク開始前に必ずこの内容を確認してください。
 - **今後のルール**: （今後、同様のケースで守るべき具体的なアクションや制約）
 ```
 
+### [2026-11-14] 他プロジェクト横断のナレッジ参照基盤（Vesper KB CLI ＋ グローバルスキル）の構築
+- **発生した事象**: `data/notebooklm_sources/` 配下に蓄積された大量の Markdown（実態監査時点で `bookmarks.json` 526件＋未追跡重複/孤立ファイル386件の計912ファイル）を、他プロジェクトで作業中の Antigravity や Claude Code から低コンテキストコストで横断参照する必要が生じた。
+- **根本原因**:
+  1. `8/16` の軽量化以降の新記事（175件）は `summary`・`read_now_reason` が空であり、`priority` ではなく `score` のみを保持する新旧スキーマ混在状態だったため、`bookmarks.json` だけの検索では新記事の本文がヒットしない。
+  2. `data/notebooklm_sources/` には ID プレフィックス無しの重複・孤立ファイルが386件残存し、約72%の `.md` は `## 本文` 以降に見出し構造を持たず、最大76,587文字の長大記事も含まれていた。
+  3. 外部MCPサーバー化は「No Extra Dependencies」方針に反し、毎ターンのシステムプロンプト常駐によるトークン圧迫も招く。
+- **解決策・パターン**:
+  1. **ゼロ依存の段階的開示 CLI (`scripts/search_kb.js`)**: `bookmarks.json` を SSoT とし、パストラバーサル防止の上で `.md` 本文もハイブリッド走査する検索エンジンを Node.js 標準モジュールのみで実装。`overview` / `search`（KWICスニペット・AND/ORフォールバック）→ `view`（要約空時の本文冒頭自動抽出）→ `read`（4,000文字上限＋`--offset` ページネーション＋見出し不在時のキーワード周辺抜粋フォールバック）の3段階でコンテキスト爆発を防止。
+  2. **SSoT スキル配布と軽量ルーティング**: `templates/vesper_kb_skill.md` を原本とし、`scripts/install_skills.js` で Antigravity（`~/.gemini/config/skills/vesper-kb/SKILL.md`）と Claude Code（`~/.claude/skills/vesper-kb/SKILL.md`）へ配布。両環境のグローバル指示ファイル（`AGENTS.md` / `CLAUDE.md`）末尾に3行のルーティング案内を配置し、クロスシェル互換のフォワードスラッシュ絶対パスで実行する設計とした。
+- **今後のルール**: ナレッジベースへの横断アクセスはディレクトリ直接Globを禁止し、必ず `bookmarks.json` を起点とした段階的開示 CLI 経由で行うこと。スキーマ進化（`score`/`priority`、空 `summary`）や本文構造の欠落を前提としたフォールバックを常に維持する。
+
 ### [2026-10-09] Linux環境（GitHub Actions）におけるファイル名バイト長制限（255バイト）とマルチバイト文字の安全な切り詰め
 - **発生した事象**: 10/8, 10/9 の GitHub Actions 自動同期および Pages ビルドが `actions/checkout` 時に `File name too long` で失敗し、同期パイプラインが実行されなかった。
 - **根本原因**: 10/7 に Markdown ファイル名を `{id}_{title}.md` 形式へ移行した際、文字数単位（`substring(0, 100)`）で切り詰めていたため、UTF-8 で 3 バイト消費する日本語タイトルにおいてファイル名全体が最大 258 バイトに達し、Linux (ext4) のファイル名上限である 255 バイトを超過した（Windows NTFS では 255 文字まで許容されていたためローカル検証をすり抜けた）。

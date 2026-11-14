@@ -8,3 +8,4 @@ data/sample_raindrops.json
 .env.*
 node_modules/
 data/backups/
+data/categories/

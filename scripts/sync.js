@@ -3,6 +3,7 @@ const path = require('path');
 const { JSDOM } = require('jsdom');
 const { Readability } = require('@mozilla/readability');
 const { execSync } = require('child_process');
+const { normalizeTags } = require('./tag_taxonomy');
 
 // ローカル実行時のみ .env を読み込み、クラウドでは process.env を優先する
 require('dotenv').config();
@@ -356,7 +357,7 @@ async function main() {
           score: score,
           read_now_reason: existing?.read_now_reason || '',
           defer_reason: existing?.defer_reason || '',
-          tags: [...new Set([...(item.tags || []), ...tagsSuggested])],
+          tags: normalizeTags([...(item.tags || []), ...tagsSuggested], 4),
           status: existing ? existing.status : 'unread',
           analyzed_at: new Date().toISOString(),
           markdown_path: relativeMdPath
