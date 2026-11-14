@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-14T05:33:13.288Z",
+  "updated_at": "2026-11-14T09:24:46.700Z",
   "articles": [
     {
       "id": "1702129693",
@@ -12820,35 +12820,64 @@
       "url": "https://zenn.dev/arufian/articles/4676070054c347",
       "title": "Claude Codeのスキル×サブエージェントで開発ワークフローを丸ごと自動化したらデリバリー速度が3倍になった",
       "excerpt": "フリーランスとして、日本の大手コンサルティングファームのAI駆動開発を支援しています。そこで「Claude Codeのスキルとサブエージェントを組み合わせて、設計からデプロイまでを丸ごとオーケストレーションするワークフロー」を作ったところ、案件のデリバリー速度が 約3倍 になりました。",
-      "summary": "",
-      "score": 92,
+      "summary": "【結論】Claude Codeのスキルを指揮者（オーケストレーター）、サブエージェントを演奏者（ペルソナ）として分業させ、委譲時のコンテキストと成果物出力を厳格に規約化することで開発プロセスを標準化すべきである。\n【NG】サブエージェントのコンテキスト分離を考慮せず、メインの会話内容や前提条件を引き継がせないまま処理を開始させること。",
+      "score": 95,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "AI駆動開発",
         "ClaudeCode",
-        "AIエージェント"
+        "AIエージェント",
+        "プロンプト・コンテキスト"
       ],
       "status": "unread",
       "analyzed_at": "2026-11-12T04:57:38.603Z",
-      "markdown_path": "data/notebooklm_sources/1796507700_Claude Codeのスキル×サブエージェントで開発ワークフローを丸ごと自動化したらデリバリー速度が3倍になった.md"
+      "markdown_path": "data/notebooklm_sources/1796507700_Claude Codeのスキル×サブエージェントで開発ワークフローを丸ごと自動化したらデリバリー速度が3倍になった.md",
+      "domain": "other",
+      "source": "Zenn",
+      "core_rule": "Claude Codeのスキルを指揮者（オーケストレーター）、サブエージェントを演奏者（ペルソナ）として分業させ、委譲時のコンテキストと成果物出力を厳格に規約化することで開発プロセスを標準化すべきである。",
+      "anti_pattern": "サブエージェントのコンテキスト分離を考慮せず、メインの会話内容や前提条件を引き継がせないまま処理を開始させること。",
+      "specific_tags": [
+        "Claude Code",
+        "サブエージェント",
+        "オーケストレーション",
+        "ワークフロー自動化",
+        "プロンプトエンジニアリング"
+      ],
+      "is_structured": true,
+      "structured_at": "2026-11-14T09:24:46.699Z"
     },
     {
       "id": "1796507681",
       "url": "https://dev.classmethod.jp/articles/claude-loop-engineering-practice/",
       "title": "Loop EngineeringをClaudeを使って実践してみた。 | DevelopersIO",
       "excerpt": "こんにちは、せーのです。",
-      "summary": "",
+      "summary": "【結論】AIの自己修正ループは、実装者と検証者（Edit権限なし）を分離し、検証フェーズでテスト改ざんや機密ファイルへのアクセスをhooksで機械的にブロックする設計にすべきである。\n【NG】実装したエージェント自身にテスト結果の採点まで行わせ、テストファイル自体の改ざん（Verifier Theater）を検知できない状態でループを回すこと。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "AI駆動開発",
-        "ClaudeCode"
+        "ClaudeCode",
+        "自動化パイプライン",
+        "プロンプト・コンテキスト"
       ],
       "status": "unread",
       "analyzed_at": "2026-11-12T05:25:23.474Z",
-      "markdown_path": "data/notebooklm_sources/1796507681_Loop EngineeringをClaudeを使って実践してみた。 _ DevelopersIO.md"
+      "markdown_path": "data/notebooklm_sources/1796507681_Loop EngineeringをClaudeを使って実践してみた。 _ DevelopersIO.md",
+      "domain": "other",
+      "source": "DevelopersIO",
+      "core_rule": "AIの自己修正ループは、実装者と検証者（Edit権限なし）を分離し、検証フェーズでテスト改ざんや機密ファイルへのアクセスをhooksで機械的にブロックする設計にすべきである。",
+      "anti_pattern": "実装したエージェント自身にテスト結果の採点まで行わせ、テストファイル自体の改ざん（Verifier Theater）を検知できない状態でループを回すこと。",
+      "specific_tags": [
+        "Loop Engineering",
+        "Claude Code",
+        "Agent SDK",
+        "Maker-Checker",
+        "自動修正ループ"
+      ],
+      "is_structured": true,
+      "structured_at": "2026-11-14T09:24:34.734Z"
     }
   ]
 }

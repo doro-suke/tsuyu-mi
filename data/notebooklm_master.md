@@ -1,10 +1,49 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/11/14 17:49:49
+最終更新日: 2026/11/14 18:24:46
 対象記事数: 50 件 (未読かつHigh優先度)
 
 ---
 
-## 1. [n8nで「三権分立AIエージェント」を構築したら、寝ている間にバグのないコードが勝手に完成した話 #LLM - Qiita](https://qiita.com/YushiYamamoto/items/9a53b6f957f809089881)
+## 1. [Claude Codeのスキル×サブエージェントで開発ワークフローを丸ごと自動化したらデリバリー速度が3倍になった](https://zenn.dev/arufian/articles/4676070054c347)
+- **優先度**: High
+- **スコア**: 95
+- **解析日時**: 2026/11/12
+- **AI要約**:
+  【結論】Claude Codeのスキルを指揮者（オーケストレーター）、サブエージェントを演奏者（ペルソナ）として分業させ、委譲時のコンテキストと成果物出力を厳格に規約化することで開発プロセスを標準化すべきである。
+  【NG】サブエージェントのコンテキスト分離を考慮せず、メインの会話内容や前提条件を引き継がせないまま処理を開始させること。
+- **タグ**: #AI駆動開発, #ClaudeCode, #AIエージェント, #プロンプト・コンテキスト
+
+### 本文
+## 1. 解決する課題（Problem）
+- メンバーごとの手動プロンプトに依存しているため、成果物やプロセスが不均一になり、品質がプロンプト力に左右されるボトルネックを解決する。
+
+## 2. 実践ルール・判断基準（Actionable Rules）
+- **IF** サブエージェントを起動する場合 **THEN** 利用者の要件、プロジェクト絶対パス、対象環境、前のペルソナの成果物パス、差し戻し時の修正指示、ドキュメント命名規則を委譲プロンプトに明示する。
+- **IF** 各ペルソナが作業を完了した場合 **THEN** チャット上の口頭報告を禁止し、指定パス・指定プレフィックスのファイル（設計書、レビュー書、テスト仕様書等）として必ず出力させる。
+- **IF** レビューやQAで問題が見つかった場合 **THEN** 例外処理とせず、開発者への差し戻しループを正規のワークフローとして自動実行する。
+- **IF** APIの仕様を参照する場合 **THEN** LLMの記憶やWeb検索に頼らず、同梱されたローカルの公式リファレンス（ナレッジベース）の検索による裏取りを強制する。
+
+## 3. 避けるべきアンチパターン（Anti-Patterns）
+- 1つの巨大な指示ファイルにすべての手順とコード例を記述して常時読み込ませること。
+- 成果物をチャットのテキスト報告だけで済ませ、ファイルとして証跡を残さないこと。
+- 「〜すること」という抽象的な指示だけに頼り、工程の省略を防ぐ中断条件（ガードレール）を設置しないこと。
+
+## 4. 具体的なコード・構成テンプレート（Snippets / Examples）
+```yaml
+---
+name: designer
+description: 設計者。要件をアーキテクチャに落とし込み、開発者が迷わず実装できる粒度の設計書を作成する。
+model: opus
+tools: Read, Write, Bash, Grep, Glob
+---
+
+# 設計者（Designer）
+あなたはソリューションアーキテクトです。要件を...
+```
+
+---
+
+## 2. [n8nで「三権分立AIエージェント」を構築したら、寝ている間にバグのないコードが勝手に完成した話 #LLM - Qiita](https://qiita.com/YushiYamamoto/items/9a53b6f957f809089881)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/5
@@ -164,7 +203,7 @@ ITPRODX.COM（https://itprodx.com/）にて、中堅企業向けに「n8n×AI」
 
 ---
 
-## 2. [Claude Code を Level 5 まで育てたら、開発が「指示と確認だけ」になった — 実ファイル構成で解説 #個人開発 - Qiita](https://qiita.com/teppei19980914/items/8da88b33ffa8cf88dfa2)
+## 3. [Claude Code を Level 5 まで育てたら、開発が「指示と確認だけ」になった — 実ファイル構成で解説 #個人開発 - Qiita](https://qiita.com/teppei19980914/items/8da88b33ffa8cf88dfa2)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/5
@@ -471,7 +510,7 @@ Claude Code は「使うツール」ではなく「育てるパートナー」�
 
 ---
 
-## 3. [Claude Codeの「サブエージェント」完全ガイド——AIに仕事を分担させる公式テクニック｜小畑タカユキ│3ヶ月でAIエージェントを実装する人](https://note.com/no_ai_no_life/n/ndccab63ad022)
+## 4. [Claude Codeの「サブエージェント」完全ガイド——AIに仕事を分担させる公式テクニック｜小畑タカユキ│3ヶ月でAIエージェントを実装する人](https://note.com/no_ai_no_life/n/ndccab63ad022)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/5
@@ -495,7 +534,7 @@ tools: Read, Grep, Glob
 
 ---
 
-## 4. [Anthropic公式「skill-creator」完全活用ガイド — SKILL.md設計・eval最適化・チーム運用・トラブルシューティングまで全部入り #Anthropic - Qiita](https://qiita.com/TaichiEndoh/items/8b8ed06bb76a80bb34c2)
+## 5. [Anthropic公式「skill-creator」完全活用ガイド — SKILL.md設計・eval最適化・チーム運用・トラブルシューティングまで全部入り #Anthropic - Qiita](https://qiita.com/TaichiEndoh/items/8b8ed06bb76a80bb34c2)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/8
@@ -1415,7 +1454,7 @@ X：@endoh_taichi
 
 ---
 
-## 5. [【完全版】Claude Code運用40選｜KAWAI](https://note.com/kawaidesign/n/nce2f82c62f1f)
+## 6. [【完全版】Claude Code運用40選｜KAWAI](https://note.com/kawaidesign/n/nce2f82c62f1f)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/8
@@ -1431,7 +1470,7 @@ Claude Codeは、便利なチャットではありません。設定、文脈、
 
 ---
 
-## 6. [DESIGN.mdは「どんなサイトもスキャンして再構築できる」のか — advanced-design-mdによる既存3手段の検証と再設計](https://zenn.dev/marycache/articles/03011f881e36f7)
+## 7. [DESIGN.mdは「どんなサイトもスキャンして再構築できる」のか — advanced-design-mdによる既存3手段の検証と再設計](https://zenn.dev/marycache/articles/03011f881e36f7)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/8
@@ -3305,7 +3344,7 @@ anthropics/skills Issue #1008 (2026). frontend-design: consider consuming/produc
 
 ---
 
-## 7. [Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita](https://qiita.com/ot12/items/06420caf41a34a910c53)
+## 8. [Opus4.7の登場により、Claude Codeの開発者と公式が「これはもうやめろ」と言い始めた6つのこと - Qiita](https://qiita.com/ot12/items/06420caf41a34a910c53)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/12
@@ -3594,7 +3633,7 @@ Claude Code 公式ドキュメント
 
 ---
 
-## 8. [Claude Code でスマホアプリ個人開発を加速する実践ガイド【React Native / Expo】 #Firebase - Qiita](https://qiita.com/similarmetal/items/9847e0b0b85024a29179)
+## 9. [Claude Code でスマホアプリ個人開発を加速する実践ガイド【React Native / Expo】 #Firebase - Qiita](https://qiita.com/similarmetal/items/9847e0b0b85024a29179)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/14
@@ -4022,7 +4061,7 @@ TypeScript の資産を活かしたい・Web 開発経験者が多いチーム�
 
 ---
 
-## 9. [Claude Codeのトークン消費を半減させる5フェーズ運用術](https://zenn.dev/yamato_snow/articles/8eff833984b842)
+## 10. [Claude Codeのトークン消費を半減させる5フェーズ運用術](https://zenn.dev/yamato_snow/articles/8eff833984b842)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/14
@@ -4401,7 +4440,7 @@ Sonnetをデフォルトに（Opusは必要な時だけ）
 
 ---
 
-## 10. [Antigravityを事故らせない運用設計｜hirokaji](https://note.com/tasty_dunlin998/n/n0dd53c5c4406)
+## 11. [Antigravityを事故らせない運用設計｜hirokaji](https://note.com/tasty_dunlin998/n/n0dd53c5c4406)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/14
@@ -4473,7 +4512,7 @@ Antigravityは強力ですが、Rules を増やせば安全になる道具では
 
 ---
 
-## 11. [Claude Codeのコスト爆発を3つのhookで防ぐ——月$200を超えないための安全装置 - Qiita](https://qiita.com/yurukusa/items/b79edb07bebc794a4a17)
+## 12. [Claude Codeのコスト爆発を3つのhookで防ぐ——月$200を超えないための安全装置 - Qiita](https://qiita.com/yurukusa/items/b79edb07bebc794a4a17)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/24
@@ -4831,7 +4870,7 @@ Claude Code Incident Postmortems (Gumroad、 ¥4,350)
 
 ---
 
-## 12. [Claude Codeのコンテキスト枯渇に立ち向かう──大規模リファクタリングのセッション設計](https://zenn.dev/miyan/articles/claude-code-context-exhaustion-strategy)
+## 13. [Claude Codeのコンテキスト枯渇に立ち向かう──大規模リファクタリングのセッション設計](https://zenn.dev/miyan/articles/claude-code-context-exhaustion-strategy)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/5/26
@@ -5406,7 +5445,7 @@ Claude Code のトークン消費を最適化する（ECC シリーズ）
 
 ---
 
-## 13. [Claude Code「Dynamic Workflows」完全ガイド：6つのパターンと14ステップ](https://zenn.dev/aria3/articles/claude-code-dynamic-workflows-6-patterns)
+## 14. [Claude Code「Dynamic Workflows」完全ガイド：6つのパターンと14ステップ](https://zenn.dev/aria3/articles/claude-code-dynamic-workflows-6-patterns)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/6/8
@@ -5617,7 +5656,7 @@ Dynamic Workflowsはまだベストプラクティスが発展中の機能です
 
 ---
 
-## 14. [Claude Code Hooks×Routines×Workflowで開発自動化パイプラインを構築する](https://zenn.dev/0h_n0/articles/3a4fdda1d5c743)
+## 15. [Claude Code Hooks×Routines×Workflowで開発自動化パイプラインを構築する](https://zenn.dev/0h_n0/articles/3a4fdda1d5c743)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/6/16
@@ -6386,7 +6425,7 @@ Anthropicが提唱する効果的なAIエージェント設計パターン解説
 
 ---
 
-## 15. [AIに『3人の専門家会議』をさせる ― マルチエージェントAI鏡『トリアージュ』を支える4つの実装](https://zenn.dev/kenya0126/articles/triage-multiagent-mirror)
+## 16. [AIに『3人の専門家会議』をさせる ― マルチエージェントAI鏡『トリアージュ』を支える4つの実装](https://zenn.dev/kenya0126/articles/triage-multiagent-mirror)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/6/27
@@ -6664,7 +6703,7 @@ LLMアプリは「賢いプロンプト1発」になりがちですが、役割�
 
 ---
 
-## 16. [差分リスクでレビュー方式を自動振り分け：Claude Codeで作る3層コードレビュー・オーケストレーター【6体AI＋テンプレ全公開】 - Qiita](https://qiita.com/4q_sano/items/1bed8709843fe6811f32)
+## 17. [差分リスクでレビュー方式を自動振り分け：Claude Codeで作る3層コードレビュー・オーケストレーター【6体AI＋テンプレ全公開】 - Qiita](https://qiita.com/4q_sano/items/1bed8709843fe6811f32)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/7/6
@@ -7911,7 +7950,7 @@ Claude Code実務運用シリーズ ― 暴走させない、から仕組みに�
 
 ---
 
-## 17. [Eccaceb](https://qiita.com/hrk-m/items/855132ecc5ace8164b95)
+## 18. [Eccaceb](https://qiita.com/hrk-m/items/855132ecc5ace8164b95)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/7/16
@@ -8169,7 +8208,7 @@ main にマージ → CI がそのコードから要件・フローを生成し�
 
 ---
 
-## 18. [小さいトークン枠でAIエージェントを回すための委任アーキテクチャ設計【Claude Code】](https://zenn.dev/cutlet_of_pork/articles/llm-token-saving-delegation-design)
+## 19. [小さいトークン枠でAIエージェントを回すための委任アーキテクチャ設計【Claude Code】](https://zenn.dev/cutlet_of_pork/articles/llm-token-saving-delegation-design)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/7/16
@@ -8352,7 +8391,7 @@ HANDOFF.md 運用
 
 ---
 
-## 19. [Claude Code のセッション引き継ぎは「現在地スナップショット」で回す — HANDOFF / QUESTIONS / 採番の型](https://zenn.dev/crandim_r_and_d/articles/260822_a10_handoff_questions_workflow)
+## 20. [Claude Code のセッション引き継ぎは「現在地スナップショット」で回す — HANDOFF / QUESTIONS / 採番の型](https://zenn.dev/crandim_r_and_d/articles/260822_a10_handoff_questions_workflow)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/8/30
@@ -8508,7 +8547,7 @@ git 管理外のファイルにはそこにしか無い知識を置かない。�
 
 ---
 
-## 20. [Claude Code に「同じ指摘を二度させない」仕組みを hook で作った](https://zenn.dev/nozomi720/articles/claude_code_hooks_feedback)
+## 21. [Claude Code に「同じ指摘を二度させない」仕組みを hook で作った](https://zenn.dev/nozomi720/articles/claude_code_hooks_feedback)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/9/3
@@ -8874,7 +8913,7 @@ hook 自身は絶対に事故らせない（例外は握り潰して exit 0）
 
 ---
 
-## 21. [Claudeのキャッシュを使い倒す - Qiita](https://qiita.com/cvusk/items/7f149b4ef5e1e71dd039)
+## 22. [Claudeのキャッシュを使い倒す - Qiita](https://qiita.com/cvusk/items/7f149b4ef5e1e71dd039)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/9/5
@@ -9650,7 +9689,7 @@ Cache diagnostics(ベータ)
 
 ---
 
-## 22. [「1人開発スタジオ」の作り方：Gemini×Clineで回す自律型マルチエージェント開発パイプライン](https://zenn.dev/momoch/articles/88a825d0c374ea)
+## 23. [「1人開発スタジオ」の作り方：Gemini×Clineで回す自律型マルチエージェント開発パイプライン](https://zenn.dev/momoch/articles/88a825d0c374ea)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/9/24
@@ -9890,7 +9929,7 @@ AIに専門性を持たせ、適切な組織構造とパイプラインを与え
 
 ---
 
-## 23. [Claude Codeを"優秀な新卒部下"として使い倒す：個人開発爆速化の全ワークフロー](https://zenn.dev/yoshiaki0217/articles/9dd7a3666d475f)
+## 24. [Claude Codeを"優秀な新卒部下"として使い倒す：個人開発爆速化の全ワークフロー](https://zenn.dev/yoshiaki0217/articles/9dd7a3666d475f)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/9/25
@@ -10411,7 +10450,7 @@ CLAUDE.mdを1時間だけでも整備してみる。それだけで、その後�
 
 ---
 
-## 24. [俺のAIプログラミング手法(2026/10/05)](https://zenn.dev/mizchi/articles/ai-coding-loop-formal)
+## 25. [俺のAIプログラミング手法(2026/10/05)](https://zenn.dev/mizchi/articles/ai-coding-loop-formal)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/10/7
@@ -10638,7 +10677,7 @@ Lean はアルゴリズム自体の開発に使う
 
 ---
 
-## 25. [Opus 5.5の登場で、Anthropic公式が「やめて・変えて」と言い始めた8つのこと - Qiita](https://qiita.com/ot12/items/383bad5be9ed6667058a)
+## 26. [Opus 5.5の登場で、Anthropic公式が「やめて・変えて」と言い始めた8つのこと - Qiita](https://qiita.com/ot12/items/383bad5be9ed6667058a)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/10/9
@@ -11067,7 +11106,7 @@ claude.ai でモデルとエフォートを選ぶ画面と、無料で試せる�
 
 ---
 
-## 26. [Opus5が思考が浅いように感じる問題への対策](https://zenn.dev/u1/articles/claude5-rules-collapse-and-fix)
+## 27. [Opus5が思考が浅いように感じる問題への対策](https://zenn.dev/u1/articles/claude5-rules-collapse-and-fix)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/10/11
@@ -11285,7 +11324,7 @@ Fable 5 の # Communicating with the user には「結論を先に・読みや�
 
 ---
 
-## 27. [CLAUDE.mdがバズってるので、AI部下7人が毎晩読んでるガチのやつを見せる](https://zenn.dev/shio_shoppaize/articles/shogun-claudemd-gachi)
+## 28. [CLAUDE.mdがバズってるので、AI部下7人が毎晩読んでるガチのやつを見せる](https://zenn.dev/shio_shoppaize/articles/shogun-claudemd-gachi)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/10/23
@@ -11557,7 +11596,7 @@ Xのバズ投稿のいいね数: 5,000超え。
 
 ---
 
-## 28. [プロンプト集は配らない。安全設定とSkillを配る — Claude Codeをチームの仕組みにする9ステップ【全48記事】 - Qiita](https://qiita.com/TakanobuSano/items/73ae018dbdaa423d1899)
+## 29. [プロンプト集は配らない。安全設定とSkillを配る — Claude Codeをチームの仕組みにする9ステップ【全48記事】 - Qiita](https://qiita.com/TakanobuSano/items/73ae018dbdaa423d1899)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/10/31
@@ -11915,7 +11954,7 @@ Claude Codeの実務運用は「止める → 整える → 任せる → 仕組
 
 ---
 
-## 29. [Claude Codeのハーネス設定を「インデックス化」してコンテキスト消費を77%削減した話](https://zenn.dev/japannomu/articles/20260329_claude-code-harness-indexing)
+## 30. [Claude Codeのハーネス設定を「インデックス化」してコンテキスト消費を77%削減した話](https://zenn.dev/japannomu/articles/20260329_claude-code-harness-indexing)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/11/9
@@ -12158,7 +12197,7 @@ GitHubで編集を提案
 
 ---
 
-## 30. [ClaudeCode無限ループ(ralph-loop)による完全自律開発ワークフローで開発者のウェルビーイングを取り戻す！｜Jun Ito](https://note.com/jujunjun110/n/n0903bad8b2f2)
+## 31. [ClaudeCode無限ループ(ralph-loop)による完全自律開発ワークフローで開発者のウェルビーイングを取り戻す！｜Jun Ito](https://note.com/jujunjun110/n/n0903bad8b2f2)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/11/9
@@ -12209,7 +12248,7 @@ for milestone in milestones.where(done == false):
 
 ---
 
-## 31. [Claude Code エージェント管理を全自動化するパイプラインを作った - Qiita](https://qiita.com/noujiru/items/eb346d22aef782ee8619)
+## 32. [Claude Code エージェント管理を全自動化するパイプラインを作った - Qiita](https://qiita.com/noujiru/items/eb346d22aef782ee8619)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/11/9
@@ -12481,7 +12520,7 @@ SessionStart の8段階
 
 ---
 
-## 32. [Loop Engineering入門：AIコーディングエージェントを動かすシステムを設計する](https://zenn.dev/suwash/articles/loop-engineering_20260610)
+## 33. [Loop Engineering入門：AIコーディングエージェントを動かすシステムを設計する](https://zenn.dev/suwash/articles/loop-engineering_20260610)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/11/11
@@ -13899,7 +13938,7 @@ Context Engineering: Agent Reliability Playbook 2026 - Digital Applied
 
 ---
 
-## 33. [【Claude Code×SDD】requirements→design→tasks→dev-report→QAの開発ワークフロー全公開](https://zenn.dev/emuni/articles/claude-code-sdd-workflow-guide)
+## 34. [【Claude Code×SDD】requirements→design→tasks→dev-report→QAの開発ワークフロー全公開](https://zenn.dev/emuni/articles/claude-code-sdd-workflow-guide)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/11/11
@@ -14188,1160 +14227,46 @@ AIによってドキュメント作成コストがほぼゼロになった今、
 
 ---
 
-## 34. [Claude Codeのスキル×サブエージェントで開発ワークフローを丸ごと自動化したらデリバリー速度が3倍になった](https://zenn.dev/arufian/articles/4676070054c347)
-- **優先度**: High
-- **スコア**: 92
-- **解析日時**: 2026/11/12
-- **タグ**: #AI駆動開発, #ClaudeCode, #AIエージェント
-
-### 本文
-はじめに
-フリーランスとして、日本の大手コンサルティングファームのAI駆動開発を支援しています。そこで「Claude Codeのスキルとサブエージェントを組み合わせて、設計からデプロイまでを丸ごとオーケストレーションするワークフロー」を作ったところ、案件のデリバリー速度が 約3倍 になりました。
-この記事では、そのスキルをどういう考え方で設計したのか、オーケストレーションの仕組みをどう組んだのか、そして運用しながらどう育てていったのかを紹介します。アーキテクチャと設計パターンは汎用的なものなので、どんなドメインにも応用できるはずです。
-
- 背景：AI駆動開発を導入したけど、成果物がバラバラ問題
-クライアント様は各案件でAI駆動開発を進めていて、顧客の要望に応える実装はすべてClaude Codeで作っていました。でも、運用を見ていて大きな課題がありました。
-メンバーそれぞれが手動でプロンプトを打っていたんです。
-これの何が問題かというと：
-
-
-成果物が均一にならない。同じ「機能を作って」でも、Aさんの案件には設計書があるのにBさんの案件にはない。テストを書く人と書かない人がいる。ドキュメントのフォーマットも人によって違う
-
-プロセスが均一にならない。レビューを通す人と通さない人がいる。いきなり実装から入って、あとで設計の不整合に気づく
-
-品質がプロンプト力に依存する。Claude Codeをうまく使える人とそうでない人で、アウトプットの質に差が出る
-
-要するに、AIは導入できたけど「開発プロセスの標準化」ができてなかったんです。コンサルティングファームにとって成果物（設計書・テスト仕様書・マニュアル）は納品物そのものなので、これはかなり痛い問題でした。
-
- 提案：実装だけじゃなく、プロセス全体をスキルにする
-そこで提案したのは、コード実装だけを手伝うスキルじゃなくて、開発ワークフロー全体をオーケストレーションするスキルです。
-利用者（開発メンバー）は「この機能を作って」と一言依頼するだけ。あとはスキルが：
-
-
-システム設計（設計書の生成）
-
-コード実装（本体 + テストコード）
-
-コードレビュー（レビュー書の生成）
-
-テスト（テスト実行・カバレッジ確認・テスト仕様書の生成）
-
-デプロイ（検証環境の構築・デプロイ実行）
-
-利用者向けガイド（マニュアル・引き継ぎ資料の生成）
-
-を全部、決まった順番・決まったフォーマットで作り切る。誰が実行しても同じプロセス・同じ成果物一式が出てくる、というのが狙いです。
-
- 全体アーキテクチャ：スキルは指揮者、サブエージェントは演奏者
-Claude Codeには スキル と サブエージェント という2つの拡張機構があります。この2つは役割がきれいに分かれます。
-
-
-
-
-スキル
-サブエージェント
-
-
-
-
-正体
-Claudeが従う指示書（Markdownファイル）
-独立したコンテキストで動くワーカー
-
-
-得意なこと
-手順・ルール・判断基準の定義
-専門タスクの実行
-
-
-コンテキスト
-メインの会話に読み込まれる
-メインとは分離される
-
-
-
-今回の設計では、スキルをオーケストレーター（指揮者）、サブエージェントをペルソナ（演奏者） にしました。
-
-
-スキル（1つ）：ワークフロー全体の進行管理。前提条件のチェック、コンテキストの収集、どのペルソナをどの順で呼ぶかの判断、差し戻しのハンドリング
-
-サブエージェント（6つ）：実際の開発現場にいる役割をそのままペルソナ化。環境管理者・設計者・開発者・レビュア・QA・デプロイ担当者
-
-つまり、実際の開発チームの分業体制をそのままAIエージェントに写した構成です。
-
- オーケストレーションの流れ
-
-オーケストレーションのフロー図
-流れはこうです：
-
-利用者が「この機能を作って」と依頼
-オーケストレーター（スキル）が起動して、前提条件チェックとコンテキスト収集をする（後述するナレッジベースの構築・検証もここでやる）
-設計者 → 開発者 → レビュア → QA の順にサブエージェントを確認なしで連続実行
-
-レビューやQAで問題が見つかったら開発者に自動で差し戻し、修正後に再レビュー・再テスト
-デプロイ担当者だけは、デプロイ先の確認で停止して利用者に聞く（ここだけは人間の判断が必要）
-全ペルソナ完了後、オーケストレーターが成果物とマニュアルの総まとめドキュメントを自動生成
-
-
- ディレクトリ構成
-プラグインとしてはこういう構成にしました（名前は例です）：
-my-dev-workflow/
-├── .claude-plugin/
-│   └── plugin.json          # プラグイン定義
-├── skills/
-│   └── dev-workflow/
-│       ├── SKILL.md          # オーケストレーター本体
-│       ├── references/       # 設計書テンプレート・ベストプラクティス集
-│       └── knowledge/        # 公式リファレンスのローカルコピー（後述）
-└── agents/
-    ├── designer.md           # 設計者
-    ├── developer.md          # 開発者
-    ├── reviewer.md           # レビュア
-    ├── qa.md                 # QA
-    ├── deploy-manager.md     # デプロイ担当者
-    └── org-admin.md          # 環境管理者
-SKILL.md がオーケストレーターで、agents/ 配下の各ファイルがペルソナです。サブエージェントの定義は、こんな感じのフロントマター付きMarkdownファイルです：
----
-name: designer
-description: 設計者。要件をアーキテクチャに落とし込み、開発者が迷わず実装できる粒度の設計書を作成する。
-model: opus
-tools: Read, Write, Bash, Grep, Glob
----
-
-# 設計者（Designer）
-
-あなたはソリューションアーキテクトです。要件を...
-ポイントは、ペルソナごとに使えるツールを tools 項目で絞れることと、使うモデルを model 項目で切り替えられること。設計者みたいに深い思考が要る役割には上位モデル、機械的な作業が中心の役割には軽いモデル、という使い分けができます。
-
- 設計で一番大事だったこと：オーケストレーターの「委譲ルール」
-作ってみてわかったんですが、このアーキテクチャの成否はサブエージェントへの委譲の仕方でほぼ決まります。
-
- サブエージェントはコンテキストを持っていない
-サブエージェントは独立したコンテキストで動きます。つまり、メインの会話で決まったこと（要件、プロジェクトのパス、命名規則、前のペルソナの成果物）を何も知らない状態で起動します。
-なので、SKILL.mdに「委譲時に必ず渡すコンテキスト」を明文化しました：
-各サブエージェントは独立したコンテキストで実行されるため、
-委譲時に以下の情報を明示的に渡すこと：
-
-1. 利用者の要件（元のプロンプトの要約）
-2. プロジェクトパス（作業ディレクトリの絶対パス）
-3. 対象環境の情報
-4. 前のペルソナの成果物パス（設計書のパス、レビューの指摘内容など）
-5. 差し戻しの場合の修正指示
-6. ドキュメント命名規則（プレフィックスなど）
-これを書かないと、サブエージェントが要件を勝手に解釈したり、成果物をバラバラの場所に置いたりします。「オーケストレーターが知っていることを、次のペルソナに漏れなく引き継ぐ」のがオーケストレーションの本体と言ってもいいくらいです。
-
- 成果物はファイルで強制する
-もうひとつ大事なのが、各ペルソナに成果物を必ずファイルとして出力させること。チャットでの口頭報告だけで済ませることを明示的に禁止しました。
-
-
-
-ペルソナ
-成果物
-
-
-
-
-設計者
-docs/{prefix}_設計書.md
-
-
-開発者
-ソースコード + テストコード一式
-
-
-レビュア
-docs/{prefix}_レビュー書.md
-
-
-QA
-docs/{prefix}_テスト仕様書.md
-
-
-デプロイ担当者
-デプロイスクリプト + 環境情報
-
-
-（全員完了後）
-docs/{prefix}_成果物とマニュアル.md
-
-
-
-ファイル名のプレフィックス（チケット番号やブランチ名から自動検出）まで規約化してあるので、どの案件のリポジトリを開いても同じ場所に同じフォーマットのドキュメントがある状態になります。これが「成果物の均一化」の実装です。
-レビュー書は「承認・差し戻しにかかわらず必ず生成する」というルールにしてあります。差し戻しゼロでも「レビューした」という証跡が納品物として残るからです。
-
- フィードバックループは「例外」じゃなく「正規ワークフロー」
-人間の開発プロセスと同じで、レビューやQAで指摘が出るのは当たり前です。なので差し戻しを例外処理じゃなく、設計に組み込まれた正規の工程として定義しました。
-レビュア → 開発者（指摘あり） → レビュア（再レビュー）
-QA      → 開発者（バグあり） → QA（再テスト）
-差し戻しが発生したら、オーケストレーターは開発者に再委譲します。このとき渡すのは：
-
-差し戻し元（レビュアかQAか）
-指摘事項の全文（レビュー書・テスト仕様書からの抜粋）
-修正対象ファイルのパス
-元の設計書のパス（開発者が設計に立ち戻れるように）
-
-このループも利用者に確認を求めず自動で回します。「差し戻し→修正→再レビュー」が淡々と進んで、承認が出たら次の工程へ、という動きです。
-
- 止まるのは1箇所だけ
-フルワークフローの間、利用者に確認を求めるのはデプロイ先の確認だけにしました。「次に進んでいいですか？」を挟むと自動化の意味がなくなるし、逆にデプロイだけは環境を壊すリスクがあるので人間の判断を必須にする。この「どこで止めてどこで止めないか」の線引きが、実運用での使い勝手をかなり左右しました。
-
- ハルシネーション対策：ナレッジベースで「裏取り」を強制する
-もうひとつ、実運用で効いたのがAPI仕様のハルシネーション対策です。
-対象プラットフォームのAPIリファレンスは膨大で、LLMの記憶だけに頼ると存在しないメソッドやパラメータを堂々と書いてきます。Web検索も、バージョン違いの情報や非公式情報を拾ってくるので信用しきれない。
-そこで、公式リファレンスドキュメント（1,000ページ超）をスキルに同梱して、ローカルのセマンティック検索ツールでインデックス化しました。そのうえで全ペルソナ共通のルールとして：
-
-API仕様（クラス・メソッド・シグネチャ等）を書くときは、必ずローカルのナレッジベースを検索して裏取りする
-
-API仕様を調べる目的でのWeb検索は禁止（同梱ドキュメントが唯一の正本）
-記憶・推測だけでシグネチャを断定しない。不確かなものは「要確認」と明示する
-
-を委譲プロンプトに毎回明記するようにしました。「正本はこれ。それ以外を見るな」と決め打ちすることで、生成コードのAPI周りの精度が目に見えて上がりました。
-
- ガードレール：エージェントに「わからない」と言わせる
-面白い設計ポイントをもうひとつ。開発者ペルソナには、前提が欠けているときに勝手に進まず停止する仕組みを入れました。
-たとえばテストコードを書くのに必要なデータモデルの定義が見つからないとき、開発者は適当なスキーマをでっち上げるんじゃなく、決まった形式で停止レポートを返します：
-GUARDRAIL_HALT: missing_definitions
----
-missing_objects: ...
-missing_fields: ...
-オーケストレーターはこれを検出したら、利用者に選択肢を提示します：
-
-A. ここで定義を入力する
-B. 対象環境から実際の定義を取得する
-C. デフォルト値で雛形を自動生成する（あとで修正）
-D. 今回はスキップする
-
-LLMは「わからないときに、それっぽく埋める」のが得意すぎるので、「わからない」を構造化されたシグナルとして返させて、オーケストレーター側でハンドリングするのが安全です。サブエージェント同士を直接連携させず、必ずオーケストレーター経由にしているのも同じ理由です。
-
- スキルは一度作って終わりじゃない：運用で育てた進化の記録
-ここまで紹介した仕組みの多く、実は初版には存在していませんでした。変更履歴を振り返ると、このスキルは大きく5つの段階を経て育っています。初版から数ヶ月、実案件で使われるたびに見つかった問題をルールとして書き戻してきた記録です。
-
- 第1段階：ワークフローの骨格
-初版に入っていたのは、オーケストレータースキル本体、6つのペルソナ、ベストプラクティス集、それと評価シナリオだけ。この時点で「設計 → 開発 → レビュー → QA → デプロイ」の流れ自体は動いていました。まず骨格を出して運用に乗せる、が正解でした。完璧を目指して作り込むより、実案件で回して問題を集めるほうが早いです。
-
- 第2段階：ナレッジベースの同梱
-運用で最初に大きな問題になったのが、前述のAPIハルシネーション。公式リファレンスをクロールしてスキルに同梱し、セマンティック検索できるようにしたのがこの段階です。
-あわせて、運用で見つかった細かい事故もルール化しました。たとえば「自動化定義を有効状態のままデプロイして、検証環境の既存の挙動を変えてしまった」という事故があり、以降は常に無効化状態で生成するルールに。「レビューだけ依頼するとレビュー書の生成が省略される」問題も、このタイミングで「必ず生成」に強制しました。
-
- 第3段階：LLMの「サボり」をゲートで塞ぐ
-一番学びが多かった段階です。運用していると、LLMは工程を平気で省略することがわかってきました。
-
-部分ワークフローを選ぶと、レビューとQAを飛ばしてデプロイまで進んでしまう
-最終の成果物とマニュアルの生成が、特定の条件でしか実行されない
-
-対策として、デプロイ前のレビュー承認・テスト承認を必須ゲート化しました。レビュー書とテスト仕様書が存在しない場合はデプロイを中断して報告する、というガード節まで書いてあります。最終ドキュメントも「条件にかかわらず、最後のペルソナ完了後に必ず生成」に変更。
-ここでの教訓は明確で、「〜すること」と書くだけでは守られないということ。「〜が存在しない場合は中断して報告すること」まで書いて、初めてゲートとして機能します。
-ドキュメントプレフィックスの自動検出（複数チケットを並行して回すとファイルが上書きされる事故への対策）、命名規則の標準化、そして前述の GUARDRAIL_HALT の仕組みも、この段階で入りました。どれも「実際に起きた事故」が起点です。
-
- 第4段階：ペルソナを「本物の」サブエージェントに
-実は初期の構成では、ペルソナ定義はスキルのディレクトリ配下に置いてあって、オーケストレーターがプロンプトで「演じ分け」させる作りでした。これを agents/ ディレクトリに移して、Claude Codeが正式なサブエージェントとして起動できる構成に変えたのがこの段階です。
-これでコンテキスト分離が本物になり、ペルソナごとのツール制限とモデル指定が効くようになりました。前の章で紹介したフロントマターのツール指定・モデル指定の項目は、この移行で手に入れたものです。
-もうひとつ、ナレッジベース検索の連携方式をMCPサーバー経由からCLIの直接実行に変更しました。MCPだとサーバー登録・サブエージェントごとの許可リスト・接続の再確立と、壊れうる箇所が多かったんです。コマンド1本で済むならそのほうが失敗点が少ない。あわせて「セットアップ後にインデックスが空でないことを必ず検証する」ルールも追加しました。空のナレッジベースは検索しても0件を返すだけなので、エージェントが「調べたけど何もなかった」と誤認したまま進む。この静かな劣化が一番怖いからです。
-
- 第5段階：実案件の知見をプレイブックとして還元
-直近の段階では、実案件のトラブルシュートで得た手順を「プレイブック」としてスキルの参照ドキュメントに書き戻し、トラブルシュート専門の補完ペルソナも追加しました。
-ここまで来ると、スキルは単なる自動化ツールじゃなくて、組織のナレッジ資産になります。ある案件で一度解いた問題は、次の案件では全員のClaude Codeが最初から知っている状態になる。この「学びをスキルに書き戻すループ」こそが、スキルという仕組みの一番おいしいところだと思ってます。
-
-このスキルを導入した結果、クライアント様の案件のデリバリー速度は導入前の約3倍になりました。
-速くなった理由を分解すると、実装スピードそのものよりも：
-
-
-手戻りが減った。設計→実装→レビューの順序が強制されるので、「作ってから設計の矛盾に気づく」が消えた
-
-ドキュメント作成がゼロコストになった。設計書・レビュー書・テスト仕様書・マニュアルが、開発フローの副産物として勝手に揃う。これまで納品前にまとめて書いていた時間がまるごと消えた
-
-プロンプト力の個人差が消えた。「この機能を作って」の一言で誰でも同じ品質のフローが回る
-
-の3つが大きいです。とくに2つ目はコンサルティングファームには効きます。納品物のドキュメント整備って、実装と同じくらい時間を食っていたので。
-
- まとめ：オーケストレーション設計のチェックリスト
-同じようなワークフロースキルを作るなら、押さえるポイントはこのあたりです。
-
-
-スキル = 指揮者、サブエージェント = 演奏者。手順とルールはスキルに、専門作業はペルソナに分離する
-
-ペルソナは実在の開発チームの役割を写す。設計者・開発者・レビュア・QA・デプロイ担当という分業は、AIでもそのまま機能する
-
-委譲コンテキストを明文化する。サブエージェントは何も知らずに起動する。渡す情報のリストをSKILL.mdに書く
-
-成果物はファイルで強制する。パス・命名規則・テンプレートまで規約化して初めて「均一な成果物」になる
-
-差し戻しを正規ワークフローとして設計する。フィードバックループは例外じゃない
-
-止める場所を1箇所に絞る。破壊的操作の直前だけ人間に確認、それ以外はノンストップ
-
-知識の正本を決めて裏取りを強制する。公式ドキュメントの同梱 + ローカル検索でハルシネーションを潰す
-
-「わからない」を構造化シグナルで返させる。ガードレールはオーケストレーターがハンドリングする
-
-工程の省略は「必須ゲート + 中断条件」で塞ぐ。「〜すること」だけでは守られない
-
-運用の学びをスキルに書き戻す。事故・トラブルシュートの手順をルールとプレイブックに還元し続けると、スキルが組織のナレッジ資産になる
-
-Claude Codeのスキルとサブエージェントは、単体で使っても便利ですが、組み合わせて「チーム」を作ると開発プロセスそのものを標準化できる。そして作ったあとも運用の学びを書き戻して育て続けられる。これがこの案件で得た一番の学びでした。
-
----
-
 ## 35. [Loop EngineeringをClaudeを使って実践してみた。 | DevelopersIO](https://dev.classmethod.jp/articles/claude-loop-engineering-practice/)
 - **優先度**: High
 - **スコア**: 92
 - **解析日時**: 2026/11/12
-- **タグ**: #AI駆動開発, #ClaudeCode
+- **AI要約**:
+  【結論】AIの自己修正ループは、実装者と検証者（Edit権限なし）を分離し、検証フェーズでテスト改ざんや機密ファイルへのアクセスをhooksで機械的にブロックする設計にすべきである。
+  【NG】実装したエージェント自身にテスト結果の採点まで行わせ、テストファイル自体の改ざん（Verifier Theater）を検知できない状態でループを回すこと。
+- **タグ**: #AI駆動開発, #ClaudeCode, #自動化パイプライン, #プロンプト・コンテキスト
 
 ### 本文
-こんにちは、せーのです。
-2026年6月、Loop Engineering という言葉が一気に広がりました。Boris Cherny 氏の "I don't prompt Claude anymore. I have loops running that prompt Claude"、Addy Osmani 氏の Loop Engineering、日本語では Zenn の設計論 など、概念と設計の整理は充実しています。
-一方で、「結局 Claude でどう実装するのか」 に踏み込んだ記事はまだ少ない、と感じています。6 つのプリミティブや L1/L2/L3 の話は理解できても、コピペで動くコードや、実際に試した時のハマりどころが無いと手が止まりますよね。
-私は普段、Claude Code では次のような使い方をしています。
-
-Skill をたくさん作り、定型処理はその中の script に外出しする
-サブエージェントや Team Agents を使い、複数の LLM に作業を割り振って実行させる
-最初は基本的に Plan モードで、私の方から Claude とディスカッションしながら、なるべく細かい設計を作ってから実装させる
-
-実装が終わったあとも、別のエージェントや AI に対して、ターミナルから手動で「この成果物をセキュリティ観点でレビューして」「この設計を運用観点で見て」と指示したり、指摘を踏まえて修正させたりしています。こうした手前の設計・割り振り・レビューのやり取りに、それなりの手間をかけています。
-Loop Engineering が示しているのは、その手間をさらに減らす方向性だと受け取りました。どのエージェントをいくつ作るか、どうレビューして検証するかを、人間が毎回組み立てるのではなく、ループとして自律的に回す設計に移す、という話です。停止条件、STATE.md、Maker-Checker、denylist ゲートといった設計規律は、まさにそのための部品です。
-今回は、その部分を実際にコードを書いて回してみる実験を行いました。
-本記事では、その結果を 自律度・運用レベルの低い順に並べた 6 つの実装例としてまとめます。手元の bash ループから始め、Agent SDK の hooks、GitHub Actions 常駐まで、段ごとに「動くコード」「実際の出力」「この段の限界」を見ていきます。検証は 2026-06-13 に Claude Code 2.1.177 / claude-agent-sdk 0.2.93 で実施しました。
-
- Loop Engineering とは（おさらい）
-Loop Engineering とは、AI に毎回手でプロンプトを打つのをやめ、「エージェントにプロンプトを打つシステム」そのものを設計する方法論です。Boris Cherny 氏の "I don't prompt Claude anymore. I have loops running that prompt Claude" や、Peter Steinberger 氏の "You should be designing loops that prompt your agents" といった発言がきっかけで、2026 年 6 月に一気に話題になりました。
-エンジニアのレバレッジの所在は、こう移ってきている、という整理がよく引用されます。
-
-
-
-段階
-設計対象
-人間の関与
-
-
-
-
-Prompt Engineering
-個別プロンプト文
-ターンごと必須
-
-
-Context Engineering
-モデル窓の中身
-レスポンスごと必須
-
-
-Loop Engineering
-ループ全体の制御
-例外・承認ゲートのみ
-
-
-
-ループには 6 つのプリミティブ（スケジューリング、Worktrees、Skills、MCP、Sub-agents、Memory/State）があり、段階的自律 L1/L2/L3（報告のみ → 補助修正 → 完全自律）でロールアウトする、というのが設計論の定石です。
-どうですか。わかりましたか。私は完全に理解しました（嘘）。
-つまりこういうことです。
-まず プリミティブ というのは、ループを作るための基本部品です。例えば「いつ起動するか」を決めるのがスケジューリング、「どの作業場所で安全に動かすか」を分けるのが Worktrees、「作業手順を覚えさせる」のが Skills、「Slack や GitHub など外部ツールにつなぐ」のが MCP、「実装係とレビュー係を分ける」のが Sub-agents、「前回どこまでやったかを残す」のが Memory/State、というイメージです。
-次に L1 / L2 / L3 は、自律度の段階です。
-
-L1: AI は調べて報告するだけ。変更は人間が判断する
-L2: AI が一部の修正まで行う。ただし危ない変更は人間が見る
-L3: 条件を満たす範囲では、AI が実行・検証・反映まで自律的に進める
-
-そして ロールアウト というのは、いきなり L3 の完全自律にしない、ということです。まず L1 で「ちゃんと見ているか」を確認し、次に L2 で「安全な範囲だけ直させる」ようにし、最後に条件が固まったところだけ L3 にする。つまり Loop Engineering は、AI に丸投げする話ではなく、AI が回るための部品と安全装置を揃え、自律度を少しずつ上げていく話です。
-
-詳しい概念・7 つのループパターンは Addy Osmani の Loop Engineering や Zenn: ループエンジニアリング設計の考え方、CLI ツール cobusgreyling/loop-engineering がよくまとまっています。
-
- 既存記事との射程の違い
-Developers.IO ではすでに Claude Code の /loop や /goal、Desktop のスケジュール機能を比較した記事があります。
-
-
-
-これらは個別機能の使い分けを整理した記事です。本記事は、それらを踏まえて Loop Engineering という設計の考え方を、Claude の実装手段で具体的に動かす方を扱います。
-具体的には、claude -p の最小ループ、/loop、/schedule、Maker-Checker、Agent SDK hooks、GitHub Actions を、最小構成から順に動かしていきます。思想そのものの網羅的な解説はしません。概念は前述の資料に任せ、ここでは「どこに停止条件を置くのか」「実装したエージェント自身にレビューさせず、別の観点を持ったレビュアーエージェントにどう検証させるのか」「いくらくらいかかるのか」に絞ります。
-読む時は、まず 実装1〜3 で「サブスク枠のまま始められる範囲」を掴み、次に 実装4〜5 で「自動修正に進む時の安全装置」を見る、という順番がおすすめです。GitHub Actions は、最後に常駐化したくなった時の選択肢として読めば十分です。
-
- 前提条件
-# Claude Code（headless / /loop / /schedule 用）
-npm install -g @anthropic-ai/claude-code
-claude --version   # 検証時: 2.1.177
-
-# Agent SDK（実装5用）
-pip install claude-agent-sdk   # Python 3.10+、検証時: 0.2.93
-
-# 認証（headless / SDK 用）
-export ANTHROPIC_API_KEY="..."   # 環境変数で設定
-
-# JSON 出力のパース用
-brew install jq
-
- Claude でループを作る 6 段階
-自律度・運用レベルが低い順に並べます。急に GitHub Actions 常駐から入ると、権限・コスト・失敗時の影響が大きくなります。なので、まずは「手元で回す」→「セッション内で回す」→「クラウドで報告だけさせる」→「検証者を分ける」→「ゲートをコードで作る」という順番で見ていきます。
-どの段から始めるかは後半のまとめでも触れますが、**最初の本番ループは Daily Triage の L1（報告のみ）**が無難です。
-  低 ─────────────────────────────────────────────→ 高
-
- [1] bash while + claude -p     手元で回す最小ループ
- [2] /loop（セッション内）       ターミナル1行、閉じると消える
- [3] /schedule（routines）       cron で永続、PC 不要
- [4] Maker-Checker（subagent）  実装者と検証者を分離
- [5] Agent SDK（query loop）     hooks / ゲート / 状態をコードで作り込む
- [6] GitHub Actions 常駐         イベント + cron で CI 常駐
-違いを整理すると、[1]〜[3] は Claude Code 組み込み機能中心で手早く始められるもの、[4]〜[5] はプログラムから制御して安全装置を厚くするもの、[6] はリポジトリに常駐させるもの、というイメージです。
-
- 実装1: 最小ループ — claude -p を bash while で回す
-Loop Engineering の最小実体は generate → test → fix → repeat です。まずは複雑な仕組みにせず、claude -p を 1 回だけ呼ぶところから始めます。
-claude -p "Run the test suite and fix any failures" \
-  --allowedTools "Bash,Read,Edit" \
-  --max-turns 15
-
-注: v2.1.177 では --max-turns が --help から消えていますが、隠しフラグとして受理され、上限到達時は subtype: "error_max_turns" / is_error: true で終了します。ドキュメント化された --max-budget-usd <amount>（1 呼び出しのコスト上限）も併用を推奨します。
-
- 「テストが通るまで」回す自己修正ループ
-次に、テストが落ちたら Claude に直させ、通るまで繰り返す形にします。素朴に書くとこうです。
-#!/usr/bin/env bash
-# fix-until-green.sh — テストが通るまで Claude に直させる（素朴版）
-set -euo pipefail
-
-MAX_ATTEMPTS=3
-attempt=0
-
-while ! npm test --silent; do
-  attempt=$((attempt + 1))
-  if [ "$attempt" -gt "$MAX_ATTEMPTS" ]; then
-    echo "❌ ${MAX_ATTEMPTS}回試しても直らない。人間にエスカレーション。"
-    exit 1
-  fi
-
-  echo "🔁 attempt ${attempt}: Claudeに修正させる"
-  npm test 2>&1 | claude -p \
-    "These tests are failing. Read the output, find the root cause, and fix the code. Do not modify the tests themselves." \
-    --allowedTools "Bash,Read,Edit" \
-    --max-turns 15 \
-    --bare
-done
-
-echo "✅ テストが通った（attempt=${attempt}）"
---bare は hooks / MCP / CLAUDE.md の自動読込をスキップし、スクリプトや CI では毎回同じ結果に近づけます。"Do not modify the tests themselves" は Verifier Theater（テストを書き換えて「通った」ことにする）対策です。
- 実は静かに壊れている — pipefail の罠
-実際にサンドボックスリポジトリ（add 関数が a - b になっているバグ入りコード）で回してみたところ、Claude は 1 回目で正しく直したのに、スクリプトは exit 1 で異常終了しました。
-+ npm test
-+ claude -p '...' --allowedTools Bash,Read,Edit --max-turns 15 --bare
-All tests pass now. ...（Claudeの応答）
-★ スクリプト終了コード = 1
-
-
-
-確認項目
-結果
-
-
-
-
-✅ テストが通った の出力
-出ない
-
-
-attempt 2 への到達
-到達しない
-
-
-スクリプト終了コード
-1（成功なのに失敗扱い）
-
-
-
-何が起きているか、少し分解します。
-まず set -euo pipefail は、bash スクリプトを厳しめに実行するための設定です。ここで効いているのは主に -e と pipefail です。
-
-set -e: コマンドが失敗（終了ステータスが 0 以外）したら、その時点でスクリプトを終了する
-pipefail: cmd1 | cmd2 のようなパイプラインで、最後のコマンドだけでなく、途中のコマンドが失敗してもパイプライン全体を失敗扱いにする
-
-次に問題の行です。
-npm test 2>&1 | claude -p ...
-これは、npm test の出力を Claude に渡すためのコードです。2>&1 は、標準エラーも標準出力に混ぜる指定です。つまり、テストの失敗メッセージも含めて Claude に読ませようとしています。
-ここで大事なのは、テストが失敗している時の npm test は、終了ステータス 1 などの「失敗」を返すという点です。これは正常な挙動です。テストが落ちているのですから、npm test は「失敗しました」とシェルに伝えます。
-通常のパイプラインでは、最後の claude -p ... が成功すれば、パイプライン全体も成功扱いになりがちです。ですが pipefail を有効にしているため、途中の npm test が失敗した時点で、このパイプライン全体も失敗扱いになります。
-その結果、流れはこうなります。
-
-while ! npm test --silent; do で、テスト失敗を検知してループに入る
-Claude に失敗内容を渡すため、もう一度 npm test 2>&1 | claude -p ... を実行する
-npm test は当然まだ失敗中なので、終了ステータス 0 以外を返す
-pipefail により、パイプライン全体も失敗扱いになる
-set -e により、スクリプトがその場で終了する
-
-つまり、Claude は修正してくれるのですが、シェル側は「パイプラインが失敗した」と判断してスクリプトを止めてしまうわけです。だから attempt 2 に進まず、最後の ✅ テストが通った にも到達しません。Loop Engineering でいちばん大事な「どう止めるか」が、意図しない場所で発火してしまっているわけですね。一見動いて見えるのが厄介です。
- 修正版
-修正版では、npm test の出力をいったん変数にキャプチャし、テスト失敗の終了ステータスをパイプラインに持ち込まないようにします。
-#!/usr/bin/env bash
-set -euo pipefail
-MAX_ATTEMPTS=3
-attempt=0
-
-while ! npm test --silent; do
-  attempt=$((attempt + 1))
-  if [ "$attempt" -gt "$MAX_ATTEMPTS" ]; then
-    echo "❌ ${MAX_ATTEMPTS}回試しても直らない。人間にエスカレーション。"
-    exit 1
-  fi
-  echo "🔁 attempt ${attempt}: Claudeに修正させる"
-  test_output="$(npm test 2>&1 || true)"
-  printf '%s\n' "$test_output" | claude -p \
-    "These tests are failing. Read the output, find the root cause, and fix the code. Do not modify the tests themselves." \
-    --allowedTools "Bash,Read,Edit" \
-    --max-turns 15 \
-    --bare
-done
-echo "✅ テストが通った（attempt=${attempt}）"
-ポイントはこの 2 行です。
-test_output="$(npm test 2>&1 || true)"
-printf '%s\n' "$test_output" | claude -p ...
-npm test 2>&1 || true は、「npm test が失敗しても、この行全体としては成功扱いにする」という意味です。テストの失敗出力は test_output に残りますが、終了ステータスは true によって 0 になります。
-そのあと printf で test_output の中身を Claude に渡します。この時点では、パイプラインの左側は npm test ではなく printf です。printf は普通に成功するため、pipefail が有効でも、テスト失敗の終了ステータスに引きずられてスクリプトが止まることはありません。
-違いを整理すると、素朴版は **「失敗中の npm test そのものをパイプに流していた」**もの、修正版は **「失敗出力だけを取り出し、終了ステータスはループ制御から切り離して Claude に渡す」**もの、というイメージです。
-修正版の実測結果です。
-成功パス（attempt 1）:
-Claude の応答（抜粋）:
-**Root cause:** The `add` function in `src/math.js` was implemented with subtraction
-(`return a - b`) instead of addition. ...
-**Fix:** Changed the operator to `+` so `add` returns `a + b`. All 3 tests now pass,
-and I left the tests unchanged.
-✅ テストが通った（attempt=1）
-attempt cap（直らないシナリオ）:
-🔁 attempt 1: Claudeに修正させる
-🔁 attempt 2: Claudeに修正させる
-🔁 attempt 3: Claudeに修正させる
-❌ 3回試しても直らない。人間にエスカレーション。
-
-この段の限界: 手元のターミナルでしか動きません。閉じたら終わりです。セッション内の定期実行なら実装2、永続化なら実装3へ。
-
- コストと結果を JSON で記録する
-ループの監視には --output-format json が便利です。
-result=$(claude -p "Summarize today's git log" \
-  --output-format json --bare --allowedTools "Bash(git log *)")
-
-echo "$result" | jq -r '.result'
-echo "$result" | jq -r '.total_cost_usd'
-echo "$result" | jq -r '.num_turns'
-echo "$result" | jq -r '.is_error'
-実出力（整形）:
-{
-  "type": "result",
-  "subtype": "success",
-  "is_error": false,
-  "num_turns": 1,
-  "result": "hi",
-  "total_cost_usd": 0.002532,
-  "session_id": "9c0e7aa9-..."
-}
-.total_cost_usd を積算すれば「日次上限 80% で停止」も自前で作れます（実装5でも触れます）。
-ここまでで、最小の「直すまで回す」ループは作れました。ただしこれは、あくまで手元のプロセスです。次は、Claude Code の中で定期的に回す方法を見てみます。
-
- 実装2: Claude Code 組み込みの /loop（セッション内ループ）
-スクリプトを書かず、ターミナルで 1 行。Claude Code 内で対話的に回します。ちょっとした監視や、作業中だけ回したい確認にはこれが一番軽いです。
-/loop 5m gh pr list で未レビューのPRを確認し、新しいものがあれば要約して
-/loop                ← 間隔省略で self-paced（既定 10 分）
-
-間隔: 30s 5m 2h 1d など（最小 1 分・既定 10 分・最長 3 日）
-ターミナル / Claude Code を閉じると全ループがキャンセル（永続しない）
-カスタムな停止判定が要るなら /goal（別記事参照）
-
-なお、/loop と /goal、さらにサブエージェントを組み合わせると、もう少し凝ったループも作れます。これは少し踏み込んだ話なので、実装の一通りを見たあとに「応用」として別途まとめます。
-
-この段の限界: PC を閉じると消えます。夜間・休日に回らない。→ 永続・PC 不要なら実装3。
-
-
- 実装3: スケジュール駆動 — /schedule（routines）で Daily Triage
-cron で定期起動する永続ループです。ここからは、PC を閉じても動く世界に入ります。Loop Engineering の代表例「Daily Triage」を Claude で実装します。
-Daily Triage とは、毎朝（あるいは数時間おきに）リポジトリの状態をひと通り見回して、対応すべきことを仕分け（triage）するループのことです。具体的には、CI が落ちていないか、新しい Issue が来ていないか、直近のコミットで気になる変更がないか、といった「定期的に誰かが見ておくべき雑務」を Claude に任せます。
-ポイントは、この段ではまだ **L1（報告のみ）**にとどめることです。Claude は状態を読んで「ここが対応待ちです」と教えてくれますが、自動では直しません。読むだけなのでトークンコストも低く、暴走のリスクもほぼありません。だからこそ「最初に本番投入するループ」として向いています。自動修正は、検証を分離できる実装4以降に進んでから足していきます。
- STATE.md（外部メモリ）
-ループは毎回記憶を失います。状態は会話の外に置くのが鉄則です。
-<!-- STATE.md — Daily Triage ループの永続メモリ -->
-# Triage State
-
-## Open（対応待ち）
-- #142 CI flaky test in auth_spec — 初検出 2026-06-12, 未対応
-
-## Watching（様子見）
-- #138 dependency bump (lodash) — patch のみ、auto-merge 禁止
-
-## Done（クローズ済み・週次で pruning）
-- #130 typo in README — 2026-06-11 解決
- トリアージ用 SKILL.md
-.claude/skills/daily-triage/SKILL.md に手順を固定します（intent debt 解消）。
----
-name: daily-triage
-description: 毎朝 CI 失敗・新着 Issue・直近コミットを読み、STATE.md を更新して要対応を報告する
----
-# Daily Triage 手順
-1. `gh issue list --state open` と直近の CI 結果を読む
-2. STATE.md の Open/Watching と照合し、新規・解決済みを差分検出
-3. STATE.md を更新（Done は週次で pruning）
-4. **L1 運用**: 修正は行わない。要対応サマリーを報告するだけ
- ルーティンとして登録
-/schedule
-→ 「毎朝7時に /daily-triage を実行し、要対応があれば Slack に通知」
-/schedule はクラウドの cron で起動するため PC を閉じても回ります。Daily Triage はトークンコストが低く、しかも L1（報告のみ）で価値が出ます。なので、最初の本番ループとして最適です。
-実務上の注意:
-
-routine の最小周期は 1 時間（/loop のセッション内最小 1 分とは別物）
-/schedule は claude.ai サブスクログイン必須。シェルに ANTHROPIC_API_KEY があると CLI から /schedule が隠れることがあります（web UI を使うか、一時的に unset する）
-Web / Desktop / CLI の 3 入口は同一クラウドアカウントに書き込みます
-
-
-この段の限界: L1（報告のみ）。自動修正に進むなら、まず Maker-Checker（実装4）で検証を分離します。
-
-
- 実装4: Maker-Checker — 実装者と検証者を分離する
-
-"The model that wrote the code is way too nice grading its own homework."
-
-ここまでは「回す」ことが中心でした。ここからは、自動修正に進むための検証の設計です。
-自動修正ループの安全性の中核は、実装者と検証者を分けることです。Agent SDK の agents で実装者と検証者を別エージェントに分けます。
-# maker_checker.py — 実装者と検証者を分離した修正ループ
-import asyncio
-from claude_agent_sdk import query, ClaudeAgentOptions, AgentDefinition, ResultMessage
-
-async def run():
-    async for message in query(
-        prompt=(
-            "1. Use the 'fixer' agent to fix the failing tests in this repo.\n"
-            "2. Then use the 'reviewer' agent to independently verify the fix by "
-            "running the tests and checking the diff. Report PASS only if tests actually pass."
-        ),
-        options=ClaudeAgentOptions(
-            allowed_tools=["Read", "Edit", "Bash", "Glob", "Grep", "Agent"],
-            cwd="./sandbox-repo",          # 対象リポジトリを明示
-            max_turns=40,
-            max_budget_usd=2.0,              # 暴走・課金ガード
-            agents={
-                "fixer": AgentDefinition(
-                    description="Implements code fixes for failing tests.",
-                    prompt="Fix the root cause in the source. Never edit test files.",
-                    tools=["Read", "Edit", "Bash", "Glob", "Grep"],
-                ),
-                "reviewer": AgentDefinition(
-                    description="Independently verifies a fix. Skeptical by default.",
-                    prompt=(
-                        "You did NOT write this code. Run the tests yourself. "
-                        "Read the diff. If tests fail or the diff edits test files, return FAIL with reasons."
-                    ),
-                    tools=["Read", "Bash", "Glob", "Grep"],  # Edit なし＝検証専任
-                ),
-            },
-        ),
-    ):
-        if isinstance(message, ResultMessage):
-            print(message.result)
-
-asyncio.run(run())
-設計ポイント:
-
-reviewer に Edit を与えない → 「直しながら採点」を構造的に禁止
-"You did NOT write this code" → 確証バイアスを言語で打ち消す
-さらに堅くするなら reviewer を別モデル（例: 実装 Sonnet、検証 Opus）にする
-
- 実測: PASS パス
-
-fixer: return a - b → return a + b（src 1 行のみ、test 不変）
-reviewer: 独立してテスト実行 + diff 確認 → PASS
-コスト: $0.71 / turns: 3
-
- 実測: Verifier Theater を FAIL で検出
-src のバグは直さず、テストの期待値だけをバグ出力に合わせて改ざんした状態では、npm test は pass 3 になります。ナイーブな「テスト通った？」判定は騙されます。
-reviewer の判定（抜粋）:
-**FAIL** — The diff edits a test file — disqualifying on its own. …
-The developer changed the assertions to `add(2,3) == -1` … making the tests assert
-*incorrect* arithmetic so they'd go green against the broken implementation.
-
-
-
-シナリオ
-テスト結果
-reviewer 判定
-コスト
-
-
-
-
-正当な fix
-pass 3
-PASS
-$0.71
-
-
-Verifier Theater
-pass 3
-FAIL
-$0.21〜0.36
-
-
-
-「テストを実際に走らせろ」「diff がテストを触ったら FAIL」をプロンプトに焼き込む設計は、テストがグリーンでも不正を構造的に検出できることを実機で確認しました。
-つまり、ここでやっているのは「AI にレビューしてもらう」ではなく、レビュー専任のエージェントに編集権限を渡さず、独立した証拠で判定させることです。ここが手動レビュー指示をループ化する時の肝になります。
-
- 実装5: Agent SDK で本格ループ — hooks でゲートと監査
-プログラムからループ全体を制御する段です。Maker-Checker で検証者を分けたら、次は「そもそも触ってはいけないもの」を機械的に止めます。denylist ゲート・監査ログ・状態の読み書きをコードで作り込みます。
- PreToolUse hook で denylist ゲート
-# guarded_loop_v2.py — permissionDecision 形式（推奨）
-import asyncio
-from datetime import datetime
-from claude_agent_sdk import query, ClaudeAgentOptions, HookMatcher, ResultMessage
-
-DENYLIST = (".env", "credentials", "secrets", ".aws/", "id_rsa")
-
-async def deny_sensitive(input_data, tool_use_id, context):
-    path = input_data.get("tool_input", {}).get("file_path", "")
-    if any(bad in path for bad in DENYLIST):
-        return {
-            "hookSpecificOutput": {
-                "hookEventName": "PreToolUse",
-                "permissionDecision": "deny",
-                "permissionDecisionReason": f"denylist: {path} への変更は禁止",
-            }
-        }
-    return {}
-
-async def audit(input_data, tool_use_id, context):
-    path = input_data.get("tool_input", {}).get("file_path", "unknown")
-    with open("./loop-audit.log", "a") as f:
-        f.write(f"{datetime.now().isoformat()} modified {path}\n")
-    return {}
-
-async def run():
-    async for message in query(
-        prompt="Create .env with FOO=bar, then create notes.txt with hello.",
-        options=ClaudeAgentOptions(
-            allowed_tools=["Read", "Edit", "Write", "Bash", "Glob", "Grep"],
-            permission_mode="acceptEdits",
-            max_turns=20,
-            hooks={
-                "PreToolUse":  [HookMatcher(matcher="Edit|Write", hooks=[deny_sensitive])],
-                "PostToolUse": [HookMatcher(matcher="Edit|Write", hooks=[audit])],
-            },
-        ),
-    ):
-        if isinstance(message, ResultMessage):
-            print("result:", message.result)
-
-asyncio.run(run())
-
-hook の返り値: SDK 0.2.93 では permissionDecision: "deny"（上記）と、簡潔な {"decision": "block", "reason": "..."} の両方がブロックします。PreToolUse の許可制御は前者を正とするのが無難です。
-
-実測:
-
-
-
-対象
-結果
-
-
-
-
-.env（denylist）
-作成されず — ブロック成功
-
-
-notes.txt（許可）
-作成成功
-
-
-
-監査ログ loop-audit.log:
-2026-06-13T21:09:48.976992 modified .../notes.txt
-ブロックされた .env は PostToolUse が発火しないため、監査ログには成功した変更だけが残ります。
- トークン予算ガード（日次 80% で停止）
-# budget_guard.py — 複数回呼び出しの累計上限
-import json, subprocess, sys
-
-DAILY_LIMIT_USD = 5.00
-spent = 0.0
-
-def run_once(prompt):
-    out = subprocess.run(
-        ["claude", "-p", prompt, "--output-format", "json", "--bare",
-         "--allowedTools", "Read,Edit,Bash", "--max-turns", "15"],
-        capture_output=True, text=True,
-    )
-    return json.loads(out.stdout)
-
-for item in ["fix #142", "fix #143", "fix #144"]:
-    if spent >= DAILY_LIMIT_USD * 0.8:
-        print(f"⏸ 予算80%到達（${spent:.2f}）。残りは翌日へ。")
-        sys.exit(0)
-    res = run_once(item)
-    spent += float(res.get("total_cost_usd", 0))
-    print(f"{item}: done, 累計 ${spent:.3f}")
-実測（検証用に上限を $0.004 に設定）:
-reply with the word one: done（cost=$0.0101）, 累計 $0.0101
-⏸ 予算80%到達（$0.0101 / 上限$0.004）。残りは翌日へ。
-使い分け:
-
---max-budget-usd: 1 回の claude -p 呼び出し内のコスト上限
-budget_guard.py 方式: 複数回の呼び出しを跨いだ累計上限。常駐ループでは両方併用が堅いです
-
-
- 実装6: GitHub Actions で CI 常駐ループ
-PC を離れ、リポジトリのイベント + cronでループを回す最終段です。ここまで来ると、ローカルの便利ツールというより、リポジトリに常駐する運用部品になります。anthropics/claude-code-action@v1 を使います。
- セットアップ
-Claude Code 内で（リポジトリ管理者権限が必要）:
-/install-github-app
-GitHub App 導入と ANTHROPIC_API_KEY secret 登録をガイドしてくれます。
- パターンA: @claude メンションに応答
-# .github/workflows/claude.yml
-name: Claude Code
-on:
-  issue_comment:
-    types: [created]
-  pull_request_review_comment:
-    types: [created]
-jobs:
-  claude:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: anthropics/claude-code-action@v1
-        with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-Issue に @claude このバグを直して PR を出して とコメント → Claude が実装して PR を作成、という流れです。
- パターンB: cron で Daily Triage
-# .github/workflows/daily-triage.yml
-name: Daily Triage
-on:
-  schedule:
-    - cron: "0 22 * * *"   # 毎日 07:00 JST（UTC 22:00）
-jobs:
-  triage:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: anthropics/claude-code-action@v1
-        with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: "/daily-triage"
-          claude_args: "--max-turns 10 --model claude-sonnet-4-6"
- コスト制御
-        with:
-          claude_args: "--max-turns 5"
-    timeout-minutes: 15
-concurrency:
-  group: claude-${{ github.ref }}
-  cancel-in-progress: true
-
-検証範囲の注記: 本記事執筆時点では、上記 YAML の構文検証と @v1 タグの解決、CLI フラグの受理までを確認しています。ライブ実行（cron 起動 → PR 自動作成）は未実施です。GitHub App 導入・secret 登録・Actions runner 時間は課金・権限に関わるため、各自の検証用リポジトリで /install-github-app から試してください。手動起動する場合は workflow_dispatch: を追加すると便利です。
-
-
- 応用: /loop・/goal・サブエージェントを組み合わせる
-ここまでの部品（/loop・/goal・サブエージェント・Agent SDK・/schedule）が揃ったので、それらを組み合わせた一歩進んだループを見ていきます。
- /loop と /goal を組み合わせる
-/loop は「一定間隔で同じプロンプトを投げ直す」もの、/goal は「条件が満たされるまでターンを継続する」ものです。混同しやすいので、公式ドキュメントの整理を借りると次のとおりです。
-
-
-
-コマンド
-次のターンが始まる条件
-止まる条件
-
-
-
-
-/goal
-前のターンが終わったら
-別の評価モデルが「条件達成」と判定したら
-
-
-/loop
-一定の時間間隔が経過したら
-自分で止めるか、Claude が「もう完了」と判断したら
-
-
-
-ここで「ループの中で goal は叩けないのか」という疑問が出ますが、結論から言うと /loop は slash command も回せます。/loop 自体が「プロンプトまたは slash command を一定間隔で実行する」スキルで、/loop 5m /foo のように slash command を指定できます。
-そして /goal の条件は Markdown ファイルを指す書き方ができます。公式ドキュメントにもこういう例があります。
-/goal implement the spec in docs/specs/feature.md until all acceptance criteria hold and the test suite passes
-つまり「やってほしいこと」を docs/specs/feature.md のような仕様ファイルに書いておき、/goal の条件からそれを参照させる、という形です。条件は最大 4,000 文字まで書けるので、ファイルへの参照＋達成条件＋制約（「テストファイルは触らない」など）をまとめて書けます。
-ただし注意が必要なのは、1 セッションでアクティブにできる /goal は 1 つだけで、新しい /goal を打つと前のものが置き換わる点です。なので、
-/goal XXX.md
-/goal YYY.md   ← これだと前の XXX.md のゴールは消えて YYY.md に置き換わる
-のように 複数のゴールを同時に並走させることはできません。「エージェントごとに別のゴールファイルを割り当てて並列に回す」をやりたい場合は、
-
-それぞれを **サブエージェント（/agents や Task）**に分けて担当させる
-.claude/loop.md に「各ファイルを順に処理する」手順を書いて bare /loop に拾わせる
-もしくは Agent SDK / /batch でファイル単位に分解して回す
-
-といった「外側のオーケストレーション」と組み合わせるのが現実的です。/goal 単体は「1 つの到達点に向けて粘る」ための仕組み、と捉えておくのが正確です。
- ループからサブエージェントへファンアウトする
-「ループで何かをチェックして、できていなかったらサブエージェントを 3 つ作り、それぞれに別の md ファイルを与えて、別々の役割で作業させる」——こんな形は作れないでしょうか。
-まず結論です。
-
-「ループからサブエージェントを複数起動して、それぞれに別の仕様 md を渡す」は できます。
-ただし、各サブエージェントが自分で /goal を実行するわけではありません。/goal はセッションに対する slash command であって、サブエージェントの中で叩くものではないからです。サブエージェント側の「ゴール」は、渡す prompt（spec md）＋ maxTurns などの停止条件で表現します。
-
-なので「goal XXX.md をサブエージェントごとに並べる」という書き方そのものは正しくありません。実際にやるなら、サブエージェントを定義して、親（ループ側）からファンアウトさせます。
-まず、役割ごとのサブエージェントを .claude/agents/ に置きます（それぞれが担当する仕様 md を prompt で指す形です）。
----
-name: api-worker
-description: API 層の未完了タスクを spec に沿って実装する
-tools: Read, Edit, Bash, Glob, Grep
-maxTurns: 20
-isolation: worktree
----
-docs/specs/api.md を読み、そこに書かれた受け入れ条件をすべて満たすまで実装する。
-テストファイルは変更しない。完了したらテスト結果を要約して報告する。
-同じ要領で docs/specs/ui.md を見る ui-worker、docs/specs/docs.md を見る docs-worker を用意します（isolation: worktree で、並列に動いてもファイル衝突しないようにします）。
-そのうえで、ループ側のプロンプト（.claude/loop.md でも /loop <prompt> でも可）に、「チェック → ダメなら 3 体にファンアウト」を書きます。
-<!-- .claude/loop.md — チェックして、未完了なら3役を並列で走らせる -->
-まず npm test を実行して状態を確認する。
-
-すべて通っていれば「グリーン」とだけ報告して終了する。
-
-失敗していれば、以下の 3 つのサブエージェントを並列で起動し、それぞれの担当 spec を実装させる:
-- api-worker（docs/specs/api.md 担当）
-- ui-worker（docs/specs/ui.md 担当）
-- docs-worker（docs/specs/docs.md 担当）
-
-3 体の報告が出そろったら、もう一度 npm test を実行して結果を要約する。
-これを /loop 15m などで回せば、「15 分ごとにチェック → 落ちていたら 3 役を並列で走らせる → 再チェック」というループになります。1 回の親ターンの中で 3 体を同時に（depth 1 のファンアウトで）起動でき、各サブエージェントは自分の context window と maxTurns を持って独立に動きます。
-
-補足: サブエージェントの入れ子は、Claude Code v2.1.172 以降では「サブエージェントがさらにサブエージェントを起動」も可能になっています（変更前は 1 段のみ）。ただし Agent SDK 側は「サブエージェントは子を持てない」と記載されており、ドキュメントとバージョンで挙動が動きやすい領域です。実機とバージョンで必ず確認してから組んでください。
-
-
-もし「各ワーカーにも評価モデルによる goal ループを持たせたい」なら、サブエージェントではなく、各ワーカーを claude -p "/goal <spec.md を参照した条件>" として 個別の headless セッションで起動する手もあります。ただし claude -p は毎回フルのセッションを立てるためコストが乗り、6/15 以降はメーター課金対象です。
-
- 逆に「/goal の中でサブエージェントを立てる」なら
-では逆向きはどうでしょう。「/goal の条件に指す md ファイルの中で、サブエージェントを 3 つ立てて、3 つの観点から解決させる」——こちらは、実はさっきのパターンより仕様に素直で、おすすめできます。
-理由はこうです。/goal はセッションに 1 つ持てる完了条件で、達成するまでターンを継続します。その各ターンの中で、メインのセッションはサブエージェントを起動できます。なので「1 つのゴールを掲げ、そのゴールに向かう過程で 3 観点のサブエージェントにファンアウトする」という形は、ゴール 1 つ・サブエージェント 3 体できれいに収まります。
-まず spec md に、ゴールと「3 観点でサブエージェントに解かせる」手順を書いておきます。
-<!-- docs/specs/fix-flaky.md -->
-# ゴール
-auth まわりの flaky テストを解消し、npm test が安定して通る状態にする。
-
-# 進め方
-原因を 3 つの観点から並列に調査・修正する。次のサブエージェントを使うこと:
-- race-investigator: 非同期処理・タイミング起因の競合を調べて直す
-- fixture-investigator: テストデータ・モックの不備を調べて直す
-- env-investigator: 環境差・グローバル状態の汚染を調べて直す
-
-各サブエージェントの報告を統合し、最小の修正を適用する。
-テストファイル自体は書き換えない。
-
-# 完了条件
-npm test を 3 回連続で実行し、すべて green であること。
-そのうえで、/goal の条件からこの md を参照させます。
-/goal docs/specs/fix-flaky.md の進め方に従い、3観点のサブエージェントを使って原因を解消し、完了条件（npm test が3回連続green）を満たすまで続ける
-こうすると、
-
-/goal がターンを開始し、メインが race / fixture / env の 3 サブエージェントを並列で起動する
-3 体がそれぞれの観点で調査・修正し、要約だけをメインの会話に返す
-メインが要約を統合して修正を当て、npm test を走らせる
-ターン終了後、評価モデル（既定 Haiku）が「3 回連続 green」かどうかを会話の内容から判定する
-未達なら理由を添えて次のターンへ、達成なら自動でゴールがクリアされる
-
-という流れになります。ゴール（粘る軸）は 1 つ、観点の分担はサブエージェント、という役割分担です。先ほどの「ループから 3 ゴール」よりも、/goal 1 つで完結する分すっきりします。
-ただし /goal の評価モデルには 1 つ注意があります。評価モデルは自分でファイルを読んだりコマンドを実行したりせず、会話に出てきた内容だけで判定します。なので完了条件は「npm test の結果が会話に出ている」など、メイン（とサブエージェントの要約）が会話に surface させたものから判定できる形で書く必要があります。サブエージェントの結果が要約としてメインに返ることが、ここで効いてきます。
- さらにこれを /loop で回す
-ここまでで「1 回のゴール（3 観点のサブエージェントでファンアウト）」はできました。ただし /goal は その条件を 1 回満たしたら終わりです。flaky テストのように「直してもまた再発する」種類の相手だと、1 回 green になっても、しばらくするとまた赤くなります。
-そこで、この /goal ごと /loop で定期的に回します。ただし「毎回とりあえずゴールを起動する」だと無駄が多いので、外側のループにも条件（ガード）を持たせます。具体的には、ループのたびにまず状態をチェックして、「直す必要がある時だけ」内側の /goal を起動する、という形にします。
-/loop のプロンプトは自然文で書けるので、こう書けます。
-/loop 1h まず npm test を実行して状態を確認する。
-- すべて green なら「グリーン」とだけ報告して、今回は何もしない。
-- 失敗していれば、docs/specs/fix-flaky.md の進め方に従い、
-  /goal で3観点のサブエージェントを使って原因を解消し、
-  完了条件（npm test が3回連続green）を満たすまで続ける。
-- まだ docs/specs/fix-flaky.md が無ければ作成し、その旨を報告して今回は終了する。
-これで全体はこういう二重構造になります。
-
-外側の /loop（1 時間ごと・ガード付き）: まず状態を見て、赤い時だけゴールを起動する「見張り」
-内側の /goal（達成まで）: 起動されたら 3 観点のサブエージェントを並列起動し、green になるまで粘る
-
-/loop 1h
-  └─ まず npm test で状態チェック
-       ├─ green        → 「グリーン」と報告して何もしない
-       ├─ spec が無い  → spec を作成して報告（今回は終了）
-       └─ red          → /goal（docs/specs/fix-flaky.md）を起動
-                            ├─ race-investigator   ┐
-                            ├─ fixture-investigator ├─ 並列で調査・修正 → 要約を返す
-                            └─ env-investigator    ┘
-                            └─ メイン統合 → npm test → 評価モデルが「3回連続green」を判定
-つまり、「いつ起動するか」と「そもそも起動すべきか（ガード）」は /loop、「1 回でどこまで粘るか」は /goal、「どんな観点で解くか」はサブエージェント、と役割が分かれます。最初に欲しかった「ループで回して、ダメなら複数の観点で解決させる」は、この形がいちばん素直に表現できます。
-外側にガードを置くのは、コスト面でも効きます。green の時はチェックだけで終わるので、サブエージェント 3 体を毎回起動せずに済みます（サブエージェントを並列で回すとコストが一気に上がります。後述のコスト節も参照）。
-なお /loop はセッション内なので、ターミナルを閉じると止まります。PC を閉じても回したいなら、この /goal 起動を /schedule（実装3）の routine に載せるか、GitHub Actions（実装6）の cron から prompt: "/goal ..." で叩く形にします。
-
-補足: /goal は trusted workspace（信頼ダイアログ承認済み）でのみ動き、disableAllHooks などで hooks を止めていると使えません（評価が hooks の仕組みを使うため）。
-
-
-⚠️ .claude/loop.md の自動検出は、バージョンによっては bare /loop で拾われず、/loop follow the instructions in .claude/loop.md のように明示指定が必要なケースが報告されています（claude-code#47883）。手元の挙動で確認してから使ってください。
-
-
- 安全装置 — どの段でも効かせる設計規律
-ここまで 6 つの実装を見てきました。コードはそれぞれ違いますが、効かせるべき安全装置は共通しています。実装1〜6のどの段でも意識したい装置を整理します。
-
-
-
-安全装置
-具体的な実装
-本記事の該当
-
-
-
-
-停止条件を先に書く
-MAX_ATTEMPTS / --max-turns / --max-budget-usd / timeout-minutes
-実装1・5・6
-
-
-denylist
-PreToolUse hook で .env / credentials をブロック
-実装5
-
-
-トークン予算
-total_cost_usd 積算、80% で停止
-実装1・5
-
-
-Maker-Checker
-実装者と検証者を別エージェント
-実装4
-
-
-Verifier Theater 対策
-「テストを書き換えるな」「実際に走らせろ」
-実装1・4
-
-
-段階的ロールアウト
-必ず L1（報告のみ）から
-実装3
-
-
-理解負債の管理
-週次ダイジェスト / 監査ログ
-実装5
-
-
-
-失敗モードの代表例:
-
-同一 PR を 5 回修正し続ける → Checker を強化、リトライ上限 3 回
-CI 失敗でも承認される → テスト・lint の実出力を検証に必須化
-STATE.md が肥大化 → Done を週次 pruning
-許可外パスを変更 → denylist を最初に設定
-
-鉄則: ループを作るより先に、どう止めるかを決める。実装1 の pipefail バグは、その大事さを実感させてくれる例でした。
-
- コスト実測と 2026/6/15 以降の課金
-ループは便利ですが、回り続ける以上、コストの話は避けられません。特に claude -p や Agent SDK を使う場合は、対話利用とは別の扱いになるため、ここで整理しておきます。
- 実測コスト（2026-06-13 / Claude Code 2.1.177）
---output-format json の total_cost_usd で捕捉した値です。
-
-
-
-操作
-構成
-実測コスト
-turns
-
-
-
-
-1 ターン応答（ツール無し）
-claude -p "say only the word: hi"
-$0.0025
-1
-
-
-1 ターン応答（ツール許可あり）
---allowedTools Read,Edit,Bash
-$0.0101
-1
-
-
-Maker-Checker フル
-Agent SDK query()
-$0.71
-3
-
-
-reviewer 単体（FAIL 判定）
-Agent SDK query()
-$0.21〜0.36
-4〜5
-
-
-
-
-**Daily Triage（L1・読むだけ）**は 1 回 $0.01 未満で回せる見込み → 最初の本番ループに向く
-Maker-Checker は 1 サイクル $0.7 前後 → CI Sweeper を 5〜15 分周期で回すと「極高」になるのは妥当
-GitHub Actions の runner 時間も別途かかります
-
- 2026/6/15 以降: Agent SDK クレジットの線引き
-2026 年 6 月 15 日から、プログラム経路は対話枠とは別の 月次 Agent SDK クレジット（API リスト価格ベース）から消費されます。公式ヘルプ より。
-メーター対象（別枠クレジット）:
-
-Agent SDK query()
-claude -p（非対話 / headless）
-Claude Code GitHub Actions（実装6も対象）
-Agent SDK 認証のサードパーティアプリ
-
-クレジット額（個人プラン例）: Pro $20 / Max 5x $100 / Max 20x $200（月次リセット、繰越なし）。初回はアカウント設定から**クレジットの有効化（claim）**が必要です。
-メーター対象外（従来どおりサブスク枠）:
-
-
-
-経路
-課金
-
-
-
-
-ローカルターミナルの対話 /loop / /goal
-サブスク枠
-
-
-claude.ai/code routine（/schedule・クラウド）
-サブスク枠（日次実行上限あり）
-
-
-Claude Desktop / claude.ai チャット
-サブスク枠
-
-
-
-
-Claude Platform の API キー課金を使っている場合は従来どおり従量課金で、上記クレジットは対象外です。
-
-ポイント: Loop Engineering の設計規律（停止条件・STATE.md・Maker-Checker・denylist・/goal）は Agent SDK 必須ではありません。/loop + /goal（ターミナル）と /schedule（クラウド・PC 不要）だけでサブスク枠のまま始められます。SDK / claude -p / GitHub Actions は「プログラムから細かく作り込みたい人向けの上位段」で、6/15 からメーター課金になります。常駐ループを非メーターで回すなら、GitHub Actions より /schedule ルーティンが有利です。
-💡**【追記】公開前の確認**
-6/15 以降のクレジット仕様・クレジット額は変更される可能性があります。公開直前に 公式ヘルプ を再確認してください。本記事執筆時点（2026-06-13）は施行前です。
-
- まとめ
-Loop Engineering を Claude で実装してみて感じたのは、概念は思想ではなく、停止条件・検証・状態管理の積み重ねだ、ということです。
-自分で Plan を書き、複数の AI にレビューを依頼し、指摘を受けて直す、という今のやり方は十分に強力です。ただ、そこに「毎回、人間が設計して割り振る」という手間が残ります。Loop Engineering は、その手前の設計・割り振り・レビューの流れを、少しずつループ側に寄せていく考え方なのだと感じました。
- 停止条件を先に書く
-MAX_ATTEMPTS や --max-budget-usd は「後から足す」ものではなく、ループの最初の行に書くものです。pipefail の罠は、見た目は動いているのに制御フローが壊れている典型例でした。
- 実装したエージェント自身にレビューさせない
-Maker-Checker と Verifier Theater 対策は、プロンプトの気合いではなく権限分離と独立シグナルで担保します。つまり、実装したエージェント自身に「これで大丈夫？」と聞くのではなく、別の観点を持ったレビュアーエージェントを立て、テスト結果や diff などの証拠を見て判定させます。テストがグリーンでも、diff がテストを触っていれば FAIL、を実機で確認できました。
- STATE は会話の外に
-/schedule で Daily Triage を L1 から回すなら、STATE.md と SKILL.md をリポジトリに committed しておくのが第一歩です。
-そして、、、どの段から始めるかで言えば、私は Daily Triage L1 を /schedule で登録するところから入るのが現実的だと感じました。5 行 bash は仕組みを理解するため、Maker-Checker と hooks は自動修正に進む段階で、という順番です。
-ぜひ試してみてはいかがでしょうか。もっとスマートなループ設計を御存知の方がいればXなどでご連絡下さい。
-
- 参考資料
- 起点・設計論
-
-Loop Engineering — Addy Osmani
-ループエンジニアリング設計の考え方 — Zenn (suwash)
-cobusgreyling/loop-engineering
-
- Claude Code 公式
-
-Run Claude Code programmatically（headless / claude -p）
-Keep Claude working toward a goal（/goal）
-Run prompts on a schedule（/loop / loop.md / routines）
-Agent SDK overview
-Claude Code GitHub Actions
-Use the Claude Agent SDK with your Claude plan（6/15 クレジット）
-anthropics/claude-code-action（GitHub）
-
- Developers.IO 既存記事
-
-Claude CodeのloopコマンドとClaude Desktopのスケジュール、CursorのAutomationsはどう違うのか
-Claude Code v2.1.139で追加された /goal コマンド
-Claude Codeにcronみたいな定期タスク実行機能が追加されました
+## 1. 解決する課題（Problem）
+- Claude等を使った自動修正ループにおいて、AIがテストコード自体を書き換えて「テスト合格」と誤認させる偽装（Verifier Theater）や、予期せぬ機密ファイルへの変更リスクを解決する。
+
+## 2. 実践ルール・判断基準（Actionable Rules）
+- **IF** テストが失敗したコードをAIに自動修正させる場合 **THEN** bashスクリプトの `pipefail` と `npm test` の終了ステータスを切り離し、シェルが誤って終了しないように実装する。
+- **IF** Maker-Checkerパターンを適用する場合 **THEN** `reviewer` エージェントには編集ツール（Edit）を与えず、差分確認とテスト実行のみに特化させる。
+- **IF** スクリプトからAgent SDKを使用する場合 **THEN** `PreToolUse` hooksを用いて `.env` や認証情報などの機密ファイルへのアクセスをプログラムレベルで `deny` する。
+
+## 3. 避けるべきアンチパターン（Anti-Patterns）
+- 失敗中の `npm test 2>&1 | claude -p` を `pipefail` 有効なシェルスクリプトで直接回し、テスト失敗時にスクリプト全体を異常終了させること。
+- 検証エージェントにコードの修正権限と検証権限の両方を同時に持たせること。
+
+## 4. 具体的なコード・構成テンプレート（Snippets / Examples）
+```python
+# Maker-Checker のエージェント分離構成例
+from claude_agent_sdk import AgentDefinition
+
+ agents = {
+     "fixer": AgentDefinition(
+         description="Implements code fixes for failing tests.",
+         prompt="Fix the root cause in the source. Never edit test files.",
+         tools=["Read", "Edit", "Bash", "Glob", "Grep"],
+     ),
+     "reviewer": AgentDefinition(
+         description="Independently verifies a fix. Skeptical by default.",
+         prompt="Run the tests yourself. Read the diff. If tests fail or the diff edits test files, return FAIL with reasons.",
+         tools=["Read", "Bash", "Glob", "Grep"],
+     ),
+ }
+```
 
 ---
 

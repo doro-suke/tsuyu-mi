@@ -99,6 +99,11 @@
   - クラウド同期競合ファイル（`.git` 内の残骸含む）を完全クリーンアップ。
   - GitHub Actions が更新していたリモート最新（751件）をリベース統合。
   - 全751件のタグ正規化、ダッシュボード再構築、NotebookLMソース同期を行い、`origin/main` への push を完了（作業ツリー clean）。
+- **高密度構造化Markdownパイプラインの統合と既存記事変換バッチの構築**:
+  - 共通アセンブラ＆パーサー（`scripts/structured_md.js`）を新設し、YAMLフロントマター（`domain`, `core_rule`, `anti_pattern`, `score`, `tags` 等）＋4セクション構成のMarkdown生成と新旧両フォーマットの本文抽出（`extractMdBody`）を統一。
+  - `prompts/summarize_prompt.txt` と `scripts/sync.js` を刷新し、1記事1回の Gemini API 呼び出し（`response_schema` 強制・`gemini-flash-lite-latest` プライマリ化＆フォールバック・`curl` タイムアウト保護）で構造化Markdown生成とスコア・タグ分類を統合。
+  - 既存記事変換バッチ（`scripts/convert_structured.js`）を実装し、`data/backups/notebooklm_sources_raw/` への自動原本退避とスコア上位からの段階的変換（2件テスト変換完了・残り749件）を実現。
+  - 下流ツール（`search_kb.js`, `generate_dashboard.js`, `export_categories.js`）を新旧フォーマット両対応へ改修。
 - **ダッシュボード タグフィルター機能の修正**:
   - 上部タグフィルターで大文字・小文字の不一致により絞り込みが 0 件になっていた不具合（`currentTag` 未小文字化）を解消。
   - 各記事カード内のタグを `<span>` からクリック可能な `<button>`（`.card-tag-btn`）へ変更し、カード内のタグクリックで即座に絞り込み・ハイライトできるよう改善。

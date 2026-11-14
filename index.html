@@ -125,7 +125,7 @@
                 <span class="text-[9px] font-bold text-[#8e8e93] uppercase tracking-widest mr-1">Top Focus Tags:</span>
             </div>
             <div class="flex justify-between items-center mt-2">
-                <p class="text-[9px] text-[#8e8e93] font-medium tracking-tight">最終アップデート: 2026/11/14 14:33:13</p>
+                <p class="text-[9px] text-[#8e8e93] font-medium tracking-tight">最終アップデート: 2026/11/14 18:24:46</p>
                 <a href="./data/notebooklm_master.md" target="_blank" class="text-[9px] text-[#e8c3b9] hover:underline font-bold tracking-tight">📝 NotebookLM用統合ソースを開く</a>
             </div>
         </div>
@@ -137,10 +137,11 @@
       <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-red-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1796507681"
            data-title="Loop EngineeringをClaudeを使って実践してみた。 | DevelopersIO"
-           data-summary="こんにちは、せーのです。"
+           data-summary="【結論】AIの自己修正ループは、実装者と検証者（Edit権限なし）を分離し、検証フェーズでテスト改ざんや機密ファイルへのアクセスをhooksで機械的にブロックする設計にすべきである。
+【NG】実装したエージェント自身にテスト結果の採点まで行わせ、テストファイル自体の改ざん（Verifier Theater）を検知できない状態でループを回すこと。"
            data-priority="high"
            data-score="92"
-           data-tags="AI駆動開発,ClaudeCode">
+           data-tags="AI駆動開発,ClaudeCode,自動化パイプライン,プロンプト・コンテキスト">
           <div class="px-6 py-5 flex-grow flex flex-col">
               <div class="flex justify-between items-start mb-3">
                   <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-red-950/40 text-red-300 border border-red-900/50">High <span class="opacity-70">· 92</span></span>
@@ -158,11 +159,11 @@
                   <a href="https://dev.classmethod.jp/articles/claude-loop-engineering-practice/" target="_blank">Loop EngineeringをClaudeを使って実践してみた。 | DevelopersIO</a>
               </h2>
               
-        <p class="text-[#a1a1aa] text-xs mb-3 line-clamp-2 leading-relaxed">
-            こんにちは、せーのです。
-        </p>
+        <div class="text-[#a1a1aa] text-sm mb-3 space-y-1">
+            <p class="leading-relaxed">・ 【結論】AIの自己修正ループは、実装者と検証者（Edit権限なし）を分離し、検証フェーズでテスト改ざんや機密ファイルへのアクセスをhooksで機械的にブロックする設計にすべきである。</p><p class="leading-relaxed">・ 【NG】実装したエージェント自身にテスト結果の採点まで行わせ、テストファイル自体の改ざん（Verifier Theater）を検知できない状態でループを回すこと。</p>
+        </div>
               
-              <div class="mt-auto pt-2"><button type="button" data-tag="AI駆動開発" onclick="filterTag('AI駆動開発')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#AI駆動開発</button><button type="button" data-tag="ClaudeCode" onclick="filterTag('ClaudeCode')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#ClaudeCode</button></div>
+              <div class="mt-auto pt-2"><button type="button" data-tag="AI駆動開発" onclick="filterTag('AI駆動開発')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#AI駆動開発</button><button type="button" data-tag="ClaudeCode" onclick="filterTag('ClaudeCode')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#ClaudeCode</button><button type="button" data-tag="自動化パイプライン" onclick="filterTag('自動化パイプライン')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#自動化パイプライン</button><button type="button" data-tag="プロンプト・コンテキスト" onclick="filterTag('プロンプト・コンテキスト')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#プロンプト・コンテキスト</button></div>
           </div>
           <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
               <a href="https://dev.classmethod.jp/articles/claude-loop-engineering-practice/" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
@@ -173,13 +174,14 @@
       <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-red-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1796507700"
            data-title="Claude Codeのスキル×サブエージェントで開発ワークフローを丸ごと自動化したらデリバリー速度が3倍になった"
-           data-summary="フリーランスとして、日本の大手コンサルティングファームのAI駆動開発を支援しています。そこで「Claude Codeのスキルとサブエージェントを組み合わせて、設計からデプロイまでを丸ごとオーケストレーションするワークフロー」を作ったところ、案件のデリバリー速度が 約3倍 になりました。"
+           data-summary="【結論】Claude Codeのスキルを指揮者（オーケストレーター）、サブエージェントを演奏者（ペルソナ）として分業させ、委譲時のコンテキストと成果物出力を厳格に規約化することで開発プロセスを標準化すべきである。
+【NG】サブエージェントのコンテキスト分離を考慮せず、メインの会話内容や前提条件を引き継がせないまま処理を開始させること。"
            data-priority="high"
-           data-score="92"
-           data-tags="AI駆動開発,ClaudeCode,AIエージェント">
+           data-score="95"
+           data-tags="AI駆動開発,ClaudeCode,AIエージェント,プロンプト・コンテキスト">
           <div class="px-6 py-5 flex-grow flex flex-col">
               <div class="flex justify-between items-start mb-3">
-                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-red-950/40 text-red-300 border border-red-900/50">High <span class="opacity-70">· 92</span></span>
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-red-950/40 text-red-300 border border-red-900/50">High <span class="opacity-70">· 95</span></span>
                   <div class="flex items-center gap-2">
                     <button onclick="toggleStatus('1796507700')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
                         既読にする
@@ -194,11 +196,11 @@
                   <a href="https://zenn.dev/arufian/articles/4676070054c347" target="_blank">Claude Codeのスキル×サブエージェントで開発ワークフローを丸ごと自動化したらデリバリー速度が3倍になった</a>
               </h2>
               
-        <p class="text-[#a1a1aa] text-xs mb-3 line-clamp-2 leading-relaxed">
-            フリーランスとして、日本の大手コンサルティングファームのAI駆動開発を支援しています。そこで「Claude Codeのスキルとサブエージェントを組み合わせて、設計からデプロイまでを丸ごとオーケストレーションするワークフロー」を作ったところ、案件のデリバリー速度が 約3倍 になりました。
-        </p>
+        <div class="text-[#a1a1aa] text-sm mb-3 space-y-1">
+            <p class="leading-relaxed">・ 【結論】Claude Codeのスキルを指揮者（オーケストレーター）、サブエージェントを演奏者（ペルソナ）として分業させ、委譲時のコンテキストと成果物出力を厳格に規約化することで開発プロセスを標準化すべきである。</p><p class="leading-relaxed">・ 【NG】サブエージェントのコンテキスト分離を考慮せず、メインの会話内容や前提条件を引き継がせないまま処理を開始させること。</p>
+        </div>
               
-              <div class="mt-auto pt-2"><button type="button" data-tag="AI駆動開発" onclick="filterTag('AI駆動開発')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#AI駆動開発</button><button type="button" data-tag="ClaudeCode" onclick="filterTag('ClaudeCode')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#ClaudeCode</button><button type="button" data-tag="AIエージェント" onclick="filterTag('AIエージェント')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#AIエージェント</button></div>
+              <div class="mt-auto pt-2"><button type="button" data-tag="AI駆動開発" onclick="filterTag('AI駆動開発')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#AI駆動開発</button><button type="button" data-tag="ClaudeCode" onclick="filterTag('ClaudeCode')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#ClaudeCode</button><button type="button" data-tag="AIエージェント" onclick="filterTag('AIエージェント')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#AIエージェント</button><button type="button" data-tag="プロンプト・コンテキスト" onclick="filterTag('プロンプト・コンテキスト')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#プロンプト・コンテキスト</button></div>
           </div>
           <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
               <a href="https://zenn.dev/arufian/articles/4676070054c347" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>

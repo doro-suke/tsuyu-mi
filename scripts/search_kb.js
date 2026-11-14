@@ -168,7 +168,14 @@ function resolveSafeMdPath(article) {
 function extractHeadings(text) {
   const headings = [];
   const lines = text.split(/\r?\n/);
+  let inCodeBlock = false;
   for (let i = 0; i < lines.length; i++) {
+    if (/^\s*```/.test(lines[i])) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock) continue;
+
     const m = lines[i].match(/^(#{1,4})\s+(.+?)\s*$/);
     if (m) {
       headings.push({

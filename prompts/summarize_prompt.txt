@@ -27,7 +27,13 @@ Web記事（note / Zenn / Qiita / 技術ブログ等）の生テキストを解�
   `ClaudeCode`, `AIエージェント`, `AI駆動開発`, `プロンプト・コンテキスト`, `MCP・外部連携`, `生成AI・LLM`, `自動化パイプライン`, `画像生成AI`, `ComfyUI`, `動画生成AI`, `ショート動画・YouTube`, `ゲーム開発`, `UI・デザイン`, `マーケティング・SNS`, `個人開発・マネタイズ`, `ナレッジ・情報整理`, `マインドセット・戦略`, `セキュリティ・品質`, `プログラミング・インフラ`
 - `source` (string): 媒体名（例: `"note"`, `"Zenn"`, `"Qiita"`, `"GitHub"`, または技術ブログ名）。
 - `date` (string): 記事の公開年月（`"YYYY-MM"` 形式）。本文やURLから不明な場合は指定された取得年月をそのまま使用すること。
-- `domain` (string): 必ず `"youtube-script"`, `"video-pipeline"`, `"game-design"`, `"godot-impl"`, `"marketing"`, `"other"` の6つから最適な1つを選択すること。
+- `domain` (string): 以下の判定基準に従い、6つの中から最も適切な1つを選択すること：
+  - `"youtube-script"`: YouTube・ショート動画の台本作成、企画、フック、視聴維持率改善に関する記事
+  - `"video-pipeline"`: 動画生成AI、ComfyUI、Remotion、FFmpeg、音声合成、映像制作自動化パイプラインに関する記事
+  - `"game-design"`: ゲーム企画、レベルデザイン、ゲームメカニクス、プレイヤー体験（UX）に関する記事
+  - `"godot-impl"`: Godot Engine、GDScript、シェーダー、またはUnity等のゲームエンジン実装に関する記事
+  - `"marketing"`: SNS運用、SEO、LP改善、note販売、アフィリエイト、個人開発のマネタイズ・集客に関する記事
+  - `"other"`: Claude Code、AIエージェント設計、汎用プログラミング、インフラ、セキュリティなど上記5つに直接該当しない技術・ビジネス記事
 - `tags` (string[]): 記事内容を表す具体的な技術名・ツール名・概念を3〜5個。
 - `core_rule` (string): この記事から抽出した、プロジェクトに適用すべき最も重要な実務ルール・結論を1〜2文で断定的に記述。
 - `anti_pattern` (string): この記事が警告しているNG行動・陥りやすい失敗パターンを1文で記述（記事内に記載がなければ `"特記事項なし"`）。

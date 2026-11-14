@@ -14,6 +14,19 @@ AIはタスク開始前に必ずこの内容を確認してください。
 - **今後のルール**: （今後、同様のケースで守るべき具体的なアクションや制約）
 ```
 
+### [2026-11-14] 高密度構造化Markdownパイプライン統合時のJSON破壊・APIハング・domain誤分類の解消
+- **発生した事象**: 
+  1. `scripts/sync.js` の `curl` 呼び出しにタイムアウトがなく、Gemini API（`gemini-flash-latest` / `gemini-3.8-flash` 等）が503高負荷・応答停止した際にバッチ処理が8分以上無期限ハングした。また `gemini-2.5-flash` は 404（新規利用終了）を返した。
+  2. 長大記事（約29,000字・コードブロック多数）を `response_mime_type: "application/json"` のみで構造化抽出した際、JSON文字列エスケープ崩れ（`Expected ',' or '}' after property value in JSON`）が発生した。
+  3. プロンプトに `domain` の境界基準がなかったため、Claude Code 解説記事が誤って `"youtube-script"` に分類され、見出し抽出でコードフェンス内の `#` 行も誤検出された。
+- **根本原因**: `curl` に `--max-time` が未設定だったこと、`generationConfig` に `response_schema`（型・必須キー・enum制約）が指定されていなかったこと、および構造化出力をLLMに生のMarkdown文字列として直接書かせるのではなく「JSONスキーマ出力＋Node.js側アセンブル」とすべき設計要件の見落とし。
+- **解決策・パターン**:
+  1. **JSONスキーマ駆動＋安全なYAML組み立て（`scripts/structured_md.js`）**: Gemini API には `response_schema`（`domain` の `enum` 制約含む）で構造化JSONを強制出力させ、Node.js側で `JSON.stringify` を用いてYAMLフロントマター＋4セクションを安全に組み立てる（セクション4 `snippets` が空または「特になし」なら自動省略）。
+  2. **原本自動バックアップと段階変換（`scripts/convert_structured.js`）**: 既存 `.md` を `data/backups/notebooklm_sources_raw/` へ自動退避し、ローカル抽出本文を15,000字まで利用して1記事1回のAPI呼び出しで変換。
+  3. **通信保護とモデルフォールバック**: `curl` に `--connect-timeout 15 --max-time 45` を設定し、高速・安定な `gemini-flash-lite-latest` をプライマリ、エラー時（429/503/500/404/JSONパース失敗）に `gemini-flash-latest` へフォールバックリトライする構成にした。
+  4. **下流互換とコードブロック除外**: `extractMdBody` でYAMLフロントマターと旧 `## 本文` 形式を統一抽出し、`search_kb.js` の `extractHeadings` では ```` ``` ```` 内をスキップするようにした。
+- **今後のルール**: 外部APIを叩く `curl` には必ず `--connect-timeout` と `--max-time` を付与すること。構造化Markdown（YAMLフロントマター含む）をLLMで生成する際は、直接Markdown出力させず必ず `response_schema` 付きJSONとして受け取り、アプリ側でエスケープして組み立てること。
+
 ### [2026-11-14] 雑な指示からの自動コンテキスト補完と自律フィードバックの組み込み
 - **発生した事象**: 「目的（KPI）・制約条件・技術スタック・現象」を毎回手動でフォーマット化して投げたり、採用・不採用の結果を人間が毎回司書へ報告する運用は、継続利用の認知負荷が高く破綻しやすい。
 - **解決策・パターン**:

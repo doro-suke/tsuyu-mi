@@ -62,7 +62,7 @@ function sanitizeFileName(title, maxBytes = 180) {
  * ユーティリティ: curlを実行
  */
 function curl(url, options = {}) {
-  let command = `curl -s -L "${url}"`;
+  let command = `curl -s -L --connect-timeout 15 --max-time 45 "${url}"`;
   if (options.headers) {
     for (const [key, value] of Object.entries(options.headers)) {
       const safeValue = String(value).replace(/"/g, '\\"');
@@ -212,23 +212,51 @@ async function extractContent(url) {
 }
 
 /**
- * 4. Gemini API で解析 (スコアリング＆タグ分類のみの軽量呼び出し)
+ * 4. Gemini API で構造化解析を実行 (1記事1回・503時のモデルフォールバック対応)
  */
 async function getSummary(apiKey, prompt, retryCount = 0) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
+  const MODELS = ['gemini-flash-lite-latest', 'gemini-flash-latest'];
+  const model = MODELS[retryCount % MODELS.length];
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
   
   const response = curl(url, {
     method: 'POST',
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { response_mime_type: "application/json" }
+      generationConfig: {
+        response_mime_type: "application/json",
+        response_schema: {
+          type: "OBJECT",
+          properties: {
+            score: { type: "INTEGER" },
+            tags_suggested: { type: "ARRAY", items: { type: "STRING" } },
+            source: { type: "STRING" },
+            date: { type: "STRING" },
+            domain: {
+              type: "STRING",
+              enum: ["youtube-script", "video-pipeline", "game-design", "godot-impl", "marketing", "other"]
+            },
+            tags: { type: "ARRAY", items: { type: "STRING" } },
+            core_rule: { type: "STRING" },
+            anti_pattern: { type: "STRING" },
+            problem: { type: "STRING" },
+            actionable_rules: { type: "STRING" },
+            anti_patterns: { type: "STRING" },
+            snippets: { type: "STRING" }
+          },
+          required: [
+            "score", "tags_suggested", "source", "date", "domain", "tags",
+            "core_rule", "anti_pattern", "problem", "actionable_rules", "anti_patterns", "snippets"
+          ]
+        }
+      }
     })
   });
 
   if (!response.ok) {
     if (retryCount < CONFIG.MAX_RETRIES) {
-      console.log(`  [Network Error] curl失敗。15秒後にリトライします... (${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
-      await sleep(15000);
+      console.log(`  [Network Error] curl失敗 (${model})。5秒後に別モデルでリトライします... (${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
+      await sleep(5000);
       return getSummary(apiKey, prompt, retryCount + 1);
     }
     throw new Error(`Gemini API 接続エラー (curl failed)`);
@@ -240,13 +268,13 @@ async function getSummary(apiKey, prompt, retryCount = 0) {
     const errorCode = responseJson.error.code;
     const errorMessage = responseJson.error.message;
 
-    if ((errorCode === 429 || errorCode === 503 || errorCode === 500) && retryCount < CONFIG.MAX_RETRIES) {
-      const waitTime = errorCode === 503 ? (retryCount + 1) * 15000 : (retryCount + 1) * 30000 + 10000;
-      console.log(`  [${errorCode} Error] 一時的なAPI制限/高負荷です。${waitTime/1000}秒後にリトライします... (${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
+    if ((errorCode === 429 || errorCode === 503 || errorCode === 500 || errorCode === 404) && retryCount < CONFIG.MAX_RETRIES) {
+      const waitTime = (errorCode === 503 || errorCode === 404) ? 5000 : (retryCount + 1) * 30000 + 10000;
+      console.log(`  [${errorCode} Error] ${model} で一時的なAPI制限/エラーです。${waitTime/1000}秒後にリトライします... (${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
       await sleep(waitTime);
       return getSummary(apiKey, prompt, retryCount + 1);
     }
-    throw new Error(`Gemini API エラー: ${errorMessage} (Code: ${errorCode})`);
+    throw new Error(`Gemini API エラー (${model}): ${errorMessage} (Code: ${errorCode})`);
   }
 
   if (!responseJson.candidates || !responseJson.candidates[0] || !responseJson.candidates[0].content) {
@@ -260,10 +288,21 @@ async function getSummary(apiKey, prompt, retryCount = 0) {
   const text = responseJson.candidates[0].content.parts[0].text;
   try {
     return JSON.parse(text);
-  } catch {
+  } catch (parseErr) {
     const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error("有効なJSONが得られませんでした。");
-    return JSON.parse(jsonMatch[0]);
+    if (jsonMatch) {
+      try {
+        return JSON.parse(jsonMatch[0]);
+      } catch {
+        // 下のフォールバックリトライへ進む
+      }
+    }
+    if (retryCount < CONFIG.MAX_RETRIES) {
+      console.log(`  [JSON Parse Error] ${model} の応答JSON解析に失敗。3秒後にリトライします... (${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
+      await sleep(3000);
+      return getSummary(apiKey, prompt, retryCount + 1);
+    }
+    throw parseErr;
   }
 }
 
