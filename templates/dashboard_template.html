@@ -153,6 +153,7 @@
         function updateDisplay() {
             const searchTerm = searchInput.value.toLowerCase();
             const articles = document.querySelectorAll('.article-card');
+            const normalizedCurrentTag = currentTag.toLowerCase().trim();
             let visibleCount = 0;
             
             // 統計用の集計
@@ -162,7 +163,7 @@
                 const title = card.dataset.title.toLowerCase();
                 const summary = card.dataset.summary.toLowerCase();
                 const priority = card.dataset.priority.toLowerCase();
-                const tags = card.dataset.tags.toLowerCase().split(',');
+                const tags = (card.dataset.tags || '').toLowerCase().split(',').map(t => t.trim()).filter(Boolean);
                 const isRead = card.classList.contains('status-read');
                 const isDeleted = localStorage.getItem(`deleted_${card.dataset.articleId}`) === 'true';
 
@@ -178,8 +179,18 @@
 
                 const matchesSearch = title.includes(searchTerm) || summary.includes(searchTerm);
                 const matchesPriority = currentPriority === 'all' || priority === currentPriority;
-                const matchesTag = currentTag === 'all' || tags.includes(currentTag);
+                const matchesTag = normalizedCurrentTag === 'all' || tags.includes(normalizedCurrentTag);
                 const matchesReadFilter = showRead || !isRead;
+
+                // カード内のタグボタンの選択状態を更新
+                card.querySelectorAll('.card-tag-btn').forEach(btn => {
+                    const btnTag = (btn.dataset.tag || '').toLowerCase().trim();
+                    if (normalizedCurrentTag !== 'all' && btnTag === normalizedCurrentTag) {
+                        btn.className = 'card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-[#c8968c] text-[#121214] border border-transparent shadow-sm transition-colors cursor-pointer mr-1 mb-1';
+                    } else {
+                        btn.className = 'card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1';
+                    }
+                });
 
                 if (matchesSearch && matchesPriority && matchesTag && matchesReadFilter) {
                     card.classList.remove('hidden-item');
@@ -213,12 +224,13 @@
             const container = document.getElementById('tagContainer');
             const articles = document.querySelectorAll('.article-card');
             const tagCounts = {};
+            const normalizedCurrentTag = currentTag.toLowerCase().trim();
             
             articles.forEach(card => {
                 const isDeleted = localStorage.getItem(`deleted_${card.dataset.articleId}`) === 'true';
                 if (isDeleted) return;
                 
-                const tags = card.dataset.tags.split(',').filter(t => t);
+                const tags = (card.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean);
                 tags.forEach(tag => {
                     tagCounts[tag] = (tagCounts[tag] || 0) + 1;
                 });
@@ -233,16 +245,17 @@
             // "ALL" タグボタン
             const allBtn = document.createElement('button');
             allBtn.onclick = () => filterTag('all');
-            allBtn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold transition-all ${currentTag === 'all' ? 'bg-[#c8968c] text-[#121214] shadow-md' : 'bg-[#1a1a1f] text-[#a1a1aa] hover:bg-[#222228]'}`;
+            allBtn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold transition-all ${normalizedCurrentTag === 'all' ? 'bg-[#c8968c] text-[#121214] shadow-md' : 'bg-[#1a1a1f] text-[#a1a1aa] hover:bg-[#222228]'}`;
             allBtn.textContent = 'ALL';
             container.appendChild(allBtn);
 
             sortedTags.forEach(([tag, count], index) => {
-                if (!isExpanded && index >= limit) return;
+                const isSelected = normalizedCurrentTag === tag.toLowerCase().trim();
+                if (!isExpanded && index >= limit && !isSelected) return;
                 
                 const btn = document.createElement('button');
                 btn.onclick = () => filterTag(tag);
-                btn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold transition-all ${currentTag === tag ? 'bg-[#c8968c] text-[#121214] shadow-md' : 'bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#222228]'}`;
+                btn.className = `tag-btn inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold transition-all ${isSelected ? 'bg-[#c8968c] text-[#121214] shadow-md' : 'bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#222228]'}`;
                 btn.dataset.tag = tag;
                 btn.textContent = `${tag.toUpperCase()} (${count})`;
                 container.appendChild(btn);
@@ -327,7 +340,11 @@
         }
 
         function filterTag(tag) {
-            currentTag = tag;
+            if (tag === 'all' || currentTag.toLowerCase().trim() === tag.toLowerCase().trim()) {
+                currentTag = 'all';
+            } else {
+                currentTag = tag;
+            }
             renderTags();
             updateDisplay();
         }

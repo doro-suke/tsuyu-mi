@@ -14,6 +14,16 @@ AIはタスク開始前に必ずこの内容を確認してください。
 - **今後のルール**: （今後、同様のケースで守るべき具体的なアクションや制約）
 ```
 
+### [2026-11-14] ダッシュボードのタグフィルターの大文字小文字不一致と記事カード内タグの非インタラクティブ不具合
+- **発生した事象**: ダッシュボード上部のタグボタンをクリックしても記事が正しく絞り込まれず（英字を含むタグで 0 件になる）、また各記事カード内のタグをクリックしても反応しなかった。
+- **根本原因**:
+  1. `templates/dashboard_template.html` の `updateDisplay()` で記事側タグ（`card.dataset.tags`）のみ `toLowerCase()` で小文字化しており、選択状態 `currentTag` を小文字化せずに `tags.includes(currentTag)` で比較していたため、大文字を含むタグ（例: `ClaudeCode`）が常に不一致になっていた。
+  2. `scripts/generate_dashboard.js` の `generateCard()` で各記事内のタグが `<span>` 要素として出力されており、`onclick` ハンドラやボタン属性を持っていなかった。
+- **解決策・パターン**:
+  1. **比較値の双方向正規化**: `updateDisplay()`, `renderTags()`, `filterTag()` のすべてで `.toLowerCase().trim()` を統一し、大文字小文字を区別せず一致判定を行うよう修正。
+  2. **カード内タグのボタン化とトグル UX**: 記事カードのタグを `<button type="button" data-tag="..." onclick="filterTag(...)" class="card-tag-btn ...">` に変更し、選択中タグのハイライト・再クリックでの解除・折りたたみ範囲外タグの自動表示を実装。
+- **今後のルール**: フロントエンドのフィルター比較では比較対象双方の正規化（`.toLowerCase().trim()`）を徹底し、UI 変更時は `templates/dashboard_template.html` と `scripts/generate_dashboard.js` の両面からクリック導線・動作確認を行うこと。
+
 ### [2026-11-14] 他プロジェクト横断のナレッジ参照基盤（Vesper KB CLI ＋ グローバルスキル）の構築
 - **発生した事象**: `data/notebooklm_sources/` 配下に蓄積された大量の Markdown（実態監査時点で `bookmarks.json` 526件＋未追跡重複/孤立ファイル386件の計912ファイル）を、他プロジェクトで作業中の Antigravity や Claude Code から低コンテキストコストで横断参照する必要が生じた。
 - **根本原因**:

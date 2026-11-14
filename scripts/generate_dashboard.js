@@ -45,7 +45,10 @@ function generateDashboard(data) {
   const generateCard = (article) => {
     const classes = getPriorityClasses(article._tier);
     const tags = normalizeTags(article.tags);
-    const tagsHtml = tags.map(tag => `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 mr-1 mb-1">#${tag}</span>`).join('');
+    const tagsHtml = tags.map(tag => {
+      const safeTag = tag.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      return `<button type="button" data-tag="${tag.replace(/"/g, '&quot;')}" onclick="filterTag('${safeTag}')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#${tag}</button>`;
+    }).join('');
     const mdRelPath = article.markdown_path ? `./${article.markdown_path}` : '#';
     const isRead = article.status === 'read';
     const score = deriveScore(article);
