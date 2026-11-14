@@ -110,6 +110,8 @@
   - `templates/vesper_librarian_agent_agy.md`（`model: flash`）および `templates/vesper_librarian_agent_claude.md`（`model: sonnet`）を新規作成し、`scripts/install_skills.js` で Antigravity / Claude Code 両環境へスキル＋エージェントを一括配布できる構成に拡張。
   - 作業側のコンテキスト汚染を防ぐため、「文脈翻訳レファレンス → 上位精読 → 3点処方箋（適用ルール・NG行動・最小スニペット / 300〜500字）のみ返却」および `feedback --useful` 自律記録プロトコルを確立。
   - `templates/vesper_kb_skill.md`（司書サブエージェント委任・`claude -p` ワンショット呼び出し）と `GEMINI.md`（2画面手動プロトタイピング用 Librarian Mode）を更新・同期完了。
+- **雑な指示からの自動前提変換（Auto-Prompt Expansion）＆自動フィードバック対応**:
+  - 人間が細かい条件（`【目的】` `【制約】` 等）を添えなくても、作業側エージェントがプロジェクト資料から目的・KPI・技術制約を自動抽出して司書へ構造化渡しし、採用分だけ自動で `feedback --useful` を記録するルールを `vesper-kb` / `vesper-librarian` / `GEMINI.md` に実装・同期完了。
 
 【現在のステータス】
 システムは完全に自律動作可能な状態です。毎日 09:00 (JST) に自動実行され、未処理のブックマークが確実に「Vesper」のダッシュボードへ反映されます。同時に、NotebookLMにロード可能な統合ナレッジファイルも毎朝最新に自動生成されます。
