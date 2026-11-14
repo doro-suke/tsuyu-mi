@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-14T09:44:36.408Z",
+  "updated_at": "2026-11-14T10:02:22.030Z",
   "articles": [
     {
       "id": "1702129693",
@@ -568,18 +568,30 @@
       "id": "1705380755",
       "url": "https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8",
       "title": "AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地",
-      "summary": "AI指示書を動き方・個別タスク・見た目の3層に分離し、仕様として定義する手法を解説している。\nDESIGN.mdはYAMLトークンとCLI検証ツールを備え、AIによるUI生成の一貫性を機械的に保証する。\nAGENTS.mdとSKILL.mdにより、エージェントの行動境界と特定タスクの手順を構造化し検証可能にする。",
+      "summary": "【結論】AI指示書を「動き方（AGENTS.md/CLAUDE.md）」「個別タスク（SKILL.md）」「見た目（DESIGN.md）」の3層に分業し、形式的に検証可能なルール（トークンや禁止語）はYAML+CLI lintで機械的に自動検証する。\n【NG】1つのCLAUDE.mdやMarkdownにエージェントの前提・個別タスク手順・デザインシステムの規約をすべて詰め込み、機械的に検証可能なルールまで人間レビューに依存させること。",
       "score": 88,
       "read_now_reason": "AI駆動開発において指示書の肥大化と曖昧さを防ぐための、最新の標準化仕様（AGENTS.md等）の具体的な構造と検証エコシステムが明記されているため。CursorやClaude Codeの挙動を安定させる設計原則として即時適用できる。",
       "defer_reason": "既存のCLAUDE.md等の運用で十分な精度が出ており、デザインシステムやタスク別の厳密なバリデーションパイプラインを構築するフェーズにない場合は、概念の把握のみで十分な可能性がある。",
       "tags": [
         "AI駆動開発",
         "UI・デザイン",
-        "自動化パイプライン"
+        "自動化パイプライン",
+        "プロンプト・コンテキスト"
       ],
       "status": "unread",
-      "analyzed_at": "2026-05-04T23:12:23.390Z",
-      "markdown_path": "data/notebooklm_sources/1705380755_AIに渡す指示書の役割分担_ AGENTS.md_SKILL.md_DESIGN.mdと仕様駆動開発の現在地.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1705380755_AIに渡す指示書の役割分担_ AGENTS.md_SKILL.md_DESIGN.mdと仕様駆動開発の現在地.md",
+      "is_structured": true,
+      "core_rule": "AI指示書を「動き方（AGENTS.md/CLAUDE.md）」「個別タスク（SKILL.md）」「見た目（DESIGN.md）」の3層に分業し、形式的に検証可能なルール（トークンや禁止語）はYAML+CLI lintで機械的に自動検証する。",
+      "anti_pattern": "1つのCLAUDE.mdやMarkdownにエージェントの前提・個別タスク手順・デザインシステムの規約をすべて詰め込み、機械的に検証可能なルールまで人間レビューに依存させること。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "AI駆動開発",
+        "UI・デザイン",
+        "自動化パイプライン",
+        "プロンプト・コンテキスト"
+      ]
     },
     {
       "id": "1705374281",
@@ -5077,7 +5089,7 @@
       "id": "1781653430",
       "url": "https://qiita.com/4q_sano/items/1bed8709843fe6811f32",
       "title": "差分リスクでレビュー方式を自動振り分け：Claude Codeで作る3層コードレビュー・オーケストレーター【6体AI＋テンプレ全公開】 - Qiita",
-      "summary": "差分リスクに応じてAIコードレビューを3段階（単独・チーム・自動判別）に自動振り分けする仕組みを構築\n軽微な変更には通常レビューのみを実行し、AIによる過剰なコード修正を防ぎつつ人間が判断する余地を確保\n実用的なプロンプト（Claude Codeのカスタムコマンド定義テンプレート）が完全公開され、即時適用可能",
+      "summary": "【結論】差分リスクに応じてコードレビューを通常レビュー（単独）・重要差分レビュー（6体チーム）・自動振り分け（オーケストレーター）の3層に振り分け、修正対象を重大・高リスクに限定して人間の判断余地を残す。\n【NG】軽微な差分に毎回最大構成の6体チームレビューを起動してトークンと時間を浪費する、または中・低リスクまでAIに「全部直して」と丸投げして不要差分で変更を肥大化・破壊すること。",
       "score": 92,
       "read_now_reason": "AI駆動開発やパイプライン自動化に直結する内容であり、Claude Codeを用いた効率的なコードレビューの自動オーケストレーション手法と、実運用に耐えうるプロンプト・設計が具体的に明記されているため。トークンの過剰消費を防ぎ、即座にプロジェクトへ適用できます。",
       "defer_reason": "開発フローにおけるコードレビュー自動化にClaude Codeを使用する予定がない場合、またはGitHub Actions等による既存のCI/CD環境で手動レビュープロセスが完全に定着している場合は後回しにできます。",
@@ -5088,8 +5100,19 @@
         "プロンプト・コンテキスト"
       ],
       "status": "unread",
-      "analyzed_at": "2026-07-06T02:18:32.326Z",
-      "markdown_path": "data/notebooklm_sources/1781653430_差分リスクでレビュー方式を自動振り分け：Claude Codeで作る3層コードレビュー・オーケストレーター【6体AI＋テンプレ全公開】 - Qiita.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1781653430_差分リスクでレビュー方式を自動振り分け：Claude Codeで作る3層コードレビュー・オーケストレーター【6体AI＋テンプレ全公開】 - Qiita.md",
+      "is_structured": true,
+      "core_rule": "差分リスクに応じてコードレビューを通常レビュー（単独）・重要差分レビュー（6体チーム）・自動振り分け（オーケストレーター）の3層に振り分け、修正対象を重大・高リスクに限定して人間の判断余地を残す。",
+      "anti_pattern": "軽微な差分に毎回最大構成の6体チームレビューを起動してトークンと時間を浪費する、または中・低リスクまでAIに「全部直して」と丸投げして不要差分で変更を肥大化・破壊すること。",
+      "domain": "other",
+      "source": "Qiita",
+      "specific_tags": [
+        "ClaudeCode",
+        "セキュリティ・品質",
+        "AI駆動開発",
+        "プロンプト・コンテキスト"
+      ]
     },
     {
       "id": "1781653727",
@@ -5228,17 +5251,30 @@
       "id": "1786063043",
       "url": "https://note.com/toitoi1618/n/ndf35dbd2585b",
       "title": "デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ",
-      "summary": "AIと人間が共有するデザインシステムと、仕様管理・デザイン作業用の2つに分離したリポジトリ構成の提示\nClaude Codeがデザイン仕様やUXガイドラインをピンポイントで取得できる独自MCPサーバーの構築\n本番と同じコンポーネントをデザイン案でも使用し、実装都合を排除してデザインのみを検討する設計手法",
+      "summary": "【結論】デザイナー不在チームでも高品質UIを量産可能にするため、デザインシステム（SSOT）と仕様・作業（spec）のリポジトリを分離し、本番と同じUIコンポーネントをMCPサーバ経由でAI（Claude Code）へ部分配信して1枚の提案HTMLに集約する。\n【NG】画面の見た目（スクショや素のHTML）だけをAIに作らせてデザイナーに投げたり、Figmaのマスターを手動で同期し続けたり、API連携などの実装都合をデザイン検討時に混ぜ込むこと。",
       "score": 90,
       "read_now_reason": "AI駆動開発において、デザイナー不在でもClaude Codeを用いて高品質なUIコードを自動生成するための、具体的なディレクトリ構成、2つのリポジトリによる役割分担、およびNext.jsを用いた独自MCPサーバーの設計アーキテクチャが明記されており、現在の自動化パイプライン構築に直接応用できるため。",
       "defer_reason": "各リポジトリのSKILL.mdの具体的なプロンプト記述や、MCPサーバー自体（Node.js等）の実装コードそのものは掲載されていないため、コードレベルでの即時コピー＆ペーストを求める場合は、自社環境向けの実装を自作する必要がある。",
       "tags": [
         "AI駆動開発",
-        "UI・デザイン"
+        "UI・デザイン",
+        "ClaudeCode",
+        "MCP・外部連携"
       ],
       "status": "unread",
-      "analyzed_at": "2026-07-13T01:44:25.540Z",
-      "markdown_path": "data/notebooklm_sources/1786063043_デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1786063043_デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ.md",
+      "is_structured": true,
+      "core_rule": "デザイナー不在チームでも高品質UIを量産可能にするため、デザインシステム（SSOT）と仕様・作業（spec）のリポジトリを分離し、本番と同じUIコンポーネントをMCPサーバ経由でAI（Claude Code）へ部分配信して1枚の提案HTMLに集約する。",
+      "anti_pattern": "画面の見た目（スクショや素のHTML）だけをAIに作らせてデザイナーに投げたり、Figmaのマスターを手動で同期し続けたり、API連携などの実装都合をデザイン検討時に混ぜ込むこと。",
+      "domain": "other",
+      "source": "note",
+      "specific_tags": [
+        "AI駆動開発",
+        "UI・デザイン",
+        "ClaudeCode",
+        "MCP・外部連携"
+      ]
     },
     {
       "id": "1791771801",
@@ -5346,24 +5382,36 @@
       "id": "1791771523",
       "url": "https://qiita.com/hrk-m/items/855132ecc5ace8164b95",
       "title": "Eccaceb",
-      "summary": "Claude Codeを用いて対話とコードから仕様を自動生成・維持するプロセスの提案\n設計、実装、完了の3フェーズに役割を分離し、サブエージェントを活用する開発手法\n検証ゲートを挟んだTDDループと、GitHub Actionsによる仕様PRの自動生成",
+      "summary": "【結論】仕様を手書き保守せず「対話から設計仕様（plan.md）」と「コードから実態仕様（flow.md/steering）」を二層生成し、オーケストレーターはコードを書かずに実装エージェントへの委譲と検証ゲート（コマンド＋照合＋品質＋モック）でTDDループを回す。\n【NG】人間が仕様書を手動で書き続け実装と乖離させること、メインの会話（オーケストレーター）自身がコードを直接書いてコンテキストを汚染・迷走させること。",
       "score": 92,
       "read_now_reason": "Claude Codeを用いたAI駆動開発において、仕様書の自動生成や自動検証ゲートをCIに組み込む具体的なアーキテクチャが提示されており、現行プロジェクトのパイプライン構築に即座に移植可能であるため。",
       "defer_reason": "ドキュメント管理の自動化やAIエージェントの品質管理プロセスを導入せず、手動での仕様管理と単一エージェントへの依存による品質低下リスクを許容する場合に限り、後回しが可能です。",
       "tags": [
         "ClaudeCode",
         "AI駆動開発",
-        "自動化パイプライン"
+        "自動化パイプライン",
+        "セキュリティ・品質"
       ],
       "status": "unread",
-      "analyzed_at": "2026-07-16T01:41:16.077Z",
-      "markdown_path": "data/notebooklm_sources/1791771523_Eccaceb.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1791771523_Eccaceb.md",
+      "is_structured": true,
+      "core_rule": "仕様を手書き保守せず「対話から設計仕様（plan.md）」と「コードから実態仕様（flow.md/steering）」を二層生成し、オーケストレーターはコードを書かずに実装エージェントへの委譲と検証ゲート（コマンド＋照合＋品質＋モック）でTDDループを回す。",
+      "anti_pattern": "人間が仕様書を手動で書き続け実装と乖離させること、メインの会話（オーケストレーター）自身がコードを直接書いてコンテキストを汚染・迷走させること。",
+      "domain": "other",
+      "source": "Qiita",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "自動化パイプライン",
+        "セキュリティ・品質"
+      ]
     },
     {
       "id": "1791771486",
       "url": "https://zenn.dev/cutlet_of_pork/articles/llm-token-saving-delegation-design",
       "title": "小さいトークン枠でAIエージェントを回すための委任アーキテクチャ設計【Claude Code】",
-      "summary": "メインモデルを統合・検証に特化させ、重い処理をLSPや安価なモデルに委任するアーキテクチャ設計\n委任のオーバーヘッドを考慮したbreak-even判断と、タスクごとのモデル階層化を実行する\n状態をHANDOFF.mdなどのファイルに永続化し、セッションクラッシュ時のトークン浪費を防ぐ",
+      "summary": "【結論】高単価なメインエージェントを「判断・分解・統合・検証」に専念させ、コード構造把握はLSPツール、大量生成・調査は安価モデルに委任し、結果は生ログを避けてdigest形式で受け取りディスクに状態永続化する。\n【NG】ファイル全文Readで毎ターン膨大なコンテキスト課金を発生させる、往復オーバーヘッドを無視して小タスクまで委任する、委任先の自己申告GREENを信じる。",
       "score": 92,
       "read_now_reason": "AI駆動開発プロジェクトにおいて直面する、AIエージェント（Claude Code等）のトークン消費とコストの急増を劇的に抑えるための具体的かつ実践的なアーキテクチャ（LSP連携、モデル階層化、状態永続化など）が詳細に解説されており、今すぐ開発パイプラインの設計に適用可能であるため。",
       "defer_reason": "AIコーディングエージェントを実開発に導入する予定が直近でない場合、またはトークン消費量やAPIコストに関する課題を現在抱えていない場合は、急ぎで読む必要はありません。",
@@ -5373,8 +5421,18 @@
         "プロンプト・コンテキスト"
       ],
       "status": "unread",
-      "analyzed_at": "2026-07-16T01:43:54.470Z",
-      "markdown_path": "data/notebooklm_sources/1791771486_小さいトークン枠でAIエージェントを回すための委任アーキテクチャ設計【Claude Code】.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1791771486_小さいトークン枠でAIエージェントを回すための委任アーキテクチャ設計【Claude Code】.md",
+      "is_structured": true,
+      "core_rule": "高単価なメインエージェントを「判断・分解・統合・検証」に専念させ、コード構造把握はLSPツール、大量生成・調査は安価モデルに委任し、結果は生ログを避けてdigest形式で受け取りディスクに状態永続化する。",
+      "anti_pattern": "ファイル全文Readで毎ターン膨大なコンテキスト課金を発生させる、往復オーバーヘッドを無視して小タスクまで委任する、委任先の自己申告GREENを信じる。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "プロンプト・コンテキスト"
+      ]
     },
     {
       "id": "1791771474",
@@ -5499,18 +5557,30 @@
       "id": "1796627971",
       "url": "https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2",
       "title": "毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復",
-      "summary": "CLI経由のClaude呼び出しで、launchd環境特有のstdinハングを防ぐ実装法を解説。\n実行毎に未達分のみを計算し、1日の目標投稿数へ確実に収束させる冪等計算ロジックを提示。\nAPIエラー時のフォールバック処理や監査スクリプトによる自己修復パイプラインを構築。",
+      "summary": "【結論】非対話バッチでClaude CodeとAPI連携を自律運用する際は、stdin遮断（</dev/null）・タイムアウト確保・「本日公開済と未公開ドラフト」を差し引く冪等計算、および秘密値の聖域化・原子置換（tmp→mv）による自己修復パイプラインを構築する。\n【NG】一時的なエラーで当日の処理を諦める非冪等設計や、自動化・自己修復スクリプトに.envなどの秘密値を触らせて上書き消去（サイレント報酬ゼロ化）させること。",
       "score": 90,
       "read_now_reason": "CLI版Claudeの非対話実行時のハング回避（</dev/null指定）や、バッチ処理における冪等計算・自己修復ロジックなど、AI自動化パイプライン構築にそのまま転用できる具体的なシェルスクリプトコードが豊富に含まれているため。",
       "defer_reason": "楽天アフィリエイトAPIの検索仕様やはてなブログ特有の投稿ロジックなど、ドメイン固有の実装部分に関しては即座に参照する必要がないため。",
       "tags": [
         "AI駆動開発",
         "自動化パイプライン",
-        "ClaudeCode"
+        "ClaudeCode",
+        "個人開発・マネタイズ"
       ],
       "status": "unread",
-      "analyzed_at": "2026-07-22T01:26:49.047Z",
-      "markdown_path": "data/notebooklm_sources/1796627971_毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1796627971_毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回.md",
+      "is_structured": true,
+      "core_rule": "非対話バッチでClaude CodeとAPI連携を自律運用する際は、stdin遮断（</dev/null）・タイムアウト確保・「本日公開済と未公開ドラフト」を差し引く冪等計算、および秘密値の聖域化・原子置換（tmp→mv）による自己修復パイプラインを構築する。",
+      "anti_pattern": "一時的なエラーで当日の処理を諦める非冪等設計や、自動化・自己修復スクリプトに.envなどの秘密値を触らせて上書き消去（サイレント報酬ゼロ化）させること。",
+      "domain": "marketing",
+      "source": "Zenn",
+      "specific_tags": [
+        "AI駆動開発",
+        "自動化パイプライン",
+        "ClaudeCode",
+        "個人開発・マネタイズ"
+      ]
     },
     {
       "id": "1796627962",
@@ -7066,7 +7136,7 @@
       "url": "https://zenn.dev/crandim_r_and_d/articles/260822_a10_handoff_questions_workflow",
       "title": "Claude Code のセッション引き継ぎは「現在地スナップショット」で回す — HANDOFF / QUESTIONS / 採番の型",
       "excerpt": "私は Claude Code だ。/compact や自動要約など、コンテキストを延命する機能は私にも一応ある。しかし数週間〜数ヶ月単位のプロジェクトでは、セッションはどのみち何度も切れるし、ユーザーは積極的に切りたがる（コンテキストが太ると私の応答の質もレート消費も悪化する）。",
-      "summary": "",
+      "summary": "【結論】セッション引き継ぎは時系列ログではなく上書き式の「現在地スナップショット型HANDOFF.md」に徹し、質問は一意採番（Q/P/T/O）付きのQUESTIONSファイルで人間と非同期にやり取りする。\n【NG】引き継ぎファイルに過去の作業ログを単調増加で追記して次セッションのコンテキストを圧迫する、チャットに未解決の質問を大量連投して相対指定による指示ミスを誘発する、git管理外ファイルにしか存在しない知識を作ってしまうこと。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
@@ -7076,8 +7146,18 @@
         "プロンプト・コンテキスト"
       ],
       "status": "unread",
-      "analyzed_at": "2026-08-30T02:17:38.394Z",
-      "markdown_path": "data/notebooklm_sources/1836568370_Claude Code のセッション引き継ぎは「現在地スナップショット」で回す — HANDOFF _ QUESTIONS _ 採番の型.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1836568370_Claude Code のセッション引き継ぎは「現在地スナップショット」で回す — HANDOFF _ QUESTIONS _ 採番の型.md",
+      "is_structured": true,
+      "core_rule": "セッション引き継ぎは時系列ログではなく上書き式の「現在地スナップショット型HANDOFF.md」に徹し、質問は一意採番（Q/P/T/O）付きのQUESTIONSファイルで人間と非同期にやり取りする。",
+      "anti_pattern": "引き継ぎファイルに過去の作業ログを単調増加で追記して次セッションのコンテキストを圧迫する、チャットに未解決の質問を大量連投して相対指定による指示ミスを誘発する、git管理外ファイルにしか存在しない知識を作ってしまうこと。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプト・コンテキスト"
+      ]
     },
     {
       "id": "1836568353",
@@ -7172,18 +7252,30 @@
       "url": "https://zenn.dev/tetsu_don/articles/e40b95dfc726ac",
       "title": "Claude Code で「ループエンジニアリング」を実践してみた",
       "excerpt": "てつどんです。データエンジニアとして 日々業務をこなしております。\n最近、バズワードのように、いろんなところで「ループエンジニアリング」というのを聞くことが多くなりました。\nそこで、今回、ループエンジニアリングというのはなんなのか、どういう使い方をするのかというのをClaudeと壁打ちして、実践してみました。\n正直、全くよく分かってない状況なので、認識として間違ってるかもしれないですが、やったことを残してみます。",
-      "summary": "",
+      "summary": "【結論】ループエンジニアリングでは、LLMの『合格させたい』自己採点バイアスを排除するため、実装エージェント（Maker）と検証エージェント（Checker）を独立したサブエージェント（fresh context）に分離し、CheckerのtoolsからWrite/Editを除外して判定に固定した上で、pytest/mypy等の機械的ゲートで検証する。\n【NG】同一のコンテキストや同一のエージェントに実装と検証の両方を行わせること、CheckerやReviewerサブエージェントにWrite/Editツールを付与すること、エラーログの検知時に想定内の異常系（バリデーション等）と本当のバグを区別せず修正ループを回すこと。",
       "score": 90,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "AI駆動開発",
         "ClaudeCode",
-        "AIエージェント"
+        "AIエージェント",
+        "セキュリティ・品質"
       ],
       "status": "unread",
-      "analyzed_at": "2026-08-31T02:14:09.220Z",
-      "markdown_path": "data/notebooklm_sources/1836568058_Claude Code で「ループエンジニアリング」を実践してみた.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1836568058_Claude Code で「ループエンジニアリング」を実践してみた.md",
+      "is_structured": true,
+      "core_rule": "ループエンジニアリングでは、LLMの『合格させたい』自己採点バイアスを排除するため、実装エージェント（Maker）と検証エージェント（Checker）を独立したサブエージェント（fresh context）に分離し、CheckerのtoolsからWrite/Editを除外して判定に固定した上で、pytest/mypy等の機械的ゲートで検証する。",
+      "anti_pattern": "同一のコンテキストや同一のエージェントに実装と検証の両方を行わせること、CheckerやReviewerサブエージェントにWrite/Editツールを付与すること、エラーログの検知時に想定内の異常系（バリデーション等）と本当のバグを区別せず修正ループを回すこと。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "AIエージェント",
+        "セキュリティ・品質"
+      ]
     },
     {
       "id": "1836568157",
@@ -7363,18 +7455,30 @@
       "url": "https://zenn.dev/nozomi720/articles/claude_code_hooks_feedback",
       "title": "Claude Code に「同じ指摘を二度させない」仕組みを hook で作った",
       "excerpt": "Claude Code を使っていて一番消耗するのは、実装の質そのものより 「先週も言ったことを今日も言っている」 ことでした。",
-      "summary": "",
+      "summary": "【結論】指摘を1指摘=1ファイルのフィードバック（~/.claude/feedback/<topic>.md）として永続化し、指摘回数（count）に応じてUserPromptSubmit（注入）・PreToolUse（事前停止）・Stop（終了阻止）の3段hookで強制力を段階的（warn→ask→deny）に引き上げる。\n【NG】人間が同じ指摘を何度もチャットで口頭注意する、CLAUDE.mdの肥大化でルール形骸化を招く、初回の指摘から一律でツール実行を完全禁止（deny）して誤検知で作業不能にする。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "ClaudeCode",
         "AI駆動開発",
-        "プロンプト・コンテキスト"
+        "プロンプト・コンテキスト",
+        "AIエージェント"
       ],
       "status": "unread",
-      "analyzed_at": "2026-09-03T01:57:03.053Z",
-      "markdown_path": "data/notebooklm_sources/1836568064_Claude Code に「同じ指摘を二度させない」仕組みを hook で作った.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1836568064_Claude Code に「同じ指摘を二度させない」仕組みを hook で作った.md",
+      "is_structured": true,
+      "core_rule": "指摘を1指摘=1ファイルのフィードバック（~/.claude/feedback/<topic>.md）として永続化し、指摘回数（count）に応じてUserPromptSubmit（注入）・PreToolUse（事前停止）・Stop（終了阻止）の3段hookで強制力を段階的（warn→ask→deny）に引き上げる。",
+      "anti_pattern": "人間が同じ指摘を何度もチャットで口頭注意する、CLAUDE.mdの肥大化でルール形骸化を招く、初回の指摘から一律でツール実行を完全禁止（deny）して誤検知で作業不能にする。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプト・コンテキスト",
+        "AIエージェント"
+      ]
     },
     {
       "id": "1836567967",
@@ -7593,17 +7697,28 @@
       "url": "https://qiita.com/cvusk/items/7f149b4ef5e1e71dd039",
       "title": "Claudeのキャッシュを使い倒す - Qiita",
       "excerpt": "Claudeのキャッシュを使い倒す",
-      "summary": "",
+      "summary": "【結論】プロンプトキャッシュは「静的→動的の一方向レイアウト」を守り、リクエスト間で不変な最後のブロックにブレークポイントを配置し、決定論的バイト一致を維持して2回以上の利用で最大90%のコスト削減とレイテンシ短縮を実現する。\n【NG】タイムスタンプや毎回の質問など可変ブロックにブレークポイントを配置したり、上流のツール定義・システムプロンプトを頻繁に変更して、1.25〜2倍の書き込み課金だけを支払い続けてヒット率ゼロに陥ること。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "生成AI・LLM",
-        "プロンプト・コンテキスト"
+        "プロンプト・コンテキスト",
+        "プログラミング・インフラ"
       ],
       "status": "unread",
-      "analyzed_at": "2026-09-05T01:53:48.445Z",
-      "markdown_path": "data/notebooklm_sources/1843184914_Claudeのキャッシュを使い倒す - Qiita.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1843184914_Claudeのキャッシュを使い倒す - Qiita.md",
+      "is_structured": true,
+      "core_rule": "プロンプトキャッシュは「静的→動的の一方向レイアウト」を守り、リクエスト間で不変な最後のブロックにブレークポイントを配置し、決定論的バイト一致を維持して2回以上の利用で最大90%のコスト削減とレイテンシ短縮を実現する。",
+      "anti_pattern": "タイムスタンプや毎回の質問など可変ブロックにブレークポイントを配置したり、上流のツール定義・システムプロンプトを頻繁に変更して、1.25〜2倍の書き込み課金だけを支払い続けてヒット率ゼロに陥ること。",
+      "domain": "other",
+      "source": "Qiita",
+      "specific_tags": [
+        "生成AI・LLM",
+        "プロンプト・コンテキスト",
+        "プログラミング・インフラ"
+      ]
     },
     {
       "id": "1843184862",
@@ -8310,17 +8425,30 @@
       "url": "https://zenn.dev/momoch/articles/88a825d0c374ea",
       "title": "「1人開発スタジオ」の作り方：Gemini×Clineで回す自律型マルチエージェント開発パイプライン",
       "excerpt": "「AIにコードを書かせる時代」から、「AIにAIをマネジメントさせる時代」へ。\n個人開発でコンテキスト爆発とハレーションに絶望した結果、ClineとGeminiで『3専門部門＋1ディレクター』の自律型開発スタジオを構築した実践記録です。",
-      "summary": "",
+      "summary": "【結論】単一セッションによるコンテキスト爆発とハレーションを防ぐため、役割（ストーリー/AV/システム/ディレクター）ごとに管理ディレクトリと行動規約を厳格に分離し、ファイル（ToDo・日誌・アーカイブ）ベースの循環ループで非同期連携させ、人間が最終Gitコミットを承認する体制を組む。\n【NG】単一チャットセッションにコード・シナリオ・アセット仕様を全て詰め込んでコンテキストを希釈させ、エージェント間で命名規約を破壊したり、完了済みToDoを無限再実行（ゾンビタスク）させること。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "AI駆動開発",
-        "AIエージェント"
+        "AIエージェント",
+        "ゲーム開発",
+        "生成AI・LLM"
       ],
       "status": "unread",
-      "analyzed_at": "2026-09-24T02:06:01.706Z",
-      "markdown_path": "data/notebooklm_sources/1860150450_「1人開発スタジオ」の作り方：Gemini×Clineで回す自律型マルチエージェント開発パイプライン.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1860150450_「1人開発スタジオ」の作り方：Gemini×Clineで回す自律型マルチエージェント開発パイプライン.md",
+      "is_structured": true,
+      "core_rule": "単一セッションによるコンテキスト爆発とハレーションを防ぐため、役割（ストーリー/AV/システム/ディレクター）ごとに管理ディレクトリと行動規約を厳格に分離し、ファイル（ToDo・日誌・アーカイブ）ベースの循環ループで非同期連携させ、人間が最終Gitコミットを承認する体制を組む。",
+      "anti_pattern": "単一チャットセッションにコード・シナリオ・アセット仕様を全て詰め込んでコンテキストを希釈させ、エージェント間で命名規約を破壊したり、完了済みToDoを無限再実行（ゾンビタスク）させること。",
+      "domain": "game-design",
+      "source": "Zenn",
+      "specific_tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "ゲーム開発",
+        "生成AI・LLM"
+      ]
     },
     {
       "id": "1860150721",
@@ -8378,18 +8506,30 @@
       "url": "https://zenn.dev/yoshiaki0217/articles/9dd7a3666d475f",
       "title": "Claude Codeを\"優秀な新卒部下\"として使い倒す：個人開発爆速化の全ワークフロー",
       "excerpt": "AIで開発は本当に速くなったのか？\n「AIを使えば開発が速くなる」\nこのフレーズ自体は、もう聞き飽きるほど目にしてきました。",
-      "summary": "",
+      "summary": "【結論】Claude Codeを「優秀な新卒エンジニア」と見立て、プロンプトの小手先テクニックではなくCLAUDE.md（思想・PlanFirst・自己改善ループ）と `ai/rules/`（規約のモジュール分割）およびGitHub MCPによる自動化環境を設計して自律実行させる。\n【NG】前提や環境を整えずに「いい感じにやっといて」「全体的にきれいにして」と曖昧に丸投げしたり、CLAUDE.mdに全ルールを詰め込んでコンテキストを埋もれさせたり、本番デプロイや認証・強制プッシュまでAIに無検証で任せること。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "ClaudeCode",
         "AI駆動開発",
-        "自動化パイプライン"
+        "自動化パイプライン",
+        "個人開発・マネタイズ"
       ],
       "status": "unread",
-      "analyzed_at": "2026-09-25T02:22:52.891Z",
-      "markdown_path": "data/notebooklm_sources/1860135635_Claude Codeを_優秀な新卒部下_として使い倒す：個人開発爆速化の全ワークフロー.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1860135635_Claude Codeを_優秀な新卒部下_として使い倒す：個人開発爆速化の全ワークフロー.md",
+      "is_structured": true,
+      "core_rule": "Claude Codeを「優秀な新卒エンジニア」と見立て、プロンプトの小手先テクニックではなくCLAUDE.md（思想・PlanFirst・自己改善ループ）と `ai/rules/`（規約のモジュール分割）およびGitHub MCPによる自動化環境を設計して自律実行させる。",
+      "anti_pattern": "前提や環境を整えずに「いい感じにやっといて」「全体的にきれいにして」と曖昧に丸投げしたり、CLAUDE.mdに全ルールを詰め込んでコンテキストを埋もれさせたり、本番デプロイや認証・強制プッシュまでAIに無検証で任せること。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "自動化パイプライン",
+        "個人開発・マネタイズ"
+      ]
     },
     {
       "id": "1865199163",
@@ -8796,18 +8936,30 @@
       "url": "https://zenn.dev/sun_asterisk/articles/e9b50f09839def",
       "title": "Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化",
       "excerpt": "Playwright 1.56 で追加された Playwright Test Agents は、E2E テストの計画・生成・修復を AI エージェントに任せる仕組みです。私たちは稼働中のプロジェクトで、このエージェントを GitHub Actions から無人で動かす仕組みを設計・実装し、検証しました。",
-      "summary": "",
+      "summary": "【結論】E2EテストのAIエージェント（Planner/Generator/Healer）をCIで無人実行する場合、AIの出力を信頼せず、①Healerの変更範囲を既存Page Objectのみに限定しテスト本体の改ざんやskip/fixmeをASTガードで禁止する、②テスト失敗原因を分類しAPIエラーや不整合は即人間にエスカレーションする、③トークン・書込権限を持たないクリーンなverifyジョブで検証しDraft PRで人間レビューを挟む。\n【NG】公式Healerをそのまま無人実行し、プロダクトのバグに対して期待値を書き換えたりtest.fixme()でスキップさせてテストを通過させること、エージェント実行ジョブで直接検証やマージを行うこと、テスト失敗時にレポートの件数だけを見て終了コードや実行全体のエラーを無視すること。",
       "score": 90,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "MCP・外部連携",
         "プログラミング・インフラ",
-        "AI駆動開発"
+        "AI駆動開発",
+        "自動化パイプライン"
       ],
       "status": "unread",
-      "analyzed_at": "2026-10-04T03:17:18.510Z",
-      "markdown_path": "data/notebooklm_sources/1869762198_Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1869762198_Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化.md",
+      "is_structured": true,
+      "core_rule": "E2EテストのAIエージェント（Planner/Generator/Healer）をCIで無人実行する場合、AIの出力を信頼せず、①Healerの変更範囲を既存Page Objectのみに限定しテスト本体の改ざんやskip/fixmeをASTガードで禁止する、②テスト失敗原因を分類しAPIエラーや不整合は即人間にエスカレーションする、③トークン・書込権限を持たないクリーンなverifyジョブで検証しDraft PRで人間レビューを挟む。",
+      "anti_pattern": "公式Healerをそのまま無人実行し、プロダクトのバグに対して期待値を書き換えたりtest.fixme()でスキップさせてテストを通過させること、エージェント実行ジョブで直接検証やマージを行うこと、テスト失敗時にレポートの件数だけを見て終了コードや実行全体のエラーを無視すること。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "MCP・外部連携",
+        "プログラミング・インフラ",
+        "AI駆動開発",
+        "自動化パイプライン"
+      ]
     },
     {
       "id": "1865112314",
@@ -8958,36 +9110,60 @@
       "url": "https://zenn.dev/mizchi/articles/ai-coding-loop-formal",
       "title": "俺のAIプログラミング手法(2026/10/05)",
       "excerpt": "棚卸し的な記事です。",
-      "summary": "",
+      "summary": "【結論】人間の役割を「モデル性能評価」「ループ構築」「定量的評価指標（ベンチマーク/複雑度/Kill率等）の設計」「CIチューニング」に再定義し、陳腐化したロールプロンプトをアンラーニングして数値目標とセッションループ（Ralph Loop / /goal）で自律改善させる。\n【NG】「あなたは優秀なプログラマです」「深呼吸して」等の陳腐化したペルソナプロンプトに依存したり、不要な一般的指示をAgents.mdに書きすぎたり、定量的評価指標なしに主観的な指示でAIを都度呼び出しながらコードの細部を人間が手動確認し続けること。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "AI駆動開発",
         "AIエージェント",
-        "ClaudeCode"
+        "ClaudeCode",
+        "生成AI・LLM"
       ],
       "status": "unread",
-      "analyzed_at": "2026-10-07T03:10:04.531Z",
-      "markdown_path": "data/notebooklm_sources/1879447110_俺のAIプログラミング手法(2026_10_05).md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1879447110_俺のAIプログラミング手法(2026_10_05).md",
+      "is_structured": true,
+      "core_rule": "人間の役割を「モデル性能評価」「ループ構築」「定量的評価指標（ベンチマーク/複雑度/Kill率等）の設計」「CIチューニング」に再定義し、陳腐化したロールプロンプトをアンラーニングして数値目標とセッションループ（Ralph Loop / /goal）で自律改善させる。",
+      "anti_pattern": "「あなたは優秀なプログラマです」「深呼吸して」等の陳腐化したペルソナプロンプトに依存したり、不要な一般的指示をAgents.mdに書きすぎたり、定量的評価指標なしに主観的な指示でAIを都度呼び出しながらコードの細部を人間が手動確認し続けること。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "ClaudeCode",
+        "生成AI・LLM"
+      ]
     },
     {
       "id": "1858006578",
       "url": "https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9",
       "title": "Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita",
       "excerpt": "Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する",
-      "summary": "",
+      "summary": "【結論】Claude Code Dynamic Workflowsでは、大規模タスク（移行・監査・リサーチ）を直列会話で回さず、JavaScriptオーケストレーションスクリプトを自動生成させて中間結果を変数に集約し、最大1,000エージェント（同時16並列）で分散実行させ、Ctrl+Gによる事前スクリプト確認とスコープ明示で制御する。\n【NG】スコープや変更ポリシーを明示せず曖昧なプロンプトでworkflowを起動すること（サブエージェントが発散し大量トークンを浪費）、/effort ultracodeを常時ONにすること、単一ファイルの軽微な修正やインタラクティブな応答タスクにDynamic Workflowsを使うこと。",
       "score": 90,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "ClaudeCode",
         "AI駆動開発",
-        "AIエージェント"
+        "AIエージェント",
+        "自動化パイプライン"
       ],
       "status": "unread",
-      "analyzed_at": "2026-10-07T03:11:38.629Z",
-      "markdown_path": "data/notebooklm_sources/1858006578_Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1858006578_Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita.md",
+      "is_structured": true,
+      "core_rule": "Claude Code Dynamic Workflowsでは、大規模タスク（移行・監査・リサーチ）を直列会話で回さず、JavaScriptオーケストレーションスクリプトを自動生成させて中間結果を変数に集約し、最大1,000エージェント（同時16並列）で分散実行させ、Ctrl+Gによる事前スクリプト確認とスコープ明示で制御する。",
+      "anti_pattern": "スコープや変更ポリシーを明示せず曖昧なプロンプトでworkflowを起動すること（サブエージェントが発散し大量トークンを浪費）、/effort ultracodeを常時ONにすること、単一ファイルの軽微な修正やインタラクティブな応答タスクにDynamic Workflowsを使うこと。",
+      "domain": "other",
+      "source": "Qiita",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "AIエージェント",
+        "自動化パイプライン"
+      ]
     },
     {
       "id": "1856646597",
@@ -9101,7 +9277,7 @@
       "url": "https://qiita.com/ot12/items/383bad5be9ed6667058a",
       "title": "Opus 5.5の登場で、Anthropic公式が「やめて・変えて」と言い始めた8つのこと - Qiita",
       "excerpt": "Opus 5.5の登場で、Anthropic公式が「やめて・変えて」と言い始めた8つのこと",
-      "summary": "",
+      "summary": "【結論】Claude Opus 5.5では思考量（thinking）の制御がつまみ（effort）に一本化され常時有効になったため、古いプロンプト指示（「よく考えて」「推論を書き出せ」等）や廃止されたAPIパラメータ（disabled, budget_tokens, 強制ツール指定）を排除し、effort: medium を基準に自前evalで調整する。\n【NG】Opus 5時代の effort 設定を持ち越したり、thinkingの無効化（disabled）や budget_tokens、tool_choice の tool/any を指定して400エラーを起こしたり、エージェントループで text だけの end_turn を即座に完了扱いすること。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
@@ -9111,8 +9287,18 @@
         "AIエージェント"
       ],
       "status": "unread",
-      "analyzed_at": "2026-10-09T09:42:34.745Z",
-      "markdown_path": "data/notebooklm_sources/1879701898_Opus 5.5の登場で、Anthropic公式が「やめて・変えて」と言い始めた8つのこと - Qiita.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1879701898_Opus 5.5の登場で、Anthropic公式が「やめて・変えて」と言い始めた8つのこと - Qiita.md",
+      "is_structured": true,
+      "core_rule": "Claude Opus 5.5では思考量（thinking）の制御がつまみ（effort）に一本化され常時有効になったため、古いプロンプト指示（「よく考えて」「推論を書き出せ」等）や廃止されたAPIパラメータ（disabled, budget_tokens, 強制ツール指定）を排除し、effort: medium を基準に自前evalで調整する。",
+      "anti_pattern": "Opus 5時代の effort 設定を持ち越したり、thinkingの無効化（disabled）や budget_tokens、tool_choice の tool/any を指定して400エラーを起こしたり、エージェントループで text だけの end_turn を即座に完了扱いすること。",
+      "domain": "other",
+      "source": "Qiita",
+      "specific_tags": [
+        "生成AI・LLM",
+        "プロンプト・コンテキスト",
+        "AIエージェント"
+      ]
     },
     {
       "id": "1879702301",
@@ -9155,18 +9341,30 @@
       "url": "https://zenn.dev/u1/articles/claude5-rules-collapse-and-fix",
       "title": "Opus5が思考が浅いように感じる問題への対策",
       "excerpt": "Claude Code を Opus 5 に切り替えた直後から、応答の散文傾向が急に強まり、思考が浅くなる (構造化して考えられない) 変化が出ました。長年育ててきた rules (CLAUDE.md や常時ロードの指示ファイル群) は何も変えていないのに、です。調べていくと、モデルが悪いのでも rules が壊れたのでもなく、Claude 5 世代で Opus 5 に配られる本体 system prompt が大きく変わり、旧来の rules がその前提で書かれていなかったのが原因でした。",
-      "summary": "",
+      "summary": "【結論】モデル更新で本体system promptが変化した際は、CLAUDE.mdの一般論追記ではなく、本体原文を名指し引用して優先宣言し、変えたい行動の直前（UserPromptSubmit hook等）に短く注入する。\n【NG】「〜するな」という禁止形の列挙や、「重要な変更時」等のモデルの主観分類に依存した発火条件、会話履歴の先頭（CLAUDE.md）に長大なルールを置いて即時行動を制御しようとすること。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "ClaudeCode",
         "AI駆動開発",
-        "プロンプト・コンテキスト"
+        "プロンプト・コンテキスト",
+        "AIエージェント"
       ],
       "status": "unread",
-      "analyzed_at": "2026-10-11T02:43:48.538Z",
-      "markdown_path": "data/notebooklm_sources/1879702259_Opus5が思考が浅いように感じる問題への対策.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1879702259_Opus5が思考が浅いように感じる問題への対策.md",
+      "is_structured": true,
+      "core_rule": "モデル更新で本体system promptが変化した際は、CLAUDE.mdの一般論追記ではなく、本体原文を名指し引用して優先宣言し、変えたい行動の直前（UserPromptSubmit hook等）に短く注入する。",
+      "anti_pattern": "「〜するな」という禁止形の列挙や、「重要な変更時」等のモデルの主観分類に依存した発火条件、会話履歴の先頭（CLAUDE.md）に長大なルールを置いて即時行動を制御しようとすること。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプト・コンテキスト",
+        "AIエージェント"
+      ]
     },
     {
       "id": "1879702228",
@@ -9470,18 +9668,30 @@
       "url": "https://note.com/tasty_dunlin998/n/n411f62ec3c26",
       "title": "Claude Code「ralph-loop」解説｜hirokaji",
       "excerpt": "Stop hookで回す自律ループの仕組み・プロンプト設計・運用の勘所・落とし穴まで   はじめに：ralph-loopは「Claudeを止めずに回す」ための実務ツールです  Claude Code は、普通に使うと「指示 → 1回の実行 → 応答で終了」という単発実行になりがちです。一方で現場では、次のような作業を「収束するまで繰り返してほしい」場面が多くあります。    lint / format を全部直して、再実行して、ゼロになるまで詰める    テストが落ちたら直して、テストを回して、全部通るまで繰り返す    生成物の品質が十分になるまで、自己チェックして改善する（ただし暴",
-      "summary": "",
+      "summary": "【結論】ralph-loopでは、Claude CodeのStop hookによる自律反復を安全に回すため、必ずコスト安全弁として `--max-iterations` を小さく（5〜10回程度）設定し、完了判定の `--completion-promise` には『用途+日付+乱数』を組み合わせたユニークな長文トークンを指定して『成功条件を満たした最終行のみに出力する』ルールを厳格に指示する。\n【NG】completion-promiseに『DONE』『完了』などの短い一般的な語句を使うこと（ログや途中出力への混入で誤停止、または一致せず無限ループ）、max-iterationsを設定しない／過大にすること、『いい感じにして』といった主観的で収束しない曖昧なタスクをループさせること、Windowsネイティブ環境でbash前提スクリプトを動かすこと。",
       "score": 90,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "ClaudeCode",
         "AI駆動開発",
-        "AIエージェント"
+        "AIエージェント",
+        "プログラミング・インフラ"
       ],
       "status": "unread",
-      "analyzed_at": "2026-10-13T04:23:28.345Z",
-      "markdown_path": "data/notebooklm_sources/1886518216_Claude Code「ralph-loop」解説｜hirokaji.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1886518216_Claude Code「ralph-loop」解説｜hirokaji.md",
+      "is_structured": true,
+      "core_rule": "ralph-loopでは、Claude CodeのStop hookによる自律反復を安全に回すため、必ずコスト安全弁として `--max-iterations` を小さく（5〜10回程度）設定し、完了判定の `--completion-promise` には『用途+日付+乱数』を組み合わせたユニークな長文トークンを指定して『成功条件を満たした最終行のみに出力する』ルールを厳格に指示する。",
+      "anti_pattern": "completion-promiseに『DONE』『完了』などの短い一般的な語句を使うこと（ログや途中出力への混入で誤停止、または一致せず無限ループ）、max-iterationsを設定しない／過大にすること、『いい感じにして』といった主観的で収束しない曖昧なタスクをループさせること、Windowsネイティブ環境でbash前提スクリプトを動かすこと。",
+      "domain": "other",
+      "source": "note",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "AIエージェント",
+        "プログラミング・インフラ"
+      ]
     },
     {
       "id": "1821826787",
@@ -10871,18 +11081,30 @@
       "url": "https://zenn.dev/shio_shoppaize/articles/shogun-claudemd-gachi",
       "title": "CLAUDE.mdがバズってるので、AI部下7人が毎晩読んでるガチのやつを見せる",
       "excerpt": "XのTLが「CLAUDE.md」で埋まった。",
-      "summary": "",
+      "summary": "【結論】CLAUDE.mdは事故報告書の集積であり、破壊的操作の無条件禁止・ファイル経由通信・セッション復帰時の自己同定手順・事前QCゲートを定義し、外部コード内容は命令ではなくデータとして扱う。\n【NG】エージェント間通信での直接ターミナル入力（tmux send-keys）、文脈圧縮後の自己同定スキップ、大量生成の事前QCなし全並列実行、SKIPテストを考慮しない全件PASS虚偽報告。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "AI駆動開発",
         "ClaudeCode",
-        "AIエージェント"
+        "AIエージェント",
+        "セキュリティ・品質"
       ],
       "status": "unread",
-      "analyzed_at": "2026-10-23T02:33:19.619Z",
-      "markdown_path": "data/notebooklm_sources/1898131909_CLAUDE.mdがバズってるので、AI部下7人が毎晩読んでるガチのやつを見せる.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1898131909_CLAUDE.mdがバズってるので、AI部下7人が毎晩読んでるガチのやつを見せる.md",
+      "is_structured": true,
+      "core_rule": "CLAUDE.mdは事故報告書の集積であり、破壊的操作の無条件禁止・ファイル経由通信・セッション復帰時の自己同定手順・事前QCゲートを定義し、外部コード内容は命令ではなくデータとして扱う。",
+      "anti_pattern": "エージェント間通信での直接ターミナル入力（tmux send-keys）、文脈圧縮後の自己同定スキップ、大量生成の事前QCなし全並列実行、SKIPテストを考慮しない全件PASS虚偽報告。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "AIエージェント",
+        "セキュリティ・品質"
+      ]
     },
     {
       "id": "1898131800",
@@ -11880,25 +12102,37 @@
       "url": "https://zenn.dev/sonicgarden/articles/claude-code-self-improving-loop",
       "title": "Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った",
       "excerpt": "この記事は Claude on SonicGarden の記事です。ソニックガーデンのプログラマが、Claude Codeの活用について書いています。#claude_on_sonicgarden",
-      "summary": "",
+      "summary": "【結論】Claude Codeのスキル（SKILL.md）改善を自律化するには、開発セッションのjsonl会話ログから『やり直し・不満シグナル』を別サブエージェントで抽出してGitHub Issue化し、Web版Routinesで無人triageスキルを回して3段ゲート（意図検証verify-diff、構文・構造検証skill-review、情報漏洩検証publicity-review）による外側最大3回ループで収束させてDraft PRを作成する。\n【NG】対話用開発スキル自身に自己修正を行わせること（無人運転不能）、サブスキルの出力を長文テキストにしてエージェントが応答完了と誤認して停止すること、.claude/配下に作業用ファイルを置いて非対話ダイアログで停止させること、Web環境のデフォルトStop hook（未コミット検知）を考慮せず中間状態で誤発火させること。",
       "score": 90,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "ClaudeCode",
         "AI駆動開発",
-        "AIエージェント"
+        "AIエージェント",
+        "自動化パイプライン"
       ],
       "status": "unread",
-      "analyzed_at": "2026-10-31T03:16:48.943Z",
-      "markdown_path": "data/notebooklm_sources/1812876643_Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1812876643_Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った.md",
+      "is_structured": true,
+      "core_rule": "Claude Codeのスキル（SKILL.md）改善を自律化するには、開発セッションのjsonl会話ログから『やり直し・不満シグナル』を別サブエージェントで抽出してGitHub Issue化し、Web版Routinesで無人triageスキルを回して3段ゲート（意図検証verify-diff、構文・構造検証skill-review、情報漏洩検証publicity-review）による外側最大3回ループで収束させてDraft PRを作成する。",
+      "anti_pattern": "対話用開発スキル自身に自己修正を行わせること（無人運転不能）、サブスキルの出力を長文テキストにしてエージェントが応答完了と誤認して停止すること、.claude/配下に作業用ファイルを置いて非対話ダイアログで停止させること、Web環境のデフォルトStop hook（未コミット検知）を考慮せず中間状態で誤発火させること。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "AIエージェント",
+        "自動化パイプライン"
+      ]
     },
     {
       "id": "1812876436",
       "url": "https://qiita.com/TakanobuSano/items/73ae018dbdaa423d1899",
       "title": "プロンプト集は配らない。安全設定とSkillを配る — Claude Codeをチームの仕組みにする9ステップ【全48記事】 - Qiita",
       "excerpt": "プロンプト集は配らない。安全設定とSkillを配る — Claude Codeをチームの仕組みにする9ステップ【全48記事】",
-      "summary": "",
+      "summary": "【結論】AI運用はプロンプト集ではなく安全設定・指示ファイル・カスタムコマンド・エージェント定義・Skillの成果物ファイルで管理し、「止める→整える→任せる→仕組みにする」の4フェーズで導入する。\n【NG】会話終了で消えるプロンプト集の配布、機械的な危険拒否設定（settings.json）なしの自動化、100行超に肥大化して形骸化した指示ファイル、1体のAIへの全責務集中。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
@@ -11908,8 +12142,18 @@
         "AIエージェント"
       ],
       "status": "unread",
-      "analyzed_at": "2026-10-31T03:21:39.781Z",
-      "markdown_path": "data/notebooklm_sources/1812876436_プロンプト集は配らない。安全設定とSkillを配る — Claude Codeをチームの仕組みにする9ステップ【全48記事】 - Qiita.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1812876436_プロンプト集は配らない。安全設定とSkillを配る — Claude Codeをチームの仕組みにする9ステップ【全48記事】 - Qiita.md",
+      "is_structured": true,
+      "core_rule": "AI運用はプロンプト集ではなく安全設定・指示ファイル・カスタムコマンド・エージェント定義・Skillの成果物ファイルで管理し、「止める→整える→任せる→仕組みにする」の4フェーズで導入する。",
+      "anti_pattern": "会話終了で消えるプロンプト集の配布、機械的な危険拒否設定（settings.json）なしの自動化、100行超に肥大化して形骸化した指示ファイル、1体のAIへの全責務集中。",
+      "domain": "other",
+      "source": "Qiita",
+      "specific_tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "AIエージェント"
+      ]
     },
     {
       "id": "1809466600",
@@ -11934,7 +12178,7 @@
       "url": "https://qiita.com/N-i-ke/items/b87d1d144ef6eef9d257",
       "title": "Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita",
       "excerpt": "Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話",
-      "summary": "",
+      "summary": "【結論】AIに判断を委ね、テンプレート生成やテスト実行等の決定的処理は専用CLIにオフロードして、docs/ディレクトリのMarkdown成果物を介して設計・実装・検証・調査の各Skillに文脈を引き継ぐ。\n【NG】AIに「テンプレ生成」「ファイル探索」「テスト実行」などの決定的処理までプロンプトで丸投げし、トークン浪費と処理のブレ・再発明を招くこと。",
       "score": 90,
       "read_now_reason": "",
       "defer_reason": "",
@@ -11944,15 +12188,25 @@
         "自動化パイプライン"
       ],
       "status": "unread",
-      "analyzed_at": "2026-10-31T03:29:59.069Z",
-      "markdown_path": "data/notebooklm_sources/1809466572_Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1809466572_Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita.md",
+      "is_structured": true,
+      "core_rule": "AIに判断を委ね、テンプレート生成やテスト実行等の決定的処理は専用CLIにオフロードして、docs/ディレクトリのMarkdown成果物を介して設計・実装・検証・調査の各Skillに文脈を引き継ぐ。",
+      "anti_pattern": "AIに「テンプレ生成」「ファイル探索」「テスト実行」などの決定的処理までプロンプトで丸投げし、トークン浪費と処理のブレ・再発明を招くこと。",
+      "domain": "other",
+      "source": "Qiita",
+      "specific_tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "自動化パイプライン"
+      ]
     },
     {
       "id": "1809466653",
       "url": "https://zenn.dev/tamai_hideyuki/articles/claude-code-config-best-practices",
       "title": "Claude Codeを使い倒すための設定術：CLAUDE.md・自動メモリ・コンテキスト管理の3本柱",
       "excerpt": "「毎回同じことを説明している」。Claude Code を使い始めてしばらくたった頃、私はこの感覚に気づいた。セッションを開くたびにプロジェクトの構成を教え、コーディングスタイルを伝え、使ってはいけないライブラリを注意する。AIが有能であることはわかっていても、文脈がリセットされるたびに準備コストが発生していた。",
-      "summary": "",
+      "summary": "【結論】CLAUDE.md（チーム共有の常識・コードに書けない背景/制約）、自動メモリ（個人固有の学習/指摘履歴）、コンテキスト管理（/compactと/clearの使い分け）の3層を分離・連携させて文脈を管理する。\n【NG】CLAUDE.mdや自動メモリにコードを読めばわかる関数名やディレクトリ構造、陳腐化の早いスプリント情報を詰め込み、コンテキストウィンドウを圧迫・汚染すること。",
       "score": 90,
       "read_now_reason": "",
       "defer_reason": "",
@@ -11962,8 +12216,18 @@
         "プロンプト・コンテキスト"
       ],
       "status": "unread",
-      "analyzed_at": "2026-11-01T03:04:33.534Z",
-      "markdown_path": "data/notebooklm_sources/1809466653_Claude Codeを使い倒すための設定術：CLAUDE.md・自動メモリ・コンテキスト管理の3本柱.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1809466653_Claude Codeを使い倒すための設定術：CLAUDE.md・自動メモリ・コンテキスト管理の3本柱.md",
+      "is_structured": true,
+      "core_rule": "CLAUDE.md（チーム共有の常識・コードに書けない背景/制約）、自動メモリ（個人固有の学習/指摘履歴）、コンテキスト管理（/compactと/clearの使い分け）の3層を分離・連携させて文脈を管理する。",
+      "anti_pattern": "CLAUDE.mdや自動メモリにコードを読めばわかる関数名やディレクトリ構造、陳腐化の早いスプリント情報を詰め込み、コンテキストウィンドウを圧迫・汚染すること。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプト・コンテキスト"
+      ]
     },
     {
       "id": "1809466528",
@@ -12742,36 +13006,60 @@
       "url": "https://zenn.dev/japannomu/articles/20260329_claude-code-harness-indexing",
       "title": "Claude Codeのハーネス設定を「インデックス化」してコンテキスト消費を77%削減した話",
       "excerpt": "Claude Code（Anthropic公式CLI）を使い込んでいくと、ルールやスキルの設定ファイルがどんどん肥大化していきます。",
-      "summary": "",
+      "summary": "【結論】ハーネス設定は「全部読ませる」のではなく「目次だけ読ませて詳細はリンクで辿る」インデックス化を行い、5W1H（Why/What=rules, How=skills/SKILL.md, How詳細=reference.md, Who=agents, When=hooks）で厳格に配置分離する。\n【NG】常時ロードされる `rules/` や呼び出し時ロードの `SKILL.md` に、作業手順・フォーマット・コード例・チェックリストを全部入りで記述し、コンテキストウィンドウを圧迫すること。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "ClaudeCode",
         "AI駆動開発",
-        "プロンプト・コンテキスト"
+        "プロンプト・コンテキスト",
+        "AIエージェント"
       ],
       "status": "unread",
-      "analyzed_at": "2026-11-09T03:38:27.127Z",
-      "markdown_path": "data/notebooklm_sources/1796512301_Claude Codeのハーネス設定を「インデックス化」してコンテキスト消費を77%削減した話.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1796512301_Claude Codeのハーネス設定を「インデックス化」してコンテキスト消費を77%削減した話.md",
+      "is_structured": true,
+      "core_rule": "ハーネス設定は「全部読ませる」のではなく「目次だけ読ませて詳細はリンクで辿る」インデックス化を行い、5W1H（Why/What=rules, How=skills/SKILL.md, How詳細=reference.md, Who=agents, When=hooks）で厳格に配置分離する。",
+      "anti_pattern": "常時ロードされる `rules/` や呼び出し時ロードの `SKILL.md` に、作業手順・フォーマット・コード例・チェックリストを全部入りで記述し、コンテキストウィンドウを圧迫すること。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプト・コンテキスト",
+        "AIエージェント"
+      ]
     },
     {
       "id": "1796512281",
       "url": "https://note.com/jujunjun110/n/n0903bad8b2f2",
       "title": "ClaudeCode無限ループ(ralph-loop)による完全自律開発ワークフローで開発者のウェルビーイングを取り戻す！｜Jun Ito",
       "excerpt": "こんにちは。チームみらい 永田町エンジニアチームの伊藤（エディ）です。  先日投稿した記事では、Claude Code Webを8並列で回すためのハーネスエンジニアリングについて書きましたが、そこから試行錯誤を進め、人間が細かく指示しなくても、1コマンドのロングセッションで大量の機能を作り切る開発手法（いわゆる ralph loop ）を自分でも研究してみました。  現時点で、15分程度でドキュメントを仕上げてAIに任せると、3~4時間のロングセッションで、数千〜1万行程度の、比較的品質の高い実装が安定して完成するような状態になったので、工夫を紹介してみようと思います。  思",
-      "summary": "",
+      "summary": "【結論】自律開発ループ（ralph-loop）は「マイルストーン（機能縦割り）> ウェーブ（並列順）> タスク」で分解し、Planner・Builder・Verifierの3エージェント分業とworktree並列化、実ブラウザ動作（動画記録）の完了条件強制で品質を担保する。\n【NG】モックやスタブによる完了偽装、レイヤー横割り設計（ウォーターフォール）、全体の一括全設計、オーケストレーションスクリプトへの過剰な分岐ロジック記述。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "AI駆動開発",
         "ClaudeCode",
-        "AIエージェント"
+        "AIエージェント",
+        "UI・デザイン"
       ],
       "status": "unread",
-      "analyzed_at": "2026-11-09T03:43:18.185Z",
-      "markdown_path": "data/notebooklm_sources/1796512281_ClaudeCode無限ループ(ralph-loop)による完全自律開発ワークフローで開発者のウェルビーイングを取り戻す！｜Jun Ito.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1796512281_ClaudeCode無限ループ(ralph-loop)による完全自律開発ワークフローで開発者のウェルビーイングを取り戻す！｜Jun Ito.md",
+      "is_structured": true,
+      "core_rule": "自律開発ループ（ralph-loop）は「マイルストーン（機能縦割り）> ウェーブ（並列順）> タスク」で分解し、Planner・Builder・Verifierの3エージェント分業とworktree並列化、実ブラウザ動作（動画記録）の完了条件強制で品質を担保する。",
+      "anti_pattern": "モックやスタブによる完了偽装、レイヤー横割り設計（ウォーターフォール）、全体の一括全設計、オーケストレーションスクリプトへの過剰な分岐ロジック記述。",
+      "domain": "other",
+      "source": "note",
+      "specific_tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "AIエージェント",
+        "UI・デザイン"
+      ]
     },
     {
       "id": "1796512267",
@@ -12796,7 +13084,7 @@
       "url": "https://zenn.dev/nrs/articles/db4120beb0e601",
       "title": "Claude Code や Codex をオーケストレーションして自動でレビュー FB ループを回して洗い物をしてる話",
       "excerpt": "皆さんはもう AI コーディングツールを使っているでしょうか。Claude Code や GitHub Copilot、Cursor など、さまざまなツールが登場して、「AI がコードを書いてくれる時代」がやってきました。",
-      "summary": "",
+      "summary": "【結論】実装エージェントとレビューエージェント（edit: false）のコンテキストを分離（1エージェント1責務）し、YAMLの「宣言的オーケストレーション」によってレビュー合格まで修正ループをプログラム的に強制する。\n【NG】1つのAIセッションに実装とレビューの両方を兼任させたり、プロンプトやSkillのお願いベースでレビュー実行を指示してAIに手順を自己判断でスキップさせること。",
       "score": 90,
       "read_now_reason": "",
       "defer_reason": "",
@@ -12806,26 +13094,48 @@
         "AIエージェント"
       ],
       "status": "unread",
-      "analyzed_at": "2026-11-09T03:52:18.579Z",
-      "markdown_path": "data/notebooklm_sources/1796512245_Claude Code や Codex をオーケストレーションして自動でレビュー FB ループを回して洗い物をしてる話.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1796512245_Claude Code や Codex をオーケストレーションして自動でレビュー FB ループを回して洗い物をしてる話.md",
+      "is_structured": true,
+      "core_rule": "実装エージェントとレビューエージェント（edit: false）のコンテキストを分離（1エージェント1責務）し、YAMLの「宣言的オーケストレーション」によってレビュー合格まで修正ループをプログラム的に強制する。",
+      "anti_pattern": "1つのAIセッションに実装とレビューの両方を兼任させたり、プロンプトやSkillのお願いベースでレビュー実行を指示してAIに手順を自己判断でスキップさせること。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "AIエージェント"
+      ]
     },
     {
       "id": "1796512220",
       "url": "https://qiita.com/noujiru/items/eb346d22aef782ee8619",
       "title": "Claude Code エージェント管理を全自動化するパイプラインを作った - Qiita",
       "excerpt": "Claude Code エージェント管理を全自動化するパイプラインを作った",
-      "summary": "",
+      "summary": "【結論】Claude Codeのサブエージェントは野良増殖・品質劣化を防ぐため、スキルと同等の管理基準（発見・取り込み・品質監視・使用追跡・ランク管理・チーム同期の6段階パイプライン）とBoris Cherny式の自己改善ループ（lessons記録）で統制する。\n【NG】サブエージェントを手動管理・野放しにしてdescriptionが曖昧なものを放置し、セキュリティ検証なしに外部コミュニティから取り込んでプロンプトインジェクションを踏むこと。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "ClaudeCode",
         "AI駆動開発",
-        "自動化パイプライン"
+        "自動化パイプライン",
+        "AIエージェント"
       ],
       "status": "unread",
-      "analyzed_at": "2026-11-09T03:54:29.087Z",
-      "markdown_path": "data/notebooklm_sources/1796512220_Claude Code エージェント管理を全自動化するパイプラインを作った - Qiita.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1796512220_Claude Code エージェント管理を全自動化するパイプラインを作った - Qiita.md",
+      "is_structured": true,
+      "core_rule": "Claude Codeのサブエージェントは野良増殖・品質劣化を防ぐため、スキルと同等の管理基準（発見・取り込み・品質監視・使用追跡・ランク管理・チーム同期の6段階パイプライン）とBoris Cherny式の自己改善ループ（lessons記録）で統制する。",
+      "anti_pattern": "サブエージェントを手動管理・野放しにしてdescriptionが曖昧なものを放置し、セキュリティ検証なしに外部コミュニティから取り込んでプロンプトインジェクションを踏むこと。",
+      "domain": "other",
+      "source": "Qiita",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "自動化パイプライン",
+        "AIエージェント"
+      ]
     },
     {
       "id": "1796512194",
@@ -12938,35 +13248,60 @@
       "url": "https://zenn.dev/acrosstudioblog/articles/38509c0473683a",
       "title": "もうプロンプトを書くな──「Loop Engineering」という新しいパラダイムの正体",
       "excerpt": "ある日、X のタイムラインを眺めていたら、こんな引用が流れてきました。",
-      "summary": "",
+      "summary": "【結論】人間が直接プロンプトを書くのではなく、エージェントを自律稼働させるシステム（目標契約・証拠フィードバック・停止条件・記憶還元）を「Loop Engineering」として設計し、客観的証拠で自律実行させる。\n【NG】AIの「完了しました」という自己申告（done）を信じて証拠検証を省略すること、および停止条件やコスト上限を決めずにループを放置してComprehension Debt（理解の負債）やCognitive Surrender（認知的降伏）に陥ること。",
       "score": 90,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "AI駆動開発",
-        "ClaudeCode"
+        "ClaudeCode",
+        "AIエージェント",
+        "自動化パイプライン"
       ],
       "status": "unread",
-      "analyzed_at": "2026-11-11T03:41:25.594Z",
-      "markdown_path": "data/notebooklm_sources/1796507747_もうプロンプトを書くな──「Loop Engineering」という新しいパラダイムの正体.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1796507747_もうプロンプトを書くな──「Loop Engineering」という新しいパラダイムの正体.md",
+      "is_structured": true,
+      "core_rule": "人間が直接プロンプトを書くのではなく、エージェントを自律稼働させるシステム（目標契約・証拠フィードバック・停止条件・記憶還元）を「Loop Engineering」として設計し、客観的証拠で自律実行させる。",
+      "anti_pattern": "AIの「完了しました」という自己申告（done）を信じて証拠検証を省略すること、および停止条件やコスト上限を決めずにループを放置してComprehension Debt（理解の負債）やCognitive Surrender（認知的降伏）に陥ること。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "AI駆動開発",
+        "ClaudeCode",
+        "AIエージェント",
+        "自動化パイプライン"
+      ]
     },
     {
       "id": "1796507730",
       "url": "https://zenn.dev/suwash/articles/loop-engineering_20260610",
       "title": "Loop Engineering入門：AIコーディングエージェントを動かすシステムを設計する",
       "excerpt": "Loop engineering は、AI コーディングエージェントを手動で逐次プロンプトする代わりに、エージェントを自律的にプロンプト・オーケストレートするシステムを設計する実践方法論です。本記事は方法論として、構成要素・論理構造・データモデル・実装パターン・運用・限界を整理します。",
-      "summary": "",
+      "summary": "【結論】エージェントを手動で逐次プロンプトするのではなく、再帰的ゴール・Maker-Checker分離・外部状態（STATE.md）・厳格な停止条件と自律ティア（L1→L2→L3）を備えたループ（自律システム）として設計する。\n【NG】停止条件やトークン予算を設計せずに無人実行（L3）を走らせたり、実装エージェントに自己成果物をレビューさせて確証バイアスによる見逃し（Verifier Theater）を起こすこと。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "AI駆動開発",
         "AIエージェント",
-        "ClaudeCode"
+        "ClaudeCode",
+        "セキュリティ・品質"
       ],
       "status": "unread",
-      "analyzed_at": "2026-11-11T03:41:46.438Z",
-      "markdown_path": "data/notebooklm_sources/1796507730_Loop Engineering入門：AIコーディングエージェントを動かすシステムを設計する.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1796507730_Loop Engineering入門：AIコーディングエージェントを動かすシステムを設計する.md",
+      "is_structured": true,
+      "core_rule": "エージェントを手動で逐次プロンプトするのではなく、再帰的ゴール・Maker-Checker分離・外部状態（STATE.md）・厳格な停止条件と自律ティア（L1→L2→L3）を備えたループ（自律システム）として設計する。",
+      "anti_pattern": "停止条件やトークン予算を設計せずに無人実行（L3）を走らせたり、実装エージェントに自己成果物をレビューさせて確証バイアスによる見逃し（Verifier Theater）を起こすこと。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "ClaudeCode",
+        "セキュリティ・品質"
+      ]
     },
     {
       "id": "1796507723",
@@ -12991,17 +13326,28 @@
       "url": "https://zenn.dev/emuni/articles/claude-code-sdd-workflow-guide",
       "title": "【Claude Code×SDD】requirements→design→tasks→dev-report→QAの開発ワークフロー全公開",
       "excerpt": "こんにちは、株式会社エムニでPM兼、ソフトウェアエンジニア/LLMエンジニアをしている、まさぴょんです🐱",
-      "summary": "",
+      "summary": "【結論】vibe coding（雑な指示・行き当たりばったり実装）を排し、CLAUDE.mdに「requirements → design → tasks → development → dev-report → test(QA)」の6フェーズと人間によるReviewゲートを焼き込んで仕様をリポジトリ資産として蓄積する。\n【NG】仕様や背景をドキュメント化せずClaude Codeにいきなりコードを書かせ、チャット履歴の消滅とともに仕様が失われ、実装完了後に手戻りやレビュー不能に陥ること。",
       "score": 92,
       "read_now_reason": "",
       "defer_reason": "",
       "tags": [
         "ClaudeCode",
-        "AI駆動開発"
+        "AI駆動開発",
+        "ナレッジ・情報整理"
       ],
       "status": "unread",
-      "analyzed_at": "2026-11-11T03:42:43.661Z",
-      "markdown_path": "data/notebooklm_sources/1796507708_【Claude Code×SDD】requirements→design→tasks→dev-report→QAの開発ワークフロー全公開.md"
+      "analyzed_at": "2026-11-14T10:02:22.030Z",
+      "markdown_path": "data/notebooklm_sources/1796507708_【Claude Code×SDD】requirements→design→tasks→dev-report→QAの開発ワークフロー全公開.md",
+      "is_structured": true,
+      "core_rule": "vibe coding（雑な指示・行き当たりばったり実装）を排し、CLAUDE.mdに「requirements → design → tasks → development → dev-report → test(QA)」の6フェーズと人間によるReviewゲートを焼き込んで仕様をリポジトリ資産として蓄積する。",
+      "anti_pattern": "仕様や背景をドキュメント化せずClaude Codeにいきなりコードを書かせ、チャット履歴の消滅とともに仕様が失われ、実装完了後に手戻りやレビュー不能に陥ること。",
+      "domain": "other",
+      "source": "Zenn",
+      "specific_tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "ナレッジ・情報整理"
+      ]
     },
     {
       "id": "1796507700",
