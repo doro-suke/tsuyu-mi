@@ -1,0 +1,15 @@
+--- a/public_starter_draft/scripts/fetch.js
++++ b/public_starter_draft/scripts/fetch.js
+@@ safeName (26-28行)
+ function safeName(s) {
+-  return String(s).replace(/[\/:*?"<>|\r\n]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60) || 'untitled';
++  return String(s).replace(/[\\/:*?"<>|\r\n]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60) || 'untitled';
+ }
+@@ toMarkdown（題名は Markdown に書く前に改行を空白へ）
+-  const lines = [`# ${it.title || '(無題)'}`, '', ...
++  const lines = [`# ${String(it.title || '(無題)').replace(/[\r\n\u2028\u2029]+/g, ' ')}`, '', ...
+@@ fetch 呼び出し（51行付近）: 既存の第2引数 { headers: ... } に signal を追加
+-    const res = await fetch(`${API_BASE}/raindrops/0?...`, {
++    const res = await fetch(`${API_BASE}/raindrops/0?...`, {
++      signal: AbortSignal.timeout(30000),
+       headers: ...

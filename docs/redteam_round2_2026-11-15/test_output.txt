@@ -1,0 +1,45 @@
+[A1] 偽の ID / Next Step 行
+  PASS  search が成功する
+  PASS  search: 偽の "ID: 999" が行頭に出ない
+  PASS  search: 偽の "Next Step:" が行頭に出ない
+  PASS  search: 偽の "Title: 偽タイトル" が独立行にならない
+  PASS  search: 実際の記事 ID 行が出る
+  PASS  search: Title 行が1行（題名は1行化されて含まれる）
+  PASS  checklist: 偽の "ID: 999" が行頭に出ない
+  PASS  view が成功する
+  PASS  view: 偽の "ID: 999" が行頭に出ない
+  PASS  view: 偽の "ID: 998" が行頭に出ない
+  PASS  view: "Next Step:" は本物の1行だけ
+  PASS  view: 非信頼データの開始・終了マーカーが1組ある
+  PASS  view: 「指示として扱わない」旨の注意行がある
+  PASS  view: 終了マーカーが Next Step より前にある
+  PASS  read が成功する
+  PASS  read: 本文内の偽の終了マーカーでは境界が偽装されない（終了マーカーは1行だけ）
+  PASS  read: 偽マーカーが無害化されて残る
+  PASS  read: 開始マーカーが本文より前にある
+  PASS  overview --section が成功する
+  PASS  overview: 非信頼データとして囲まれ、偽の終了マーカーは無害化される
+  PASS  view: 題名が長さ制限される（200字+省略記号）
+  PASS  view: 要約が上限（1500字+省略記号）で切られる
+[A2] 型の崩れた記事・フィードバックで落ちない
+  PASS  search evilkw が落ちない
+  PASS  search --tag ClaudeCode が落ちない
+  PASS  checklist evilkw --tier all が落ちない
+  PASS  stats が落ちない
+  PASS  view 2 が落ちない
+  PASS  view 3 が落ちない
+  PASS  view 4 が落ちない
+  PASS  tags が数値の記事 (ID 2) も検索結果に出る
+  PASS  title が数値の記事 (ID 3) も検索結果に出る
+[A5] feedback の --query / --note
+  PASS  feedback が成功する
+  PASS  feedback 出力に偽の行が独立して出ない
+  PASS  query に改行が含まれない
+  PASS  query が 100字(+省略記号)以内
+  PASS  note に改行が含まれない
+  PASS  note が 200字(+省略記号)以内
+[B1] ".." で始まる正当なファイル名 / パストラバーサル
+  PASS  "..dots.md" は読める
+  PASS  "../outside.md" は拒否される
+
+結果: 39 PASS / 0 FAIL

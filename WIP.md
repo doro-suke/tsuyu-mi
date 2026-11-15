@@ -169,3 +169,9 @@
 - 未検証: 実キー通し実行、Actions(Linux) 初回、Mac/Linux、古い curl。
 - 戻し方: git revert eba2b61 797f28a。コミット eba2b61 まで push 済み。
 - V・広報(claude-3e)へ回答済み。同梱版反映は V。
+
+## 2026-11-15（第2弾）六花 V レッドチーム修正: search_kb.js・テンプレート
+- 変更: `scripts/search_kb.js`（A1 題名等の1行化・長さ制限、view/read/overview の非信頼データ囲み／A2 記事・feedback の型補正／A5 --query 100字・--note 200字・改行除去／B1 `..` 始まりのファイル名）、`templates/`（A3 claude -p を標準入力渡しに、A5 feedback の固定文言ルール明記）。
+- テスト: `node scripts/test_redteam_round2.js`（偽データ、39 PASS / 0 FAIL）。差分・出力・fetch.js 差分案は `docs/redteam_round2_2026-11-15/`。
+- 戻し方: 該当コミットを `git revert`。
+- 未対応/未確認: A4（agy 版の tools 書式は未確認。Claude 版は Bash のみ案）、A6 は六花側のため差分案のみ、B2〜B6 は v1.1 判断待ち。

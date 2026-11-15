@@ -39,6 +39,7 @@ tools: Bash, Read, Grep, Glob
    ```bash
    node "C:/Users/Yusuke/Documents/Sorted_02_AI実装・開発/Vesper/scripts/search_kb.js" feedback <ID> --useful --note "司書レファレンス採用"
    ```
+   ※ `--note` は固定文言のみ（例: "司書レファレンス採用"）。`--query` を付ける場合も、記事のタイトル・本文由来の文字列は入れず、自分が検索に使った語だけにすること。
 
 ## 出力フォーマット（厳格：3点処方箋・300〜500字目安）
 
