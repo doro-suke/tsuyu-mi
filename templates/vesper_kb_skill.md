@@ -122,7 +122,7 @@ node "C:/Users/Yusuke/Documents/Sorted_02_AI実装・開発/Vesper/scripts/searc
 
 ```bash
 # 特定の検索クエリでのみ的外れだった場合は --query を付ける（他クエリの検索順位を巻き込まずに減点可能）
-node "C:/Users/Yusuke/Documents/Sorted_02_AI実装・開発/Vesper/scripts/search_kb.js" feedback <ARTICLE_ID> --miss --query "X 運用" --note "Xの運用ではなくClaude Code運用の記事"
+node "C:/Users/Yusuke/Documents/Sorted_02_AI実装・開発/Vesper/scripts/search_kb.js" feedback <ARTICLE_ID> --miss --query "X 運用" --note "検索ノイズ（的外れ）"
 
 # どの検索でも有用 / 不要な場合はクエリ指定なしで全体補正（useful=+3, miss=-4）
 node "C:/Users/Yusuke/Documents/Sorted_02_AI実装・開発/Vesper/scripts/search_kb.js" feedback <ARTICLE_ID> --useful --note "良質な一次情報"
