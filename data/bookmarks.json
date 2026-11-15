@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-14T10:02:22.030Z",
+  "updated_at": "2026-11-15T03:41:59.904Z",
   "articles": [
     {
       "id": "1702129693",
@@ -13412,6 +13412,68 @@
       ],
       "is_structured": true,
       "structured_at": "2026-11-14T09:24:34.734Z"
+    },
+    {
+      "id": "1791771791",
+      "url": "https://qiita.com/Koukyosyumei/items/3bd4696237ea64c38971",
+      "title": "Claude Code・Codex用に、超爆速で超安全なサンドボックスを作る方法 - Qiita",
+      "excerpt": "Claude Code・Codex用に、超爆速で超安全なサンドボックスを作る方法",
+      "summary": "【結論】AIエージェントにシェルコマンドやネットワークアクセスを行わせる際は、OSレベルのサンドボックス（Bubblewrap等）や専用の分離ツール（h5i）を導入し、破壊的変更や機密情報の流出を物理的に防ぐべきである。\n【NG】制限のない状態でAIエージェントにBashツールを実行させ、誤削除や不正な外部送信を許すこと。",
+      "score": 92,
+      "domain": "other",
+      "source": "Qiita",
+      "core_rule": "AIエージェントにシェルコマンドやネットワークアクセスを行わせる際は、OSレベルのサンドボックス（Bubblewrap等）や専用の分離ツール（h5i）を導入し、破壊的変更や機密情報の流出を物理的に防ぐべきである。",
+      "anti_pattern": "制限のない状態でAIエージェントにBashツールを実行させ、誤削除や不正な外部送信を許すこと。",
+      "specific_tags": [
+        "Claude Code",
+        "Codex",
+        "h5i",
+        "サンドボックス",
+        "セキュリティ"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "セキュリティ・品質",
+        "プログラミング・インフラ",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-15T03:41:40.424Z",
+      "markdown_path": "data/notebooklm_sources/1791771791_Claude Code・Codex用に、超爆速で超安全なサンドボックスを作る方法 - Qiita.md"
+    },
+    {
+      "id": "1791771750",
+      "url": "https://qiita.com/archeleeds/items/2efad73069b54288deb4",
+      "title": "ComfyUI × 動画生成AI × Codex で、ゲーム用スプライトアニメを量産するパイプラインを作った話 - Qiita",
+      "excerpt": "ComfyUI × 動画生成AI × Codex で、ゲーム用スプライトアニメを量産するパイプラインを作った話",
+      "summary": "【結論】ゲーム用スプライト自動化では、キャラ同一性をLoRA、ポーズをControlNet、モーションを動画AIで担当させ、非決定的で高価な生成工程と決定的な後処理（透過・正規化）を別ワークフローに分離するべきである。\n【NG】高価な生成工程と調整用の後処理を同一ワークフローに同居させ、パラメータ調整や再起動で良品画像の再抽選ロスを引き起こすこと。",
+      "score": 92,
+      "domain": "video-pipeline",
+      "source": "Qiita",
+      "core_rule": "ゲーム用スプライト自動化では、キャラ同一性をLoRA、ポーズをControlNet、モーションを動画AIで担当させ、非決定的で高価な生成工程と決定的な後処理（透過・正規化）を別ワークフローに分離するべきである。",
+      "anti_pattern": "高価な生成工程と調整用の後処理を同一ワークフローに同居させ、パラメータ調整や再起動で良品画像の再抽選ロスを引き起こすこと。",
+      "specific_tags": [
+        "ComfyUI",
+        "Wan2.2",
+        "Codex CLI",
+        "LoRA",
+        "ControlNet"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "ComfyUI",
+        "ゲーム開発",
+        "自動化パイプライン"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-15T03:41:59.904Z",
+      "markdown_path": "data/notebooklm_sources/1791771750_ComfyUI × 動画生成AI × Codex で、ゲーム用スプライトアニメを量産するパイプラインを作った話 - Qiita.md"
     }
   ]
 }
