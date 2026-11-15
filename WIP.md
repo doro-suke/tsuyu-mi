@@ -175,3 +175,5 @@
 - テスト: `node scripts/test_redteam_round2.js`（偽データ、39 PASS / 0 FAIL）。差分・出力・fetch.js 差分案は `docs/redteam_round2_2026-11-15/`。
 - 戻し方: 該当コミットを `git revert`。
 - 未対応/未確認: A4（agy 版の tools 書式は未確認。Claude 版は Bash のみ案）、A6 は六花側のため差分案のみ、B2〜B6 は v1.1 判断待ち。
+
+- 追記: 41a92a4 でスキルの --note 例を固定文言に統一（V 指摘）。V は竹・無料版へ反映し受け入れ済み（同梱版で 39/41 PASS）。A4: Claude 版は tools: Bash のみ（司書の動作は未検証）。B2 優先で v1.1。
