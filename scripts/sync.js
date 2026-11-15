@@ -41,6 +41,15 @@ const CONFIG = {
  */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+// ログ出力前にAPIキーをマスクする（execSync のエラーメッセージにはキー入りのコマンド全文が含まれるため）
+function redact(text) {
+  let out = String(text);
+  for (const secret of [RAINDROP_API_KEY, GEMINI_API_KEY]) {
+    if (secret) out = out.split(secret).join('***REDACTED***');
+  }
+  return out.replace(/([?&]key=)[^&"\s]+/g, '$1***REDACTED***');
+}
+
 function truncateByBytes(str, maxBytes) {
   let bytes = 0;
   let result = '';
@@ -90,7 +99,7 @@ function curl(url, options = {}) {
       };
     } catch (error) {
       if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
-      console.error(`curl (POST) failed: ${error.message}`);
+      console.error(`curl (POST) failed: ${redact(error.message)}`);
       return { ok: false, status: 500, text: async () => '', json: async () => ({}) };
     }
   }
@@ -105,14 +114,14 @@ function curl(url, options = {}) {
           if (!stdout || stdout.trim() === "") throw new Error("レスポンスが空です");
           return JSON.parse(stdout);
         } catch (e) {
-          console.error(`[JSON解析失敗] URL: ${url}`);
+          console.error(`[JSON解析失敗] URL: ${redact(url)}`);
           console.error(`[JSON解析失敗] 内容: ${stdout.substring(0, 500)}...`);
           throw e;
         }
       }
     };
   } catch (error) {
-    console.error(`curl failed: ${error.message}`);
+    console.error(`curl failed: ${redact(error.message)}`);
     return { ok: false, status: 500, text: async () => '', json: async () => ({}) };
   }
 }
@@ -206,7 +215,7 @@ async function extractContent(url) {
       excerpt: article.excerpt
     } : null;
   } catch (error) {
-    console.error(`  [抽出失敗] ${url}: ${error.message}`);
+    console.error(`  [抽出失敗] ${redact(url)}: ${redact(error.message)}`);
     return null;
   }
 }
@@ -479,7 +488,7 @@ async function main() {
     
     console.log('=== Vesper: 全自動同期パイプライン完了 ===');
   } catch (error) {
-    console.error(`\n[致命的なエラー] ${error.message}`);
+    console.error(`\n[致命的なエラー] ${redact(error.message)}`);
     process.exit(1);
   }
 }
