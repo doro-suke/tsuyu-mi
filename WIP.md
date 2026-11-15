@@ -161,3 +161,11 @@
 ### 次回課題
 - V が B の実装可否を判断（Vesper 側で実装する場合は sync.js から、ダミーHTTPサーバで検証）。
 - 未コミット: `scripts/sync.js`（redact）、`data/kb_feedback.json`。コミット要否はユーザー判断。push は承認後のみ。
+
+## 2026-11-15（続々）六花 V レッドチーム修正（本体）
+- 変更: scripts/sync.js（curl() を execFileSync＋-K - 化、http/https 限定、Gemini キーをヘッダへ、httpOk/status 追加、extractContent は HTTP エラーを本文にしない、parseMaxProcess、空 bookmarks の削除ガード、writeBookmarksAtomic、POST 本文の DEL を  置換）、scripts/generate_dashboard.js（escapeHtml/safeHref、replace 関数渡し）、scripts/test_redteam_fixes.js（新規）、docs/redteam_2026-11-15/。
+- 検証: node scripts/test_redteam_fixes.js → 41 PASS / 0 FAIL（偽キー・ローカルサーバー、Windows）。プロセス一覧に偽キー・URL 非掲載を確認。
+- 判断: -f 不採用（応答 JSON の error.code=429/503 再試行を保つため -w でステータス取得）。
+- 未検証: 実キー通し実行、Actions(Linux) 初回、Mac/Linux、古い curl。
+- 戻し方: git revert eba2b61 797f28a。コミット eba2b61 まで push 済み。
+- V・広報(claude-3e)へ回答済み。同梱版反映は V。
