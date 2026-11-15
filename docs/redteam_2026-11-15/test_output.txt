@@ -1,0 +1,63 @@
+◇ injected env (0) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+
+[A] curl() コマンド注入
+  PASS  %VAR% 展開: 取得は成功（ok）
+  PASS  ダブルクォート＋別コマンド: 取得は成功（ok）
+  PASS  $(...): 取得は成功（ok）
+  PASS  バッククォート: 取得は成功（ok）
+  PASS  どの注入でもマーカーファイルが作られない
+  PASS  %VAR% が展開されず文字列のままサーバーへ届く
+curl failed: 未対応のスキームです (file:)
+  PASS  http/https 以外は拒否: file
+curl failed: 未対応のスキームです (ftp:)
+  PASS  http/https 以外は拒否: ftp
+curl failed: 未対応のスキームです (javascript:)
+  PASS  http/https 以外は拒否: javascript
+curl failed: 未対応のスキームです (gopher:)
+  PASS  http/https 以外は拒否: gopher
+curl failed: curl 引数に制御文字が含まれています
+  PASS  ヘッダ値の改行（設定行の注入）は拒否
+
+[A'] キーがプロセス一覧に出ない／ヘッダとしては届く
+  PASS  curl 実行中のプロセスを採取できた（引数は -K - のみで URL も載らない）
+  PASS  プロセスのコマンドラインに Raindrop 偽キーが無い
+  PASS  プロセスのコマンドラインに Gemini 偽キーが無い
+  PASS  応答は正常に取得
+  PASS  Authorization ヘッダがサーバーに届く
+  PASS  x-goog-api-key ヘッダがサーバーに届く
+
+[A''] HTTP エラー時の挙動（Gemini 429 の再試行判定が従来どおり使えるか）
+  PASS  429 でも ok=true のまま（従来どおり response.ok 分岐に入らない）
+  PASS  status=429, httpOk=false
+  PASS  応答 JSON の error.code=429 を読める（既存の再試行条件に合致）
+  PASS  404 HTML: httpOk=false
+  [抽出失敗] http://127.0.0.1:60261/missing: Fetch failed (HTTP 404)
+  PASS  extractContent は 404 の HTML を本文として扱わない（null）
+  PASS  POST 本文が送られ、一時ファイルを作らない
+
+[B] ダッシュボード XSS
+[Dashboard] ダッシュボードを更新しました: C:\Users\Yusuke\Documents\Sorted_02_AI実装・開発\Vesper\index.html
+  PASS  出力が生成された
+  PASS  title の <img onerror> がエスケープされる
+  PASS  javascript: の URL は href にならない
+  PASS  summary の <script> がエスケープされる
+  PASS  read_now_reason の <script> がエスケープされる
+  PASS  タグ経由の onclick 注入が起きない
+  PASS  id 経由の属性注入が起きない
+  PASS  正常な https URL は href に残る（& は &amp;）
+  PASS  $& と $' が置換パターンとして展開されず、そのまま出力される
+  PASS  テンプレート本体が壊れていない（</html> が1回）
+
+[C] 件数引数・孤立削除ガード
+  PASS  引数 "-1" は拒否（exit 1・取得処理に入らない）
+  PASS  引数 "abc" は拒否（exit 1・取得処理に入らない）
+  PASS  引数 "0" は拒否（exit 1・取得処理に入らない）
+  PASS  引数 "99999" は拒否（exit 1・取得処理に入らない）
+  PASS  引数 "1.5" は拒否（exit 1・取得処理に入らない）
+[クリーンアップ] bookmarks が空のため、孤立ファイルの削除をスキップします。
+  PASS  bookmarks が空のときは .md を削除しない
+  [クリーンアップ] 孤立ファイル削除: keep_me.md
+[クリーンアップ] 1 件の孤立ファイルを削除しました。
+  PASS  bookmarks があれば従来どおり孤立ファイルを削除する
+
+結果: 40 PASS / 0 FAIL

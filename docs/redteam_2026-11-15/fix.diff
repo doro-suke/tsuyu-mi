@@ -1,0 +1,381 @@
+diff --git a/scripts/generate_dashboard.js b/scripts/generate_dashboard.js
+index e7ae241..4efeafb 100644
+--- a/scripts/generate_dashboard.js
++++ b/scripts/generate_dashboard.js
+@@ -11,6 +11,22 @@ const CONFIG = {
+   INDEX_HTML: path.join(__dirname, '..', 'index.html'),
+ };
+ 
++// HTMLエスケープ（テキスト・属性値の両方に使用）
++function escapeHtml(value) {
++  return String(value ?? '')
++    .replace(/&/g, '&amp;')
++    .replace(/</g, '&lt;')
++    .replace(/>/g, '&gt;')
++    .replace(/"/g, '&quot;')
++    .replace(/'/g, '&#39;');
++}
++
++// href 用: http/https 以外（javascript: 等）は無害な '#' にする
++function safeHref(url) {
++  const u = String(url ?? '').trim();
++  return /^https?:\/\//i.test(u) ? escapeHtml(u) : '#';
++}
++
+ function deriveScore(article) {
+   if (article.score !== undefined) return article.score;
+   const map = { high: 75, medium: 45, low: 15 };
+@@ -47,8 +63,8 @@ function generateDashboard(data) {
+     const classes = getPriorityClasses(article._tier);
+     const tags = normalizeTags(article.tags);
+     const tagsHtml = tags.map(tag => {
+-      const safeTag = tag.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+-      return `<button type="button" data-tag="${tag.replace(/"/g, '&quot;')}" onclick="filterTag('${safeTag}')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#${tag}</button>`;
++      const safeTag = escapeHtml(tag);
++      return `<button type="button" data-tag="${safeTag}" onclick="filterTag(this.dataset.tag)" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#${safeTag}</button>`;
+     }).join('');
+     const mdRelPath = article.markdown_path ? `./${article.markdown_path}` : '#';
+     const isRead = article.status === 'read';
+@@ -60,12 +76,12 @@ function generateDashboard(data) {
+     if (article.summary && article.summary.trim() !== '') {
+       summaryHtml = `
+         <div class="text-[#a1a1aa] text-sm mb-3 space-y-1">
+-            ${article.summary.split('\n').map(line => `<p class="leading-relaxed">・ ${line}</p>`).join('')}
++            ${article.summary.split('\n').map(line => `<p class="leading-relaxed">・ ${escapeHtml(line)}</p>`).join('')}
+         </div>`;
+     } else if (article.excerpt && article.excerpt.trim() !== '') {
+       summaryHtml = `
+         <p class="text-[#a1a1aa] text-xs mb-3 line-clamp-2 leading-relaxed">
+-            ${article.excerpt}
++            ${escapeHtml(article.excerpt)}
+         </p>`;
+     }
+ 
+@@ -75,41 +91,41 @@ function generateDashboard(data) {
+       reasonHtml = `
+         <div class="bg-[#131316] p-3 rounded-md mb-3 border border-[#222228]/80">
+             <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
+-            <p class="text-xs text-[#e4e4e7] italic leading-relaxed">${article.read_now_reason}</p>
++            <p class="text-xs text-[#e4e4e7] italic leading-relaxed">${escapeHtml(article.read_now_reason)}</p>
+         </div>`;
+     }
+ 
+     return `
+       <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 ${classes.border} border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 ${isRead ? 'status-read' : ''}"
+-           data-article-id="${article.id}"
+-           data-title="${(article.title || '').replace(/"/g, '&quot;')}"
+-           data-summary="${summaryText.replace(/"/g, '&quot;')}"
++           data-article-id="${escapeHtml(article.id)}"
++           data-title="${escapeHtml(article.title || '')}"
++           data-summary="${escapeHtml(summaryText)}"
+            data-priority="${article._tier}"
+            data-score="${score}"
+-           data-tags="${tags.join(',')}">
++           data-tags="${escapeHtml(tags.join(','))}">
+           <div class="px-6 py-5 flex-grow flex flex-col">
+               <div class="flex justify-between items-start mb-3">
+                   <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase ${classes.badge}">${classes.label} <span class="opacity-70">· ${score}</span></span>
+                   <div class="flex items-center gap-2">
+-                    <button onclick="toggleStatus('${article.id}')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
++                    <button onclick="toggleStatus(this.closest('.article-card').dataset.articleId)" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                         ${isRead ? '未読に戻す' : '既読にする'}
+                     </button>
+-                    <button onclick="deleteArticle('${article.id}')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
++                    <button onclick="deleteArticle(this.closest('.article-card').dataset.articleId)" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                         削除
+                     </button>
+                     <span class="text-xs text-gray-500">${new Date(article.analyzed_at).toLocaleDateString('ja-JP')}</span>
+                   </div>
+               </div>
+               <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+-                  <a href="${article.url}" target="_blank">${article.title}</a>
++                  <a href="${safeHref(article.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(article.title)}</a>
+               </h2>
+               ${summaryHtml}
+               ${reasonHtml}
+               <div class="mt-auto pt-2">${tagsHtml}</div>
+           </div>
+           <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+-              <a href="${article.url}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+-              <a href="${mdRelPath}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
++              <a href="${safeHref(article.url)}" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
++              <a href="${escapeHtml(mdRelPath)}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+           </div>
+       </div>`;
+   };
+@@ -117,8 +133,8 @@ function generateDashboard(data) {
+   const sortedArticles = [...data.articles].sort((a, b) => new Date(b.analyzed_at) - new Date(a.analyzed_at));
+   const articlesHtml = sortedArticles.map(generateCard).join('\n');
+   const finalHtml = template
+-    .replace('{{last_updated}}', new Date(data.updated_at).toLocaleString('ja-JP'))
+-    .replace('<!-- ARTICLES_PLACEHOLDER -->', articlesHtml);
++    .replace('{{last_updated}}', () => new Date(data.updated_at).toLocaleString('ja-JP'))
++    .replace('<!-- ARTICLES_PLACEHOLDER -->', () => articlesHtml);
+   fs.writeFileSync(CONFIG.INDEX_HTML, finalHtml, 'utf8');
+   console.log(`[Dashboard] ダッシュボードを更新しました: ${CONFIG.INDEX_HTML}`);
+ }
+@@ -201,5 +217,7 @@ module.exports = {
+   generateDashboard,
+   generateNotebookMaster,
+   deriveScore,
+-  assignTiers
++  assignTiers,
++  escapeHtml,
++  safeHref
+ };
+diff --git a/scripts/sync.js b/scripts/sync.js
+index 4effe2c..3df00b6 100644
+--- a/scripts/sync.js
++++ b/scripts/sync.js
+@@ -2,7 +2,7 @@ const fs = require('fs');
+ const path = require('path');
+ const { JSDOM } = require('jsdom');
+ const { Readability } = require('@mozilla/readability');
+-const { execSync } = require('child_process');
++const { execSync, execFileSync } = require('child_process');
+ const { normalizeTags } = require('./tag_taxonomy');
+ const {
+   assembleStructuredMarkdown,
+@@ -29,6 +29,7 @@ const CONFIG = {
+   TEMPLATE_FILE: path.join(__dirname, '..', 'templates', 'dashboard_template.html'),
+   INDEX_HTML: path.join(__dirname, '..', 'index.html'),
+   RAINDROP_PER_PAGE: 50,
++  MAX_PROCESS_LIMIT: 200,         // 件数引数の上限
+   MAX_PROCESS_DEFAULT: 10,        // 1回のデフォルト処理件数: 10件
+   MAX_SCAN_PAGES: 10,             // 最大10ページ（500件）まで未処理記事を走査
+   CONSECUTIVE_EXISTING_LIMIT: 25, // 連続25件すでに処理済みであれば安全にスキャン終了
+@@ -47,7 +48,10 @@ function redact(text) {
+   for (const secret of [RAINDROP_API_KEY, GEMINI_API_KEY]) {
+     if (secret) out = out.split(secret).join('***REDACTED***');
+   }
+-  return out.replace(/([?&]key=)[^&"\s]+/g, '$1***REDACTED***');
++  return out
++    .replace(/([?&]key=)[^&"\s]+/g, '$1***REDACTED***')
++    .replace(/(x-goog-api-key:\s*)[^\s"']+/gi, '$1***REDACTED***')
++    .replace(/(Bearer\s+)[^\s"']+/gi, '$1***REDACTED***');
+ }
+ 
+ function truncateByBytes(str, maxBytes) {
+@@ -67,47 +71,81 @@ function sanitizeFileName(title, maxBytes = 180) {
+   return truncateByBytes(cleaned, maxBytes).trim() || 'untitled';
+ }
+ 
++/**
++ * curl 設定ファイル（-K -）の引用符付き文字列にエスケープする。
++ * 制御文字（改行等）は設定行の注入に使われるため拒否する。
++ */
++function quoteCurlConfig(value) {
++  const str = String(value);
++  if (/[\u0000-\u001F\u007F]/.test(str)) {
++    throw new Error('curl 引数に制御文字が含まれています');
++  }
++  return '"' + str.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
++}
++
+ /**
+  * ユーティリティ: curlを実行
++ * - シェルを経由しない（execFileSync + 引数配列）ため、URL 中の %VAR% / " / $() / バッククォートは展開・実行されない
++ * - ヘッダ（API キーを含む）は標準入力の設定（-K -）で渡し、プロセス一覧の引数に載せない
++ * - http/https 以外のスキームは取得しない
++ * - 戻り値の ok は従来どおり「curl 自体の成否」。HTTP ステータスは status / httpOk で参照できる
++ *   （Gemini の 429/503 は応答 JSON の error.code で判定する既存の再試行ロジックを維持するため、
++ *    -f / --fail は使わずステータスを -w で取得している）
+  */
+ function curl(url, options = {}) {
+-  let command = `curl -s -L --connect-timeout 15 --max-time 45 "${url}"`;
+-  if (options.headers) {
+-    for (const [key, value] of Object.entries(options.headers)) {
+-      const safeValue = String(value).replace(/"/g, '\\"');
+-      command += ` -H "${key}: ${safeValue}"`;
+-    }
++  const failed = () => ({ ok: false, httpOk: false, status: 500, text: async () => '', json: async () => ({}) });
++
++  let target;
++  try {
++    target = new URL(String(url));
++  } catch {
++    console.error('curl failed: 不正な URL です');
++    return failed();
+   }
+-  if (options.method === 'POST') {
+-    const tempFile = path.join(CONFIG.DATA_DIR, `temp_post_${Date.now()}_${Math.random().toString(36).substring(7)}.json`);
+-    fs.writeFileSync(tempFile, options.body, 'utf8');
+-    command += ` -X POST -H "Content-Type: application/json" -d "@${tempFile}"`;
+-    try {
+-      const stdout = execSync(command, { encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
+-      if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
+-      return {
+-        ok: true,
+-        text: async () => stdout,
+-        json: async () => {
+-          try {
+-            return JSON.parse(stdout);
+-          } catch (e) {
+-            console.error(`[JSON解析失敗] レスポンスがJSONではありません: ${stdout.substring(0, 200)}...`);
+-            throw e;
+-          }
+-        }
+-      };
+-    } catch (error) {
+-      if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
+-      console.error(`curl (POST) failed: ${redact(error.message)}`);
+-      return { ok: false, status: 500, text: async () => '', json: async () => ({}) };
++  if (target.protocol !== 'http:' && target.protocol !== 'https:') {
++    console.error(`curl failed: 未対応のスキームです (${target.protocol})`);
++    return failed();
++  }
++
++  const MARK = '__VESPER_HTTP__';
++  const args = [
++    '-s', '-L',
++    '--proto', '=http,https', '--proto-redir', '=http,https',
++    '--connect-timeout', '15', '--max-time', '45',
++    '-w', MARK + '%{http_code}',
++    '-K', '-'
++  ];
++
++  let config;
++  try {
++    config = [`url = ${quoteCurlConfig(target.href)}`];
++    for (const [key, value] of Object.entries(options.headers || {})) {
++      config.push(`header = ${quoteCurlConfig(`${key}: ${value}`)}`);
++    }
++    if (options.method === 'POST') {
++      // 本文は設定（標準入力）に直接載せる。一時ファイルを使わない（日本語パスを curl.exe が読めない問題の回避も兼ねる）
++      config.push('request = "POST"');
++      config.push('header = "Content-Type: application/json"');
++      config.push(`data-binary = ${quoteCurlConfig(options.body)}`);
+     }
++  } catch (error) {
++    console.error(`curl failed: ${redact(error.message)}`);
++    return failed();
+   }
+-  
++
+   try {
+-    const stdout = execSync(command, { encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
++    const raw = execFileSync('curl', args, {
++      input: config.join('\n') + '\n',
++      encoding: 'utf8',
++      maxBuffer: 10 * 1024 * 1024
++    });
++    const idx = raw.lastIndexOf(MARK);
++    const stdout = idx >= 0 ? raw.slice(0, idx) : raw;
++    const status = idx >= 0 ? parseInt(raw.slice(idx + MARK.length), 10) : 0;
+     return {
+       ok: true,
++      status,
++      httpOk: status >= 200 && status < 300,
+       text: async () => stdout,
+       json: async () => {
+         try {
+@@ -115,14 +153,14 @@ function curl(url, options = {}) {
+           return JSON.parse(stdout);
+         } catch (e) {
+           console.error(`[JSON解析失敗] URL: ${redact(url)}`);
+-          console.error(`[JSON解析失敗] 内容: ${stdout.substring(0, 500)}...`);
++          console.error(`[JSON解析失敗] 内容: ${redact(stdout.substring(0, 500))}...`);
+           throw e;
+         }
+       }
+     };
+   } catch (error) {
+     console.error(`curl failed: ${redact(error.message)}`);
+-    return { ok: false, status: 500, text: async () => '', json: async () => ({}) };
++    return failed();
+   }
+ }
+ 
+@@ -202,7 +240,7 @@ async function extractContent(url) {
+     const response = curl(url, {
+       headers: { 'User-Agent': 'Mozilla/5.0' }
+     });
+-    if (!response.ok) throw new Error(`Fetch failed`);
++    if (!response.ok || !response.httpOk) throw new Error(`Fetch failed (HTTP ${response.status})`);
+     const html = await response.text();
+     if (!html) throw new Error(`HTML content is empty`);
+     
+@@ -226,10 +264,11 @@ async function extractContent(url) {
+ async function getSummary(apiKey, prompt, retryCount = 0) {
+   const MODELS = ['gemini-flash-lite-latest', 'gemini-flash-latest'];
+   const model = MODELS[retryCount % MODELS.length];
+-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
++  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+   
+   const response = curl(url, {
+     method: 'POST',
++    headers: { 'x-goog-api-key': apiKey },
+     body: JSON.stringify({
+       contents: [{ parts: [{ text: prompt }] }],
+       generationConfig: {
+@@ -332,6 +371,10 @@ function buildSummarizePrompt(template, { title, url, date, contentText }) {
+  */
+ function cleanupOrphanedMarkdowns(bookmarks) {
+   if (!fs.existsSync(CONFIG.NOTEBOOK_DIR)) return;
++  if (!bookmarks.articles || bookmarks.articles.length === 0) {
++    console.log('[クリーンアップ] bookmarks が空のため、孤立ファイルの削除をスキップします。');
++    return;
++  }
+   const knownPaths = new Set(
+     bookmarks.articles
+       .filter(a => a.markdown_path)
+@@ -351,6 +394,32 @@ function cleanupOrphanedMarkdowns(bookmarks) {
+   if (cleaned > 0) console.log(`[クリーンアップ] ${cleaned} 件の孤立ファイルを削除しました。`);
+ }
+ 
++/**
++ * 件数引数の検証（-1 などで全件処理になる事故を防ぐ）。未指定ならデフォルト。
++ */
++function parseMaxProcess(arg) {
++  if (arg === undefined) return CONFIG.MAX_PROCESS_DEFAULT;
++  if (!/^[0-9]+$/.test(String(arg))) {
++    console.error(`エラー: 処理件数は 1〜${CONFIG.MAX_PROCESS_LIMIT} の整数で指定してください (指定値: ${arg})`);
++    process.exit(1);
++  }
++  const n = parseInt(arg, 10);
++  if (n < 1 || n > CONFIG.MAX_PROCESS_LIMIT) {
++    console.error(`エラー: 処理件数は 1〜${CONFIG.MAX_PROCESS_LIMIT} の整数で指定してください (指定値: ${arg})`);
++    process.exit(1);
++  }
++  return n;
++}
++
++/**
++ * bookmarks.json を一時ファイル経由で書き込む（書き込み途中の中断で壊れないようにする）
++ */
++function writeBookmarksAtomic(bookmarks) {
++  const tmp = CONFIG.BOOKMARKS_JSON + '.tmp';
++  fs.writeFileSync(tmp, JSON.stringify(bookmarks, null, 2), 'utf8');
++  fs.renameSync(tmp, CONFIG.BOOKMARKS_JSON);
++}
++
+ /**
+  * メイン処理
+  */
+@@ -362,7 +431,7 @@ async function main() {
+ 
+   console.log('=== Vesper: 全自動同期パイプライン開始 ===');
+   
+-  const maxProcess = process.argv[2] ? parseInt(process.argv[2], 10) : CONFIG.MAX_PROCESS_DEFAULT;
++  const maxProcess = parseMaxProcess(process.argv[2]);
+   console.log(`最大処理件数: ${maxProcess}`);
+   
+   let bookmarks = { updated_at: new Date().toISOString(), articles: [] };
+@@ -450,7 +519,7 @@ async function main() {
+         }
+ 
+         bookmarks.updated_at = new Date().toISOString();
+-        fs.writeFileSync(CONFIG.BOOKMARKS_JSON, JSON.stringify(bookmarks, null, 2), 'utf8');
++        writeBookmarksAtomic(bookmarks);
+         processedCount++;
+         console.log(`  成功: Score ${score} | Domain: ${newArticle.domain} | Tags: [${newArticle.tags.join(', ')}]`);
+       } catch (err) {
+@@ -503,6 +572,8 @@ module.exports = {
+   curl,
+   extractContent,
+   getSummary,
++  cleanupOrphanedMarkdowns,
++  parseMaxProcess,
+   buildSummarizePrompt,
+   sanitizeFileName,
+ };

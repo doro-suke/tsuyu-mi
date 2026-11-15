@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { JSDOM } = require('jsdom');
 const { Readability } = require('@mozilla/readability');
-const { execSync } = require('child_process');
+const { execSync, execFileSync } = require('child_process');
 const { normalizeTags } = require('./tag_taxonomy');
 const {
   assembleStructuredMarkdown,
@@ -29,6 +29,7 @@ const CONFIG = {
   TEMPLATE_FILE: path.join(__dirname, '..', 'templates', 'dashboard_template.html'),
   INDEX_HTML: path.join(__dirname, '..', 'index.html'),
   RAINDROP_PER_PAGE: 50,
+  MAX_PROCESS_LIMIT: 200,         // 件数引数の上限
   MAX_PROCESS_DEFAULT: 10,        // 1回のデフォルト処理件数: 10件
   MAX_SCAN_PAGES: 10,             // 最大10ページ（500件）まで未処理記事を走査
   CONSECUTIVE_EXISTING_LIMIT: 25, // 連続25件すでに処理済みであれば安全にスキャン終了
@@ -47,7 +48,10 @@ function redact(text) {
   for (const secret of [RAINDROP_API_KEY, GEMINI_API_KEY]) {
     if (secret) out = out.split(secret).join('***REDACTED***');
   }
-  return out.replace(/([?&]key=)[^&"\s]+/g, '$1***REDACTED***');
+  return out
+    .replace(/([?&]key=)[^&"\s]+/g, '$1***REDACTED***')
+    .replace(/(x-goog-api-key:\s*)[^\s"']+/gi, '$1***REDACTED***')
+    .replace(/(Bearer\s+)[^\s"']+/gi, '$1***REDACTED***');
 }
 
 function truncateByBytes(str, maxBytes) {
@@ -68,46 +72,80 @@ function sanitizeFileName(title, maxBytes = 180) {
 }
 
 /**
+ * curl 設定ファイル（-K -）の引用符付き文字列にエスケープする。
+ * 制御文字（改行等）は設定行の注入に使われるため拒否する。
+ */
+function quoteCurlConfig(value) {
+  const str = String(value);
+  if (/[\u0000-\u001F\u007F]/.test(str)) {
+    throw new Error('curl 引数に制御文字が含まれています');
+  }
+  return '"' + str.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
+}
+
+/**
  * ユーティリティ: curlを実行
+ * - シェルを経由しない（execFileSync + 引数配列）ため、URL 中の %VAR% / " / $() / バッククォートは展開・実行されない
+ * - ヘッダ（API キーを含む）は標準入力の設定（-K -）で渡し、プロセス一覧の引数に載せない
+ * - http/https 以外のスキームは取得しない
+ * - 戻り値の ok は従来どおり「curl 自体の成否」。HTTP ステータスは status / httpOk で参照できる
+ *   （Gemini の 429/503 は応答 JSON の error.code で判定する既存の再試行ロジックを維持するため、
+ *    -f / --fail は使わずステータスを -w で取得している）
  */
 function curl(url, options = {}) {
-  let command = `curl -s -L --connect-timeout 15 --max-time 45 "${url}"`;
-  if (options.headers) {
-    for (const [key, value] of Object.entries(options.headers)) {
-      const safeValue = String(value).replace(/"/g, '\\"');
-      command += ` -H "${key}: ${safeValue}"`;
-    }
-  }
-  if (options.method === 'POST') {
-    const tempFile = path.join(CONFIG.DATA_DIR, `temp_post_${Date.now()}_${Math.random().toString(36).substring(7)}.json`);
-    fs.writeFileSync(tempFile, options.body, 'utf8');
-    command += ` -X POST -H "Content-Type: application/json" -d "@${tempFile}"`;
-    try {
-      const stdout = execSync(command, { encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
-      if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
-      return {
-        ok: true,
-        text: async () => stdout,
-        json: async () => {
-          try {
-            return JSON.parse(stdout);
-          } catch (e) {
-            console.error(`[JSON解析失敗] レスポンスがJSONではありません: ${stdout.substring(0, 200)}...`);
-            throw e;
-          }
-        }
-      };
-    } catch (error) {
-      if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
-      console.error(`curl (POST) failed: ${redact(error.message)}`);
-      return { ok: false, status: 500, text: async () => '', json: async () => ({}) };
-    }
-  }
-  
+  const failed = () => ({ ok: false, httpOk: false, status: 500, text: async () => '', json: async () => ({}) });
+
+  let target;
   try {
-    const stdout = execSync(command, { encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
+    target = new URL(String(url));
+  } catch {
+    console.error('curl failed: 不正な URL です');
+    return failed();
+  }
+  if (target.protocol !== 'http:' && target.protocol !== 'https:') {
+    console.error(`curl failed: 未対応のスキームです (${target.protocol})`);
+    return failed();
+  }
+
+  const MARK = '__VESPER_HTTP__';
+  const args = [
+    '-s', '-L',
+    '--proto', '=http,https', '--proto-redir', '=http,https',
+    '--connect-timeout', '15', '--max-time', '45',
+    '-w', MARK + '%{http_code}',
+    '-K', '-'
+  ];
+
+  let config;
+  try {
+    config = [`url = ${quoteCurlConfig(target.href)}`];
+    for (const [key, value] of Object.entries(options.headers || {})) {
+      config.push(`header = ${quoteCurlConfig(`${key}: ${value}`)}`);
+    }
+    if (options.method === 'POST') {
+      // 本文は設定（標準入力）に直接載せる。一時ファイルを使わない（日本語パスを curl.exe が読めない問題の回避も兼ねる）
+      config.push('request = "POST"');
+      config.push('header = "Content-Type: application/json"');
+      config.push(`data-binary = ${quoteCurlConfig(options.body)}`);
+    }
+  } catch (error) {
+    console.error(`curl failed: ${redact(error.message)}`);
+    return failed();
+  }
+
+  try {
+    const raw = execFileSync('curl', args, {
+      input: config.join('\n') + '\n',
+      encoding: 'utf8',
+      maxBuffer: 10 * 1024 * 1024
+    });
+    const idx = raw.lastIndexOf(MARK);
+    const stdout = idx >= 0 ? raw.slice(0, idx) : raw;
+    const status = idx >= 0 ? parseInt(raw.slice(idx + MARK.length), 10) : 0;
     return {
       ok: true,
+      status,
+      httpOk: status >= 200 && status < 300,
       text: async () => stdout,
       json: async () => {
         try {
@@ -115,14 +153,14 @@ function curl(url, options = {}) {
           return JSON.parse(stdout);
         } catch (e) {
           console.error(`[JSON解析失敗] URL: ${redact(url)}`);
-          console.error(`[JSON解析失敗] 内容: ${stdout.substring(0, 500)}...`);
+          console.error(`[JSON解析失敗] 内容: ${redact(stdout.substring(0, 500))}...`);
           throw e;
         }
       }
     };
   } catch (error) {
     console.error(`curl failed: ${redact(error.message)}`);
-    return { ok: false, status: 500, text: async () => '', json: async () => ({}) };
+    return failed();
   }
 }
 
@@ -202,7 +240,7 @@ async function extractContent(url) {
     const response = curl(url, {
       headers: { 'User-Agent': 'Mozilla/5.0' }
     });
-    if (!response.ok) throw new Error(`Fetch failed`);
+    if (!response.ok || !response.httpOk) throw new Error(`Fetch failed (HTTP ${response.status})`);
     const html = await response.text();
     if (!html) throw new Error(`HTML content is empty`);
     
@@ -226,10 +264,11 @@ async function extractContent(url) {
 async function getSummary(apiKey, prompt, retryCount = 0) {
   const MODELS = ['gemini-flash-lite-latest', 'gemini-flash-latest'];
   const model = MODELS[retryCount % MODELS.length];
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
   
   const response = curl(url, {
     method: 'POST',
+    headers: { 'x-goog-api-key': apiKey },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: {
@@ -332,6 +371,10 @@ function buildSummarizePrompt(template, { title, url, date, contentText }) {
  */
 function cleanupOrphanedMarkdowns(bookmarks) {
   if (!fs.existsSync(CONFIG.NOTEBOOK_DIR)) return;
+  if (!bookmarks.articles || bookmarks.articles.length === 0) {
+    console.log('[クリーンアップ] bookmarks が空のため、孤立ファイルの削除をスキップします。');
+    return;
+  }
   const knownPaths = new Set(
     bookmarks.articles
       .filter(a => a.markdown_path)
@@ -352,6 +395,32 @@ function cleanupOrphanedMarkdowns(bookmarks) {
 }
 
 /**
+ * 件数引数の検証（-1 などで全件処理になる事故を防ぐ）。未指定ならデフォルト。
+ */
+function parseMaxProcess(arg) {
+  if (arg === undefined) return CONFIG.MAX_PROCESS_DEFAULT;
+  if (!/^[0-9]+$/.test(String(arg))) {
+    console.error(`エラー: 処理件数は 1〜${CONFIG.MAX_PROCESS_LIMIT} の整数で指定してください (指定値: ${arg})`);
+    process.exit(1);
+  }
+  const n = parseInt(arg, 10);
+  if (n < 1 || n > CONFIG.MAX_PROCESS_LIMIT) {
+    console.error(`エラー: 処理件数は 1〜${CONFIG.MAX_PROCESS_LIMIT} の整数で指定してください (指定値: ${arg})`);
+    process.exit(1);
+  }
+  return n;
+}
+
+/**
+ * bookmarks.json を一時ファイル経由で書き込む（書き込み途中の中断で壊れないようにする）
+ */
+function writeBookmarksAtomic(bookmarks) {
+  const tmp = CONFIG.BOOKMARKS_JSON + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(bookmarks, null, 2), 'utf8');
+  fs.renameSync(tmp, CONFIG.BOOKMARKS_JSON);
+}
+
+/**
  * メイン処理
  */
 async function main() {
@@ -362,7 +431,7 @@ async function main() {
 
   console.log('=== Vesper: 全自動同期パイプライン開始 ===');
   
-  const maxProcess = process.argv[2] ? parseInt(process.argv[2], 10) : CONFIG.MAX_PROCESS_DEFAULT;
+  const maxProcess = parseMaxProcess(process.argv[2]);
   console.log(`最大処理件数: ${maxProcess}`);
   
   let bookmarks = { updated_at: new Date().toISOString(), articles: [] };
@@ -450,7 +519,7 @@ async function main() {
         }
 
         bookmarks.updated_at = new Date().toISOString();
-        fs.writeFileSync(CONFIG.BOOKMARKS_JSON, JSON.stringify(bookmarks, null, 2), 'utf8');
+        writeBookmarksAtomic(bookmarks);
         processedCount++;
         console.log(`  成功: Score ${score} | Domain: ${newArticle.domain} | Tags: [${newArticle.tags.join(', ')}]`);
       } catch (err) {
@@ -503,6 +572,8 @@ module.exports = {
   curl,
   extractContent,
   getSummary,
+  cleanupOrphanedMarkdowns,
+  parseMaxProcess,
   buildSummarizePrompt,
   sanitizeFileName,
 };

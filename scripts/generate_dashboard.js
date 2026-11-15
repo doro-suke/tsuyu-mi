@@ -11,6 +11,22 @@ const CONFIG = {
   INDEX_HTML: path.join(__dirname, '..', 'index.html'),
 };
 
+// HTMLエスケープ（テキスト・属性値の両方に使用）
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// href 用: http/https 以外（javascript: 等）は無害な '#' にする
+function safeHref(url) {
+  const u = String(url ?? '').trim();
+  return /^https?:\/\//i.test(u) ? escapeHtml(u) : '#';
+}
+
 function deriveScore(article) {
   if (article.score !== undefined) return article.score;
   const map = { high: 75, medium: 45, low: 15 };
@@ -47,8 +63,8 @@ function generateDashboard(data) {
     const classes = getPriorityClasses(article._tier);
     const tags = normalizeTags(article.tags);
     const tagsHtml = tags.map(tag => {
-      const safeTag = tag.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-      return `<button type="button" data-tag="${tag.replace(/"/g, '&quot;')}" onclick="filterTag('${safeTag}')" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#${tag}</button>`;
+      const safeTag = escapeHtml(tag);
+      return `<button type="button" data-tag="${safeTag}" onclick="filterTag(this.dataset.tag)" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#${safeTag}</button>`;
     }).join('');
     const mdRelPath = article.markdown_path ? `./${article.markdown_path}` : '#';
     const isRead = article.status === 'read';
@@ -60,12 +76,12 @@ function generateDashboard(data) {
     if (article.summary && article.summary.trim() !== '') {
       summaryHtml = `
         <div class="text-[#a1a1aa] text-sm mb-3 space-y-1">
-            ${article.summary.split('\n').map(line => `<p class="leading-relaxed">・ ${line}</p>`).join('')}
+            ${article.summary.split('\n').map(line => `<p class="leading-relaxed">・ ${escapeHtml(line)}</p>`).join('')}
         </div>`;
     } else if (article.excerpt && article.excerpt.trim() !== '') {
       summaryHtml = `
         <p class="text-[#a1a1aa] text-xs mb-3 line-clamp-2 leading-relaxed">
-            ${article.excerpt}
+            ${escapeHtml(article.excerpt)}
         </p>`;
     }
 
@@ -75,41 +91,41 @@ function generateDashboard(data) {
       reasonHtml = `
         <div class="bg-[#131316] p-3 rounded-md mb-3 border border-[#222228]/80">
             <p class="text-[9px] font-bold text-[#c8968c] uppercase tracking-wider mb-1">今読む理由</p>
-            <p class="text-xs text-[#e4e4e7] italic leading-relaxed">${article.read_now_reason}</p>
+            <p class="text-xs text-[#e4e4e7] italic leading-relaxed">${escapeHtml(article.read_now_reason)}</p>
         </div>`;
     }
 
     return `
       <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 ${classes.border} border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 ${isRead ? 'status-read' : ''}"
-           data-article-id="${article.id}"
-           data-title="${(article.title || '').replace(/"/g, '&quot;')}"
-           data-summary="${summaryText.replace(/"/g, '&quot;')}"
+           data-article-id="${escapeHtml(article.id)}"
+           data-title="${escapeHtml(article.title || '')}"
+           data-summary="${escapeHtml(summaryText)}"
            data-priority="${article._tier}"
            data-score="${score}"
-           data-tags="${tags.join(',')}">
+           data-tags="${escapeHtml(tags.join(','))}">
           <div class="px-6 py-5 flex-grow flex flex-col">
               <div class="flex justify-between items-start mb-3">
                   <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase ${classes.badge}">${classes.label} <span class="opacity-70">· ${score}</span></span>
                   <div class="flex items-center gap-2">
-                    <button onclick="toggleStatus('${article.id}')" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                    <button onclick="toggleStatus(this.closest('.article-card').dataset.articleId)" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
                         ${isRead ? '未読に戻す' : '既読にする'}
                     </button>
-                    <button onclick="deleteArticle('${article.id}')" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                    <button onclick="deleteArticle(this.closest('.article-card').dataset.articleId)" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
                         削除
                     </button>
                     <span class="text-xs text-gray-500">${new Date(article.analyzed_at).toLocaleDateString('ja-JP')}</span>
                   </div>
               </div>
               <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
-                  <a href="${article.url}" target="_blank">${article.title}</a>
+                  <a href="${safeHref(article.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(article.title)}</a>
               </h2>
               ${summaryHtml}
               ${reasonHtml}
               <div class="mt-auto pt-2">${tagsHtml}</div>
           </div>
           <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
-              <a href="${article.url}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
-              <a href="${mdRelPath}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+              <a href="${safeHref(article.url)}" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="${escapeHtml(mdRelPath)}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
           </div>
       </div>`;
   };
@@ -117,8 +133,8 @@ function generateDashboard(data) {
   const sortedArticles = [...data.articles].sort((a, b) => new Date(b.analyzed_at) - new Date(a.analyzed_at));
   const articlesHtml = sortedArticles.map(generateCard).join('\n');
   const finalHtml = template
-    .replace('{{last_updated}}', new Date(data.updated_at).toLocaleString('ja-JP'))
-    .replace('<!-- ARTICLES_PLACEHOLDER -->', articlesHtml);
+    .replace('{{last_updated}}', () => new Date(data.updated_at).toLocaleString('ja-JP'))
+    .replace('<!-- ARTICLES_PLACEHOLDER -->', () => articlesHtml);
   fs.writeFileSync(CONFIG.INDEX_HTML, finalHtml, 'utf8');
   console.log(`[Dashboard] ダッシュボードを更新しました: ${CONFIG.INDEX_HTML}`);
 }
@@ -201,5 +217,7 @@ module.exports = {
   generateDashboard,
   generateNotebookMaster,
   deriveScore,
-  assignTiers
+  assignTiers,
+  escapeHtml,
+  safeHref
 };
