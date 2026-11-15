@@ -125,6 +125,9 @@ async function main() {
     const post = sync.curl(`${base}/post`, { method: 'POST', body: JSON.stringify({ k: 'v' }) });
     check('POST 本文が送られ、一時ファイルを作らない', (await post.text()).startsWith('ok:') && fs.readdirSync(sync.CONFIG.DATA_DIR).every((f) => !f.startsWith('temp_post_')));
 
+    const del = sync.curl(`${base}/post`, { method: 'POST', body: JSON.stringify({ k: 'ab' }) });
+    check('本文に DEL(U+007F) を含む POST も成功する', del.ok === true && (await del.text()).startsWith('ok:'));
+
     console.log('\n[B] ダッシュボード XSS');
     let html = '';
     const origWrite = fs.writeFileSync;

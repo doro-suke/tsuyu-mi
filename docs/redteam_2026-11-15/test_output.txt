@@ -1,4 +1,4 @@
-◇ injected env (0) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (0) from .env // tip: ⌘ suppress logs { quiet: true }
 
 [A] curl() コマンド注入
   PASS  %VAR% 展開: 取得は成功（ok）
@@ -31,9 +31,10 @@ curl failed: curl 引数に制御文字が含まれています
   PASS  status=429, httpOk=false
   PASS  応答 JSON の error.code=429 を読める（既存の再試行条件に合致）
   PASS  404 HTML: httpOk=false
-  [抽出失敗] http://127.0.0.1:60261/missing: Fetch failed (HTTP 404)
+  [抽出失敗] http://127.0.0.1:51212/missing: Fetch failed (HTTP 404)
   PASS  extractContent は 404 の HTML を本文として扱わない（null）
   PASS  POST 本文が送られ、一時ファイルを作らない
+  PASS  本文に DEL(U+007F) を含む POST も成功する
 
 [B] ダッシュボード XSS
 [Dashboard] ダッシュボードを更新しました: C:\Users\Yusuke\Documents\Sorted_02_AI実装・開発\Vesper\index.html
@@ -60,4 +61,4 @@ curl failed: curl 引数に制御文字が含まれています
 [クリーンアップ] 1 件の孤立ファイルを削除しました。
   PASS  bookmarks があれば従来どおり孤立ファイルを削除する
 
-結果: 40 PASS / 0 FAIL
+結果: 41 PASS / 0 FAIL

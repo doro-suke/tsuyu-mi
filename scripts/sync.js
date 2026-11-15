@@ -126,7 +126,8 @@ function curl(url, options = {}) {
       // 本文は設定（標準入力）に直接載せる。一時ファイルを使わない（日本語パスを curl.exe が読めない問題の回避も兼ねる）
       config.push('request = "POST"');
       config.push('header = "Content-Type: application/json"');
-      config.push(`data-binary = ${quoteCurlConfig(options.body)}`);
+      // JSON.stringify が escape しない DEL (U+007F) を JSON のエスケープ表記に置換する（値は同じ）。無いと quoteCurlConfig が制御文字として拒否する
+      config.push(`data-binary = ${quoteCurlConfig(String(options.body).replace(/\u007f/g, '\\u007f'))}`);
     }
   } catch (error) {
     console.error(`curl failed: ${redact(error.message)}`);
