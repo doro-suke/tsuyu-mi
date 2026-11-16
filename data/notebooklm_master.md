@@ -1,5 +1,5 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/11/15 3:42:15
+最終更新日: 2026/11/16 5:08:47
 対象記事数: 50 件 (未読かつHigh優先度)
 
 ---
@@ -1634,7 +1634,87 @@ proc = subprocess.run(
 
 ---
 
-## 38. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
+## 38. [Claude Codeで最近使っているTips【2026/11】](https://zenn.dev/oikon/articles/claude-code-recipe)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/11/16
+- **AI要約**:
+  【結論】Claude Codeのセッション管理において、/btwコマンドによる非破壊的質問、HTMLレポートによる情報集約、サブエージェントやRemote Controlを活用したマルチエージェントオーケストレーションを組み合わせるべきである。
+  【NG】長時間のセッションでメインコンテキストにすべての調査結果や生ログを蓄積させ、コンテキストを圧迫・劣化させること。
+- **タグ**: #AI駆動開発, #AIエージェント, #自動化パイプライン, #ClaudeCode
+
+### 本文
+## 1. 解決する課題（Problem）
+- AIエージェントの長時間自走や大量のタスク処理に伴う、メインコンテキストの圧迫、進捗把握の困難さ、および複数マシン・複数セッションの管理コスト増大を解決する。
+
+## 2. 実践ルール・判断基準（Actionable Rules）
+- **IF** 実行中のエージェントの作業を中断せずに進捗や要点を把握したい場合 **THEN** `/btw` コマンドを使用し、メインコンテキストを汚さずに質問を行う。
+- **IF** 長大なドキュメントやレポートを出力させる場合 **THEN** マークダウンではなくHTML形式（Artifactsなど）を指定し、情報密度と視認性を向上させる。
+- **IF** 独立した調査や並列タスクを実行する場合 **THEN** `Orchestrator-Subagent` または実験的機能の `Agent Teams` を活用し、結果の要約のみを親に返す構造にする。
+- **IF** 常時起動マシンでエージェントを24/7稼働させる場合 **THEN** `Remote Control` を有効化し、`--name` や `/rename` で役割名を付与した上でWeb/モバイルアプリやHerdrから一元管理する。
+
+## 3. 避けるべきアンチパターン（Anti-Patterns）
+- 1つの巨大なセッションにあらゆる調査・実装を詰め込み、プロンプトキャッシュの切れ目に無駄なコストと遅延を発生させること。
+- マルチプレクサのキー入力送出に頼り、セッション間メッセージや@メンションによる明示的なエージェント連携を活用しないこと。
+
+## 4. 具体的なコード・構成テンプレート（Snippets / Examples）
+```bash
+# prompt-rail Modのインストール
+claude plugin marketplace add oikon48/prompt-rail
+claude plugin install prompt-rail@oikon48
+
+# prompt-cache-control Modのインストール
+npx claude-code-templates@latest --mod observability/prompt-cache-control
+
+# セッションの起動と名前付与
+claude --remote-control --name worker1
+```
+
+---
+
+## 39. [実際に試したClaude便利術20選 まとめ - Qiita](https://qiita.com/N-Kyo/items/bf4a3a2185db2d28eee5)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/11/16
+- **AI要約**:
+  【結論】CLAUDE.mdは前提のお願いに留め、危険な操作や厳格なルールはpermissionsやPreToolUse Hookで二重に強制すべきである。
+  【NG】terraform applyやdestroyなどの破壊的コマンドのブロックを、強制力のないCLAUDE.mdの指示だけに頼ること。
+- **タグ**: #AI駆動開発, #プロンプト・コンテキスト, #セキュリティ・品質, #ClaudeCode
+
+### 本文
+## 1. 解決する課題（Problem）
+- Claude Codeの運用において、指示が守られなかったり、長大なコンテキストによってAIの精度が低下したり、誤って危険なインフラ操作を実行してしまうリスクがある。
+
+## 2. 実践ルール・判断基準（Actionable Rules）
+- **IF** 破壊的コマンド（terraform apply / destroyなど）を実行させたくない場合 **THEN** `.claude/settings.json` の `permissions.deny` と `PreToolUse` の Hook（exit 2を返す設定）の二段構えでブロックする。
+- **IF** 毎回異なる指示や長い手順を避けてコンテキストを軽量化したい場合 **THEN** 役割ごとに `CLAUDE.md`（基本前提）、`.claude/skills/`（手順書）、`.claude/agents/`（サブエージェント）に分離配置する。
+- **IF** インフラコード等でエラー0件を自動達成させたい場合 **THEN** `/goal` コマンドに完了条件と除外ルール（設計を変えないものは変更しない等）を明記して渡す。
+
+## 3. 避けるべきアンチパターン（Anti-Patterns）
+- 規約や長大な手順のすべてを1つのCLAUDE.mdに詰め込み、毎ターンのトークンを圧迫すること。
+- ツールによる静的解析（trivy等）のパスだけでコードの安全性を過信し、AIによる設計レビューを怠ること。
+
+## 4. 具体的なコード・構成テンプレート（Snippets / Examples）
+"permissions": {
+  "deny": ["Bash(terraform apply:*)", "Bash(terraform destroy:*)"]
+},
+"hooks": {
+  "PreToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "cmd=$(jq -r '.tool_input.command'); if echo \"$cmd\" | grep -Eq 'terraform.*(apply|destroy)'; then echo 'terraform apply / destroy は禁止しています' >&2; exit 2; fi"
+        }
+      ]
+    }
+  ]
+}
+
+---
+
+## 40. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1678,7 +1758,7 @@ newt-design-system/
 
 ---
 
-## 39. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
+## 41. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1721,7 +1801,7 @@ some_command > "$TARGET_FILE.tmp" && mv "$TARGET_FILE.tmp" "$TARGET_FILE"
 
 ---
 
-## 40. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
+## 42. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1761,7 +1841,7 @@ def _is_ascii_digits(value: str) -> bool:
 
 ---
 
-## 41. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
+## 43. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1796,7 +1876,7 @@ const NODE_BUILTINS = new Set(['fs', 'child_process', 'os', 'net', 'http', 'http
 
 ---
 
-## 42. [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
+## 44. [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1836,7 +1916,7 @@ For each finding, report: file path, line number, severity (high/medium/low), an
 
 ---
 
-## 43. [Claude Code「ralph-loop」解説｜hirokaji](https://note.com/tasty_dunlin998/n/n411f62ec3c26)
+## 45. [Claude Code「ralph-loop」解説｜hirokaji](https://note.com/tasty_dunlin998/n/n411f62ec3c26)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1881,7 +1961,7 @@ For each finding, report: file path, line number, severity (high/medium/low), an
 
 ---
 
-## 44. [Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った](https://zenn.dev/sonicgarden/articles/claude-code-self-improving-loop)
+## 46. [Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った](https://zenn.dev/sonicgarden/articles/claude-code-self-improving-loop)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1919,7 +1999,7 @@ For each finding, report: file path, line number, severity (high/medium/low), an
 
 ---
 
-## 45. [Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita](https://qiita.com/N-i-ke/items/b87d1d144ef6eef9d257)
+## 47. [Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita](https://qiita.com/N-i-ke/items/b87d1d144ef6eef9d257)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1967,7 +2047,7 @@ description: ソフトウェア機能の要件定義・基本設計・詳細設�
 
 ---
 
-## 46. [Claude Codeを使い倒すための設定術：CLAUDE.md・自動メモリ・コンテキスト管理の3本柱](https://zenn.dev/tamai_hideyuki/articles/claude-code-config-best-practices)
+## 48. [Claude Codeを使い倒すための設定術：CLAUDE.md・自動メモリ・コンテキスト管理の3本柱](https://zenn.dev/tamai_hideyuki/articles/claude-code-config-best-practices)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -2004,7 +2084,7 @@ description: ソフトウェア機能の要件定義・基本設計・詳細設�
 
 ---
 
-## 47. [Claude Code や Codex をオーケストレーションして自動でレビュー FB ループを回して洗い物をしてる話](https://zenn.dev/nrs/articles/db4120beb0e601)
+## 49. [Claude Code や Codex をオーケストレーションして自動でレビュー FB ループを回して洗い物をしてる話](https://zenn.dev/nrs/articles/db4120beb0e601)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -2048,7 +2128,7 @@ movements:
 
 ---
 
-## 48. [もうプロンプトを書くな──「Loop Engineering」という新しいパラダイムの正体](https://zenn.dev/acrosstudioblog/articles/38509c0473683a)
+## 50. [もうプロンプトを書くな──「Loop Engineering」という新しいパラダイムの正体](https://zenn.dev/acrosstudioblog/articles/38509c0473683a)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -2080,562 +2160,6 @@ movements:
 - 受け入れ基準: カバレッジ80%以上、tsc エラー0件
 - 過去の罠: monorepo 内で `npm` を使うと lockfile が壊れる
 ```
-
----
-
-## 49. [AIに渡す指示書の役割分担: AGENTS.md/SKILL.md/DESIGN.mdと仕様駆動開発の現在地](https://zenn.dev/genda_jp/articles/f71d3ed7d4d7e8)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/11/14
-- **AI要約**:
-  【結論】AI指示書を「動き方（AGENTS.md/CLAUDE.md）」「個別タスク（SKILL.md）」「見た目（DESIGN.md）」の3層に分業し、形式的に検証可能なルール（トークンや禁止語）はYAML+CLI lintで機械的に自動検証する。
-  【NG】1つのCLAUDE.mdやMarkdownにエージェントの前提・個別タスク手順・デザインシステムの規約をすべて詰め込み、機械的に検証可能なルールまで人間レビューに依存させること。
-- **今読む理由**: AI駆動開発において指示書の肥大化と曖昧さを防ぐための、最新の標準化仕様（AGENTS.md等）の具体的な構造と検証エコシステムが明記されているため。CursorやClaude Codeの挙動を安定させる設計原則として即時適用できる。
-- **タグ**: #AI駆動開発, #UI・デザイン, #自動化パイプライン, #プロンプト・コンテキスト
-
-### 本文
-## 1. 解決する課題（Problem）
-- 自然言語ドキュメント1枚に指示を詰め込むと、形式的に検証可能なルールと定性的な判断ルールが混在し人間レビューの負担と属人性（ブレ）が増大する
-- AIエージェントが生成するUIのデザイン・見た目がセッションごとにブレて一貫性が保てない
-- 指示書ファイルが肥大化し、コンテキストの圧迫とメンテナンス性の低下を引き起こす
-
-## 2. 実践ルール・判断基準（Actionable Rules）
-- 特記事項なし
-
-## 3. 避けるべきアンチパターン（Anti-Patterns）
-- 特記事項なし
-
-## 4. 具体的なコード・構成テンプレート（Snippets / Examples）
-```markdown
----
-name: Heritage
-colors:
-  primary: "#1A1C1E"
-  tertiary: "#B8422E"
-typography:
-  h1:
-    fontFamily: Public Sans
-    fontSize: 3rem
----
-
-## Overview
-Architectural Minimalism meets Journalistic Gravitas.
-
-## Colors
-- Primary (#1A1C1E): Deep ink for headlines and core text.
-- Tertiary (#B8422E): "Boston Clay", the sole driver for interaction.
-
-# CLIによる検証コマンド
-# npx @google/design.md lint DESIGN.md
-```
-
----
-
-## 50. [Claude Code Skillの作り方｜21個運用して分かった設計と育て方](https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2)
-- **優先度**: High
-- **スコア**: 88
-- **解析日時**: 2026/5/4
-- **AI要約**:
-  Claude Codeの振る舞いを制御するSkillの定義方法とYAMLフロントマターの各フィールドを詳説。
-  個人環境やプロジェクト単位での配置ルール、および引数渡しや自動発動の仕組みを具体的に解説。
-  skill-creatorを用いたスキルの自動生成、評価、改善を行うための実践的な運用サイクルを提示。
-- **今読む理由**: AI駆動開発のコアツールであるClaude Codeの効率を劇的に高める具体的設定ファイル(SKILL.md)の構造と、自動化パイプラインの構築手法が即座に適用可能な形式でまとめられているため。
-- **タグ**: #ClaudeCode, #AI駆動開発, #自動化パイプライン, #生成AI・LLM
-
-### 本文
-Claude Codeを半年以上使い込んでいると、毎回同じ指示を打っている自分に気づくことがあります。「コミットメッセージは日本語で」「テストを書いてからPRを出して」「この記事はこのトーンで」。
-これを解決するのがSkillです。
-Skillとは、~/.claude/skills/ や .claude/skills/ に置くYAMLフロントマター付きのMarkdownファイル（SKILL.md）のこと。テキストファイル1つで、Claude Codeの振る舞いを根本から変えられます。
-私は現在21個のSkillを運用していますが、そのうち16個は自作です。この記事では、Skillの構造から作り方、実際の運用で分かった育て方まで、一通り解説します。
-
-
- Skillの構造
-
- SKILL.mdファイルの中身
-Skillファイルはこんな構造です。
----
-name: my-skill-name
-description: このスキルが何をするか、いつ使用するかの説明
----
-
-# スキル名
-
-## 手順
-1. まず○○を確認する
-2. 次に○○を実行する
-3. 最後に○○で検証する
-
-## 出力フォーマット
-- ファイル形式: ○○
-- 命名規則: ○○
-
-## 注意事項
-- ○○の場合は△△する
-- ○○は禁止
-冒頭の --- で囲まれた部分がYAMLフロントマターです。
-
-
-name: スキルの識別子（小文字・ハイフン・数字のみ、最大64文字）。/name で呼び出す時の名前になる
-
-description: 最重要フィールド。Claude Codeはこの説明文を読んで「この会話でこのスキルを使うべきか？」を自動判断する
-
-
-フロントマターの後はMarkdownで「こうやってほしい」と書くだけです。
-
- フロントマターの全フィールド
-公式ドキュメントに基づくフロントマターの全フィールドを整理します。
-
-
-
-フィールド
-必須
-説明
-
-
-
-
-name
-No
-表示名。省略するとディレクトリ名が使われる
-
-
-description
-推奨
-何をするか・いつ使うか。Claudeの自動判断に使われる。省略するとMarkdownコンテンツの最初の段落が使われる。250文字で切り詰められるのでキーワードを前半に入れる
-
-
-
-argument-hint
-No
-オートコンプリート時のヒント（例: [issue-number]）
-
-
-disable-model-invocation
-No
-
-true で手動呼び出しのみに制限。副作用のあるSkill向け
-
-
-user-invocable
-No
-
-false で / メニューから非表示。バックグラウンド知識向け
-
-
-allowed-tools
-No
-Skill実行中に承認なしで使えるツールを事前許可（例: Read Grep Glob）。他のツールの使用を制限するものではない
-
-
-model
-No
-Skill実行時に使用するモデル
-
-
-effort
-No
-思考レベルの上書き（low / medium / high / max）
-
-
-context
-No
-
-fork でサブエージェントコンテキストで実行
-
-
-agent
-No
-
-context: fork 時のサブエージェントタイプ
-
-
-hooks
-No
-Skillライフサイクルにフックを設定
-
-
-paths
-No
-Globパターンで自動発動条件を限定
-
-
-shell
-No
-
-bash（デフォルト）or powershell
-
-
-
-
-正直、最初は name と description だけで十分です。使い込んでいくうちに disable-model-invocation や context: fork が欲しくなってきます。
-
-
- Skillの配置と読み込みの仕組み
-
- Personal と Project の2種類
-
-
-
-配置場所
-パス
-適用範囲
-
-
-
-
-Enterprise
-マネージド設定で配布
-組織全体
-
-
-Personal
-~/.claude/skills/<skill-name>/SKILL.md
-全プロジェクト
-
-
-Project
-.claude/skills/<skill-name>/SKILL.md
-そのプロジェクトのみ
-
-
-Plugin
-<plugin>/skills/<skill-name>/SKILL.md
-プラグイン有効時
-
-
-
-迷ったら、まずはPersonal（~/.claude/skills/）に置くのがおすすめです。どのプロジェクトでも使えるので汎用性が高い。チームで共有したいSkillはProject（.claude/skills/）に置いてGitでバージョン管理すると便利です。
-
-
- ディレクトリ構成
-my-skill/
-├── SKILL.md           # メインの指示（必須）
-├── template.md        # テンプレート
-├── examples/
-│   └── sample.md      # 出力例
-├── references/        # 参考ドキュメント
-│   └── api-docs.md    # 必要時に読み込まれる
-└── scripts/
-    └── validate.sh    # 実行可能スクリプト
-最初は SKILL.md だけで十分ですが、使い込んでいくとスクリプトやテンプレートを追加したくなります。
-公式の /pptx スキルにはPDF回転やフォーム入力用のPythonスクリプトが scripts/ に入っていたりします。毎回コードを書き直す必要がなくなるので、安定した品質の出力が得られます。
-
- descriptionによる自動トリガー
-Skillは /skill名 で手動呼び出しするだけでなく、descriptionの内容にマッチすると自動で発動します。
-たとえば、descriptionに Use when deploying the application to production と書いておくと、ユーザーが「本番にデプロイして」と言っただけで、Claude Codeが自動的にそのSkillを使います。
-だからこそ、descriptionは「何をするか」と「いつ使うか」の両方を具体的に書くことが重要です。
-
-
- $ARGUMENTS による引数渡し
----
-name: fix-issue
-description: GitHub Issueを修正する
-disable-model-invocation: true
----
-
-GitHub Issue $ARGUMENTS を修正してください。
-
-1. Issueの内容を読む
-2. 要件を理解する
-3. 修正を実装する
-4. テストを書く
-5. コミットを作成する
-/fix-issue 123 と打てば $ARGUMENTS が 123 に置換されます。$ARGUMENTS[0]、$ARGUMENTS[1] で複数引数にも対応。$0、$1 の短縮形も使えます。
-
-
- Skillの入手方法
-
- 1. 公式プラグイン
-Claude Codeには2つのAnthropic公式マーケットプレイスがあります。
-claude-plugins-official（自動追加済み）
-Claude Code起動時に自動で利用可能になるマーケットプレイスです。/plugin の Discover タブから閲覧・インストールできます。
-
-
-
-プラグイン
-用途
-
-
-
-
-frontend-design
-
-/frontend-design — フロントエンドUI設計
-
-
-code-review
-PRのコードレビュー
-
-
-feature-dev
-ガイド付き機能開発
-
-
-各種LSPプラグイン
-コード補完・型チェック（TypeScript, Python, Goなど）
-
-
-各種連携プラグイン
-GitHub, Slack, Sentry, Linearなど外部サービス連携
-
-
-
-anthropic-agent-skills（手動追加）
-Skill中心のマーケットプレイスです。以下のコマンドで追加します。
-/plugin marketplace add anthropics/skills
-
-
-
-プラグイン
-含まれるSkill
-用途
-
-
-
-
-document-skills
-
-/pptx, /xlsx, /pdf, /docx, /skill-creator, /frontend-design など
-ドキュメント生成・Skill開発
-
-
-
-個人的なおすすめは /xlsx です。CSVを渡して「グラフ付きのExcelにして」と言うだけで、フォーマット済みの .xlsx ファイルが出てきます。
-
- 2. コミュニティ / GitHub
-GitHubで「claude code skills」と検索すると、色々出てきます。
-探す際のポイント：
-
-スター数を確認する
-最終更新日を確認する（Claude Codeの更新が速いので、古いものは動かないことがある）
-READMEが充実しているか
-実際の使用例があるか
-
-
- 3. 自作（最終的にはここ）
-最初は公式やコミュニティで十分です。でも使い込んでいくと「自分の仕事に特化したSkillがほしい」と感じるようになります。
-私の自作Skill 16個の内訳はざっくりこんな感じです。
-
-
-執筆系（6個）: 記事作成、X投稿生成、チャットログ整形、参考記事クリーンアップ
-
-開発系（5個）: エンドポイントテスター、コードレビュー、設定検証
-
-運用系（5個）: コンテンツ検証、リプライ生成、ブログテンプレート
-
-毎週使っているのは5〜6個ですが、残りも月1回程度は出番があります。あるとないとでは作業効率が全然違います。
-
-
- 自作Skillの設計と作成
-
- ステップ1：課題の特定
-「何を自動化・効率化したいのか」を明確にします。
-私の場合、ブログ記事を書くときに毎回同じことを指示していました。「一人称は『私』で」「ターゲット読者はこういう人」「起承転結で」「CTAを入れて」。これを毎回手で打つのが面倒だったのがきっかけです。
-
- ステップ2：プロンプトの構造化
-繰り返している指示を整理します。
-
-ターゲット読者は誰か
-トーンや文体の指定
-構成のルール
-必須要素
-禁止事項
-
-これを箇条書きにするだけでOKです。
-
- ステップ3：/skill-creator で作成する
-ここが一番大事なポイントです。Skillは手書きで作るのではなく、/skill-creator に作ってもらうのが正解です。
-/skill-creator
-/skill-creator は対話形式でヒアリングしてくれます。「どんな目的のスキルですか？」「ターゲットは？」「トーンの指定はありますか？」。ステップ2で整理した内容を答えていくと、正しいフォーマットのSKILL.mdを自動生成してくれます。
-
- /skill-creator の4つのモード
-/skill-creator にはCreate以外にも便利なモードがあります。
-
-
-
-モード
-目的
-やること
-
-
-
-
-Create
-Skillを新規作成
-対話形式でヒアリング→SKILL.md生成
-
-
-Eval
-Skillをテスト
-テストケースを作成してA/Bテスト
-
-
-Improve
-description最適化
-失敗パターン分析→改善案を提案・適用
-
-
-Benchmark
-品質監視
-Pass rate、実行時間、トークン数を計測
-
-
-
-作る → テスト → 改善のサイクルをskill-creator 1つで回せます。
-
- ステップ4：Eval / Improve でテスト・改善
-作ったSkillを実際に使ってみて、「ここが違うな」と思ったらEvalモードでテストケースを作ります。
-Evalモードの内部では4つのサブエージェントがパイプラインで動きます。
-Comparator（A/Bテスト） が特に面白くて、「Skillありの出力」と「Skillなしの出力」をブラインドで比較して、本当にSkillが効果を持っているかを定量的に確認してくれます。
-正直に言うと、私のブログ記事作成Skillの評価はB+ でした。A+じゃないあたりが、まだ改善の余地があるということなんですが、「Skillなしの出力」と明確に差が出ていたので、効果自体は確認できました。
-Improveモードでは、失敗パターンを分析してdescriptionの改善案を提案・適用してくれます。Anthropicの公式ブログによると、Improveモード適用後、公開されている6つのドキュメント作成スキルのうち5つでトリガー精度が改善したそうです。
-
- ステップ5：運用・メンテナンス（Benchmark モード）
-Skillは作って終わりではありません。特に重要なのが、Claudeのモデルが更新されたときの品質チェックです。
-Benchmarkモードでは以下の指標をトラッキングします。
-
-
-Pass rate: テストケースのアサーション通過率（%）
-
-Elapsed time: Skill実行にかかった時間（秒）
-
-Token usage: 1回の実行で消費したトークン数
-
-「モデルが進化してSkillが不要になった」場合もBenchmarkが検出してくれます。不要なSkillを抱え続けると、かえってClaude Codeのパフォーマンスが落ちることがあるので、引き算のメンテナンスも大事です。
-日常の運用ルールとして、私はこうしています。
-
-月1回くらいの頻度で「このSkill、まだ必要か？」と見直す
-Claudeのモデル更新があったらBenchmarkを回す
-新しい気づきがあったら随時追加する
-使わなくなったSkillは削除する
-
-
-
- よくある失敗パターン
-自作Skillで私がやらかした失敗パターンを共有しておきます。
-
-
-
-失敗
-原因
-対策
-
-
-
-
-詰め込みすぎ
-1つのSkillに複数の役割を持たせた
-1 Skill = 1目的に分割する
-
-
-descriptionが曖昧
-「便利なスキル」としか書かなかった
-「何をするか」+「いつ使うか」を具体的に
-
-
-テストしない
-作って満足、使ってみない
-Evalモードで必ず検証する
-
-
-メンテナンスしない
-モデル更新後に放置
-定期的にBenchmarkを回す
-
-
-
-特にdescriptionが曖昧だと、Claude Codeが「いつこのSkillを使うべきか」を判断できず、トリガーされないか、逆に関係ない場面でトリガーされてしまいます。
-
-
- 知っておくと便利な仕組み
-
- 動的コンテキスト注入
-!`<command>` 構文でシェルコマンドの結果をSkillに注入できます。
----
-name: pr-summary
-description: PRの変更内容を要約する
-context: fork
-agent: Explore
----
-
-## PRの情報
-- PR diff: !`gh pr diff`
-- PRコメント: !`gh pr view --comments`
-- 変更ファイル: !`gh pr diff --name-only`
-
-## タスク
-このPRの変更内容を要約してください。
-
-
- context: fork でサブエージェント実行
-context: fork をfrontmatterに追加すると、Skillがサブエージェントの独立コンテキストで実行されます。メインの会話履歴にはアクセスしません。
----
-name: deep-research
-description: コードベースを徹底調査する
-context: fork
-agent: Explore
----
-
-$ARGUMENTS について徹底調査してください。
-
-1. Glob と Grep で関連ファイルを探す
-2. コードを読んで分析する
-3. ファイルパスを含めた調査結果を要約する
-調査結果の要約だけがメインセッションに返ってくるので、コンテキストが汚れません。トークン節約の観点でも有効です。
-
-
- 私の運用環境 — 21個のSkillの使い分け
-参考までに、私のSkill運用の全体像を共有します。
-
-
-
-カテゴリ
-個数
-使用頻度
-例
-
-
-
-
-執筆系
-6
-週2〜3回
-記事作成、X投稿生成、記事クリーンアップ
-
-
-開発系
-5
-週1〜2回
-エンドポイントテスト、設定検証、コードレビュー
-
-
-運用系
-5
-月1〜2回
-コンテンツ検証、リプライ生成
-
-
-公式プラグイン
-5
-必要時
-
-/pptx, /xlsx, /pdf, /skill-creator, /simplify
-
-
-
-
-21個全部が毎日必要なわけではないです。でも、特定の作業に取りかかったとき「あ、あのSkillがある」と思えるのが大事で、ないときと比べると明らかに立ち上がりが速くなります。
-
-
- おわりに
-Skillは「自分専用のClaude Code」を育てることに近いと感じています。
-最初はぎこちない指示しかできなかったClaude Codeが、Skillを入れることで「こういうことね」と察してくれるようになる。一緒に仕事をしていくうちに阿吽の呼吸ができてくる感覚です。
-ただし、完璧を目指すと挫折します。最初は name と description だけのシンプルなSKILL.mdで十分。使いながら育てていくのが一番のコツです。
-今日やること： /skill-creator でSkillを1つ作って、Evalモードで評価してみてください。自分の仕事に特化したSkillが1つあるだけで、Claude Codeとの付き合い方が変わるはずです。
-
-以前書いた「Claude Codeのトークン消費を半減させる5フェーズ運用術」の中で「CLAUDE.mdからSkillに移動する」というテクニックを紹介しましたが、Skillの作り方・育て方はこの記事で解説した通りです。Skillの活用事例（pptx・xlsx・pdfなど）についても別途記事にまとめる予定です。
-この記事の内容は2026年4月時点のClaude Code公式ドキュメントに基づいています。
-公式ドキュメント: https://code.claude.com/docs/en/skills
 
 ---
 

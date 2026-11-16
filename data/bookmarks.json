@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-15T03:41:59.904Z",
+  "updated_at": "2026-11-16T05:06:58.602Z",
   "articles": [
     {
       "id": "1702129693",
@@ -13474,6 +13474,253 @@
       "is_structured": true,
       "analyzed_at": "2026-11-15T03:41:59.904Z",
       "markdown_path": "data/notebooklm_sources/1791771750_ComfyUI × 動画生成AI × Codex で、ゲーム用スプライトアニメを量産するパイプラインを作った話 - Qiita.md"
+    },
+    {
+      "id": "1930091875",
+      "url": "https://zenn.dev/sae_eng/articles/0e9ed7205ebc41",
+      "title": "Claude Code に忘れさせたら、トークン使用量が4割減った",
+      "excerpt": "こんにちは、Saeです。\n「さえたエンジニア」へなるために、日々鍛錬に勤しんでます。",
+      "summary": "【結論】Claude Codeの自動コンパクト機能（autoCompactWindow）を97万トークンから50万トークンへ引き下げ、離席時のキャッシュ切れ対策と併用することで、トークン消費量とAPIコストを約4割削減すべきである。\n【NG】会話が1Mコンテキストの限界に達するまでコンパクトを避け、長大化したセッションや離席後のキャッシュ切れ（1時間経過）で毎回全会話をフルコストで再書き込みさせること。",
+      "score": 90,
+      "domain": "other",
+      "source": "Zenn",
+      "core_rule": "Claude Codeの自動コンパクト機能（autoCompactWindow）を97万トークンから50万トークンへ引き下げ、離席時のキャッシュ切れ対策と併用することで、トークン消費量とAPIコストを約4割削減すべきである。",
+      "anti_pattern": "会話が1Mコンテキストの限界に達するまでコンパクトを避け、長大化したセッションや離席後のキャッシュ切れ（1時間経過）で毎回全会話をフルコストで再書き込みさせること。",
+      "specific_tags": [
+        "Claude Code",
+        "トークン節約",
+        "autoCompactWindow",
+        "プロンプトキャッシュ",
+        "離席対策"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AI駆動開発",
+        "プロンプト・コンテキスト"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-16T05:03:53.069Z",
+      "markdown_path": "data/notebooklm_sources/1930091875_Claude Code に忘れさせたら、トークン使用量が4割減った.md"
+    },
+    {
+      "id": "1930091857",
+      "url": "https://zenn.dev/oikon/articles/claude-code-recipe",
+      "title": "Claude Codeで最近使っているTips【2026/11】",
+      "excerpt": "Oikonです。",
+      "summary": "【結論】Claude Codeのセッション管理において、/btwコマンドによる非破壊的質問、HTMLレポートによる情報集約、サブエージェントやRemote Controlを活用したマルチエージェントオーケストレーションを組み合わせるべきである。\n【NG】長時間のセッションでメインコンテキストにすべての調査結果や生ログを蓄積させ、コンテキストを圧迫・劣化させること。",
+      "score": 92,
+      "domain": "other",
+      "source": "Zenn",
+      "core_rule": "Claude Codeのセッション管理において、/btwコマンドによる非破壊的質問、HTMLレポートによる情報集約、サブエージェントやRemote Controlを活用したマルチエージェントオーケストレーションを組み合わせるべきである。",
+      "anti_pattern": "長時間のセッションでメインコンテキストにすべての調査結果や生ログを蓄積させ、コンテキストを圧迫・劣化させること。",
+      "specific_tags": [
+        "Claude Code",
+        "マルチエージェント",
+        "Remote Control",
+        "Claude Mods",
+        "プロンプトキャッシュ"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "AIエージェント",
+        "自動化パイプライン",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-16T05:04:11.514Z",
+      "markdown_path": "data/notebooklm_sources/1930091857_Claude Codeで最近使っているTips【2026_11】.md"
+    },
+    {
+      "id": "1930091435",
+      "url": "https://qiita.com/N-Kyo/items/bf4a3a2185db2d28eee5",
+      "title": "実際に試したClaude便利術20選 まとめ - Qiita",
+      "excerpt": "実際に試したClaude便利術20選 まとめ",
+      "summary": "【結論】CLAUDE.mdは前提のお願いに留め、危険な操作や厳格なルールはpermissionsやPreToolUse Hookで二重に強制すべきである。\n【NG】terraform applyやdestroyなどの破壊的コマンドのブロックを、強制力のないCLAUDE.mdの指示だけに頼ること。",
+      "score": 92,
+      "domain": "other",
+      "source": "Qiita",
+      "core_rule": "CLAUDE.mdは前提のお願いに留め、危険な操作や厳格なルールはpermissionsやPreToolUse Hookで二重に強制すべきである。",
+      "anti_pattern": "terraform applyやdestroyなどの破壊的コマンドのブロックを、強制力のないCLAUDE.mdの指示だけに頼ること。",
+      "specific_tags": [
+        "Claude Code",
+        "CLAUDE.md",
+        "permissions",
+        "Hooks",
+        "Terraform"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "プロンプト・コンテキスト",
+        "セキュリティ・品質",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-16T05:04:31.276Z",
+      "markdown_path": "data/notebooklm_sources/1930091435_実際に試したClaude便利術20選 まとめ - Qiita.md"
+    },
+    {
+      "id": "1930091412",
+      "url": "https://qiita.com/saitoko/items/cfe7201e8cc0676180bb",
+      "title": "コードが読めなくても、Claude Code の出力が正しいか確かめられる——動かす・開く・分ける・基準を持つ、4つの確認方法 - Qiita",
+      "excerpt": "コードが読めなくても、Claude Code の出力が正しいか確かめられる——動かす・開く・分ける・基準を持つ、4つの確認方法",
+      "summary": "【結論】コードが読めなくても、「動かす」「実物を開く」「役を分ける」「人が基準を持つ」の4つの確認手順を組み込むことで、AI出力の正確性を担保できる。\n【NG】AIの「できました」という返答や自己評価をそのまま信用し、実物の確認や別コンテキストでの検証を行わないこと。",
+      "score": 82,
+      "domain": "other",
+      "source": "Qiita",
+      "core_rule": "コードが読めなくても、「動かす」「実物を開く」「役を分ける」「人が基準を持つ」の4つの確認手順を組み込むことで、AI出力の正確性を担保できる。",
+      "anti_pattern": "AIの「できました」という返答や自己評価をそのまま信用し、実物の確認や別コンテキストでの検証を行わないこと。",
+      "specific_tags": [
+        "Claude Code",
+        "AIチーム",
+        "非エンジニア",
+        "品質管理",
+        "検証手法"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "プロンプト・コンテキスト",
+        "ナレッジ・情報整理",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-16T05:04:49.186Z",
+      "markdown_path": "data/notebooklm_sources/1930091412_コードが読めなくても、Claude Code の出力が正しいか確かめられる——動かす・開く・分ける・基準を持つ、4つの確認方法 - Qiita.md"
+    },
+    {
+      "id": "1930091393",
+      "url": "https://qiita.com/oosawak@github/items/a93703112834983bc1f1",
+      "title": "AIが書いたコードは使って確かめる ― 舞台アプリ開発のレビュー記録 - Qiita",
+      "excerpt": "AIが書いたコードは使って確かめる ― 舞台アプリ開発のレビュー記録",
+      "summary": "【結論】AI生成コードのレビューはコードの行単位の検査ではなく、実物を用いた「体験の確認」と「方法論の妥当性評価」を中心に行うべきである。\n【NG】「動いた」という表面上の報告だけを信じ、どの経路や仕組みで動作したかの確認を怠ること。",
+      "score": 65,
+      "domain": "other",
+      "source": "Qiita",
+      "core_rule": "AI生成コードのレビューはコードの行単位の検査ではなく、実物を用いた「体験の確認」と「方法論の妥当性評価」を中心に行うべきである。",
+      "anti_pattern": "「動いた」という表面上の報告だけを信じ、どの経路や仕組みで動作したかの確認を怠ること。",
+      "specific_tags": [
+        "Claude Code",
+        "AIレビュー",
+        "個人開発",
+        "アプリ開発",
+        "UX検証"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "個人開発・マネタイズ",
+        "マインドセット・戦略",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-16T05:06:03.841Z",
+      "markdown_path": "data/notebooklm_sources/1930091393_AIが書いたコードは使って確かめる ― 舞台アプリ開発のレビュー記録 - Qiita.md"
+    },
+    {
+      "id": "1930091370",
+      "url": "https://qiita.com/BaspisKawaE/items/933b883e4585ebd59299",
+      "title": "あなたのAIはまだ、「ものの調べ方」を知らない。──調査スキル「imozuru」を作ってバズった話 - Qiita",
+      "excerpt": "あなたのAIはまだ、「ものの調べ方」を知らない。──調査スキル「imozuru」を作ってバズった話",
+      "summary": "【結論】AIの調査結果が物足りないときはデフォルトの検索手順を疑い、情報探索モデル（Batesのberrypicking等）を組み込んだカスタムスキルと機械的な原文照合を導入すべきである。\n【NG】「AIだからこんなもの」と諦めたり、AIに要約文だけで回答させたりして、一次情報の検証や探索プロセスの見直しを行わないこと。",
+      "score": 90,
+      "domain": "other",
+      "source": "Qiita",
+      "core_rule": "AIの調査結果が物足りないときはデフォルトの検索手順を疑い、情報探索モデル（Batesのberrypicking等）を組み込んだカスタムスキルと機械的な原文照合を導入すべきである。",
+      "anti_pattern": "「AIだからこんなもの」と諦めたり、AIに要約文だけで回答させたりして、一次情報の検証や探索プロセスの見直しを行わないこと。",
+      "specific_tags": [
+        "Claude Code",
+        "情報探索",
+        "スキル設計",
+        "Python",
+        "なぜなぜ分析"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "AI駆動開発",
+        "MCP・外部連携",
+        "ClaudeCode"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-16T05:06:22.275Z",
+      "markdown_path": "data/notebooklm_sources/1930091370_あなたのAIはまだ、「ものの調べ方」を知らない。──調査スキル「imozuru」を作ってバズった話 - Qiita.md"
+    },
+    {
+      "id": "1930091320",
+      "url": "https://qiita.com/inoyu-qiita/items/4fc91ba7f67d6763960e",
+      "title": "Xで話題の、原文を芋づる式にたどるスキル「imozuru」でドメイン知識を仕入れて、普通のAI検索と比べてみた - Qiita",
+      "excerpt": "Xで話題の、原文を芋づる式にたどるスキル「imozuru」でドメイン知識を仕入れて、普通のAI検索と比べてみた",
+      "summary": "【結論】知らない分野の調査時はAIに直接要約させず、専門用語・中心人物・原文（論文や公式資料）を芋づる式に収集してローカルに証跡（map.md/sources等）として残すべきである。\n【NG】検索上位の要約だけを鵜呑みにし、専門家の判断基準や一次情報の根拠を確認せずに資料作成や実装を進めること。",
+      "score": 85,
+      "domain": "other",
+      "source": "Qiita",
+      "core_rule": "知らない分野の調査時はAIに直接要約させず、専門用語・中心人物・原文（論文や公式資料）を芋づる式に収集してローカルに証跡（map.md/sources等）として残すべきである。",
+      "anti_pattern": "検索上位の要約だけを鵜呑みにし、専門家の判断基準や一次情報の根拠を確認せずに資料作成や実装を進めること。",
+      "specific_tags": [
+        "imozuru",
+        "Claude Code",
+        "ドメイン知識",
+        "情報収集",
+        "Agent Skills"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "ClaudeCode",
+        "AIエージェント",
+        "自動化パイプライン",
+        "ナレッジ・情報整理"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-16T05:06:40.364Z",
+      "markdown_path": "data/notebooklm_sources/1930091320_Xで話題の、原文を芋づる式にたどるスキル「imozuru」でドメイン知識を仕入れて、普通のAI検索と比べてみた - Qiita.md"
+    },
+    {
+      "id": "1930091015",
+      "url": "https://qiita.com/7mpy/items/5710fef43ba0e59204c6",
+      "title": "Fable 5.2でGTA 6 Osaka Cityを作ってみた - Qiita",
+      "excerpt": "Fable 5.2でGTA 6 Osaka Cityを作ってみた",
+      "summary": "【結論】AIを活用して大規模なゲームを開発する際は、全体を一度に生成するのではなく、地図データ変換・衝突判定・AI制御などの機能単位に分割し、段階的に実装と検証を進めるべきである。\n【NG】初回の指示だけで全機能（都市生成・物理・AI・ミッション）を一括してAIにコードを書かせ、動作確認を怠るアプローチ。",
+      "score": 85,
+      "domain": "game-design",
+      "source": "Qiita",
+      "core_rule": "AIを活用して大規模なゲームを開発する際は、全体を一度に生成するのではなく、地図データ変換・衝突判定・AI制御などの機能単位に分割し、段階的に実装と検証を進めるべきである。",
+      "anti_pattern": "初回の指示だけで全機能（都市生成・物理・AI・ミッション）を一括してAIにコードを書かせ、動作確認を怠るアプローチ。",
+      "specific_tags": [
+        "TypeScript",
+        "Three.js",
+        "OpenStreetMap",
+        "空間ハッシュ",
+        "AIエージェント"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AI駆動開発",
+        "ゲーム開発",
+        "プログラミング・インフラ",
+        "AIエージェント"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-16T05:06:58.602Z",
+      "markdown_path": "data/notebooklm_sources/1930091015_Fable 5.2でGTA 6 Osaka Cityを作ってみた - Qiita.md"
     }
   ]
 }
