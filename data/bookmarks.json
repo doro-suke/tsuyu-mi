@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-16T05:06:58.602Z",
+  "updated_at": "2026-11-21T04:41:57.091Z",
   "articles": [
     {
       "id": "1702129693",
@@ -13721,6 +13721,35 @@
       "is_structured": true,
       "analyzed_at": "2026-11-16T05:06:58.602Z",
       "markdown_path": "data/notebooklm_sources/1930091015_Fable 5.2でGTA 6 Osaka Cityを作ってみた - Qiita.md"
+    },
+    {
+      "id": "1819891141",
+      "url": "https://note.com/genel/n/n9cdf77d1d3db?magazine_key=m03efbb766a9a",
+      "title": "AI動画を「それっぽい映像」から「CM」へ。3つの演出作り方解説｜GENEL ｜ AIを用いた動画制作解説",
+      "excerpt": "こんにちは！GENELです。  最近のAIの進化で、結構誰でもAIでCM作ったり、アニメ作ったりできる時代になってきましたよね👀  例えばこんなAICM↓   話題の「AIを使ったCM」の年表と作り方  リポビタンDが年始から話題でしたよね👀 簡単に話題になったCMをまとめました （無数にあるので抜粋です💡）  2023年 ・伊藤園「お〜いお茶 カテキン緑茶」 ・サテライトオフィス「企業のAI活用支援」  2024年 ・カネボウ「KATE ポッピングシルエットシャドウ」… pic.twitter.com/wXFItF6K7Q — GENEL | AI動画制作の今を知るなら (@gene",
+      "summary": "【結論】AI動画制作で「それっぽい映像」から「CM品質」に引き上げるためには、同一構図の画像生成（アニメと実写など）を用意し、Vidu Q3等のキーフレーム機能で開始・回転・光のエフェクト・変身のタイミングまでテキストで詳細に指示すべきである。\n【NG】アニメから実写への変身指示を「アニメから実写に変わって」のように抽象的に記述し、AIの自動解釈に任せて意図しない変身結果を招くこと。",
+      "score": 82,
+      "domain": "video-pipeline",
+      "source": "note",
+      "core_rule": "AI動画制作で「それっぽい映像」から「CM品質」に引き上げるためには、同一構図の画像生成（アニメと実写など）を用意し、Vidu Q3等のキーフレーム機能で開始・回転・光のエフェクト・変身のタイミングまでテキストで詳細に指示すべきである。",
+      "anti_pattern": "アニメから実写への変身指示を「アニメから実写に変わって」のように抽象的に記述し、AIの自動解釈に任せて意図しない変身結果を招くこと。",
+      "specific_tags": [
+        "Vidu Q3",
+        "Nano Banana Pro",
+        "キーフレーム",
+        "動画制作",
+        "CM演出"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "動画生成AI",
+        "ショート動画・YouTube"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-21T04:41:57.091Z",
+      "markdown_path": "data/notebooklm_sources/1819891141_AI動画を「それっぽい映像」から「CM」へ。3つの演出作り方解説｜GENEL ｜ AIを用いた動画制作解説.md"
     }
   ]
 }
