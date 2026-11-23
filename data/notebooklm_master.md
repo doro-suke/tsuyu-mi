@@ -1,5 +1,5 @@
 # Vesper - NotebookLM Master Source
-最終更新日: 2026/11/22 3:54:56
+最終更新日: 2026/11/23 4:35:44
 対象記事数: 50 件 (未読かつHigh優先度)
 
 ---
@@ -1714,7 +1714,37 @@ claude --remote-control --name worker1
 
 ---
 
-## 40. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
+## 40. [AIで動画・イラスト・アプリを作る時に役立つ。明確に伝えるにはAIと共通言語で話す。624の見本集と探せるプロンプト【保存版】｜うちた](https://note.com/uchita_success/n/n753d9df5c28f)
+- **優先度**: High
+- **スコア**: 92
+- **解析日時**: 2026/11/23
+- **AI要約**:
+  【結論】AIに対して「いい感じに」等の曖昧な表現を使わず、プロが言語化した固有の名称（カメラワークやUI部品名など）を共通言語としてプロンプトに指定することで出力品質を最大化するべきである。
+  【NG】「映画のように」「エモい写真にして」など、AIの解釈に依存する曖昧な修飾語だけで指示を出してガチャ感覚で生成を繰り返すこと。
+- **タグ**: #プロンプト・コンテキスト, #生成AI・LLM, #ナレッジ・情報整理
+
+### 本文
+## 1. 解決する課題（Problem）
+- AIへ指示を出す際に抽象的な表現しか思い浮かばず、生成される出力が安定しない・ガチャ状態になってしまうボトルネックを解決する。
+
+## 2. 実践ルール・判断基準（Actionable Rules）
+- **IF** 動画のカメラワークや編集効果を指定する場合 **THEN** 「ドリーイン」や「ジャンプカット」等の専門用語を指定して動線や効果を明確にする。
+- **IF** ユーザーの抽象的な要望をAIに構造化させる場合 **THEN** 事前に定義された624語の辞書ベースから候補を3つ提示させ、意図に合致するものを明示的に選ばせるプロンプト構成を採用する。
+- **IF** デザイン・アプリ・Webを生成する場合 **THEN** 「ミニマル」「スイス・スタイル」「ヒーローセクション」等の正しいUI/UX部品の名称を指示文に含める。
+
+## 3. 避けるべきアンチパターン（Anti-Patterns）
+- 具体的な専門用語や標準名称の代わりに「今っぽいデザイン」「それっぽい動き」という主観的な言葉だけで指示を与えること。
+- 複数の似通った選択肢を同時に提示してAIやユーザーを迷わせること。
+
+## 4. 具体的なコード・構成テンプレート（Snippets / Examples）
+## タスク
+「名前の相棒」として、私のふわっとしたイメージを、AIに通じる名前に直してください。
+名前の候補を3つ出し、私が選んだ名前で、そのままAIに渡せる指示文を作るのがゴールです。
+候補は下の辞書から選び、どの見本を見ればいいかを添えてください。
+
+---
+
+## 41. [デザイナーの脳内をコピーして、誰でも90点以上のUIを作れるようにする｜トイ](https://note.com/toitoi1618/n/ndf35dbd2585b)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1758,7 +1788,7 @@ newt-design-system/
 
 ---
 
-## 41. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
+## 42. [毎朝3本のアフィリ記事を完全自動で公開する仕組み （全2回の第2回）：後編 ― 収益化リンク・例外処理・1日3本に収束させる自己回復](https://zenn.dev/bokuwalily/articles/affiliate-auto-publish-2)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1801,7 +1831,7 @@ some_command > "$TARGET_FILE.tmp" && mv "$TARGET_FILE.tmp" "$TARGET_FILE"
 
 ---
 
-## 42. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
+## 43. [Claude Code で「ループエンジニアリング」を実践してみた](https://zenn.dev/tetsu_don/articles/e40b95dfc726ac)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1841,7 +1871,7 @@ def _is_ascii_digits(value: str) -> bool:
 
 ---
 
-## 43. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
+## 44. [Playwright Test Agents × GitHub Actions：E2E テスト生成・修復の自動化](https://zenn.dev/sun_asterisk/articles/e9b50f09839def)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1876,7 +1906,7 @@ const NODE_BUILTINS = new Set(['fs', 'child_process', 'os', 'net', 'http', 'http
 
 ---
 
-## 44. [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
+## 45. [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する - Qiita](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1916,7 +1946,7 @@ For each finding, report: file path, line number, severity (high/medium/low), an
 
 ---
 
-## 45. [Claude Code「ralph-loop」解説｜hirokaji](https://note.com/tasty_dunlin998/n/n411f62ec3c26)
+## 46. [Claude Code「ralph-loop」解説｜hirokaji](https://note.com/tasty_dunlin998/n/n411f62ec3c26)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1961,7 +1991,7 @@ For each finding, report: file path, line number, severity (high/medium/low), an
 
 ---
 
-## 46. [Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った](https://zenn.dev/sonicgarden/articles/claude-code-self-improving-loop)
+## 47. [Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った](https://zenn.dev/sonicgarden/articles/claude-code-self-improving-loop)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -1999,7 +2029,7 @@ For each finding, report: file path, line number, severity (high/medium/low), an
 
 ---
 
-## 47. [Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita](https://qiita.com/N-i-ke/items/b87d1d144ef6eef9d257)
+## 48. [Claude Code の Skill を自作して、設計→実装→検証→調査のワークフローを丸ごと AI に任せた話 - Qiita](https://qiita.com/N-i-ke/items/b87d1d144ef6eef9d257)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -2047,7 +2077,7 @@ description: ソフトウェア機能の要件定義・基本設計・詳細設�
 
 ---
 
-## 48. [Claude Codeを使い倒すための設定術：CLAUDE.md・自動メモリ・コンテキスト管理の3本柱](https://zenn.dev/tamai_hideyuki/articles/claude-code-config-best-practices)
+## 49. [Claude Codeを使い倒すための設定術：CLAUDE.md・自動メモリ・コンテキスト管理の3本柱](https://zenn.dev/tamai_hideyuki/articles/claude-code-config-best-practices)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -2084,7 +2114,7 @@ description: ソフトウェア機能の要件定義・基本設計・詳細設�
 
 ---
 
-## 49. [Claude Code や Codex をオーケストレーションして自動でレビュー FB ループを回して洗い物をしてる話](https://zenn.dev/nrs/articles/db4120beb0e601)
+## 50. [Claude Code や Codex をオーケストレーションして自動でレビュー FB ループを回して洗い物をしてる話](https://zenn.dev/nrs/articles/db4120beb0e601)
 - **優先度**: High
 - **スコア**: 90
 - **解析日時**: 2026/11/14
@@ -2124,41 +2154,6 @@ movements:
     rules:
       - condition: 修正完了
         next: review         # review に戻る
-```
-
----
-
-## 50. [もうプロンプトを書くな──「Loop Engineering」という新しいパラダイムの正体](https://zenn.dev/acrosstudioblog/articles/38509c0473683a)
-- **優先度**: High
-- **スコア**: 90
-- **解析日時**: 2026/11/14
-- **AI要約**:
-  【結論】人間が直接プロンプトを書くのではなく、エージェントを自律稼働させるシステム（目標契約・証拠フィードバック・停止条件・記憶還元）を「Loop Engineering」として設計し、客観的証拠で自律実行させる。
-  【NG】AIの「完了しました」という自己申告（done）を信じて証拠検証を省略すること、および停止条件やコスト上限を決めずにループを放置してComprehension Debt（理解の負債）やCognitive Surrender（認知的降伏）に陥ること。
-- **タグ**: #AI駆動開発, #ClaudeCode, #AIエージェント, #自動化パイプライン
-
-### 本文
-## 1. 解決する課題（Problem）
-- 人間がプロンプトの前に張り付き続けなければならずスケーラビリティに限界がある
-- AIが「できました」と自己申告した内容にミスや未達成が潜み、無人ループで検証の死角が生じる
-- スムーズに回るループほど自分で書いたコードが理解できなくなる「Comprehension Debt（理解の負債）」や、AIの出力を無批判に受け入れる「Cognitive Surrender（認知的降伏）」に陥る
-- 外部記憶がないと毎日のループがコールドスタートになり同じ事故を繰り返す
-
-## 2. 実践ルール・判断基準（Actionable Rules）
-- 特記事項なし
-
-## 3. 避けるべきアンチパターン（Anti-Patterns）
-- 特記事項なし
-
-## 4. 具体的なコード・構成テンプレート（Snippets / Examples）
-```markdown
-# .claude/skills/build.md
-# Build Skill
-- 依存関係インストール: `pnpm install --frozen-lockfile`
-- 型チェック: `pnpm typecheck`
-- テスト: `pnpm test --coverage`
-- 受け入れ基準: カバレッジ80%以上、tsc エラー0件
-- 過去の罠: monorepo 内で `npm` を使うと lockfile が壊れる
 ```
 
 ---
