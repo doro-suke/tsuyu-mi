@@ -125,7 +125,7 @@
                 <span class="text-[9px] font-bold text-[#8e8e93] uppercase tracking-widest mr-1">Top Focus Tags:</span>
             </div>
             <div class="flex justify-between items-center mt-2">
-                <p class="text-[9px] text-[#8e8e93] font-medium tracking-tight">最終アップデート: 2026/11/23 4:35:29</p>
+                <p class="text-[9px] text-[#8e8e93] font-medium tracking-tight">最終アップデート: 2026/11/26 5:51:13</p>
                 <a href="./data/notebooklm_master.md" target="_blank" class="text-[9px] text-[#e8c3b9] hover:underline font-bold tracking-tight">📝 NotebookLM用統合ソースを開く</a>
             </div>
         </div>
@@ -134,6 +134,80 @@
     <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div id="articlesGrid">
             
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-amber-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1942811804"
+           data-title="AI にリバースエンジニアリングさせる REA を触って、持ち帰ったのは「証拠付きで進める」考え方でした"
+           data-summary="【結論】AIエージェントに調査や実装を行わせる際は、推測によるハルシネーションを防ぐため、観測された事実（証拠）と限界をセットで報告させる設計にすべきである。
+【NG】エージェントにソースコードのない不明な対象を質問し、推測やWebの一般情報で尤もらしい嘘（ハルシネーション）を埋めさせること。"
+           data-priority="medium"
+           data-score="65"
+           data-tags="AIエージェント,MCP・外部連携,ナレッジ・情報整理,プロンプト・コンテキスト">
+          <div class="px-6 py-5 flex-grow flex flex-col">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-950/40 text-amber-300 border border-amber-900/50">Medium <span class="opacity-70">· 65</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus(this.closest('.article-card').dataset.articleId)" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle(this.closest('.article-card').dataset.articleId)" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/11/26</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://zenn.dev/flinters_blog/articles/3b377ce568d676" target="_blank" rel="noopener noreferrer">AI にリバースエンジニアリングさせる REA を触って、持ち帰ったのは「証拠付きで進める」考え方でした</a>
+              </h2>
+              
+        <div class="text-[#a1a1aa] text-sm mb-3 space-y-1">
+            <p class="leading-relaxed">・ 【結論】AIエージェントに調査や実装を行わせる際は、推測によるハルシネーションを防ぐため、観測された事実（証拠）と限界をセットで報告させる設計にすべきである。</p><p class="leading-relaxed">・ 【NG】エージェントにソースコードのない不明な対象を質問し、推測やWebの一般情報で尤もらしい嘘（ハルシネーション）を埋めさせること。</p>
+        </div>
+              
+              <div class="mt-auto pt-2"><button type="button" data-tag="AIエージェント" onclick="filterTag(this.dataset.tag)" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#AIエージェント</button><button type="button" data-tag="MCP・外部連携" onclick="filterTag(this.dataset.tag)" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#MCP・外部連携</button><button type="button" data-tag="ナレッジ・情報整理" onclick="filterTag(this.dataset.tag)" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#ナレッジ・情報整理</button><button type="button" data-tag="プロンプト・コンテキスト" onclick="filterTag(this.dataset.tag)" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#プロンプト・コンテキスト</button></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://zenn.dev/flinters_blog/articles/3b377ce568d676" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/1942811804_AI にリバースエンジニアリングさせる REA を触って、持ち帰ったのは「証拠付きで進める」考え方でした.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
+      <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-[#2a2a30] border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
+           data-article-id="1942811813"
+           data-title="AIでリバースエンジニアリング？「REA（Reverse Engineer Anything）」を調べてみた - Qiita"
+           data-summary="【結論】ソースコードのないアプリケーションの調査には、AIエージェントから解析機能を利用できるツール（REAなど）を活用し、結果の正確性は必ず動作と照合すべきである。
+【NG】AIが説明したリバースエンジニアリングの解析結果を裏付けなしに絶対的なものとして鵜呑みにすること。"
+           data-priority="low"
+           data-score="45"
+           data-tags="AIエージェント,MCP・外部連携,生成AI・LLM">
+          <div class="px-6 py-5 flex-grow flex flex-col">
+              <div class="flex justify-between items-start mb-3">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#1a1a1f] text-[#8e8e93] border border-[#2c2c34]">Low <span class="opacity-70">· 45</span></span>
+                  <div class="flex items-center gap-2">
+                    <button onclick="toggleStatus(this.closest('.article-card').dataset.articleId)" class="toggle-status-btn text-xs font-medium text-[#c8968c] hover:text-[#e8c3b9] underline transition-colors">
+                        既読にする
+                    </button>
+                    <button onclick="deleteArticle(this.closest('.article-card').dataset.articleId)" class="text-xs font-medium text-red-400 hover:text-red-300 underline ml-1 transition-colors">
+                        削除
+                    </button>
+                    <span class="text-xs text-gray-500">2026/11/26</span>
+                  </div>
+              </div>
+              <h2 class="text-lg font-bold mb-3 line-clamp-2 text-[#f4f4f5] hover:text-[#e8c3b9] transition-colors leading-snug">
+                  <a href="https://qiita.com/shuichi-takatsu/items/9aa2e5e14a3acd926d93" target="_blank" rel="noopener noreferrer">AIでリバースエンジニアリング？「REA（Reverse Engineer Anything）」を調べてみた - Qiita</a>
+              </h2>
+              
+        <div class="text-[#a1a1aa] text-sm mb-3 space-y-1">
+            <p class="leading-relaxed">・ 【結論】ソースコードのないアプリケーションの調査には、AIエージェントから解析機能を利用できるツール（REAなど）を活用し、結果の正確性は必ず動作と照合すべきである。</p><p class="leading-relaxed">・ 【NG】AIが説明したリバースエンジニアリングの解析結果を裏付けなしに絶対的なものとして鵜呑みにすること。</p>
+        </div>
+              
+              <div class="mt-auto pt-2"><button type="button" data-tag="AIエージェント" onclick="filterTag(this.dataset.tag)" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#AIエージェント</button><button type="button" data-tag="MCP・外部連携" onclick="filterTag(this.dataset.tag)" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#MCP・外部連携</button><button type="button" data-tag="生成AI・LLM" onclick="filterTag(this.dataset.tag)" class="card-tag-btn inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#1a1a1f] text-[#c8968c] border border-[#2c2c34]/50 hover:bg-[#2c2c34] hover:text-[#e8c3b9] transition-colors cursor-pointer mr-1 mb-1">#生成AI・LLM</button></div>
+          </div>
+          <div class="px-6 py-4 bg-[#141417] border-t border-[#222228] grid grid-cols-2 gap-2">
+              <a href="https://qiita.com/shuichi-takatsu/items/9aa2e5e14a3acd926d93" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center items-center px-4 py-2 text-sm font-semibold rounded-md text-[#121214] bg-gradient-to-r from-[#c8968c] to-[#e8c3b9] hover:opacity-90 transition-opacity">記事を読む</a>
+              <a href="./data/notebooklm_sources/1942811813_AIでリバースエンジニアリング？「REA（Reverse Engineer Anything）」を調べてみた - Qiita.md" target="_blank" class="inline-flex justify-center items-center px-4 py-2 border border-[#2c2c34] text-sm font-semibold rounded-md text-[#e8c3b9] bg-[#1a1a1f] hover:bg-[#222228] transition-colors">AI用ソース</a>
+          </div>
+      </div>
+
       <div class="article-card flex flex-col bg-[#18181b] rounded-lg shadow-xl overflow-hidden border-t-2 border-red-900/80 border-x border-b border-[#222228] transition transform hover:-translate-y-1 hover:shadow-2xl hover:border-[#c8968c]/70 "
            data-article-id="1939698809"
            data-title="AIで動画・イラスト・アプリを作る時に役立つ。明確に伝えるにはAIと共通言語で話す。624の見本集と探せるプロンプト【保存版】｜うちた"

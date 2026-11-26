@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T04:35:29.094Z",
+  "updated_at": "2026-11-26T05:51:13.249Z",
   "articles": [
     {
       "id": "1702129693",
@@ -13779,6 +13779,66 @@
       "is_structured": true,
       "analyzed_at": "2026-11-23T04:35:29.094Z",
       "markdown_path": "data/notebooklm_sources/1939698809_AIで動画・イラスト・アプリを作る時に役立つ。明確に伝えるにはAIと共通言語で話す。624の見本集と探せるプロンプト【保存版】｜.md"
+    },
+    {
+      "id": "1942811813",
+      "url": "https://qiita.com/shuichi-takatsu/items/9aa2e5e14a3acd926d93",
+      "title": "AIでリバースエンジニアリング？「REA（Reverse Engineer Anything）」を調べてみた - Qiita",
+      "excerpt": "AIでリバースエンジニアリング？「REA（Reverse Engineer Anything）」を調べてみた",
+      "summary": "【結論】ソースコードのないアプリケーションの調査には、AIエージェントから解析機能を利用できるツール（REAなど）を活用し、結果の正確性は必ず動作と照合すべきである。\n【NG】AIが説明したリバースエンジニアリングの解析結果を裏付けなしに絶対的なものとして鵜呑みにすること。",
+      "score": 45,
+      "domain": "other",
+      "source": "Qiita",
+      "core_rule": "ソースコードのないアプリケーションの調査には、AIエージェントから解析機能を利用できるツール（REAなど）を活用し、結果の正確性は必ず動作と照合すべきである。",
+      "anti_pattern": "AIが説明したリバースエンジニアリングの解析結果を裏付けなしに絶対的なものとして鵜呑みにすること。",
+      "specific_tags": [
+        "REA",
+        "リバースエンジニアリング",
+        "MCPサーバー",
+        "AIコーディングエージェント"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "MCP・外部連携",
+        "生成AI・LLM"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-26T05:50:52.590Z",
+      "markdown_path": "data/notebooklm_sources/1942811813_AIでリバースエンジニアリング？「REA（Reverse Engineer Anything）」を調べてみた - Qiita.md"
+    },
+    {
+      "id": "1942811804",
+      "url": "https://zenn.dev/flinters_blog/articles/3b377ce568d676",
+      "title": "AI にリバースエンジニアリングさせる REA を触って、持ち帰ったのは「証拠付きで進める」考え方でした",
+      "excerpt": "こんにちは。FLINTERSの河内です。",
+      "summary": "【結論】AIエージェントに調査や実装を行わせる際は、推測によるハルシネーションを防ぐため、観測された事実（証拠）と限界をセットで報告させる設計にすべきである。\n【NG】エージェントにソースコードのない不明な対象を質問し、推測やWebの一般情報で尤もらしい嘘（ハルシネーション）を埋めさせること。",
+      "score": 65,
+      "domain": "other",
+      "source": "Zenn",
+      "core_rule": "AIエージェントに調査や実装を行わせる際は、推測によるハルシネーションを防ぐため、観測された事実（証拠）と限界をセットで報告させる設計にすべきである。",
+      "anti_pattern": "エージェントにソースコードのない不明な対象を質問し、推測やWebの一般情報で尤もらしい嘘（ハルシネーション）を埋めさせること。",
+      "specific_tags": [
+        "REA",
+        "リバースエンジニアリング",
+        "エージェント設計",
+        "コンテキスト管理",
+        "証拠ベース"
+      ],
+      "read_now_reason": "",
+      "defer_reason": "",
+      "tags": [
+        "AIエージェント",
+        "MCP・外部連携",
+        "ナレッジ・情報整理",
+        "プロンプト・コンテキスト"
+      ],
+      "status": "unread",
+      "is_structured": true,
+      "analyzed_at": "2026-11-26T05:51:13.249Z",
+      "markdown_path": "data/notebooklm_sources/1942811804_AI にリバースエンジニアリングさせる REA を触って、持ち帰ったのは「証拠付きで進める」考え方でした.md"
     }
   ]
 }
